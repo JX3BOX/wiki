@@ -54,7 +54,7 @@ export default {
             immediate: true,
             handler() {
                 this.items = null; // 加载中状态
-                this.page = parseInt(this.$route.query.page);
+                this.page = Number(this.$route.query.page);
                 // 获取菜单物品列表
                 get_menu_items({
                     auc_genre: this.$store.state.sidebar.AucGenre,

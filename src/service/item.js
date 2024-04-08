@@ -23,6 +23,10 @@ export function get_items_count() {
     return $.get(`api/node/item/count`);
 }
 
+export function get_item_enums() {
+    return $.get(`/item/enums`);
+}
+
 // 获取物品
 export function get_item(item_id) {
     if (!item_id) return;

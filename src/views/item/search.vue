@@ -54,7 +54,7 @@ export default {
             this.$router.replace({ query: query });
         },
         page_change_handle(page) {
-            let query = { page: page };
+            let query = { ...this.$route.query, page: page };
             // 菜单筛选
             if (this.$route.query.auc_genre) query.auc_genre = this.$route.query.auc_genre;
             if (this.$route.query.auc_sub_type_id) query.auc_sub_type_id = this.$route.query.auc_sub_type_id;
@@ -79,8 +79,12 @@ export default {
                     ids: this.$route.query.ids || "",
                     keyword: this.$route.params.keyword,
                     page: this.page,
-                    limit: this.length,
+                    per: this.length,
                     client: this.client,
+                };
+                params = {
+                    ...params,
+                    ...this.$route.query,
                 };
                 // 菜单筛选
                 if (this.$route.query.auc_genre) params.auc_genre = this.$route.query.auc_genre;

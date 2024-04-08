@@ -18,14 +18,18 @@
                     ><i class="el-icon-position"></i> <span class="u-text">搜索</span></el-button
                 >
             </el-input>
+            <slot name="filter"></slot>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "CommonSearch",
     props: {
+        name: {
+            type: String,
+            default: "CommonSearch",
+        },
         placeholder: {
             type: String,
             default: "输入关键词「回车」进行搜索",
