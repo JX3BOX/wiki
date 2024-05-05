@@ -182,7 +182,7 @@ module.exports = {
             .rule("images")
             .use("url-loader")
             .loader("url-loader")
-            .tap((options) => Object.assign(options, { limit: 10240 }));
+            .tap((options) => Object.assign(options, { limit: 10240, esModule: false }));
 
         //💝 in-line svg imgs ~
         config.module.rule("vue").use("vue-svg-inline-loader").loader("vue-svg-inline-loader");
