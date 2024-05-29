@@ -14,11 +14,6 @@ function getMenuGroups(params) {
         });
 }
 
-// 删除词条
-function removeKnowledge(id) {
-    return $cms().delete(`/api/cms/helper/knowledge/${id}`)
-}
-
 // 获取通识子类
 function getKnowledgeMenus() {
 	return $cms().get(`/api/cms/helper/knowledge/types`);
@@ -29,4 +24,4 @@ function getKnowledgeCount(params) {
     return $cms().get(`/api/cms/helper/knowledge/count`, { params });
 }
 
-export { getKnowledgeList, getMenuGroups, removeKnowledge, getKnowledgeMenus, getKnowledgeCount };
+export { getKnowledgeList, getMenuGroups, getKnowledgeMenus, getKnowledgeCount };

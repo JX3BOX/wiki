@@ -64,7 +64,6 @@
 </template>
 
 <script>
-// import { removeKnowledge } from "@/service/knowledge.js";
 import { postStat } from "@jx3box/jx3box-common/js/stat";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import WikiPanel from "@/components/wiki-panel.vue";
@@ -166,30 +165,6 @@ export default {
             }
         },
         publishLink,
-        // 删除
-        // del() {
-        //     this.$confirm("此操作将永久删除该百科通识, 是否继续?", "提示", {
-        //         confirmButtonText: "确定",
-        //         cancelButtonText: "取消",
-        //         type: "warning",
-        //     })
-        //         .then(() => {
-        //             removeKnowledge(this.id)
-        //                 .then((res) => {
-        //                     this.$message({
-        //                         type: "success",
-        //                         message: "删除成功!",
-        //                     });
-        //                     this.goBack();
-        //                 })
-        //                 .catch((err) => {
-        //                     this.$message({
-        //                         type: "error",
-        //                         message: "删除失败!",
-        //                     });
-        //                 });
-        //         })
-        // }
     },
     watch: {
         "$route.params.post_id": {
