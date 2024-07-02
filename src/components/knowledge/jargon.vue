@@ -70,7 +70,8 @@ export default {
 }
 @media screen and (max-width: @phone) {
     .m-jargon {
-        grid-template-columns: repeat(2, 1fr);
+        // grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(100px, 1fr));
     }
 }
 </style>
