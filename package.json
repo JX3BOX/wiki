@@ -8,12 +8,12 @@
         "preview": "cross-env BUILD_MODE=preview vue-cli-service build",
         "lint": "vue-cli-service lint",
         "inspect": "vue inspect > output.js",
-        "update": "npm --registry https://registry.npmjs.org install @jx3box/jx3box-common-ui@latest @jx3box/jx3box-common@latest @jx3box/jx3box-data@latest @jx3box/jx3box-comment-ui@latest @jx3box/jx3box-editor@latest @jx3box/jx3box-map@latest"
+        "update": "npm --registry https://registry.npmjs.org install @jx3box/jx3box-common-ui@latest @jx3box/jx3box-data@latest @jx3box/jx3box-comment-ui@latest @jx3box/jx3box-editor@latest @jx3box/jx3box-map@latest"
     },
     "dependencies": {
         "@antv/g2": "^4.2.10",
         "@jx3box/jx3box-comment-ui": "^1.9.4",
-        "@jx3box/jx3box-common": "^8.2.20",
+        "@jx3box/jx3box-common": "8.2.20",
         "@jx3box/jx3box-common-ui": "^8.8.7",
         "@jx3box/jx3box-data": "^3.6.0",
         "@jx3box/jx3box-dict": "^2.1.1",
