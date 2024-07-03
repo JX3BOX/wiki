@@ -84,9 +84,6 @@ export default {
                     ...params,
                     ...this.$route.query,
                 };
-                // 菜单筛选
-                if (this.$route.query.auc_genre) params.auc_genre = this.$route.query.auc_genre;
-                if (this.$route.query.auc_sub_type_id) params.auc_sub_type_id = this.$route.query.auc_sub_type_id;
 
                 get_items_search(params).then((data) => {
                     data = data.data;

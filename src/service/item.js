@@ -1,5 +1,6 @@
-import { $next, $node, $cms } from "@jx3box/jx3box-common/js/https";
+import { $next, $node, $cms, axios } from "@jx3box/jx3box-common/js/https";
 const $ = $node({ mute: true });
+// const $ = axios.create({ baseURL: 'http://localhost:7002' });
 
 export function getMyFav(params) {
     return $next().get(`api/article/favorites/my`, {
