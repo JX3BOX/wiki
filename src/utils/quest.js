@@ -183,7 +183,8 @@ export const questTargetDescFormat = (target) => {
             .replace(/\\n/g, "\n")
             .replace(/\<G\>/g, "&emsp;&emsp;")
             .replace(/\<C\>/g, "侠士")
-            .replace(/\<N\>/g, "侠士");
+            .replace(/\<N\>/g, "侠士")
+            .replace(/\<F\d+ (.+?)\>/g, '$1');
     else return "";
 };
 
