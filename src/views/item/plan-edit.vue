@@ -29,10 +29,16 @@
             <!-- 清单类型 -->
             <el-form-item label="清单">
                 <!-- <el-radio-group v-model="data.type" size="medium" @change="resetPages"> -->
-                    <!-- <el-radio-button label="1">道具清单</el-radio-button> -->
-                    <!-- <el-radio-button label="2">装备清单</el-radio-button> -->
+                <!-- <el-radio-button label="1">道具清单</el-radio-button> -->
+                <!-- <el-radio-button label="2">装备清单</el-radio-button> -->
                 <!-- </el-radio-group> -->
-                <el-button class="u-add-plan" size="medium" icon="el-icon-plus" @click="addRelation" type="primary" plain
+                <el-button
+                    class="u-add-plan"
+                    size="medium"
+                    icon="el-icon-plus"
+                    @click="addRelation"
+                    type="primary"
+                    plain
                     >新增分组</el-button
                 >
             </el-form-item>
@@ -143,6 +149,7 @@
 </template>
 
 <script>
+import { pick } from "lodash";
 import { getItemsByName } from "@/service/item";
 import { getItemPlanID, updatePlan } from "@/service/item-plan";
 // components
@@ -201,9 +208,9 @@ export default {
         loadItems() {
             getItemsByName(this.keyword, this.params).then((res) => {
                 // console.log(res)
-                this.searchList = res.data.list.map(item => {
-                    item.count = 1
-                    return item
+                this.searchList = res.data.list.map((item) => {
+                    item.count = 1;
+                    return item;
                 });
                 this.total = res.data.total;
             });
@@ -235,15 +242,19 @@ export default {
         },
         submit() {
             this.loading = true;
-            updatePlan(this.id, this.data).then(() => {
-                this.$message({
-                    message: "提交成功",
-                    type: "success",
+            const _data = pick(this.data, ["title", "type", "public", "relation", "description"]);
+            console.log(_data);
+            updatePlan(this.id, _data)
+                .then(() => {
+                    this.$message({
+                        message: "提交成功",
+                        type: "success",
+                    });
+                    this.$router.push({ name: "plan_view", params: { plan_id: this.id } });
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
-                this.$router.push({ name: "plan_view", params: { plan_id: this.id } });
-            }).finally(() => {
-                this.loading = false;
-            })
         },
 
         // 获取清单数据

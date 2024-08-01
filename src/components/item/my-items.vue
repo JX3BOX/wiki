@@ -123,7 +123,7 @@ export default {
                     this.data = res.data.data.data.map((item) => {
                         return {
                             ...item,
-                            fId: list.find((k) => k.post_id === item.id)?.id,
+                            fId: list ? list.find((k) => k.post_id === item.id)?.id : null,
                         };
                     });
                 });

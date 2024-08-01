@@ -66,7 +66,7 @@ export default {
     name: "WikiPost",
     props: {
         wikiPost: {
-            type: Object,
+            type: [Object, String],
             default: null,
         },
         scene: {
