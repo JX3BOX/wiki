@@ -48,6 +48,12 @@ module.exports = {
             template : 'public/macro.html',
             filename:'macro/details/index.html',
         },
+        wiki: {
+            title: "Wiki - JX3BOX",
+            template: "public/index.html",
+            entry: "src/pages/wiki.js",
+            filename: "wiki/index.html",
+        },
     },
 
     // ❤️ Porxy ~
