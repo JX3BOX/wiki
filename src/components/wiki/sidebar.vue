@@ -1,0 +1,138 @@
+<template>
+    <div class="m-achievement-sidebar">
+        <img class="" src="@/assets/img/wiki/overview/title.svg" alt="" />
+        <ul class="m-sidebar-nav">
+            <li class="active">
+                <router-link
+                    :to="{
+                        name: 'overview',
+                    }"
+                    >完成进度</router-link
+                >
+                <ul>
+                    <li>
+                        <router-link
+                            class="is-child"
+                            :to="{
+                                name: 'overview',
+                            }"
+                            >总览</router-link
+                        >
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <router-link
+                    :style="{
+                        pointerEvents: 'none',
+                    }"
+                    :to="{
+                        name: 'overview',
+                    }"
+                    >亲友对比</router-link
+                >
+            </li>
+            <li>
+                <router-link
+                    :style="{
+                        pointerEvents: 'none',
+                    }"
+                    :to="{
+                        name: 'overview',
+                    }"
+                    >渡劫方案</router-link
+                >
+            </li>
+        </ul>
+        <a class="u-wiki-btn" href="/cj">
+            <p class="u-text">
+                已收录资历点：<span>{{ count }}</span>
+            </p>
+        </a>
+    </div>
+</template>
+
+<script>
+import { getAchievementsTotal } from "@/service/achievement";
+
+export default {
+    name: "AchievementCount",
+    data() {
+        return {
+            count: 0,
+        };
+    },
+    created() {
+        // 获取成就统计信息
+        getAchievementsTotal().then((data) => {
+            const count = data.data.data.count;
+            this.count = ~~count?.general + ~~count?.armor_point;
+            this.$store.commit("SET_STATE", { key: "generalTotal", value: ~~count["general"] });
+            this.$store.commit("SET_STATE", { key: "armorTotal", value: ~~count["armor"] });
+        });
+    },
+};
+</script>
+
+<style lang="less" scoped>
+.m-achievement-sidebar {
+    ul {
+        padding: 0;
+    }
+    .m-sidebar-nav {
+        .mb(46px);
+        .flex;
+        flex-direction: column;
+        gap: 8px;
+        li {
+            list-style: none;
+            .flex;
+            flex-direction: column;
+            gap: 8px;
+            ul {
+                margin-left: 18px;
+            }
+            &.active {
+                a {
+                    font-weight: bold;
+                    color: rgba(245, 224, 201, 1);
+                    border-color: rgba(245, 224, 201, 1);
+                }
+            }
+            a {
+                padding-left: 12px;
+                color: rgba(255, 255, 255, 0.5);
+                line-height: 24px;
+                border-left: 4px solid;
+                border-color: rgba(255, 255, 255, 0.5);
+                &:hover {
+                    background: rgba(255, 255, 255, 0.25);
+                    border-color: rgba(245, 224, 201, 0.75);
+                }
+            }
+        }
+    }
+    .u-wiki-btn {
+        .db;
+        .size(180px, 120px);
+        .r(10px);
+        cursor: pointer;
+        color: rgba(150, 150, 150, 1);
+        font-size: 12px;
+        background: url(~@/assets/img/wiki/overview/wiki-btn.png) no-repeat;
+        background-size: cover;
+        position: relative;
+        .u-text {
+            text-align: center;
+            width: 100%;
+            position: absolute;
+            margin: 0;
+            bottom: 28px;
+            span {
+                font-weight: bold;
+                color: rgba(204, 161, 108, 1);
+            }
+        }
+    }
+}
+</style>

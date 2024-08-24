@@ -17,6 +17,7 @@ let store = {
         armorTotal: 0,
         onlyUncompleted: false,
         achievementsVirtual: [],
+        viewAchievementsName: null,
     },
     mutations: {
         SET_STATE: (state, { key, value, isSession = false }) => {

@@ -1,7 +1,9 @@
 <template>
     <div class="m-cj-aside-left">
         <div class="m-menus">
-            <router-link class="u-all el-tree-node__label" :to="{ name: 'search', params: { keyword: '' } }"><i class="el-icon-caret-right"></i>全部</router-link>
+            <router-link class="u-all el-tree-node__label" :to="{ name: 'search', params: { keyword: '' } }"
+                ><i class="el-icon-caret-right"></i>全部</router-link
+            >
             <el-tree class="filter-tree" :data="menus" node-key="id" ref="tree" @node-click="clickNode">
                 <router-link class="el-tree-node__label" slot-scope="{ node, data }" :to="menu_url(data, node)">
                     <span class="u-name" v-text="data.label"></span>
@@ -34,15 +36,17 @@ export default {
 
                 if (!isEqual(val, oldVal)) {
                     // 异步加载侧边栏数据
-                    getMenus().then(
-                        (data) => {
+                    getMenus()
+                        .then((data) => {
                             data = data.data;
                             let menus = [];
                             // 生成ID用于菜单激活
                             for (let index in data.data.menus) {
                                 data.data.menus[index].id = data.data.menus[index].AucGenre;
                                 for (let i in data.data.menus[index].children) {
-                                    data.data.menus[index].children[i].id = `${data.data.menus[index].AucGenre}-${data.data.menus[index].children[i].AucSubType}`;
+                                    data.data.menus[index].children[
+                                        i
+                                    ].id = `${data.data.menus[index].AucGenre}-${data.data.menus[index].children[i].AucSubType}`;
                                 }
                                 menus.push(data.data.menus[index]);
                             }
@@ -50,12 +54,11 @@ export default {
 
                             // 展开菜单
                             this.expand_menu();
-                        }
-                    ).catch(e => {
-                        this.menus = false;
-                    });
+                        })
+                        .catch((e) => {
+                            this.menus = false;
+                        });
                 }
-
             },
         },
     },

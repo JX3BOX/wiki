@@ -1,15 +1,21 @@
+import { name } from "dayjs/locale/zh-cn";
 import Vue from "vue";
 import VueRouter from "vue-router";
+
 Vue.use(VueRouter);
 
-const overview = () => import("@/views/wiki/overview.vue");
-
-const routes = [{ name: "overview", path: "/achievement/overview", component: overview }];
+const routes = [
+    {
+        name: "overview",
+        path: "/achievement/overview",
+        component: () => import("../views/wiki/overview.vue"),
+    },
+];
 
 const router = new VueRouter({
-    routes,
-    base: "/wiki",
     mode: "history",
+    base: "/wiki",
+    routes,
 });
 
 router.beforeEach((to, from, next) => {
