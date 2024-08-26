@@ -79,13 +79,9 @@
             <!-- 头像 -->
             <div v-else class="m-info-avatar">
                 <!-- TODO：头像边框 与 头像-->
-                <img
-                    class="u-avatar-border"
-                    src="https://img.js.design/assets/img/667be113ba14aab13a28e7b6.png#d2f64fd0890db470e45ef6e665e83359"
-                    alt="头像边框"
-                />
+                <img v-if="avatar_frame" class="u-avatar-border" :src="avatar_frame" alt="头像边框" />
 
-                <img class="u-avatar-img" src="@/assets/img/wiki/overview/avatar_demo.svg" alt="门派头像" />
+                <RoleAvatar class="u-avatar-img" :mount="currentRole.mount" :body_type="currentRole.body_type" />
             </div>
         </div>
         <div class="m-overview-main">
@@ -151,11 +147,16 @@ import {
     getMenus,
 } from "@/service/achievement";
 import { getUserRoles } from "@/service/team";
+import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
+import { getUserInfo } from "@/service/wiki";
+import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "wiki-achievement-overview",
     props: [],
+    components: { RoleAvatar },
     data: function () {
         return {
+            userInfo: null,
             achievementData: {},
             pointsData: {},
             list: [],
@@ -170,6 +171,17 @@ export default {
         };
     },
     computed: {
+        avatar_frame() {
+            if (this.userInfo) {
+                const { user_avatar_frame } = this.userInfo;
+                console.log(user_avatar_frame);
+
+                if (user_avatar_frame) {
+                    return __imgPath + `avatar/images/${user_avatar_frame}/${user_avatar_frame}.svg`;
+                }
+            }
+            return null;
+        },
         viewAchievementsName() {
             return this.$store.state.viewAchievementsName;
         },
@@ -231,9 +243,19 @@ export default {
     },
 
     mounted() {
+        this.getUserInfo();
         this.loadData();
     },
     methods: {
+        getUserInfo() {
+            const uid = User.getInfo().uid;
+            uid &&
+                getUserInfo(uid).then((res) => {
+                    if (res.data.code == 0) {
+                        this.userInfo = res.data.data;
+                    }
+                });
+        },
         onChangeRole(role) {
             this.currentRole = role;
         },
