@@ -1,6 +1,6 @@
 <template>
     <div class="m-home-view">
-        <WikiPanel :border-none="true">
+        <WikiPanel :border-none="true" class="u-qlinks-box">
             <template slot="head-title">
                 <i class="el-icon-location-information"></i>
                 <span>便捷入口</span>
@@ -20,7 +20,7 @@
                         <Counter></Counter>
                     </li>
                     <li class="u-qlink">
-                        <a target="_blank" :href="hiddenAchievementsPostLink" style="background-color: #f7b044;">
+                        <a target="_blank" :href="hiddenAchievementsPostLink" style="background-color: #f7b044">
                             <i class="el-icon-medal"></i>
                             <span>隐藏成就</span>
                         </a>

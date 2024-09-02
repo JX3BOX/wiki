@@ -1,4 +1,9 @@
 .m-home-view {
+    .u-qlinks-box {
+        .m-panel-body {
+            .pt(0);
+        }
+    }
     .u-qlinks {
         margin: 0;
         padding: 0;
@@ -6,7 +11,7 @@
 
         .u-qlink {
             display: inline-block;
-            margin: 0 20px 0 0;
+            margin: 15px 20px 0 0;
 
             i {
                 .mr(5px);
@@ -56,7 +61,7 @@
 
                 &:not([href]) {
                     color: #3d454d;
-                    &:hover{
+                    &:hover {
                         box-shadow: none;
                     }
                 }
@@ -64,11 +69,15 @@
 
             .m-achievement {
                 .mt(5px);
-                a{.underline(@color-link);}
+                a {
+                    .underline(@color-link);
+                }
             }
 
-            .u-author{
-                a{.underline(@color-link);}
+            .u-author {
+                a {
+                    .underline(@color-link);
+                }
             }
 
             .u-author,
