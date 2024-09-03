@@ -55,10 +55,11 @@ export default {
                     this.logs = data.map((item) => {
                         return {
                             type: "价格",
-                            date: dayjs(item.date).format("YYYY-MM-DD"),
+                            date: dayjs(item.timestamp * 1000).format("YYYY-MM-DD"),
                             price: item.price,
                         };
                     });
+                    console.log(this.logs);
                     const prices = this.logs.map((item) => item.price);
                     const len = prices.length;
                     this.currentPrice = {

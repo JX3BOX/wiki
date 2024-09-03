@@ -24,7 +24,7 @@
                     ></span>
                 </td>
                 <td v-text="item && item.RequireLevel ? item.RequireLevel : 1"></td>
-                <td v-text="price.hour + '时'"></td>
+                <td v-text="date_format(price.timestamp)"></td>
                 <td v-text="price.server"></td>
                 <td style="text-align: right" v-text="item_price(price.price)"></td>
             </tr>
@@ -36,7 +36,7 @@
 
 <script>
 import { get_item, get_item_prices } from "@/service/item";
-import { item_price, date_format, item_color } from "@/filters";
+import { item_price, item_color } from "@/filters";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import dayjs from "dayjs";
 
@@ -67,7 +67,9 @@ export default {
                 }).then((res) => {
                     this.priceLoading = false;
                     const data = res.data || [];
-                    this.prices = data;
+                    this.prices = data.sort((a, b) => {
+                        return b.timestamp - a.timestamp;
+                    });
                 });
                 // 获取物品信息
                 get_item(this.item_id).then((data) => {
@@ -80,7 +82,9 @@ export default {
             return iconLink(id, this.client);
         },
         item_price,
-        date_format,
+        date_format(timestamp) {
+            return dayjs(timestamp * 1000).format("YYYY-MM-DD HH:mm:ss");
+        },
         item_color,
     },
     watch: {
