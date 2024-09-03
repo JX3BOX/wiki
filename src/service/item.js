@@ -34,28 +34,34 @@ export function get_item(item_id) {
     return $.get(`api/node/item/${item_id}`);
 }
 
-// 物品价格
-export function get_item_prices(item_id, params) {
+// 判断是否显示价格
+export function show_item_prices(item_id, params) {
     if (!item_id) return;
     return $next().get(`api/item-price/${item_id}/detail`, {
         params,
     });
 }
 
-// 物品价格日志
-export function get_item_price_logs(item_id, params) {
-    if (!item_id) return;
-    return $next().get(`api/item-price/${item_id}/logs`, {
-        params,
-    });
-}
+// // 物品价格日志
+// export function get_item_price_logs(item_id, params) {
+//     if (!item_id) return;
+//     return $next().get(`api/item-price/${item_id}/logs`, {
+//         params,
+//     });
+// }
 
-// 物品区服价格日志
-export function get_item_servers_price_logs(item_id, params) {
-    if (!item_id) return;
-    return $next().get(`api/item-price/${item_id}/logs`, {
-        params,
-    });
+// // 物品区服价格日志
+// export function get_item_servers_price_logs(item_id, params) {
+//     if (!item_id) return;
+//     return $next().get(`api/item-price/${item_id}/logs`, {
+//         params,
+//     });
+// }
+
+// 物品价格
+export function get_item_prices(data) {
+    if (!data.item_id) return;
+    return $next().post(`api/auction/`, data);
 }
 
 // 通过node的接口获取物品

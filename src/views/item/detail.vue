@@ -167,8 +167,7 @@
                     placeholder="请选择服务器"
                     size="mini"
                 >
-                    <el-option key label="前五低价区服" value v-if="isStdClient"></el-option>
-                    <el-option v-for="serve in servers" :key="serve" :label="serve" :value="serve"></el-option>
+                    <el-option v-for="(serve, i) in servers" :key="i" :label="serve" :value="serve"></el-option>
                 </el-select>
             </div>
 
@@ -278,7 +277,7 @@ import { item_color, item_quality, item_price, item_bind } from "@/filters";
 import { publishLink, ts2str, showAvatar, iconLink } from "@jx3box/jx3box-common/js/utils";
 import { getManufactureDetail, getItemDetail } from "@/service/item";
 import { getMyInfo } from "@/service/user";
-import { get_item, get_item_prices } from "@/service/item";
+import { get_item, show_item_prices } from "@/service/item";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -384,7 +383,7 @@ export default {
         get_data() {
             const item_id = this.source.id;
             if (item_id) {
-                get_item_prices(item_id, {
+                show_item_prices(item_id, {
                     server: this.server,
                     limit: 15,
                 }).then((data) => {
@@ -421,7 +420,7 @@ export default {
             // 获取最新攻略
             if (this.id) {
                 get_item(this.id).then((res) => {
-                    console.log(res, "res")
+                    // console.log(res, "res");
                     this.source = res?.data?.data?.item;
                 });
                 wiki.mix({ type: "item", id: this.id, client: this.client }).then((res) => {
@@ -551,6 +550,10 @@ export default {
     created() {
         if (this.$store.state.client == "origin") {
             this.server = "缘起稻香";
+        } else {
+            if (!this.server) {
+                this.server = "梦江南";
+            }
         }
         if (sessionStorage.getItem("server_name")) {
             this.server = sessionStorage.getItem("server_name");

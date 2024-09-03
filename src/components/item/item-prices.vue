@@ -6,8 +6,7 @@
                 <th>等级</th>
                 <th>上传时间</th>
                 <th>服务器</th>
-                <th style="text-align: right">一口价 (总价)</th>
-                <th style="text-align: right">一口价 (单价)</th>
+                <th style="text-align: right">一口价</th>
             </tr>
             <tr v-for="(price, key) in prices" :key="key">
                 <td>
@@ -25,10 +24,9 @@
                     ></span>
                 </td>
                 <td v-text="item && item.RequireLevel ? item.RequireLevel : 1"></td>
-                <td v-text="dayjs(price.created*1000).format('YYYY-MM-DD HH:mm:ss')"></td>
+                <td v-text="price.hour + '时'"></td>
                 <td v-text="price.server"></td>
-                <td style="text-align: right" v-text="item_price(price.n_money)"></td>
-                <td style="text-align: right" v-text="item_price(price.unit_price)"></td>
+                <td style="text-align: right" v-text="item_price(price.price)"></td>
             </tr>
         </table>
 
@@ -53,7 +51,7 @@ export default {
         };
     },
     computed: {
-        client: function() {
+        client: function () {
             return this.$store.state.client;
         },
     },
@@ -62,23 +60,23 @@ export default {
         get_data() {
             if (this.item_id) {
                 this.priceLoading = true;
-                get_item_prices(this.item_id, {
+                get_item_prices({
+                    item_id: this.item_id,
                     server: this.server,
-                    limit: 15,
-                }).then((data) => {
+                    aggregate_type: "hourly",
+                }).then((res) => {
                     this.priceLoading = false;
-                    data = data.data;
-                    this.prices = data.data.prices.sort((a,b)=> a.created + b.created) || [];
+                    const data = res.data || [];
+                    this.prices = data;
                 });
                 // 获取物品信息
                 get_item(this.item_id).then((data) => {
                     data = data.data;
                     this.item = data.data.item;
                 });
-
             }
         },
-        icon_url: function(id) {
+        icon_url: function (id) {
             return iconLink(id, this.client);
         },
         item_price,

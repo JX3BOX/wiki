@@ -1,110 +1,76 @@
 <template>
     <div class="m-item-price-logs">
-        <!-- 今日价格 -->
+        <!--近30日价格-->
         <el-row class="m-today" v-if="currentPrice">
             <el-col :span="8">
-                <div class="u-label">
-                    <i class="el-icon-right u-avg"></i> 今日均价
-                </div>
+                <div class="u-label"><i class="el-icon-right u-avg"></i> 近30日均价</div>
                 <div class="u-value u-avg">
-                    <GamePrice :price="currentPrice.AvgPrice" />
+                    <GamePrice :price="currentPrice.avg" />
                 </div>
             </el-col>
             <el-col :span="8">
-                <div class="u-label">
-                    <i class="el-icon-bottom u-min"></i> 今日最低价
-                </div>
+                <div class="u-label"><i class="el-icon-bottom u-min"></i> 近30日最低价</div>
                 <div class="u-value u-min">
-                    <GamePrice :price="currentPrice.LowestPrice" />
+                    <GamePrice :price="currentPrice.lower" />
                 </div>
             </el-col>
             <el-col :span="8">
-                <div class="u-label">
-                    <i class="el-icon-top u-max"></i> 今日最高价
-                </div>
+                <div class="u-label"><i class="el-icon-top u-max"></i> 近30日最高价</div>
                 <div class="u-value u-max">
-                    <GamePrice :price="currentPrice.HighestPrice" />
+                    <GamePrice :price="currentPrice.higher" />
                 </div>
             </el-col>
         </el-row>
 
         <div v-show="!hidden" id="m-item-price-chart" />
-        <div v-show="!logs.length" style="text-align:center">🐖 暂无记录</div>
+        <div v-show="!logs.length" style="text-align: center">🐖 暂无记录</div>
     </div>
 </template>
 
 <script>
 import { Chart } from "@antv/g2";
-import {
-    get_item_price_logs,
-    get_item_servers_price_logs,
-} from "@/service/item";
+import { get_item_prices } from "@/service/item";
 import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
-
+import dayjs from "dayjs";
 export default {
     name: "ItemPriceChart",
     props: ["item_id", "server"],
     data() {
         return {
-            today: null,
-            yesterday: null,
             logs: [],
             chart: null,
             hidden: false,
+            currentPrice: {},
         };
-    },
-    computed: {
-        currentPrice({ today, yesterday }) {
-            return today || yesterday || null
-        }
     },
     methods: {
         get_data() {
             if (this.item_id) {
-                if (this.server) {
-                    get_item_price_logs(this.item_id, {
-                        server: this.server,
-                    }).then((data) => {
-                        data = data.data;
-                        let output = [];
-                        for (let i in data.data.logs) {
-                            let log = data.data.logs[i];
-                            output.push({
-                                date: log.Date,
-                                price: log.AvgPrice,
-                                type: "均价",
-                            });
-                            output.push({
-                                date: log.Date,
-                                price: log.LowestPrice,
-                                type: "最低价",
-                            });
-                            output.push({
-                                date: log.Date,
-                                price: log.HighestPrice,
-                                type: "最高价",
-                            });
-                        }
-                        this.today = data.data.today;
-                        this.yesterday = data.data.yesterday;
-                        this.logs = output;
-                        this.hidden = !(this.logs.length > 0);
+                get_item_prices({
+                    item_id: this.item_id,
+                    server: this.server,
+                    aggregate_type: "daily",
+                }).then((res) => {
+                    const data = res.data || [];
+                    this.logs = data.map((item) => {
+                        return {
+                            type: "价格",
+                            date: dayjs(item.date).format("YYYY-MM-DD"),
+                            price: item.price,
+                        };
                     });
-                } else {
-                    get_item_servers_price_logs(this.item_id).then((data) => {
-                        data = data.data;
-                        this.today = null;
-                        this.yesterday = null;
-                        this.logs = (data.data?.logs || []).map((item)=>{
-                            return {
-                                server: item.Server,
-                                price: item.AvgPrice,
-                                date: item.Date
-                            }
-                        });
-                        this.hidden = !(this.logs.length > 0);
-                    });
-                }
+                    const prices = this.logs.map((item) => item.price);
+                    const len = prices.length;
+                    this.currentPrice = {
+                        avg:
+                            prices.reduce((acc, cur) => {
+                                return acc + cur;
+                            }, 0) / len,
+                        lower: Math.min(...prices),
+                        higher: Math.max(...prices),
+                    };
+                    this.hidden = !len;
+                });
             }
         },
         render() {
@@ -115,7 +81,7 @@ export default {
                     width: "100%",
                     height: 300,
                 });
-            }else{
+            } else {
                 this.chart.clear();
             }
 
@@ -141,9 +107,7 @@ export default {
                 shared: true,
                 customItems: (items) => {
                     for (let index = 0; index < items.length; index++) {
-                        items[index].value = this.$options.filters.item_price(
-                            items[index].value
-                        );
+                        items[index].value = this.$options.filters.item_price(items[index].value);
                     }
                     return items;
                 },
