@@ -40,14 +40,15 @@
 }
 
 .m-nav {
-    .pr;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
     .h(100%);
 
     @search-input-height: 50px;
 
     .m-menus-panel {
-        .pa;
-        top: @search-input-height;
         .w(100%);
         .h(calc(~"100% - 30px -" @search-input-height));
         overflow-y: auto;

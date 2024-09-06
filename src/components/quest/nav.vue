@@ -1,6 +1,13 @@
 <template>
     <nav class="m-nav">
-        <el-input class="u-keyword" v-model="keyword" placeholder="输入关键字"> </el-input>
+        <role-select v-model="role" @list-loaded="onRolesLoaded">
+            <template #tip>
+                <el-tooltip class="item" effect="dark" content="虚拟角色即为魔盒账号本身，可自定义进度" placement="top">
+                    <a href="/tool/74559" target="_blank"><i class="el-icon-warning-outline"></i></a>
+                </el-tooltip>
+            </template>
+        </role-select>
+        <el-input class="u-keyword" size="small" v-model="keyword" placeholder="输入关键字"> </el-input>
         <div class="m-menus-panel">
             <el-tree
                 :data="maps"
@@ -27,12 +34,14 @@
 </template>
 
 <script>
-import { getQuestMaps } from "@/service/quest";
+import RoleSelect from "@/components/common/role-select.vue";
+import { getQuestMaps, listUserQuest } from "@/service/quest";
 const questType = require("@/assets/data/quest-type.json");
 import Bus from "@jx3box/jx3box-common-ui/service/bus";
 
 export default {
     name: "Nav",
+    components: { RoleSelect },
     data: () => ({
         keyword: "",
         maps: [],
@@ -41,6 +50,8 @@ export default {
             children: "children",
             label: "name",
         },
+
+        role: "",
     }),
     computed: {
         client() {
@@ -50,6 +61,15 @@ export default {
     watch: {
         keyword(val) {
             this.$refs.tree.filter(val);
+        },
+        role(val) {
+            this.$store.commit("SET_ROLE", val);
+            // 加载该角色的列表
+            listUserQuest(this.role.ID).then((res) => {
+                const data = res.data?.data || [];
+                this.$store.commit("SET_COMPLETED_QUESTS", data);
+                localStorage.setItem("quests_last_sync", this.role.jx3id);
+            });
         },
     },
     methods: {
@@ -83,6 +103,14 @@ export default {
                 if (node.isLeaf) {
                     Bus.$emit("toggleLeftSide", false);
                 }
+            }
+        },
+        onRolesLoaded(list, virtualRole) {
+            const quests_last_sync_jx3id = localStorage.getItem("quests_last_sync");
+            if (quests_last_sync_jx3id && quests_last_sync_jx3id !== "0") {
+                this.role = list.find((item) => item.jx3id == quests_last_sync_jx3id) || "";
+            } else {
+                this.role = virtualRole;
             }
         },
     },

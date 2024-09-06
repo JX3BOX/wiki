@@ -1,5 +1,6 @@
 @import "./grid-layout.less";
 .m-quest-card {
+    .pr;
     //指针
     .pointer;
     .fz(14px);
@@ -32,6 +33,22 @@
     &:hover {
         border: 1px solid @color-link;
         background-color: #fff;
+
+        .u-actions {
+            opacity: 1;
+        }
+    }
+
+    .u-actions {
+        .pa;
+        .rt(8px);
+
+        opacity: 0.5;
+
+        .el-button--small {
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
     }
 
     .u-map {

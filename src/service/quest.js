@@ -41,3 +41,18 @@ export function getBreadcrumb(key = "wiki_quest_ac") {
             return res.data.data.html || "";
         });
 }
+
+// 用户标记任务完成
+export function completeUserQuest(role_id, quest_id) {
+    return $cms().post(`/api/cms/wiki/user-quest/${role_id}/${quest_id}`);
+}
+
+// 用户取消标记任务完成
+export function cancelUserQuest(role_id, quest_id) {
+    return $cms().delete(`/api/cms/wiki/user-quest/${role_id}/${quest_id}`);
+}
+
+// 用户获取任务完成状态
+export function listUserQuest(role_id) {
+    return $cms().get(`/api/cms/wiki/user-quest/${role_id}`);
+}
