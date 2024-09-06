@@ -47,24 +47,25 @@
             <el-button
                 size="small"
                 plain
-                type="primary"
                 v-if="!isCompleted"
                 @click.stop="onQuestComplete"
                 :loading="loading"
                 :disabled="!role"
+                icon="el-icon-check"
             >
-                已完成
+                标记为已完成
             </el-button>
             <el-button
                 size="small"
                 plain
-                type="warning"
+                type="info"
                 v-if="isCompleted"
                 @click.stop="onQuestCancel"
                 :loading="loading"
                 :disabled="!role"
+                icon="el-icon-close"
             >
-                撤销
+                标记为未完成
             </el-button>
         </div>
     </div>
