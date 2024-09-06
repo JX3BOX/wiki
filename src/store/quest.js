@@ -7,10 +7,14 @@ const store = {
     state: {
         client: location.href.includes("origin") ? "origin" : "std",
 
+        onlyNotCompleted: false, // 是否只显示未完成的任务
         currentRole: "",
         completedQuests: [],
     },
     mutations: {
+        SET_STATE(state, payload) {
+            state = Object.assign(state, payload);
+        },
         SET_ROLE(state, role) {
             state.currentRole = role;
         },

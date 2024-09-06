@@ -8,6 +8,14 @@
             </template>
         </role-select>
         <el-input class="u-keyword" size="small" v-model="keyword" placeholder="输入关键字"> </el-input>
+        <div v-if="role" class="m-filters">
+            <el-checkbox v-model="uncompleted" label="只看未完成" border size="mini"></el-checkbox>
+            <div class="u-total">
+                <!-- numTotal -->
+                <b class="u-completed-num">{{ uncompleted ? total - completedNum : completedNum }}</b>
+                <span class="u-total-num"> / {{ total }}</span>
+            </div>
+        </div>
         <div class="m-menus-panel">
             <el-tree
                 :data="maps"
@@ -21,11 +29,19 @@
                 <template slot-scope="{ node, data }">
                     <span v-if="!node.isLeaf" class="el-tree-node__label">
                         <span class="u-name" v-text="data.name"></span>
-                        <em v-if="data.count" class="u-count" v-text="`(${data.completed}/${data.count})`"></em>
+                        <em
+                            v-if="data.count"
+                            class="u-count"
+                            v-text="`(${uncompleted ? data.count - data.completed : data.completed}/${data.count})`"
+                        ></em>
                     </span>
                     <router-link v-else class="el-tree-node__label" :to="menuLink(data, node)">
                         <span class="u-name" v-text="data.name"></span>
-                        <em v-if="data.count" class="u-count" v-text="`(${data.completed}/${data.count})`"></em>
+                        <em
+                            v-if="data.count"
+                            class="u-count"
+                            v-text="`(${uncompleted ? data.count - data.completed : data.completed}/${data.count})`"
+                        ></em>
                     </router-link>
                 </template>
             </el-tree>
@@ -53,6 +69,7 @@ export default {
         },
 
         role: "",
+        uncompleted: false,
     }),
     computed: {
         ...mapState({
@@ -61,8 +78,19 @@ export default {
         client() {
             return this.$store.state.client;
         },
+        total() {
+            return this.maps.reduce((a, b) => a + b.count, 0);
+        },
+        completedNum() {
+            return this.completed.length;
+        },
     },
     watch: {
+        uncompleted(val) {
+            this.$store.commit("SET_STATE", {
+                onlyNotCompleted: val,
+            });
+        },
         keyword(val) {
             this.$refs.tree.filter(val);
         },

@@ -37,9 +37,12 @@
 </template>
 
 <script>
+import LzString from "lz-string";
 import { getQuests } from "@/service/quest";
 import QuestCard from "@/components/quest/result/quest-card.vue";
 import ListHead from "@/components/quest/result/list-head.vue";
+import { mapState } from "vuex";
+
 export default {
     name: "SearchResult",
     components: { QuestCard, ListHead },
@@ -58,9 +61,9 @@ export default {
             getQuests({
                 keyword: this.keyword,
                 chain: this.chain,
-                class_id: this.class_id,
                 map_id: this.map_id,
                 client: this.client,
+                filter: this.filter,
                 page,
             }).then((res) => {
                 this.result = res.data.list;
@@ -70,20 +73,25 @@ export default {
         },
     },
     computed: {
+        ...mapState({
+            onlyNotCompleted: (state) => state.onlyNotCompleted,
+            completedQuests: (state) => state.completedQuests,
+        }),
+        filter() {
+            if (!this.onlyNotCompleted) return null;
+            return LzString.compressToEncodedURIComponent(this.completedQuests.join(","));
+        },
         keyword() {
             return this.$route.query.keyword;
         },
         chain() {
             return this.$route.query.chain;
         },
-        class_id() {
-            return this.$route.query.class_id;
-        },
         map_id() {
             return this.$route.query.map_id;
         },
-        watchId() {
-            return this.keyword + this.chain + this.class_id + this.map_id;
+        watch_id() {
+            return [this.keyword, this.chain, this.filter, this.map_id];
         },
         resultIsObject() {
             return this.result instanceof Object;
@@ -93,7 +101,7 @@ export default {
         },
     },
     watch: {
-        watchId: function () {
+        watch_id: function () {
             this.search();
         },
     },
