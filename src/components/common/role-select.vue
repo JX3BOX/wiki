@@ -13,7 +13,7 @@
         >
             <span slot="prefix" class="u-prefix">
                 角色
-                <slot name="prefix"></slot>
+                <slot name="tip"></slot>
             </span>
             <el-option v-if="isLogin" :value="virtualRole" :label="virtualRole.name + '<虚拟角色>'">
                 <span class="u-role">
@@ -73,4 +73,66 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less">
+.m-related-roles {
+    .fz(12px);
+    .u-tip {
+        .mb(10px);
+        i {
+            .fz(16px);
+            .mr(3px);
+        }
+        a {
+            padding: 0 2px;
+            box-shadow: 0 1px 0 @color-link;
+        }
+    }
+
+    .el-input__prefix {
+        left: 1px;
+        top: 1px;
+        .r(5px);
+    }
+
+    .u-prefix {
+        .db;
+        .h(30px);
+        .lh(30px);
+
+        background-color: #f5f7fa;
+        color: #909399;
+
+        border-right: 1px solid #dcdfe6;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+
+        padding: 0 10px;
+        white-space: nowrap;
+    }
+
+    .el-input--prefix .el-input__inner {
+        padding-left: 75px;
+    }
+}
+
+.m-related-roles-options {
+    .u-role {
+        display: flex;
+        justify-content: space-between;
+    }
+    .u-role-name {
+        .flex;
+        align-items: center;
+    }
+    .u-role-icon {
+        .size(20px);
+        .y;
+        .mr(3px);
+        .r(50%);
+    }
+    .u-role-server {
+        color: #999;
+        .fz(12px);
+    }
+}
+</style>

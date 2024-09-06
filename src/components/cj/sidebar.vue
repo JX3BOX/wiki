@@ -1,7 +1,7 @@
 <template>
     <div class="m-left-side">
         <role-select v-model="currentRole" @list-loaded="onRoleLoaded">
-            <template #prefix>
+            <template #tip>
                 <el-tooltip
                     v-if="!isVirtual && !isSync"
                     class="item"
