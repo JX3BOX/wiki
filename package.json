@@ -26,6 +26,7 @@
         "jquery": "^3.5.1",
         "localforage": "^1.7.3",
         "lodash": "^4.17.15",
+        "lz-string": "^1.5.0",
         "mitt": "^3.0.1",
         "qrcode.vue": "^1.7.0",
         "qs": "^6.12.0",

@@ -84,7 +84,7 @@ module.exports = {
                 target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7002" : "https://node.jx3box.com",
             },
             "/api/team": {
-                target: "https://team.api.jx3box.com",
+                target: "https://team.jx3box.com",
                 onProxyReq: function (request) {
                     request.setHeader("origin", "");
                 },

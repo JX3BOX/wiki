@@ -1,57 +1,28 @@
 <template>
     <div class="m-left-side">
-        <div class="m-related-roles">
-            <!-- <div v-if="!isLogin" class="u-tip el-alert el-alert--info is-light">
-                <i class="el-icon-warning-outline"></i> <a href="/team/role/bind" target="_blank">绑定角色</a>
-            </div> -->
-            <el-select
-                v-if="isLogin"
-                v-model="currentRole"
-                value-key="ID"
-                placeholder="请选择当前角色"
-                :disabled="!isLogin"
-                popper-class="m-related-roles-options"
-                size="small"
-            >
-                <span slot="prefix" class="u-prefix">
-                    角色
-                    <el-tooltip
-                        v-if="!isVirtual && !isSync"
-                        class="item"
-                        effect="dark"
-                        content="请先在游戏中同步成就"
-                        placement="top"
-                    >
-                        <a href="/tool/74559" target="_blank"><i class="el-icon-warning-outline"></i></a>
-                    </el-tooltip>
-                    <el-tooltip
-                        v-else
-                        class="item"
-                        effect="dark"
-                        content="虚拟角色即为魔盒账号本身，可自定义进度"
-                        placement="top"
-                    >
-                        <a href="/tool/74559" target="_blank"><i class="el-icon-warning-outline"></i></a>
-                    </el-tooltip>
-                </span>
-                <el-option v-if="isLogin" :value="virtualRole" :label="virtualRole.name + '<虚拟角色>'">
-                    <span class="u-role">
-                        <span class="u-role-name"
-                            ><img class="u-role-icon" :src="virtualRole.avatar" />{{ virtualRole.name }}</span
-                        >
-                        <span class="u-role-server"> &lt;虚拟角色&gt;</span>
-                    </span>
-                </el-option>
-                <el-option v-for="role in roleList" :key="role.ID" :value="role" :label="role.name">
-                    <span class="u-role">
-                        <span class="u-role-name"
-                            ><img class="u-role-icon" :src="showSchoolIcon(role.mount)" />{{ role.name }}</span
-                        >
-                        <span class="u-role-server">{{ role.server }}</span>
-                    </span>
-                </el-option>
-            </el-select>
-        </div>
+        <role-select v-model="currentRole" @list-loaded="onRoleLoaded">
+            <template #tip>
+                <el-tooltip
+                    v-if="!isVirtual && !isSync"
+                    class="item"
+                    effect="dark"
+                    content="请先在游戏中同步成就"
+                    placement="top"
+                >
+                    <a href="/tool/74559" target="_blank"><i class="el-icon-warning-outline"></i></a>
+                </el-tooltip>
+                <el-tooltip
+                    v-else
+                    class="item"
+                    effect="dark"
+                    content="虚拟角色即为魔盒账号本身，可自定义进度"
+                    placement="top"
+                >
+                    <a href="/tool/74559" target="_blank"><i class="el-icon-warning-outline"></i></a>
+                </el-tooltip>
+            </template>
+        </role-select>
+
         <el-select v-model="sidebar.general" size="small">
             <el-option v-for="type in menu_types" :key="type.value" :label="type.label" :value="type.value"></el-option>
         </el-select>
@@ -95,7 +66,7 @@
 
 <script>
 import { getMenus, getRoleGameAchievements, getVirtualRoleAchievements } from "@/service/achievement";
-
+import RoleSelect from "@/components/common/role-select.vue";
 import Bus from "@jx3box/jx3box-common-ui/service/bus";
 import { getUserRoles } from "@/service/team";
 import User from "@jx3box/jx3box-common/js/user";
@@ -104,6 +75,9 @@ import { flattenDeep, cloneDeep } from "lodash";
 export default {
     name: "Sidebar",
     props: ["sidebar"],
+    components: {
+        RoleSelect,
+    },
     data() {
         return {
             menus_cache: [],
@@ -413,25 +387,15 @@ export default {
             }
             return null;
         },
-
-        // 获取用户角色列表
-        loadUserRoles() {
-            this.isLogin &&
-                getUserRoles().then((res) => {
-                    this.roleList = res.data?.data?.list || [];
-                    const wiki_last_sync_jx3id = localStorage.getItem("wiki_last_sync");
-                    if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
-                        this.currentRole = this.roleList.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
-                    } else {
-                        this.currentRole = this.virtualRole;
-                        this.$store.commit("SET_STATE", { key: "role", value: this.virtualRole });
-                        this.loadVirtualAchievements();
-                    }
-                    // res.data?.data?.list.filter((item) => {
-                    //     return !!item.player_id;
-                    // }) || [];
-                    // sessionStorage.setItem("cj-roles", JSON.stringify(this.roleList));
-                });
+        onRoleLoaded(list, virtualRole) {
+            const wiki_last_sync_jx3id = localStorage.getItem("wiki_last_sync");
+            if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
+                this.currentRole = list.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
+            } else {
+                this.currentRole = virtualRole;
+                this.$store.commit("SET_STATE", { key: "role", value: virtualRole });
+                this.loadVirtualAchievements();
+            }
         },
         // 获取角色成就状态
         loadRoleAchievements(jx3id) {
@@ -453,9 +417,6 @@ export default {
                 this.$store.commit("SET_STATE", { key: "achievementsVirtual", value: list });
             });
         },
-    },
-    mounted() {
-        this.loadUserRoles();
     },
 };
 </script>

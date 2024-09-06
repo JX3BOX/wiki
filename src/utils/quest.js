@@ -138,11 +138,12 @@ export const buildPoints = (quest) => {
 
 export const schoolIcon = (school) => {
     let filenameMap = {
+        万灵山庄: "万灵",
         北天药宗: "药宗",
         凌雪阁: "凌雪",
         衍天宗: "衍天",
     };
-    if (filenameMap[school]) return (school = filenameMap[school]);
+    if (filenameMap[school]) school = filenameMap[school];
     return `${__imgPath}/image/school/${school}.png`;
 };
 
@@ -184,7 +185,7 @@ export const questTargetDescFormat = (target) => {
             .replace(/\<G\>/g, "&emsp;&emsp;")
             .replace(/\<C\>/g, "侠士")
             .replace(/\<N\>/g, "侠士")
-            .replace(/\<F\d+ (.+?)\>/g, '$1');
+            .replace(/\<F\d+ (.+?)\>/g, "$1");
     else return "";
 };
 

@@ -39,12 +39,43 @@
                 ></item-icon>
             </div>
         </div>
+
+        <div class="u-actions" @click.stop>
+            <el-tooltip content="在左侧选择角色后可以标记任务完成情况" placement="top" v-if="!role">
+                <i class="el-icon-info"></i>
+            </el-tooltip>
+            <el-button
+                size="small"
+                plain
+                v-if="!isCompleted"
+                @click.stop="onQuestComplete"
+                :loading="loading"
+                :disabled="!role"
+                icon="el-icon-check"
+            >
+                标记为已完成
+            </el-button>
+            <el-button
+                size="small"
+                plain
+                type="info"
+                v-if="isCompleted"
+                @click.stop="onQuestCancel"
+                :loading="loading"
+                :disabled="!role"
+                icon="el-icon-close"
+            >
+                标记为未完成
+            </el-button>
+        </div>
     </div>
 </template>
 
 <script>
+import { completeUserQuest, cancelUserQuest } from "@/service/quest";
 import { schoolIcon, questTargetDescFormat } from "@/utils/quest";
 import ItemIcon from "@/components/common/item-icon.vue";
+import { mapState } from "vuex";
 
 export default {
     name: "QuestCard",
@@ -57,6 +88,9 @@ export default {
             required: true,
         },
     },
+    data: () => ({
+        loading: false,
+    }),
     methods: {
         go(id) {
             this.$router.push({ name: "view", params: { quest_id: id } });
@@ -76,8 +110,41 @@ export default {
             if (result["tong"]) z += `${result["tong"]}铜`;
             return `${z}`;
         },
+        onQuestCancel() {
+            const role_id = this.role.ID;
+            const quest_id = this.quest.id;
+            this.loading = true;
+            cancelUserQuest(role_id, quest_id)
+                .then(() => {
+                    this.$message.success("操作完成");
+                    this.$store.commit("REMOVE_COMPLETED_QUEST", quest_id);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        onQuestComplete() {
+            const role_id = this.role.ID;
+            const quest_id = this.quest.id;
+            this.loading = true;
+            completeUserQuest(role_id, quest_id)
+                .then(() => {
+                    this.$message.success("操作完成");
+                    this.$store.commit("ADD_COMPLETED_QUEST", quest_id);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
     },
     computed: {
+        ...mapState({
+            role: (state) => state.currentRole,
+            completed: (state) => state.completedQuests,
+        }),
+        isCompleted() {
+            return this.completed.includes(this.quest.id);
+        },
         targetFormatted() {
             return questTargetDescFormat(this.quest.desc?.Objective);
         },

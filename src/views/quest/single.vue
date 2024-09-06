@@ -1,6 +1,35 @@
 <template>
     <div class="m-quest-view">
         <div class="w-quest">
+            <div class="u-actions" @click.stop>
+                <el-tooltip content="在左侧选择角色后可以标记任务完成情况" placement="top" v-if="!role">
+                    <i class="el-icon-info"></i>
+                </el-tooltip>
+                <el-button
+                    size="small"
+                    plain
+                    v-if="!isCompleted"
+                    @click.stop="onQuestComplete"
+                    :loading="loading"
+                    :disabled="!role"
+                    icon="el-icon-check"
+                >
+                    标记为已完成
+                </el-button>
+                <el-button
+                    size="small"
+                    plain
+                    type="info"
+                    v-if="isCompleted"
+                    @click.stop="onQuestCancel"
+                    :loading="loading"
+                    :disabled="!role"
+                    icon="el-icon-close"
+                >
+                    标记为未完成
+                </el-button>
+            </div>
+
             <p class="u-title__warpper">
                 <span class="u-title">
                     <span class="u-title-name" :style="questNameColor">{{ quest.name }}</span>
@@ -226,9 +255,10 @@ import WikiRevisions from "@/components/wiki-revisions.vue";
 import WikiComments from "@/components/wiki-comments.vue";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 
-import { getQuest } from "@/service/quest";
+import { getQuest, completeUserQuest, cancelUserQuest } from "@/service/quest";
 import { buildPoints, schoolIcon, questDescFormat, questTargetDescFormat } from "@/utils/quest.js";
 import isArray from "lodash/isArray";
+import { mapState } from "vuex";
 
 export default {
     name: "QuestSingle",
@@ -247,6 +277,8 @@ export default {
     },
     data() {
         return {
+            loading: false,
+
             wiki_post: {
                 source: {},
                 post: null,
@@ -289,6 +321,32 @@ export default {
         };
     },
     methods: {
+        onQuestCancel() {
+            const role_id = this.role.ID;
+            const quest_id = this.quest.id;
+            this.loading = true;
+            cancelUserQuest(role_id, quest_id)
+                .then(() => {
+                    this.$message.success("操作完成");
+                    this.$store.commit("REMOVE_COMPLETED_QUEST", quest_id);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        onQuestComplete() {
+            const role_id = this.role.ID;
+            const quest_id = this.quest.id;
+            this.loading = true;
+            completeUserQuest(role_id, quest_id)
+                .then(() => {
+                    this.$message.success("操作完成");
+                    this.$store.commit("ADD_COMPLETED_QUEST", quest_id);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
         getData() {
             getQuest({
                 id: this.id,
@@ -358,6 +416,13 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            role: (state) => state.currentRole,
+            completed: (state) => state.completedQuests,
+        }),
+        isCompleted() {
+            return this.completed.includes(this.quest.id);
+        },
         id_str: function () {
             return String(this.id);
         },
