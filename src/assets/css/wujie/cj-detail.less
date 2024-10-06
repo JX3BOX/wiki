@@ -293,4 +293,70 @@
         align-items: center;
         padding: 20px;
     }
+    .m-series {
+        .flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 28px;
+        width: 100%;
+        overflow-x: auto;
+        margin-bottom: 12px;
+    }
+    .u-series {
+        position: relative;
+        flex: none;
+        background: rgba(255, 255, 255, 0.2);
+        border: 0.5px solid rgba(255, 255, 255, 1);
+        border-radius: 2px;
+        min-width: 180px;
+        height: 26px;
+        box-sizing: border-box;
+        .flex;
+        align-items: center;
+        justify-content: space-between;
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -0.5px;
+            height: 100%;
+            border-left: 4px solid #3a97eb;
+            border-top-left-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+        &:not(:last-child):after {
+            position: absolute;
+            width: 28px;
+            height: 26px;
+            content: "";
+            display: block;
+            background-image: url("../../img/wujie/right.svg");
+            background-size: 20px 14px;
+            background-repeat: no-repeat;
+            right: -32px;
+            top: 6px;
+        }
+    }
+    .u-series__left,
+    .u-series__right {
+        .flex;
+        align-items: center;
+        gap: 5px;
+        color: #fff;
+        padding: 0 8px;
+        box-sizing: border-box;
+        .u-icon {
+            .size(12px);
+        }
+        font-size: 10px;
+        font-weight: 400;
+    }
+
+    .u-series__left {
+        font-size: 14px;
+        font-weight: 700;
+        .u-icon {
+            .size(20px);
+        }
+    }
 }

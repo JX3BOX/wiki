@@ -27,7 +27,27 @@
         <div class="m-content-wrapper">
             <div class="m-strategy-content">
                 <!-- 进阶类成就 -->
-                <div class="m-advance"></div>
+                <div class="m-series" v-if="seriesList.length">
+                    <router-link
+                        class="u-series"
+                        :class="item.ID == source.ID ? 'active' : ''"
+                        v-for="item in seriesList"
+                        :key="item.ID"
+                        :to="{
+                            name: 'wujie-cj-detail',
+                            params: { source_id: item.ID },
+                        }"
+                    >
+                        <div class="u-series__left">
+                            <img class="u-icon" :src="icon_url(item.IconID)" />
+                            <div class="u-name">{{ item.Name }}</div>
+                        </div>
+                        <div class="u-series__right">
+                            <img class="u-icon" src="@/assets/img/wujie/point.svg" svg-inline />
+                            <div class="u-num">{{ item.Point }}</div>
+                        </div>
+                    </router-link>
+                </div>
                 <!-- 攻略 -->
                 <div class="m-strategy">
                     <div class="m-title">
@@ -109,7 +129,7 @@ import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
 import { postStat } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
-import { ts2str, authorLink, showAvatar } from "@jx3box/jx3box-common/js/utils.js";
+import { ts2str, authorLink, showAvatar, iconLink } from "@jx3box/jx3box-common/js/utils.js";
 import { reportNow } from "@jx3box/jx3box-common/js/reporter";
 
 import { getAchievementsTotal, get_achievement } from "@/service/achievement";
@@ -192,6 +212,9 @@ export default {
         prefix() {
             return this.client === "std" ? "www" : "origin";
         },
+        seriesList() {
+            return this.source?.SeriesAchievementList || [];
+        },
     },
     watch: {
         id: {
@@ -216,6 +239,9 @@ export default {
         }
     },
     methods: {
+        icon_url: function (id) {
+            return iconLink(id, this.client);
+        },
         author_url: authorLink,
         ts2str,
         thumbnail_url: function (val) {
