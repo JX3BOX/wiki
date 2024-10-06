@@ -19,38 +19,40 @@
         </div>
         <div class="m-panel-body">
             <slot name="body-before"></slot>
-            <div class="m-wiki-metas" v-if="wikiPost && wikiPost.post">
-                <!-- 参与贡献 -->
-                <div class="u-meta" v-if="wikiPost.users && wikiPost.users.length">
-                    <em class="u-label">参与贡献</em>
-                    <a
-                        class="u-value u-creator"
-                        v-for="(user, key) in wikiPost.users"
-                        :key="key"
-                        target="_blank"
-                        :href="user.id ? author_url(user.id) : null"
-                    >
-                        <img :src="thumbnail_url(user.avatar)" :alt="user.nickname" :title="user.nickname" />
-                    </a>
+            <slot name="meta">
+                <div class="m-wiki-metas" v-if="wikiPost && wikiPost.post">
+                    <!-- 参与贡献 -->
+                    <div class="u-meta" v-if="wikiPost.users && wikiPost.users.length">
+                        <em class="u-label">参与贡献</em>
+                        <a
+                            class="u-value u-creator"
+                            v-for="(user, key) in wikiPost.users"
+                            :key="key"
+                            target="_blank"
+                            :href="user.id ? author_url(user.id) : null"
+                        >
+                            <img :src="thumbnail_url(user.avatar)" :alt="user.nickname" :title="user.nickname" />
+                        </a>
+                    </div>
+                    <!-- 综合难度 -->
+                    <div class="u-meta" v-if="wikiPost.post && wikiPost.post.level">
+                        <em class="u-label">综合难度</em>
+                        <span class="u-value">
+                            <i class="el-icon-star-on" v-for="i in wikiPost.post.level" :key="i"></i>
+                        </span>
+                    </div>
+                    <!-- 热度 -->
+                    <div class="u-meta" v-if="stat">
+                        <em class="u-label">热度</em>
+                        <span class="u-value" v-text="stat.views"></span>
+                    </div>
+                    <!-- 更新时间 -->
+                    <div class="u-meta" v-if="wikiPost.post && wikiPost.post.updated">
+                        <em class="u-label">更新时间</em>
+                        <span class="u-value" v-text="ts2str(wikiPost.post.updated)"></span>
+                    </div>
                 </div>
-                <!-- 综合难度 -->
-                <div class="u-meta" v-if="wikiPost.post && wikiPost.post.level">
-                    <em class="u-label">综合难度</em>
-                    <span class="u-value">
-                        <i class="el-icon-star-on" v-for="i in wikiPost.post.level" :key="i"></i>
-                    </span>
-                </div>
-                <!-- 热度 -->
-                <div class="u-meta" v-if="stat">
-                    <em class="u-label">热度</em>
-                    <span class="u-value" v-text="stat.views"></span>
-                </div>
-                <!-- 更新时间 -->
-                <div class="u-meta" v-if="wikiPost.post && wikiPost.post.updated">
-                    <em class="u-label">更新时间</em>
-                    <span class="u-value" v-text="ts2str(wikiPost.post.updated)"></span>
-                </div>
-            </div>
+            </slot>
             <slot name="body"></slot>
             <slot name="body-after"></slot>
         </div>

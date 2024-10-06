@@ -12,7 +12,7 @@
                     <span v-if="comments && !comments.length">💧 暂无评论</span>
                 </div>
                 <!-- 递归评论组件 -->
-                <Comment :comments="comments" :source-id="sourceId" />
+                <Comment :isWujie="isWujie" :comments="comments" :source-id="sourceId" />
                 <el-pagination
                     class="u-pagination-box"
                     background
@@ -20,7 +20,9 @@
                     :current-page="page"
                     :total="total"
                     :page-size="pageSize"
-                    layout="prev, pager, next, total"
+                    :layout="isWujie ? 'prev, pager, next' : 'prev, pager, next, total'"
+                    :small="isWujie"
+                    :pager-count="isWujie ? 5 : 7"
                     @current-change="handleCurrentChange"
                 ></el-pagination>
                 <!-- 回复表单 -->
@@ -67,6 +69,9 @@ export default {
         };
     },
     computed: {
+        isWujie() {
+            return this.$route.name.indexOf("wujie") > -1;
+        },
         client: function () {
             return location.href.includes("classic") || location.href.includes("origin") ? "origin" : "std";
         },

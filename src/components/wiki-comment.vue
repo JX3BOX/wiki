@@ -3,7 +3,7 @@
         <li class="u-comment-panel" v-for="(comment, key) in comments" :key="key">
             <div class="u-comment">
                 <!-- 评论内容 -->
-                <div class="u-nickname-panel">
+                <div class="u-nickname-panel" v-if="!isWujie">
                     <a
                         class="u-nickname"
                         :href="comment.user_id ? author_url(comment.user_id) : null"
@@ -23,6 +23,25 @@
                 <p class="u-content" v-html="comment.content"></p>
                 <!-- 其他 -->
                 <div class="m-reply">
+                    <div v-if="isWujie" class="u-reply-left">
+                        <a
+                            class="u-nickname"
+                            :href="comment.user_id ? author_url(comment.user_id) : null"
+                            target="_blank"
+                            v-text="comment.user_nickname"
+                        ></a>
+                        <template v-if="comment.parent_id">
+                            <span>回复</span>
+                            <a
+                                class="u-nickname"
+                                :href="comment.parent.user_id ? author_url(comment.parent.user_id) : null"
+                                target="_blank"
+                                v-text="comment.parent.user_nickname"
+                            ></a>
+                        </template>
+                        <!-- 更新时间 -->
+                        <span class="u-time" v-text="'于' + ts2str(comment.updated)"></span>
+                    </div>
                     <!-- 展开、收起 -->
                     <el-button
                         type="default"
@@ -40,11 +59,11 @@
                         class="u-reply"
                         @click="comment.reply_form.show = !comment.reply_form.show"
                     >
-                        <i class="el-icon-chat-dot-round"></i>
+                        <i v-if="!isWujie" class="el-icon-chat-dot-round"></i>
                         <span>回复</span>
                     </el-button>
                     <!-- 更新时间 -->
-                    <span class="u-time" v-text="ts2str(comment.updated)"></span>
+                    <span v-if="!isWujie" class="u-time" v-text="ts2str(comment.updated)"></span>
                 </div>
                 <!-- 评论回复表单 -->
                 <div class="m-reply-form" v-if="comment.reply_form && comment.reply_form.show">
@@ -59,7 +78,12 @@
                     </el-button>
                 </div>
             </div>
-            <WikiComment v-if="comment.children.length" :comments="comment.children" :source-id="sourceId" />
+            <WikiComment
+                v-if="comment.children.length"
+                :is-wujie="isWujie"
+                :comments="comment.children"
+                :source-id="sourceId"
+            />
         </li>
     </ul>
 </template>
@@ -69,7 +93,7 @@ import { authorLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 
 export default {
     name: "WikiComment",
-    props: ["comments", "sourceId"],
+    props: ["comments", "sourceId", "isWujie"],
     methods: {
         author_url: authorLink,
         ts2str,

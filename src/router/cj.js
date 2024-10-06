@@ -101,8 +101,8 @@ const routes = [
 
 const router = new VueRouter({
     routes,
-    base: '/cj',
-    mode: 'history',
+    base: "/cj",
+    mode: "history",
 });
 
 const originalPush = VueRouter.prototype.push;
@@ -111,14 +111,13 @@ VueRouter.prototype.push = function push(location) {
 };
 
 router.beforeEach((to, from, next) => {
-    if (to.fullPath.includes('/#')) {
-        next(to.fullPath.replace('/#', ''));
+    if (to.fullPath.includes("/#")) {
+        next(to.fullPath.replace("/#", ""));
     }
-    if (to.fullPath.includes('/achievement')) {
-        next(to.fullPath.replace('/achievement', ''));
+    if (to.fullPath.includes("/achievement")) {
+        next(to.fullPath.replace("/achievement", ""));
     }
-    next()
+    next();
 });
-
 
 export default router;
