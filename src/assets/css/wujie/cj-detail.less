@@ -43,6 +43,7 @@
         font-size: 10px;
         color: #ceeef8;
         font-weight: 400;
+        white-space: nowrap;
     }
     .u-stat-item {
         margin-right: 5px;
@@ -68,6 +69,11 @@
         &:hover {
             background: linear-gradient(180deg, rgba(214, 214, 186, 1) 0%, rgba(117, 117, 117, 1) 100%);
         }
+    }
+}
+@media screen and (max-width:@phone){
+    .m-header__links{
+        .none;
     }
 }
 .m-content-wrapper {
@@ -221,15 +227,16 @@
     .m-meta-list {
         .flex;
         justify-content: space-between;
+        height: 16px;
         align-items: center;
         padding: 0 10px;
         box-sizing: border-box;
         width: 100%;
-        height: 16px;
         color: #fff;
         background: linear-gradient(90deg, rgba(51, 67, 76, 1) 0%, rgba(125, 161, 185, 1) 100%);
         .m-user-info {
-            width: 50%;
+            // width: 50%;
+            width:100px;
             overflow: hidden;
             .flex;
         }
@@ -357,6 +364,18 @@
         font-weight: 700;
         .u-icon {
             .size(20px);
+        }
+    }
+}
+@media screen and (max-width:568px){
+    .m-content-wrapper {
+        flex-direction: column;
+        height: auto;
+        .m-strategy-content{
+            width: 100%;
+        }
+        .m-comment{
+            width: 100%;
         }
     }
 }

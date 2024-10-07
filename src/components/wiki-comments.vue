@@ -22,7 +22,7 @@
                     :page-size="pageSize"
                     :layout="isWujie ? 'prev, pager, next' : 'prev, pager, next, total'"
                     :small="isWujie"
-                    :pager-count="isWujie ? 5 : 7"
+                    :pager-count="isWujie ? 0 : 7"
                     @current-change="handleCurrentChange"
                 ></el-pagination>
                 <!-- 回复表单 -->
