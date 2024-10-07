@@ -22,4 +22,8 @@ function getMyInfo() {
     });
 }
 
-export { getProfile, getMeta, getMyInfo };
+function report(data) {
+    return $cms().post("/api/cms/system/common/reporter");
+}
+
+export { getProfile, getMeta, getMyInfo, report };

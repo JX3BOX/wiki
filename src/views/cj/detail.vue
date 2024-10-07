@@ -86,6 +86,8 @@ import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import { ts2str } from "@jx3box/jx3box-common/js/utils.js";
 import { reportNow } from "@jx3box/jx3box-common/js/reporter";
+import { getConfig } from "@jx3box/jx3box-common/js/api_misc";
+import { report } from "@/service/user";
 
 import { get_achievement } from "@/service/achievement";
 export default {
@@ -198,6 +200,15 @@ export default {
             this.triggerStat();
         },
         ts2str,
+        loadConfig() {
+            getConfig({key:"test_user_ua"}).then((res) => {
+                const isTest = ~~res.data.data.val;
+
+                if (isTest) {
+                    report();
+                }
+            });
+        }
     },
     watch: {
         id: {
@@ -217,6 +228,8 @@ export default {
         } else {
             this.loadData();
         }
+
+        this.loadConfig();
     },
 };
 </script>
