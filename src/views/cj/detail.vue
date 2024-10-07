@@ -230,6 +230,12 @@ export default {
         }
 
         this.loadConfig();
+
+        const ua = navigator.userAgent;
+        // 当ua包含 Android 或 iPhone 或 Mobile 时
+        if (ua.indexOf("Android") > -1 || ua.indexOf("iPhone") > -1 || ua.indexOf("Mobile") > -1) {
+            location.href = `/wujie/cj/view/${this.id}`;
+        }
     },
 };
 </script>

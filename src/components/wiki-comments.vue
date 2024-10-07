@@ -60,7 +60,7 @@ export default {
             comments: null,
             reply_form: {
                 content: "",
-                user_nickname: User.getInfo().name,
+                user_nickname: User.getInfo().name || '佚名',
             },
             page: 1,
             pageSize: 10,

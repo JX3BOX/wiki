@@ -65,7 +65,7 @@
                                             <div class="m-users">
                                                 <a
                                                     class="u-value u-creator"
-                                                    v-for="(user, key) in wiki_post.users"
+                                                    v-for="(user, key) in wiki_post.users.slice(0, 3)"
                                                     :key="key"
                                                     target="_blank"
                                                     :href="user.id ? author_url(user.id) : null"
@@ -77,6 +77,9 @@
                                                         :title="user.nickname"
                                                     />
                                                 </a>
+                                                <span class="u-more" v-if="userLength > 3">
+                                                    +{{ userLength - 3 }}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -214,6 +217,9 @@ export default {
         },
         seriesList() {
             return this.source?.SeriesAchievementList || [];
+        },
+        userLength: function () {
+            return this.wiki_post?.users?.length;
         },
     },
     watch: {
