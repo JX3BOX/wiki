@@ -20,9 +20,9 @@
                     :current-page="page"
                     :total="total"
                     :page-size="pageSize"
-                    :layout="isWujie ? 'prev, pager, next' : 'prev, pager, next, total'"
+                    :layout="isWujie ? 'prev, next' : 'prev, pager, next, total'"
                     :small="isWujie"
-                    :pager-count="isWujie ? 0 : 7"
+                    :pager-count="isWujie ? 5 : 7"
                     @current-change="handleCurrentChange"
                 ></el-pagination>
                 <!-- 回复表单 -->
@@ -60,7 +60,7 @@ export default {
             comments: null,
             reply_form: {
                 content: "",
-                user_nickname: User.getInfo().name || '佚名',
+                user_nickname: User.getInfo().name,
             },
             page: 1,
             pageSize: 10,
