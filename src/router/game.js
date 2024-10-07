@@ -11,7 +11,7 @@ const routes = [
         component: () => import("../views/game.vue"),
     },
     // 无界成就单页
-    { name: "wujie-cj-detail", path: "/wujie-cj-detail/:source_id(\\d+)/:post_id(\\d+)?", component: wujieDetail },
+    { name: "wujie-cj-detail", path: "/wujie/cj/view/:source_id(\\d+)/:post_id(\\d+)?", component: wujieDetail },
 ];
 
 const router = new VueRouter({
