@@ -78,7 +78,7 @@
                                                     />
                                                 </a>
                                                 <span class="u-more" v-if="userLength > 3">
-                                                    +{{ userLength - 3 }}
+                                                    +{{ userLength - 3 > 999 ? 999 : userLength - 3 }}
                                                 </span>
                                             </div>
                                         </div>
