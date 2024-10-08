@@ -70,7 +70,7 @@ export default {
     },
     computed: {
         isWujie() {
-            return this.$route.name.indexOf("wujie") > -1;
+            return this.$route.name?.indexOf("wujie") > -1;
         },
         client: function () {
             return location.href.includes("classic") || location.href.includes("origin") ? "origin" : "std";
