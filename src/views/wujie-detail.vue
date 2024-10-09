@@ -17,12 +17,25 @@
                     </div>
                 </div>
             </div>
-            <div class="m-header__links">
-                <a class="u-link" :href="`${rootPath}adventure`">奇遇大全</a>
-                <a class="u-link" :href="`${rootPath}pet`">宠物大全</a>
-                <a class="u-link" :href="`${rootPath}horse`">坐骑大全</a>
-                <a class="u-link" :href="`${rootPath}furniture`">家具大全</a>
-            </div>
+            <el-dropdown class="m-header__links">
+                <el-button type="primary" class="u-dropdown-link">
+                    更多百科<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu class="m-header__menu" slot="dropdown">
+                    <el-dropdown-item class="u-dropdown-link">
+                        <a :href="`${rootPath}adventure`">奇遇大全</a>
+                    </el-dropdown-item>
+                    <el-dropdown-item class="u-dropdown-link">
+                        <a :href="`${rootPath}pet`">宠物大全</a>
+                    </el-dropdown-item>
+                    <el-dropdown-item class="u-dropdown-link">
+                        <a :href="`${rootPath}horse`">坐骑大全</a>
+                    </el-dropdown-item>
+                    <el-dropdown-item class="u-dropdown-link">
+                        <a :href="`${rootPath}furniture`">家具大全</a>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
         </div>
         <div class="m-content-wrapper">
             <div class="m-strategy-content">
@@ -54,6 +67,7 @@
                         <img class="u-icon" src="@/assets/img/wujie/strategy.svg" svg-inline alt="成就攻略" />
                         <div class="u-title">成就攻略</div>
                     </div>
+
                     <div class="m-detail">
                         <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
                             <WikiPanel :wiki-post="wiki_post">
@@ -120,7 +134,7 @@
                     <img class="u-icon" src="@/assets/img/wujie/comment.svg" svg-inline alt="百科评论" />
                     <div class="u-title">百科评论</div>
                 </div>
-                <WikiComments type="achievement" :source-id="id" />
+                <WikiComments class="m-comment-detail" type="achievement" :source-id="id" />
             </div>
         </div>
     </div>

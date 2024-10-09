@@ -1,6 +1,7 @@
-html,body{
-    margin:0;
-    padding:0;
+html,
+body {
+    margin: 0;
+    padding: 0;
     background: linear-gradient(180deg, rgba(41, 56, 69, 1) 0%, rgba(115, 136, 149, 1) 100%);
 }
 .p-wujie-cj-detail {
@@ -31,18 +32,19 @@ html,body{
     .pr;
     .m-logo {
         .size(40px);
-        .pa;.lt(20px,0);
+        .pa;
+        .lt(20px,0);
     }
     .u-logo {
         .size(34px);
         .db;
-        margin:3px;
+        margin: 3px;
     }
     .u-title {
         .fz(15px,20px);
         font-weight: 700;
         color: #fff;
-        padding:2px 0;
+        padding: 2px 0;
     }
     .u-stat {
         font-size: 12px;
@@ -51,38 +53,54 @@ html,body{
         white-space: nowrap;
         transform: scale(0.8);
         transform-origin: left center;
-        .pr;top:-2px;
+        .pr;
+        top: -2px;
     }
     .u-stat-item {
         margin-right: 5px;
     }
 }
 .m-header__links {
+    margin-right: 24px;
+}
+.m-header__menu {
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
+.u-dropdown-link {
     flex: none;
     .flex;
-    justify-content: flex-end;
-    align-items: flex-start;
-    gap: 10px;
-    .u-link {
-        flex: none;
-        .flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(180deg, rgba(86, 127, 153, 1) 0%, rgba(150, 194, 221, 1) 100%);
-        border: 1px solid rgba(173, 195, 199, 1);
-        font-size: 12px;
-        font-weight: 700;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(86, 127, 153, 1) 0%, rgba(150, 194, 221, 1) 100%);
+    border: 1px solid rgba(173, 195, 199, 1);
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 0;
+    height: 26.5px;
+    box-sizing: border-box;
+    a {
         color: #fff;
-        padding: 4px 8px;
-        &:hover {
-            background: linear-gradient(180deg, rgba(214, 214, 186, 1) 0%, rgba(117, 117, 117, 1) 100%);
-        }
+        width: 100%;
+    }
+    &:hover {
+        background: linear-gradient(180deg, rgba(214, 214, 186, 1) 0%, rgba(117, 117, 117, 1) 100%);
+    }
+    &.el-dropdown-menu__item {
+        margin: 5px;
     }
 }
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disabled):hover {
+    background-color: transparent;
+    color: #fff;
+}
 // @media screen and (max-width:@phone){
-    .m-header__links{
-        .none;
-    }
+// .m-header__links{
+//     .none;
+// }
 // }
 .m-content-wrapper {
     position: relative;
@@ -96,23 +114,29 @@ html,body{
     box-sizing: border-box;
     overflow: hidden;
     .m-strategy-content {
+        position: relative;
         flex: 1;
         width: calc(100% - 210px);
         height: 100%;
     }
     .m-strategy {
+        position: relative;
         height: 100%;
+    }
+    .m-comment-detail {
         overflow-y: auto;
+        height: 100%;
+        padding-bottom: 40px;
+        box-sizing: border-box;
     }
     .m-comment {
         width: 200px;
         height: 100%;
-        overflow-y: auto;
-        .u-pagination-box{
+        .u-pagination-box {
             .x(right);
             padding-right: 0;
             box-sizing: border-box;
-            .btn-next{
+            .btn-next {
                 margin-right: 0;
             }
         }
@@ -237,6 +261,9 @@ html,body{
     .m-detail {
         width: 100%;
         padding: 2px;
+        height: 100%;
+        padding-bottom: 40px;
+        overflow-y: auto;
         box-sizing: border-box;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(199, 221, 235, 0.75) 100%);
     }
@@ -252,7 +279,7 @@ html,body{
         background: linear-gradient(90deg, rgba(51, 67, 76, 1) 0%, rgba(125, 161, 185, 1) 100%);
         .m-user-info {
             // width: 50%;
-            width:120px;
+            width: 120px;
             overflow: hidden;
             .flex;
         }
@@ -350,6 +377,9 @@ html,body{
             border-top-left-radius: 2px;
             border-bottom-left-radius: 2px;
         }
+        &.active:before {
+            border-color: #f3b252;
+        }
         &:not(:last-child):after {
             position: absolute;
             width: 28px;
@@ -386,14 +416,14 @@ html,body{
         }
     }
 }
-@media screen and (max-width:568px){
+@media screen and (max-width: 568px) {
     .m-content-wrapper {
         flex-direction: column;
         height: auto;
-        .m-strategy-content{
+        .m-strategy-content {
             width: 100%;
         }
-        .m-comment{
+        .m-comment {
             width: 100%;
         }
     }
