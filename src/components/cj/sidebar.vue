@@ -68,7 +68,6 @@
 import { getMenus, getRoleGameAchievements, getVirtualRoleAchievements } from "@/service/achievement";
 import RoleSelect from "@/components/common/role-select.vue";
 import Bus from "@jx3box/jx3box-common-ui/service/bus";
-import { getUserRoles } from "@/service/team";
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
 import { flattenDeep, cloneDeep } from "lodash";
@@ -86,8 +85,6 @@ export default {
             menu_types: [
                 { value: 1, label: "常规成就" },
                 { value: 2, label: "五甲成就" },
-                // { value: 4, label: "宠物成就" },
-                // { value: 5, label: "奇遇成就" },
                 { value: 3, label: "其他板块" },
             ],
 
@@ -266,6 +263,7 @@ export default {
                                 sub: first_node.data.sub,
                                 detail: first_node.data.detail,
                             },
+                            query: that.$route.query,
                         });
                     }, 100);
                     this.$refs.tree.store.setCurrentNode(first_node);
@@ -374,16 +372,18 @@ export default {
                     return {
                         name: "normal",
                         params: { sub: data.sub, detail: data.detail },
+                        query: this.$route.query,
                     };
                 case 2:
                     return {
                         name: "top_five",
                         params: { sub: data.sub, detail: data.detail },
+                        query: this.$route.query,
                     };
                 case 3:
                     // case 4:
                     // case 5:
-                    return { name: data.router };
+                    return { name: data.router, query: this.$route.query };
             }
             return null;
         },

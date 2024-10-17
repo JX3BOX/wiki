@@ -82,7 +82,11 @@ export default {
         // 获取成就列表
         get_achievements(sub, detail) {
             if (!sub) return [];
-            getMenuAchievements(sub, detail).then(
+            const params = {};
+
+            if (this.$route.query.scene) params.scene = this.$route.query.scene;
+
+            getMenuAchievements(sub, detail, params).then(
                 (data) => {
                     data = data.data;
                     const achievements =

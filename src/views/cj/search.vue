@@ -98,6 +98,8 @@ export default {
         // 获取成就搜索列表
         get_achievements(keyword, page, length) {
             let data = { keyword: keyword, page: page };
+            if (this.$route.query.scene) data["scene"] = this.$route.query.scene;
+
             if (typeof length !== "undefined") data["limit"] = length;
             return new Promise((resolve, reject) => {
                 searchAchievements(data).then(
@@ -168,6 +170,10 @@ export default {
 
 <style lang="less">
 .m-search-view {
+    .m-normal-op {
+        .mb(20px);
+    }
+
     .m-search-op {
         padding-bottom: 10px;
         .el-checkbox {

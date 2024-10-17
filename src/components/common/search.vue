@@ -1,5 +1,5 @@
 <template>
-    <div class="m-search-bar" :class="$route.name == 'view' ? 'can-return' : ''">
+    <div class="m-search-bar m-cj-search" :class="$route.name == 'view' ? 'can-return' : ''">
         <div class="m-return">
             <el-button class="u-return-btn" @click="returnHandle"><i class="el-icon-arrow-left"></i>返回</el-button>
         </div>
@@ -11,9 +11,9 @@
                 :placeholder="placeholder"
                 clearable
             >
-                <span slot="prepend">
+                <template #prepend>
                     <slot><i class="el-icon-search"></i> <span class="u-text">关键词</span></slot>
-                </span>
+                </template>
                 <el-button slot="append" class="u-search-btn" type="primary" plain @click="searchHandle"
                     ><i class="el-icon-position"></i> <span class="u-text">搜索</span></el-button
                 >

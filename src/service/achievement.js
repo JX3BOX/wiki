@@ -55,12 +55,13 @@ export function getMenus(general) {
 }
 
 // 获取菜单下成就
-export function getMenuAchievements(sub, detail) {
+export function getMenuAchievements(sub, detail, params) {
     let url = `/api/cms/helper/achievements/${sub}`;
     if (detail) url += `/${detail}`;
     return $cms().get(url, {
         params: {
             client,
+            ...params,
         },
     });
 }
@@ -160,5 +161,12 @@ export function getRoleGameAchievements(jx3id) {
         params: {
             jx3id,
         },
+    });
+}
+
+// 获取地图列表
+export function getMapList(params) {
+    return $.get("/api/node/v2/map/list", {
+        params,
     });
 }
