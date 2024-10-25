@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { postStat } from "@jx3box/jx3box-common/js/stat";
+import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import WikiPanel from "@/components/wiki-panel.vue";
 import WikiRevisions from "@/components/wiki-revisions.vue";
@@ -139,6 +139,13 @@ export default {
                 .then((res) => {
                     this.data = res.data.data;
                     if (this.data.source) this.data.source.post = this.data.post;
+
+                    User.isLogin() && postHistory({
+                        source_type: 'knowledge',
+                        source_id: this.id,
+                        link: location.href,
+                        title: this.title,
+                    });
                 })
                 .finally(() => {
                     this.loading = false;

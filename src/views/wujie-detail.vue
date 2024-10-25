@@ -143,11 +143,12 @@
 <script>
 import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
 
-import { postStat } from "@jx3box/jx3box-common/js/stat";
+import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import { ts2str, authorLink, showAvatar, iconLink } from "@jx3box/jx3box-common/js/utils.js";
 import { reportNow } from "@jx3box/jx3box-common/js/reporter";
+import User from "@jx3box/jx3box-common/js/user";
 
 import { getAchievementsTotal, get_achievement } from "@/service/achievement";
 
@@ -296,6 +297,13 @@ export default {
                         data: {
                             href: `${this.prefix}:/cj/view/${this.id}`,
                         },
+                    });
+
+                    User.isLogin() && postHistory({
+                        source_type: "wujie",
+                        source_id: this.id,
+                        link: location.href,
+                        title: post.title,
                     });
                 });
 

@@ -245,9 +245,10 @@ import ItemIcon from "@/components/common/item-icon.vue";
 import QuestDialog from "@/components/quest/single/quest-dialog.vue";
 import Notice from "@/components/quest/single/notice.vue";
 
-import { postStat } from "@jx3box/jx3box-common/js/stat.js";
+import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat.js";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
 import { getAppIcon } from "@jx3box/jx3box-common/js/utils";
+import User from "@jx3box/jx3box-common/js/user";
 
 import { publishLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 import WikiPanel from "@/components/wiki-panel.vue";
@@ -387,6 +388,13 @@ export default {
                     };
                     this.is_empty = isEmpty;
                     this.compatible = compatible;
+
+                    User.isLogin() && postHistory({
+                        source_type: this.client == "origin" ? "origin_quest" : "quest",
+                        source_id: this.id,
+                        link: location.href,
+                        title: this.quest.name,
+                    });
                 });
             }
             this.triggerStat();

@@ -268,7 +268,7 @@ import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import Notice from "@/components/cj/notice.vue";
 
-import { postStat } from "@jx3box/jx3box-common/js/stat";
+import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
 import { __Links } from "@jx3box/jx3box-common/data/jx3box.json";
 import std_servers from "@jx3box/jx3box-data/data/server/server_std.json";
@@ -432,6 +432,13 @@ export default {
                     };
                     this.is_empty = isEmpty;
                     this.compatible = compatible;
+
+                    User.isLogin() && postHistory({
+                        source_type: this.client == "origin" ? "origin_item" : "item",
+                        source_id: this.id,
+                        link: location.href,
+                        title: post.title,
+                    });
                 });
             }
             this.triggerStat();

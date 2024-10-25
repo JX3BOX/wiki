@@ -81,13 +81,14 @@ import WikiComments from "@/components/wiki-comments.vue";
 import AchievementSingle from "@/components/cj/achievement-single.vue";
 import Relations from "@/components/relations.vue";
 import Notice from "@/components/cj/notice.vue";
-import { postStat } from "@jx3box/jx3box-common/js/stat";
+import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import { ts2str } from "@jx3box/jx3box-common/js/utils.js";
 import { reportNow } from "@jx3box/jx3box-common/js/reporter";
 import { getConfig } from "@jx3box/jx3box-common/js/api_misc";
 import { report } from "@/service/user";
+import User from "@jx3box/jx3box-common/js/user";
 
 import { get_achievement } from "@/service/achievement";
 export default {
@@ -184,6 +185,13 @@ export default {
                         data: {
                             href: `${this.prefix}:/cj/view/${this.id}`,
                         },
+                    });
+
+                    User.isLogin() && postHistory({
+                        source_type: this.client == "origin" ? "origin_cj" : "cj",
+                        source_id: this.id,
+                        link: location.href,
+                        title: post.title,
                     });
                 });
             }
