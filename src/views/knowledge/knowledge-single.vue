@@ -142,7 +142,7 @@ export default {
 
                     User.isLogin() && postHistory({
                         source_type: 'knowledge',
-                        source_id: this.id,
+                        source_id: ~~this.id,
                         link: location.href,
                         title: this.title,
                     });

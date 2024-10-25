@@ -301,7 +301,7 @@ export default {
 
                     User.isLogin() && postHistory({
                         source_type: "wujie",
-                        source_id: this.id,
+                        source_id: ~~this.id,
                         link: location.href,
                         title: post.title,
                     });

@@ -189,7 +189,7 @@ export default {
 
                     User.isLogin() && postHistory({
                         source_type: this.client == "origin" ? "origin_cj" : "cj",
-                        source_id: this.id,
+                        source_id: ~~this.id,
                         link: location.href,
                         title: post.title,
                     });
