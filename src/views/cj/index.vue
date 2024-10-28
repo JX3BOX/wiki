@@ -96,7 +96,7 @@ export default {
                     ...this.$route.query,
                 };
                 delete query.scene;
-                this.$router.replace({ query });
+                this.$router.replace({ name: "search", query });
                 return;
             }
             const query = {
@@ -104,7 +104,7 @@ export default {
                 scene,
             };
             if (query.scene != this.$route.query.scene) {
-                this.$router.replace({ query });
+                this.$router.replace({ name: "search", query });
             }
         },
         getAppIcon,

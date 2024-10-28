@@ -75,12 +75,13 @@ export default {
                 this.isAll = false;
                 this.page = parseInt(this.$route.query.page) || 1;
                 let data = await this.get_achievements(this.$route.params.keyword, this.page, this.length);
-                const achievements = data.achievements.map((item) => {
-                    return {
-                        ...item,
-                        checked: false,
-                    };
-                });
+                const achievements =
+                    data.achievements?.map((item) => {
+                        return {
+                            ...item,
+                            checked: false,
+                        };
+                    }) || [];
                 this.achievements = achievements;
                 this.achievements_count = data.total;
             },
@@ -121,7 +122,8 @@ export default {
             });
         },
         finishVirtual() {
-            const ids = this.selectedAchievements.map((item) => item.ID + "");
+            const ids = this.selectedAchievements?.map((item) => item.ID + "");
+            if (!ids.length) return;
             const data = {
                 achievements: ids.join(),
             };
@@ -143,7 +145,7 @@ export default {
             });
         },
         cancelVirtual() {
-            const ids = this.selectedAchievements.map((item) => item.ID + "");
+            const ids = this.selectedAchievements?.map((item) => item.ID + "");
             const data = {
                 achievements: ids.join(),
             };

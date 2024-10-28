@@ -70,7 +70,7 @@ import RoleSelect from "@/components/common/role-select.vue";
 import Bus from "@jx3box/jx3box-common-ui/service/bus";
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
-import { flattenDeep, cloneDeep } from "lodash";
+import { flattenDeep, cloneDeep, omit } from "lodash";
 export default {
     name: "Sidebar",
     props: ["sidebar"],
@@ -145,6 +145,13 @@ export default {
         },
     },
     watch: {
+        // 监听$route 当不处于normal路由的时候 取消展开 tree
+        $route(to) {
+            if (to.name !== "normal") {
+                let all = this.$refs.tree.store._getAllNodes();
+                for (let i = 0; i < all.length; i++) all[i].expanded = false;
+            }
+        },
         sidebar: {
             immediate: true,
             deep: true,
@@ -158,11 +165,6 @@ export default {
                 if (that.sidebar.general) that.get_menus(this.sidebar.general);
             },
         },
-        // roleList() {
-        //     if (this.roleList.length && !this.currentRole) {
-        //         this.currentRole = this.roleList[0];
-        //     }
-        // },
         virtualRole: {
             immediate: true,
             deep: true,
@@ -263,7 +265,7 @@ export default {
                                 sub: first_node.data.sub,
                                 detail: first_node.data.detail,
                             },
-                            query: that.$route.query,
+                            query: omit(that.$route.query, "page"),
                         });
                     }, 100);
                     this.$refs.tree.store.setCurrentNode(first_node);
@@ -372,18 +374,18 @@ export default {
                     return {
                         name: "normal",
                         params: { sub: data.sub, detail: data.detail },
-                        query: this.$route.query,
+                        query: omit(this.$route.query, ["page"]),
                     };
                 case 2:
                     return {
                         name: "top_five",
                         params: { sub: data.sub, detail: data.detail },
-                        query: this.$route.query,
+                        query: omit(this.$route.query, ["page"]),
                     };
                 case 3:
                     // case 4:
                     // case 5:
-                    return { name: data.router, query: this.$route.query };
+                    return { name: data.router, query: omit(this.$route.query, ["page"]) };
             }
             return null;
         },
