@@ -58,14 +58,18 @@ export default {
     },
     methods: {
         search(page = 1) {
-            getQuests({
-                keyword: this.keyword,
-                chain: this.chain,
-                map_id: this.map_id,
-                client: this.client,
-                filter: this.filter,
-                page,
-            }).then((res) => {
+            getQuests(
+                {
+                    keyword: this.keyword,
+                    chain: this.chain,
+                    map_id: this.map_id,
+                    client: this.client,
+                    page,
+                },
+                {
+                    filter: this.filter,
+                }
+            ).then((res) => {
                 this.result = res.data.list;
                 this.total = res.data.total;
                 this.pageSize = res.data.per;
