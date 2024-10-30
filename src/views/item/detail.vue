@@ -236,6 +236,7 @@
                             mode="wiki"
                             :key="'item-thx-' + id"
                             :client="client"
+                            showRss
                         />
                     </template>
                 </WikiPanel>

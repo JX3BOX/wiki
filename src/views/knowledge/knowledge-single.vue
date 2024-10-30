@@ -39,6 +39,7 @@
                             mode="wiki"
                             :authors="authors"
                             :key="'item-thx-' + id"
+                            showRss
                         />
                     </template>
                 </WikiPanel>

@@ -212,7 +212,7 @@
                             class="m-thx"
                             :postId="id"
                             postType="quest"
-                            :postTitle="wiki_post.source.Name"
+                            :postTitle="wiki_post.source.QuestName"
                             :userId="author_id"
                             :adminBoxcoinEnable="true"
                             :userBoxcoinEnable="true"
@@ -220,6 +220,7 @@
                             mode="wiki"
                             :key="'quest-thx-' + id"
                             :client="client"
+                            showRss
                         />
                     </template>
                 </WikiPanel>

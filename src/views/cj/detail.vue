@@ -57,6 +57,7 @@
                             :authors="authors"
                             :key="'achievement-thx-' + id"
                             :client="client"
+                            showRss
                         />
                     </template>
                 </WikiPanel>
