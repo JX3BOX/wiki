@@ -103,7 +103,7 @@ import player_name from "@/utils/player-name";
 import star from "@/utils/star";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import WikiPanel from "@/components/wiki-panel.vue";
-import { wiki } from "@jx3box/jx3box-common/js/wiki.js";
+import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
 import { getTypeLabel, iconLink, publishLink } from "@jx3box/jx3box-common/js/utils";
 import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
@@ -182,48 +182,33 @@ export default {
                 content: document.getElementById("c-article").innerHTML,
                 remark: this.publish.remark,
             }
-            wiki.post({ type: this.wiki_post.type, data: data, client: this.client }, {})
-            .then(
-                (res) => {
-                    res = res.data;
-                    if (res.code === 200) {
-                        this.$message({
-                            message: "提交成功，请等待审核",
-                            type: "success",
-                        });
-                        this.publish = {
-                            level: 1,
-                            author: player_name(),
-                            remark: "",
-                        };
-                        this.isEditMode = false;
-                    } else
-                        this.$message({
-                            message: `${res.message}`,
-                            type: "warning",
-                        });
-                },
-                () => {
-                    this.$message({
-                        message: "网络异常，提交失败",
-                        type: "warning",
-                    });
-                }
-            );
+            wiki.post({ type: this.wiki_post.type, ...data, client: this.client }).then((res) => {
+                res = res.data;
+                this.$message({
+                    message: "提交成功，请等待审核",
+                    type: "success",
+                });
+                this.publish = {
+                    level: 1,
+                    author: player_name(),
+                    remark: "",
+                };
+                this.isEditMode = false;
+            });
         },
     },
     watch: {
-        isEditMode() {
+        isEditMode(val) {
+            if (!val) return
             // 获取最新攻略
             if (this.wiki_post && this.wiki_post.type && this.wiki_post.source_id) {
-                wiki.get({ type: this.wiki_post.type, id: this.wiki_post.source_id }, { supply: this.isEditMode ? 0 : 1, client: this.client })
-                .then((res) => {
-                    res = res.data;
-                    if (res.code === 200) {
+                wiki.get({ type: this.wiki_post.type, id: this.wiki_post.source_id }, { client: this.client }).then(
+                    (res) => {
+                        res = res.data;
                         this.wiki_post = res.data;
                         this.publish.level = _.get(this, "wiki_post.post.level") || 1;
                     }
-                });
+                );
             }
         },
         wikiPost: {
