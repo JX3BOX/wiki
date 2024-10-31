@@ -16,22 +16,32 @@ export function addMyFav(id, type = "item") {
     return $next().post(`api/article/favorites/add/${id}/${type}`);
 }
 
-export function getMenus() {
-    return $.get(`api/node/item/menus`);
+export function getMenus(params) {
+    return $.get(`api/node/item/menus`, {
+        params,
+    });
 }
 
-export function get_items_count() {
-    return $.get(`api/node/item/count`);
+export function get_items_count(params) {
+    return $.get(`api/node/item/count`, {
+        params,
+    });
 }
 
-export function get_item_enums() {
-    return $.get(`/item/enums`);
+export function get_item_enums(params) {
+    return $.get(`/item/enums`, {
+        params,
+    });
 }
 
 // 获取物品
-export function get_item(item_id) {
+export function get_item(item_id, client) {
     if (!item_id) return;
-    return $.get(`api/node/item/${item_id}`);
+    return $.get(`api/node/item/${item_id}`, {
+        params: {
+            client: client ?? "std",
+        },
+    });
 }
 
 // 判断是否显示价格

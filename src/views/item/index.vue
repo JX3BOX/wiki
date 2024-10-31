@@ -116,6 +116,9 @@ export default {
         params() {
             return this.$route.params;
         },
+        client() {
+            return this.$store.state.client;
+        }
     },
     watch: {
         $route: {
@@ -185,7 +188,7 @@ export default {
     },
     mounted() {
         this.initQuery();
-        get_item_enums().then((res) => {
+        get_item_enums({client: this.client}).then((res) => {
             const data = res.data?.data;
             if (!data) return;
             this.enums = data;

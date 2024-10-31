@@ -28,11 +28,15 @@ export default {
             },
         };
     },
-    computed: {},
+    computed: {
+        client() {
+            return this.$store.state.client;
+        }
+    },
     methods: {},
     mounted: function () {
         // 输出物品总数统计
-        get_items_count().then((res) => {
+        get_items_count({client: this.client}).then((res) => {
             res = res.data;
             this.count = res.data;
         });

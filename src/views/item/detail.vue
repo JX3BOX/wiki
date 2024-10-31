@@ -420,7 +420,7 @@ export default {
         loadData: function () {
             // 获取最新攻略
             if (this.id) {
-                get_item(this.id).then((res) => {
+                get_item(this.id, this.client).then((res) => {
                     // console.log(res, "res");
                     this.source = res?.data?.data?.item;
                 });

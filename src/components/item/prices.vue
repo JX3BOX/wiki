@@ -79,7 +79,7 @@ export default {
                     this.prices = data.data.prices || [];
                 });
                 // 获取物品信息
-                get_item(this.item_id).then((data) => {
+                get_item(...this.params).then((data) => {
                     data = data.data;
                     this.item = data.data.item;
                 });

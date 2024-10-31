@@ -61,6 +61,7 @@ export default {
                     auc_sub_type_id: this.$store.state.sidebar.AucSubTypeID,
                     page: this.page,
                     limit: this.length,
+                    client: this.$store.state.client,
                 }).then((data) => {
                     data = data.data;
                     this.items = data.data.data || [];

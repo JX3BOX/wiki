@@ -72,7 +72,7 @@ export default {
                     });
                 });
                 // 获取物品信息
-                get_item(this.item_id).then((data) => {
+                get_item(this.item_id, this.client).then((data) => {
                     data = data.data;
                     this.item = data.data.item;
                 });
