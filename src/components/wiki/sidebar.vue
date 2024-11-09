@@ -1,6 +1,6 @@
 <template>
-    <div class="m-achievement-sidebar">
-        <img class="" src="@/assets/img/wiki/overview/title.svg" alt="" />
+    <div class="m-achievement-sidebar" :class="{ is_mobile: mobile }">
+        <img class="u-title_img" src="@/assets/img/wiki/overview/title.svg" alt="" />
         <ul class="m-sidebar-nav">
             <li class="active">
                 <router-link
@@ -11,13 +11,9 @@
                 >
                 <ul>
                     <li>
-                        <router-link
-                            class="is-child"
-                            :to="{
-                                name: 'overview',
-                            }"
-                            >总览</router-link
-                        >
+                        <router-link class="is-child" :to="{ name: 'overview' }">{{
+                            viewAchievementsName ? viewAchievementsName + "资历" : "总览"
+                        }}</router-link>
                     </li>
                 </ul>
             </li>
@@ -44,7 +40,7 @@
                 >
             </li>
         </ul>
-        <a class="u-wiki-btn" href="/cj">
+        <a class="u-wiki-btn" href="/cj" v-show="!mobile">
             <p class="u-text">
                 已收录资历点：<span>{{ count }}</span>
             </p>
@@ -61,6 +57,16 @@ export default {
         return {
             count: 0,
         };
+    },
+    computed: {
+        mobile() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const mobileKeywords = ["android", "iphone", "ipad", "ipod", "windows phone"];
+            return mobileKeywords.some((keyword) => userAgent.includes(keyword));
+        },
+        viewAchievementsName() {
+            return this.$store.state.viewAchievementsName;
+        },
     },
     created() {
         // 获取成就统计信息
@@ -132,6 +138,16 @@ export default {
                 font-weight: bold;
                 color: rgba(204, 161, 108, 1);
             }
+        }
+    }
+    &.is_mobile {
+        .w(137px);
+        .h(calc(100vh - 120px));
+        .pl(20px);
+        .pt(52px);
+        box-sizing: border-box;
+        .u-title_img {
+            .w(50px);
         }
     }
 }

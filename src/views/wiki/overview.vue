@@ -1,6 +1,6 @@
 <template>
-    <div class="p-achievement-overview">
-        <div class="m-overview-header">
+    <div class="p-achievement-overview" :class="{ is_mobile: mobile }">
+        <div class="m-overview-header" v-if="!mobile">
             <!-- 资历、选中用户信息 -->
             <div class="m-header-info">
                 <!-- 用户信息展示 -->
@@ -47,6 +47,7 @@
 
                     <div v-if="viewAchievementsName" class="u-overview" @click="onSeeOverview">查看总览</div>
                 </div>
+
                 <!-- 资历展示 -->
                 <div class="m-info-zl">
                     <div class="m-info-zl__info">
@@ -84,7 +85,71 @@
                 <RoleAvatar class="u-avatar-img" :mount="currentRole.mount" :body_type="currentRole.body_type" />
             </div>
         </div>
-        <div class="m-overview-main">
+        <!-- 移动端角色信息 -->
+        <div class="m-overview-header_mobile" v-if="mobile">
+            <div class="u-name">
+                {{ currentRole.name }}
+                {{ currentRole.server && "·" }}
+                {{ currentRole.server }}
+                <img width="30" height="30" :src="showSchoolIcon(currentRole.mount)" alt="jx3logo" />
+            </div>
+
+            <el-dropdown trigger="click">
+                <div class="u-toggle-btn">
+                    <span>切换</span>
+                    <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" width="16px" height="16px" />
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-if="isLogin">
+                        <div class="m-role-item" @click="onChangeRole(virtualRole)">
+                            <span>{{ virtualRole.name }}</span>
+                            <span>&lt;虚拟角色&gt;</span>
+                        </div>
+                    </el-dropdown-item>
+                    <el-dropdown-item v-for="role in roleList" :key="role.ID">
+                        <div
+                            @click="onChangeRole(role)"
+                            class="m-role-item"
+                            :class="{
+                                active: role.jx3id === currentRole.jx3id,
+                            }"
+                        >
+                            <span>{{ role.name }}</span>
+                            <span>{{ role.server }}</span>
+                        </div>
+                    </el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+        </div>
+        <!-- 移动端查看总览位置 -->
+        <div class="u-overview_mobile" :class="{ isScroll }" v-show="mobile" @click="onSeeOverview">查看总览</div>
+        <div
+            ref="overviewList"
+            class="m-overview-main"
+            :class="{ is_mobile: mobile, isScroll }"
+            @scroll="overviewListScroll"
+        >
+            <!-- 移动端资历总览 -->
+            <div class="m-info-zl" v-if="mobile">
+                <div class="m-info-zl__info" v-if="!isScroll">
+                    <span class="u-title"
+                        >{{ viewAchievementsName || "总" }}资历：<span class="u-number">{{
+                            ownPointsCount
+                        }}</span></span
+                    >
+
+                    <span class="u-rate">{{ totalProgress }}%</span>
+                </div>
+                <div class="m-info-zl__progress">
+                    <div
+                        class="u-active-progress"
+                        :style="{
+                            width: `${totalProgress}%`,
+                            background: getCurrentProgressBg(totalProgress),
+                        }"
+                    ></div>
+                </div>
+            </div>
             <!-- item -->
             <div class="m-cj-item" @click="onEnterCategory(item)" v-for="(item, i) in list" :key="i">
                 <!-- 做边框 -->
@@ -133,6 +198,24 @@
                 </div>
             </div>
         </div>
+        <div class="m-zl-info_bottom" v-if="isScroll">
+            <div class="m-box_bottom">
+                <span class="u-title"
+                    >{{ viewAchievementsName || "总" }}资历： <span class="u-number">{{ ownPointsCount }}</span></span
+                >
+
+                <span class="u-rate">{{ totalProgress }}%</span>
+            </div>
+            <div class="m-info-zl__progress">
+                <div
+                    class="u-active-progress"
+                    :style="{
+                        width: `${totalProgress}%`,
+                        background: getCurrentProgressBg(totalProgress),
+                    }"
+                ></div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -168,9 +251,15 @@ export default {
                 jx3id: 0,
                 ID: ~~User.getInfo().uid,
             },
+            isScroll: false, //移动端滚动后总览数据移至底部
         };
     },
     computed: {
+        mobile() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const mobileKeywords = ["android", "iphone", "ipad", "ipod", "windows phone"];
+            return mobileKeywords.some((keyword) => userAgent.includes(keyword));
+        },
         avatar_frame() {
             if (this.userInfo) {
                 const { user_avatar_frame } = this.userInfo;
@@ -247,6 +336,14 @@ export default {
         this.loadData();
     },
     methods: {
+        overviewListScroll($event) {
+            if (!this.mobile) return;
+            if (this.$refs.overviewList.scrollTop > 70) {
+                this.isScroll = true;
+            } else {
+                this.isScroll = false;
+            }
+        },
         getUserInfo() {
             const uid = User.getInfo().uid;
             uid &&
@@ -258,17 +355,26 @@ export default {
         },
         onChangeRole(role) {
             this.currentRole = role;
+            this.$nextTick(() => {
+                this.$refs.overviewList.scrollTop = 0;
+            });
         },
         showSchoolIcon,
         onEnterCategory(data) {
             if (data.children) {
                 this.$store.commit("SET_STATE", { key: "viewAchievementsName", value: data.name });
                 this.getRenderList(data.children);
+                this.$nextTick(() => {
+                    this.$refs.overviewList.scrollTop = 0;
+                });
             }
         },
         onSeeOverview() {
             this.$store.commit("SET_STATE", { key: "viewAchievementsName", value: null });
             this.getRenderList();
+            this.$nextTick(() => {
+                this.$refs.overviewList.scrollTop = 0;
+            });
         },
         loadData() {
             this.loadUserRoles();
@@ -417,6 +523,10 @@ export default {
 .p-achievement-overview {
     padding-top: 65px;
     width: 960px;
+    &.is_mobile {
+        width: calc(100vw - 137px);
+        .pt(0);
+    }
     .m-overview-header {
         .mb(18px);
         .flex;
@@ -512,6 +622,7 @@ export default {
                 }
             }
         }
+
         .m-info-avatar {
             max-width: 205px;
             width: 205px;
@@ -549,6 +660,50 @@ export default {
             }
         }
     }
+    //手机端用户信息
+    .m-overview-header_mobile {
+        position: fixed;
+        .z(21);
+        width: 100vw;
+        .lt(0);
+        background-color: #fff;
+        .h(40px);
+        padding: 8px 24px;
+        box-sizing: border-box;
+        .flex;
+        align-items: center;
+        justify-content: space-between;
+        .u-name {
+            .fz(16px,24px);
+            .bold(400);
+            color: rgba(181, 148, 87, 1);
+            .flex;
+            .flex(o);
+        }
+        .u-toggle-btn {
+            .size(60px,18px);
+            .r(4px);
+            border: 1px solid #bfb8ac;
+            .flex;
+            .flex(o);
+            .fz(12px);
+            .bold(400);
+            color: rgba(191, 184, 172, 1);
+        }
+    }
+    //移动端查看总览
+    .u-overview_mobile {
+        position: fixed;
+        left: 12px;
+        bottom: 12px;
+        .fz(24px);
+        .bold(900);
+        color: #fff;
+        text-decoration: underline;
+        &.isScroll {
+            bottom: 92px;
+        }
+    }
     .m-overview-main {
         .grid;
         grid-template-columns: repeat(3, 1fr);
@@ -557,6 +712,30 @@ export default {
         overflow-y: scroll;
         row-gap: 24px;
         column-gap: 12px;
+        padding-right: 10px;
+
+        /* 针对Webkit内核的浏览器 */
+        &::-webkit-scrollbar {
+            /* 设置滚动条的宽度 */
+            width: 10px;
+        }
+
+        /* 滚动条轨道 - 背景颜色/白底 */
+        &::-webkit-scrollbar-track {
+            background: #595958;
+            border-radius: 10px;
+        }
+
+        /* 滚动条的滑块部分 */
+        &::-webkit-scrollbar-thumb {
+            background: #e2d3b9;
+            border-radius: 10px;
+        }
+
+        /* 当鼠标悬停在滚动条滑块上时改变颜色 */
+        &::-webkit-scrollbar-thumb:hover {
+            background: #e2d3b9;
+        }
         .m-cj-item {
             .flex;
             .h(70px);
@@ -631,6 +810,63 @@ export default {
                 }
             }
         }
+        //列表手机端
+        &.is_mobile {
+            .mt(40px);
+            height: calc(100vh - 60px);
+            .db;
+            .pr(0);
+            &::-webkit-scrollbar {
+                /* 设置滚动条的宽度 */
+                width: 0;
+            }
+            .m-info-zl {
+                .mt(20px);
+                .mb(20px);
+                .h(80px);
+                padding: 12px 12px 12px 12px;
+                box-sizing: border-box;
+                background: rgba(247, 247, 247, 1);
+                .u-title,
+                .u-number,
+                .u-rate {
+                    .fz(20px,28px);
+                    .bold(700);
+                }
+                .m-info-zl__info {
+                    .flex;
+                    justify-content: space-between;
+                }
+                .u-title {
+                    color: rgba(65, 65, 64, 1);
+                }
+                .u-number {
+                    color: rgba(181, 148, 87, 1);
+                }
+                .u-rate {
+                    color: rgba(148, 126, 93, 1);
+                }
+                .m-info-zl__progress {
+                    .mt(8px);
+                    position: relative;
+                    .size(100%,12px);
+                    background: white;
+                    .u-active-progress {
+                        position: absolute;
+                        transition: 0.5s;
+                        left: 0;
+                        top: 0;
+                        height: 100%;
+                    }
+                }
+            }
+            .m-cj-item {
+                .mb(12px);
+            }
+        }
+        &.isScroll {
+            height: calc(100vh - 140px);
+        }
     }
 }
 .m-role-dropdown {
@@ -655,6 +891,48 @@ export default {
         &.active {
             color: #947e5d;
             background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(204, 184, 155, 1) 100%);
+        }
+    }
+}
+//底部总览信息
+.m-zl-info_bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    .size(100%, 80px);
+    padding: 12px 12px 12px 12px;
+    box-sizing: border-box;
+    background: rgba(247, 247, 247, 1);
+    .m-box_bottom {
+        .flex;
+        justify-content: space-between;
+    }
+    .u-title,
+    .u-number,
+    .u-rate {
+        .fz(20px,28px);
+        .bold(700);
+    }
+    .u-title {
+        color: rgba(65, 65, 64, 1);
+    }
+    .u-number {
+        color: rgba(181, 148, 87, 1);
+    }
+    .u-rate {
+        color: rgba(148, 126, 93, 1);
+    }
+    .m-info-zl__progress {
+        .mt(8px);
+        position: relative;
+        .size(100%,12px);
+        background: white;
+        .u-active-progress {
+            position: absolute;
+            transition: 0.5s;
+            left: 0;
+            top: 0;
+            height: 100%;
         }
     }
 }

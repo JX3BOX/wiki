@@ -1,9 +1,9 @@
 <template>
     <div>
-        <Header></Header>
-        <div class="m-achievement-main">
+        <!-- <Header></Header> -->
+        <div class="m-achievement-main" :class="{ is_mobile: mobile }">
             <SideBar />
-            <div class="m-achievement-content">
+            <div class="m-achievement-content" :class="{ is_mobile: mobile }">
                 <router-view></router-view>
             </div>
         </div>
@@ -18,7 +18,13 @@ export default {
     data() {
         return {};
     },
-    computed: {},
+    computed: {
+        mobile() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const mobileKeywords = ["android", "iphone", "ipad", "ipod", "windows phone"];
+            return mobileKeywords.some((keyword) => userAgent.includes(keyword));
+        },
+    },
     watch: {},
     methods: {},
     mounted() {},
