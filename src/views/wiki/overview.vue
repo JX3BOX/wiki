@@ -709,7 +709,7 @@ export default {
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(6, 1fr);
         height: 540px;
-        overflow-y: scroll;
+        overflow-y: auto;
         row-gap: 24px;
         column-gap: 12px;
         padding-right: 10px;
