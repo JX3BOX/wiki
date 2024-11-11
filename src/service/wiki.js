@@ -10,3 +10,7 @@ export function getWikiRanking(params) {
 export function getWiki(post_id, params) {
     return $cms().get(`/api/cms/wiki/post/id/${post_id}`, { params });
 }
+
+export function getUserInfo(uid) {
+    return $cms({ mute: true }).get(`/api/cms/user/${uid}/info`);
+}

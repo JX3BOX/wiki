@@ -18,6 +18,12 @@ module.exports = {
             entry: "src/pages/quest.js",
             filename: "quest/index.html",
         },
+        wiki: {
+            title: "成就总览 - JX3BOX",
+            template: "public/index.html",
+            entry: "src/pages/wiki.js",
+            filename: "wiki/index.html",
+        },
         knowledge: {
             title: "通识百科 - JX3BOX",
             template: "public/index.html",
@@ -36,17 +42,17 @@ module.exports = {
             entry: "src/pages/cj.js",
             filename: "cj/index.html",
         },
-        macros : {
-            title : '云端宏排行榜 - JX3BOX',
-            entry:'src/pages/macros.js',
-            template : 'public/macro.html',
-            filename:'macro/tops/index.html',
+        macros: {
+            title: "云端宏排行榜 - JX3BOX",
+            entry: "src/pages/macros.js",
+            template: "public/macro.html",
+            filename: "macro/tops/index.html",
         },
-        macro : {
-            title : '云端宏 - JX3BOX',
-            entry:'src/pages/macro.js',
-            template : 'public/macro.html',
-            filename:'macro/details/index.html',
+        macro: {
+            title: "云端宏 - JX3BOX",
+            entry: "src/pages/macro.js",
+            template: "public/macro.html",
+            filename: "macro/details/index.html",
         },
     },
 

@@ -54,6 +54,15 @@ export function getMenus(general) {
     });
 }
 
+export function getAchievementPoints(general) {
+    return $.get(`/api/node/achievement/points`, {
+        params: {
+            general,
+            client,
+        },
+    });
+}
+
 // 获取菜单下成就
 export function getMenuAchievements(sub, detail, params) {
     let url = `/api/cms/helper/achievements/${sub}`;
