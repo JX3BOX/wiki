@@ -136,7 +136,7 @@ export default {
             }
             const data = {
                 type: this.type,
-                source_id: this.sourceId,
+                source_id: String(this.sourceId),
                 parent_id: parent_id,
                 user_nickname: form.user_nickname || User.getInfo().name,
                 content: form.content,
