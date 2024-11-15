@@ -82,7 +82,7 @@ export default {
             if (AucGenre === null) return {};
             let params = {
                 AucGenre: AucGenre === "" ? "empty" : Number(AucGenre),
-                AucSubTypeID: data.AucSubType === "" ? "empty" : Number(data.AucSubType),
+                AucSubTypeID: data.AucSubType === "" ? "" : Number(data.AucSubType),
             };
             return { name: "normal", params: params };
         },
