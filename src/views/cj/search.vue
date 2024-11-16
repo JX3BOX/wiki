@@ -77,7 +77,6 @@ export default {
                 this.isAll = false;
                 const scene = this.$route.query?.scene || "";
                 const keyword = this.$route.params?.keyword || "";
-                console.log(scene, this.scene, keyword, this.keyword);
                 if ((scene && this.scene != scene) || (keyword && this.keyword != keyword)) {
                     this.page_change_handle(1);
                 } else {
