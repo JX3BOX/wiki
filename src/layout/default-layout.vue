@@ -100,7 +100,7 @@ export default {
     },
     data() {
         return {
-            logo: __cdn + "logo/logo-light/bps.svg",
+            logo: __cdn + "logo/logo-light/cj.svg",
         };
     },
 };
