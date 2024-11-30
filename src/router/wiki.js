@@ -16,6 +16,11 @@ const routes = [
         path: "/achievement/overview",
         component: () => import("../views/wiki/overview.vue"),
     },
+    {
+        name: "compare",
+        path: "/achievement/compare",
+        component: () => import("../views/wiki/compare.vue"),
+    },
 ];
 
 const router = new VueRouter({

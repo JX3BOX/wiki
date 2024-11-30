@@ -18,6 +18,7 @@ let store = {
         onlyUncompleted: false,
         achievementsVirtual: [],
         viewAchievementsName: null,
+        is_fold: false,
     },
     mutations: {
         SET_STATE: (state, { key, value, isSession = false }) => {

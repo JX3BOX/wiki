@@ -1,0 +1,688 @@
+<template>
+    <div class="p-compare">
+        <div>
+            <!-- 用户信息展示 -->
+            <div
+                :style="{
+                    opacity: currentRole ? 1 : 0.5,
+                }"
+                class="m-info-user"
+            >
+                <span class="u-name"
+                    >{{ currentRole.name }}
+                    {{ currentRole.server && "·" }}
+                    {{ currentRole.server }}</span
+                >
+                <el-dropdown trigger="click">
+                    <div class="u-toggle-btn">
+                        <div>
+                            <span>切换角色</span>
+                            <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" />
+                        </div>
+                    </div>
+                    <el-dropdown-menu class="m-role-dropdown" slot="dropdown">
+                        <el-dropdown-item v-for="role in roleList" :key="role.ID">
+                            <div
+                                @click="onChangeRole(role)"
+                                class="m-role-item"
+                                :class="{
+                                    active: role.jx3id === currentRole.jx3id,
+                                }"
+                            >
+                                <span>{{ role.name }}</span>
+                                <span>{{ role.server }}</span>
+                            </div>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
+        </div>
+        <!-- 顶部信息 -->
+        <div class="u-title">
+            <div class="u-label">亲友对比</div>
+            <div class="u-tip">*根据成就未完成人数由多到少排序。</div>
+            <div class="u-radio">
+                <!-- <el-radio value="1" size="large">仅显示共同未完成</el-radio> -->
+                <el-select v-model="selectTab" placeholder="请选择" clearable @change="selectTabChange">
+                    <el-option v-for="item in selectOptions" :key="item.value" :label="item.name" :value="item.value">
+                    </el-option>
+                </el-select>
+            </div>
+        </div>
+        <div class="m-main">
+            <!-- 左侧成就筛选 -->
+            <div class="u-left">
+                <ul
+                    class="u-zl-item"
+                    :class="{ active: item.sub == activeIndex }"
+                    v-for="(item, index) in menuList"
+                    :key="index"
+                    @click="setActiveIndex(item.sub)"
+                >
+                    <div class="u-zl-item_title">{{ item.name }}</div>
+                    <li
+                        class="u-zl-item_children"
+                        :class="{ active: item2.detail == activeIndexChildren }"
+                        v-for="(item2, index2) in item.children"
+                        :key="index2"
+                        @click.stop="setActiveIndex(item.sub, item2.detail)"
+                    >
+                        {{ item2.name }}
+                    </li>
+                </ul>
+            </div>
+            <div class="u-right">
+                <!-- 竖向布局 -->
+                <div class="u-zl-box">
+                    <div class="u-zl_table" :style="'width:' + (contrastKith.length + 1) * 200 + 'px'">
+                        <div class="u-table_label ps">成就名称</div>
+                        <!-- 对比亲友及自身 -->
+                        <div class="u-table_label kith" v-for="(item, index) in contrastKith" :key="index">
+                            <div class="u-name">{{ item.name }}·{{ item.server }}</div>
+                            <i class="el-icon-edit" v-if="index > 0" @click="delRole(item, index)"></i>
+                        </div>
+                    </div>
+                    <div class="u-zl_cell" :style="'width:' + (contrastKith.length + 1) * 200 + 'px'">
+                        <div class="u-zl-list ps">
+                            <div class="u-zl-list_item" v-for="(item, index) in achievements" :key="index">
+                                <img class="u-icon" :src="icon_url(item?.IconID)" />
+                                <span class="u-name">{{ item?.Name }}</span>
+                            </div>
+                        </div>
+                        <div class="u-zl-list" v-for="(item, index) in contrastKith" :key="index">
+                            <div class="u-zl-list_item kith" v-for="(item2, index2) in item.achievements" :key="index2">
+                                <div class="u-self-checked" :class="{ finish: item2.value != '-1' }">
+                                    <i class="el-icon-check" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="u-zl-add_item" @click="addRole">
+                    <i class="el-icon-circle-plus-outline u-add-icon"></i>
+                    <div>添加角色</div>
+                </div>
+            </div>
+        </div>
+        <!-- 添加角色弹窗 -->
+        <el-dialog title="添加角色" :visible.sync="showAddRole" width="400px" draggable :close-on-click-modal="false">
+            <el-form :model="kithForm" :rules="rules" ref="roleRef">
+                <!-- <el-form-item label="角色类型" prop="roleType">
+                    <el-radio-group
+                        v-model="kithForm.roleType"
+                        @input="
+                            kithForm.userId = '';
+                            kithForm.jx3Id = '';
+                        "
+                    >
+                        <el-radio label="1">自身</el-radio>
+                        <el-radio label="2">亲友</el-radio>
+                    </el-radio-group>
+                </el-form-item> -->
+                <el-form-item label="我的亲友" prop="uid">
+                    <el-select v-model="kithForm.uid" placeholder="请选择" @change="getKithRolesList">
+                        <el-option
+                            :label="item?.kith_info?.display_name || '-'"
+                            :value="item.kith_id"
+                            v-for="(item, index) in myKith"
+                            :key="index"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="对应角色" prop="jx3Id">
+                    <el-select v-model="kithForm.jx3Id" placeholder="请选择对应角色" @change="setRoleInfo">
+                        <el-option
+                            :label="item.name"
+                            :value="item.jx3id"
+                            v-for="(item, index) in myKithRoles"
+                            :key="index"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="showAddRole = false">取 消</el-button>
+                <el-button type="primary" @click="addRoleConfirm">确 定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+import {
+    getRoleGameAchievements,
+    getMenuAchievements,
+    getMenus,
+    getVirtualRoleAchievements,
+} from "@/service/achievement";
+import { getMyKith, getMyKithRoles } from "@/service/wiki";
+import { iconLink } from "@jx3box/jx3box-common/js/utils";
+import User from "@jx3box/jx3box-common/js/user";
+import { getUserRoles } from "@/service/team";
+import { cloneDeep } from "lodash";
+export default {
+    components: {},
+    data() {
+        return {
+            currentRole: {}, //当前角色
+            menuList: [],
+            selectTab: "",
+
+            selectOptions: [
+                {
+                    name: "共同未完成的",
+                    value: 1,
+                },
+                {
+                    name: "我未完成的",
+                    value: 2,
+                },
+            ],
+            activeIndex: 1,
+            activeIndexChildren: null,
+            achievements: [],
+            achievements_bak: [],
+            showAddRole: false,
+            myKith: [],
+            myKithRoles: [],
+            roleList: [],
+            kithForm: {
+                uid: "",
+                jx3Id: "",
+            },
+            rules: {
+                roleType: { required: true, message: "请选择类型", trigger: "change" },
+                uid: { required: true, message: "请选择亲友", trigger: "change" },
+                jx3Id: { required: true, message: "请选择角色", trigger: "change" },
+            },
+            contrastKith: [], //对比的亲友及自身
+            contrastKith_bak: [], //对比的亲友及自身
+        };
+    },
+    created() {
+        this.getList();
+        this.getMyKith();
+        this.loadUserRoles();
+    },
+    mounted() {},
+    methods: {
+        icon_url: function (id) {
+            return iconLink(id);
+        },
+        setActiveIndex(sub, detail) {
+            this.activeIndex = sub;
+            if (detail) {
+                this.activeIndexChildren = detail;
+            } else {
+                this.activeIndexChildren = null;
+            }
+            this.selectTab = "";
+            this.getMenuAchievements(sub, detail);
+        },
+        // 获取成就菜单列表
+        getList() {
+            getMenus({
+                general: 1,
+                client: "std",
+            }).then((res) => {
+                const data = res.data.data.menus;
+                this.menuList = data;
+                this.getMenuAchievements();
+            });
+        },
+        // 获取成就列表
+        getMenuAchievements(sub = 1, detail) {
+            getMenuAchievements(sub, detail).then((data) => {
+                this.achievements = data.data.data.achievements || [];
+                this.achievements_bak = cloneDeep(this.achievements);
+                this.queryFinish(); //查询完成情况
+            });
+        },
+        addRole() {
+            this.kithForm = {
+                roleType: "1",
+                userId: "",
+                jx3Id: "",
+            };
+            this.showAddRole = true;
+            this.$nextTick(() => {
+                this.$refs.roleRef.clearValidate(); // 清除表单验证
+            });
+        },
+        //获取我的亲友
+        getMyKith() {
+            getMyKith().then((res) => {
+                this.myKith = res.data.data;
+            });
+        },
+        // 获取当前用户角色列表
+        loadUserRoles() {
+            User.isLogin() &&
+                getUserRoles().then((res) => {
+                    this.roleList = res.data?.data?.list || [];
+                    this.currentRole = res.data?.data?.list[0] || {};
+
+                    if (this.currentRole?.jx3id) this.addRoleConfirm(this.currentRole.jx3id, 1);
+                });
+        },
+        onChangeRole(role) {
+            this.currentRole = role;
+            this.selectTab = "";
+            this.addRoleConfirm(this.currentRole.jx3id, 1);
+        },
+        getKithRolesList() {
+            getMyKithRoles(this.kithForm.uid).then((res) => {
+                this.myKithRoles = res.data.data;
+            });
+        },
+        //删除角色
+        delRole(role, index) {
+            this.contrastKith.splice(index, 1);
+            this.selectTab = "";
+            let arr = [],
+                selectOptions = cloneDeep(this.selectOptions);
+            selectOptions.forEach((item, index) => {
+                if (item.value !== role.jx3id) {
+                    arr.push(item);
+                }
+            });
+            this.selectOptions = arr;
+            this.selectTabChange();
+        },
+        setRoleInfo(value) {
+            // if (this.kithForm.roleType == 1) {
+            //     let info = this.roleList.find((item) => item.jx3id == value);
+            //     this.kithForm.info = info;
+            // } else {
+            //     let info = this.myKithRoles.find((item) => item.jx3id == value);
+            //     this.kithForm.info = info;
+            // }
+            let info = this.myKithRoles.find((item) => item.jx3id == value);
+            this.kithForm.info = info;
+        },
+        //获取对应角色成就列表
+        addRoleConfirm(jx3Id, type) {
+            getRoleGameAchievements(type == 1 ? jx3Id : this.kithForm.jx3Id).then((res) => {
+                const achievements = res.data?.data?.achievements || "";
+                let contrastKith = {};
+                if (type) {
+                    contrastKith = {
+                        ...this.currentRole,
+                        my_achievements: achievements.split(","),
+                        achievements: [],
+                    };
+                } else {
+                    contrastKith = {
+                        ...this.kithForm.info,
+                        my_achievements: achievements.split(","),
+                        achievements: [],
+                    };
+                    //同时向select内追加个人选择
+                    this.selectOptions.push({
+                        value: this.kithForm.jx3Id,
+                        name: contrastKith.name + "未完成",
+                    });
+                }
+                if (type == 1 && this.contrastKith[0]) {
+                    this.$set(this.contrastKith, 0, contrastKith);
+                } else {
+                    this.contrastKith.push(contrastKith);
+                }
+
+                this.showAddRole = false;
+                this.queryFinish();
+            });
+        },
+        //判断成就是否完成
+        queryFinish() {
+            let kith = this.contrastKith,
+                achievements = this.achievements;
+            kith.forEach((item, index) => {
+                this.contrastKith[index].achievements = [];
+                achievements.forEach((achievement, index2) => {
+                    if (item.my_achievements.includes(achievement.ID.toString())) {
+                        this.contrastKith[index].achievements.push({ key: index2, value: achievement.ID.toString() });
+                    } else {
+                        this.contrastKith[index].achievements.push({ key: index2, value: "-1" });
+                    }
+                });
+            });
+            if (!this.selectTab) {
+                this.contrastKith_bak = cloneDeep(this.contrastKith);
+            }
+        },
+        //多数组取交集
+        getIntersectionByKey(arrays, key, type) {
+            if (arrays.length === 0) {
+                return [];
+            }
+            // 将每个对象数组映射为只包含指定键值的数组
+            const mappedArrays = arrays.map((array) => array.map((obj) => obj[key]));
+            // 使用 reduce 方法进行交集操作
+            return mappedArrays.reduce((acc, curr) => {
+                return acc.filter((value) => curr.includes(value));
+            });
+        },
+        //根据条件筛选
+        selectTabChange(value) {
+            let achievements = cloneDeep(this.achievements_bak);
+            let contrastKith = cloneDeep(this.contrastKith_bak);
+            if (!value) {
+                this.achievements = achievements;
+                this.queryFinish();
+                return;
+            }
+            let arr = [];
+            this.contrastKith.forEach((item, index) => {
+                if (value == 2 && index == 0) {
+                    let a = [];
+                    contrastKith[index].achievements.forEach((item2, index2) => {
+                        if (item2.value == "-1") {
+                            a.push({ key: item2.key, value: item2.value });
+                        }
+                    });
+                    arr.push(a);
+                } else if (value == 1) {
+                    let a = [];
+                    contrastKith[index].achievements.forEach((item2, index2) => {
+                        if (item2.value == "-1") {
+                            a.push({ key: item2.key, value: item2.value });
+                        }
+                    });
+                    arr.push(a);
+                } else if (item.jx3id == value) {
+                    let a = [];
+                    contrastKith[index].achievements.forEach((item2, index2) => {
+                        if (item2.value == "-1") {
+                            a.push({ key: item2.key, value: item2.value });
+                        }
+                    });
+                    arr.push(a);
+                }
+            });
+            let keys = this.getIntersectionByKey(arr, "key");
+            let achievementsFilter = [];
+            keys.map((item) => {
+                achievementsFilter.push(this.achievements_bak[item]);
+            });
+            this.achievements = achievementsFilter;
+            this.queryFinish();
+        },
+    },
+};
+</script>
+
+<style lang="less" scoped>
+/* 针对Webkit内核的浏览器 */
+::-webkit-scrollbar {
+    /* 设置滚动条的宽度 */
+    width: 2px;
+}
+
+/* 滚动条轨道 - 背景颜色/白底 */
+::-webkit-scrollbar-track {
+    background: #595958;
+    border-radius: 4px;
+}
+
+/* 滚动条的滑块部分 */
+::-webkit-scrollbar-thumb {
+    background: #e2d3b9;
+    border-radius: 4px;
+}
+
+/* 当鼠标悬停在滚动条滑块上时改变颜色 */
+::-webkit-scrollbar-thumb:hover {
+    background: #e2d3b9;
+}
+.p-compare {
+    padding-top: 35px;
+    width: 960px;
+    height: 100%;
+    box-sizing: border-box;
+    .m-info-user {
+        .mb(8px);
+        .flex;
+        .h(35px);
+        transition: 0.5s;
+        align-items: center;
+        color: rgba(255, 236, 204, 1);
+
+        .u-name {
+            .fz(24px,35px);
+            .mr(8px );
+            .bold;
+        }
+        .u-toggle-btn {
+            .r(4px);
+            .size(96px, 28px);
+            .ml(36px);
+            .flex;
+            .flex(o);
+            border: 1px solid rgba(191, 184, 172, 1);
+            color: #ffeccc;
+            gap: 4px;
+            cursor: pointer;
+            > div {
+                .flex;
+                align-items: center;
+                img {
+                    .ml(4px);
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
+        .u-overview {
+            .fz(24px,35px);
+            .bold;
+            color: white;
+            margin-left: auto;
+            cursor: pointer;
+            text-decoration: underline;
+            position: relative;
+            bottom: -5px;
+        }
+    }
+    .u-title {
+        .flex;
+        align-items: center;
+        .mb(8px);
+        .u-label {
+            flex: 0 0 115px;
+            mask-image: linear-gradient(180deg, rgba(255, 255, 255, 1) 43.06%, rgba(255, 255, 255, 0) 100%);
+            .fz(26px);
+            .bold(900);
+            color: #fff;
+        }
+        .u-tip {
+            flex: 1;
+            color: rgba(255, 236, 204, 1);
+            .fz(14px);
+            .bold(400);
+        }
+        .u-radio {
+            flex: 0 0 150px;
+            :deep(.el-input__inner) {
+                background-color: rgba(255, 255, 255, 0);
+                color: #fff;
+                &:focus {
+                    border-color: #fff;
+                }
+            }
+        }
+    }
+    .m-main {
+        height: calc(100% - 40px);
+        .flex;
+        .u-left {
+            flex: 0 0 106px;
+            color: #ffeccc;
+            background: linear-gradient(180deg, #000000 0%, #000000 100%);
+            height: 100%;
+            overflow-y: auto;
+            ul,
+            li {
+                padding: 0;
+                margin: 0;
+            }
+            .u-zl-item {
+                cursor: pointer;
+                padding: 4px 4px 4px 14px;
+                box-sizing: border-box;
+                &.active {
+                    .u-zl-item_title {
+                        background: #3d342a;
+                    }
+                    .u-zl-item_children {
+                        transition: display 0.5s ease-out;
+                        display: block;
+                    }
+                }
+                .u-zl-item_title {
+                    .fz(14px);
+                    padding: 4px;
+                    .bold(700);
+                }
+            }
+            .u-zl-item_children {
+                .bold(400);
+                .fz(12px);
+                display: none;
+                color: rgba(255, 236, 204, 1);
+                padding: 4px 0 4px 20px;
+
+                &.active {
+                    background: #3d342a;
+                }
+            }
+        }
+        .u-right {
+            .h(100%);
+            .flex;
+            .u-zl-box {
+                .h(100%);
+                max-width: 642px;
+                overflow: scroll;
+                .pr;
+                .fz(16px,24px);
+                .bold(400);
+            }
+            .u-zl_table {
+                .flex;
+                .w(100%);
+                position: sticky;
+                top: 0;
+                .z(3);
+                .u-table_label {
+                    background-color: #463c34;
+                    padding: 0px 12px 0px 12px;
+                    box-sizing: border-box;
+                    .size(200px,50px);
+                    flex-shrink: 0;
+                    color: #ffeccc;
+
+                    .flex;
+                    .flex(o);
+                    .u-name {
+                        .mr(4px);
+                        max-width: 170px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    &.kith {
+                        justify-content: center;
+                    }
+                    &.ps {
+                        position: sticky;
+                        left: 0;
+                    }
+                    i {
+                        cursor: pointer;
+                    }
+                }
+            }
+            .u-zl_cell {
+                .h(calc(100% - 50px));
+                .flex;
+                // .pr;
+                .w(100%);
+            }
+
+            .u-zl-list {
+                .size(200px,100%);
+                flex-shrink: 0;
+                &.ps {
+                    position: sticky;
+                    left: 0;
+
+                    .z(2);
+                }
+
+                .u-zl-list_item {
+                    color: #ffeccc;
+                    .w(100%);
+                    min-height: 36px;
+                    .flex;
+                    align-items: center;
+
+                    &:nth-child(odd) {
+                        background: #ebe5df;
+                    }
+                    &:nth-child(even) {
+                        background: #fff;
+                    }
+                    &.kith {
+                        .flex(o);
+                    }
+                    .u-self-checked {
+                        .size(22px);
+                        background: #fff;
+                        border: 1px solid #6e6e6d;
+                        i {
+                            .fz(22px);
+                            color: #000;
+                            display: none;
+                        }
+                        &.finish {
+                            background-color: #e0c7a8;
+                            i {
+                                display: block;
+                            }
+                        }
+                    }
+                }
+
+                .u-icon {
+                    .size(22px);
+                    margin: 0 18px 0 12px;
+                }
+                .u-name {
+                    color: #846b4b;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 140px;
+                }
+            }
+            .u-zl-add_item {
+                cursor: pointer;
+                .size(200px,100%);
+                .fz(22px);
+                .flex;
+                .flex(o);
+                flex-direction: column;
+                color: #e2d3b9;
+                border-radius: 10px;
+                border: 1px solid #e2d3b9;
+                .ml(12px);
+                .u-add-icon {
+                    .fz(42px);
+                }
+            }
+        }
+    }
+}
+</style>

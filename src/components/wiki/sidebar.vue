@@ -2,7 +2,7 @@
     <div class="m-achievement-sidebar" :class="{ is_mobile: mobile }">
         <img class="u-title_img" src="@/assets/img/wiki/overview/title.svg" alt="" />
         <ul class="m-sidebar-nav">
-            <li class="active">
+            <li :class="{ active: $route.name === 'overview' }">
                 <router-link
                     :to="{
                         name: 'overview',
@@ -17,13 +17,10 @@
                     </li>
                 </ul>
             </li>
-            <li>
+            <li :class="{ active: $route.name === 'compare' }">
                 <router-link
-                    :style="{
-                        pointerEvents: 'none',
-                    }"
                     :to="{
-                        name: 'overview',
+                        name: 'compare',
                     }"
                     >亲友对比</router-link
                 >

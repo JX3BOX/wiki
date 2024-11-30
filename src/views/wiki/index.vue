@@ -2,7 +2,7 @@
     <div>
         <!-- <Header></Header> -->
         <div class="m-achievement-main" :class="{ is_mobile: mobile }">
-            <SideBar />
+            <SideBar v-if="!is_fold" />
             <div class="m-achievement-content" :class="{ is_mobile: mobile }">
                 <router-view></router-view>
             </div>
@@ -16,7 +16,9 @@ export default {
     name: "WikiAchievementIndex",
     components: { SideBar },
     data() {
-        return {};
+        return {
+            is_fold: false,
+        };
     },
     computed: {
         mobile() {
@@ -25,7 +27,15 @@ export default {
             return mobileKeywords.some((keyword) => userAgent.includes(keyword));
         },
     },
-    watch: {},
+    watch: {
+        "$store.state.is_fold": {
+            deep: true,
+            immediate: true,
+            handler(val) {
+                this.is_fold = val;
+            },
+        },
+    },
     methods: {},
     mounted() {},
 };
