@@ -40,7 +40,9 @@
         <!-- 顶部信息 -->
         <div class="u-title">
             <div class="u-label">亲友对比</div>
-            <div class="u-tip">*根据成就未完成人数由多到少排序。</div>
+            <div class="u-tip">
+                <!-- *根据成就未完成人数由多到少排序。 -->
+            </div>
             <div class="u-radio">
                 <!-- <el-radio value="1" size="large">仅显示共同未完成</el-radio> -->
                 <el-select v-model="selectTab" placeholder="请选择" clearable @change="selectTabChange">
@@ -79,14 +81,20 @@
                         <!-- 对比亲友及自身 -->
                         <div class="u-table_label kith" v-for="(item, index) in contrastKith" :key="index">
                             <div class="u-name">{{ item.name }}·{{ item.server }}</div>
-                            <i class="el-icon-edit" @click="delRole(item, index)"></i>
+                            <i class="el-icon-circle-close" @click="delRole(item, index)"></i>
                         </div>
                     </div>
                     <div class="u-zl_cell" :style="'width:' + (contrastKith.length + 1) * 200 + 'px'">
                         <div class="u-zl-list ps">
                             <div class="u-zl-list_item" v-for="(item, index) in achievements" :key="index">
-                                <img class="u-icon" :src="icon_url(item?.IconID)" />
-                                <span class="u-name">{{ item?.Name }}</span>
+                                <el-tooltip effect="dark" :content="item.Desc" placement="top">
+                                    <a :href="get_link(item.ID)" target="_blank">
+                                        <div class="u-zl-list_item_box">
+                                            <img class="u-icon" :src="icon_url(item?.IconID)" />
+                                            <span class="u-name">{{ item?.Name }}</span>
+                                        </div></a
+                                    >
+                                </el-tooltip>
                             </div>
                         </div>
                         <div class="u-zl-list" v-for="(item, index) in contrastKith" :key="index">
@@ -156,7 +164,7 @@ import {
     getVirtualRoleAchievements,
 } from "@/service/achievement";
 import { getMyKith, getMyKithRoles } from "@/service/wiki";
-import { iconLink } from "@jx3box/jx3box-common/js/utils";
+import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import { getUserRoles } from "@/service/team";
 import { cloneDeep } from "lodash";
@@ -206,6 +214,9 @@ export default {
     },
     mounted() {},
     methods: {
+        get_link: function (id) {
+            return getLink("achievement", id);
+        },
         icon_url: function (id) {
             return iconLink(id);
         },
@@ -647,13 +658,30 @@ export default {
                     &.kith {
                         .flex(o);
                     }
+                    .u-zl-list_item_box {
+                        cursor: pointer;
+                        .flex;
+                        align-items: center;
+                        .u-icon {
+                            .size(22px);
+                            margin: 0 18px 0 12px;
+                        }
+                        .u-name {
+                            color: #846b4b;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            max-width: 140px;
+                        }
+                    }
                     .u-self-checked {
-                        .size(22px);
+                        .size(24px);
                         background: #fff;
                         border: 1px solid #6e6e6d;
                         .r(4px);
                         i {
-                            .fz(22px);
+                            .fz(24px);
+                            .bold(600);
                             color: #000;
                             display: none;
                         }
@@ -664,18 +692,6 @@ export default {
                             }
                         }
                     }
-                }
-
-                .u-icon {
-                    .size(22px);
-                    margin: 0 18px 0 12px;
-                }
-                .u-name {
-                    color: #846b4b;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    max-width: 140px;
                 }
             }
             .u-zl-add_item {

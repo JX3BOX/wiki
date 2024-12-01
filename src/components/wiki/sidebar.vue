@@ -9,7 +9,7 @@
                     }"
                     >完成进度</router-link
                 >
-                <ul>
+                <ul v-show="$route.name === 'overview'">
                     <li>
                         <router-link class="is-child" :to="{ name: 'overview' }">{{
                             viewAchievementsName ? viewAchievementsName + "资历" : "总览"
