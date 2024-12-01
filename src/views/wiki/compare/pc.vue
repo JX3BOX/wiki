@@ -1,7 +1,7 @@
 <template>
     <div class="p-compare">
-        <div>
-            <!-- 用户信息展示 -->
+        <!-- <div>
+         
             <div
                 :style="{
                     opacity: currentRole ? 1 : 0.5,
@@ -36,7 +36,7 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-        </div>
+        </div> -->
         <!-- 顶部信息 -->
         <div class="u-title">
             <div class="u-label">亲友对比</div>
@@ -79,7 +79,7 @@
                         <!-- 对比亲友及自身 -->
                         <div class="u-table_label kith" v-for="(item, index) in contrastKith" :key="index">
                             <div class="u-name">{{ item.name }}·{{ item.server }}</div>
-                            <i class="el-icon-edit" v-if="index > 0" @click="delRole(item, index)"></i>
+                            <i class="el-icon-edit" @click="delRole(item, index)"></i>
                         </div>
                     </div>
                     <div class="u-zl_cell" :style="'width:' + (contrastKith.length + 1) * 200 + 'px'">
@@ -107,7 +107,7 @@
         <!-- 添加角色弹窗 -->
         <el-dialog title="添加角色" :visible.sync="showAddRole" width="400px" draggable :close-on-click-modal="false">
             <el-form :model="kithForm" :rules="rules" ref="roleRef">
-                <!-- <el-form-item label="角色类型" prop="roleType">
+                <el-form-item label="角色类型" prop="roleType">
                     <el-radio-group
                         v-model="kithForm.roleType"
                         @input="
@@ -118,8 +118,8 @@
                         <el-radio label="1">自身</el-radio>
                         <el-radio label="2">亲友</el-radio>
                     </el-radio-group>
-                </el-form-item> -->
-                <el-form-item label="我的亲友" prop="uid">
+                </el-form-item>
+                <el-form-item label="我的亲友" prop="uid" v-if="kithForm.roleType == 2">
                     <el-select v-model="kithForm.uid" placeholder="请选择" @change="getKithRolesList">
                         <el-option
                             :label="item?.kith_info?.display_name || '-'"
@@ -134,7 +134,7 @@
                         <el-option
                             :label="item.name"
                             :value="item.jx3id"
-                            v-for="(item, index) in myKithRoles"
+                            v-for="(item, index) in kithForm.roleType == 1 ? roleList : myKithRoles"
                             :key="index"
                         ></el-option>
                     </el-select>
@@ -173,10 +173,10 @@ export default {
                     name: "共同未完成的",
                     value: 1,
                 },
-                {
-                    name: "我未完成的",
-                    value: 2,
-                },
+                // {
+                //     name: "我未完成的",
+                //     value: 2,
+                // },
             ],
             activeIndex: 1,
             activeIndexChildren: null,
@@ -290,15 +290,15 @@ export default {
             this.selectTabChange();
         },
         setRoleInfo(value) {
-            // if (this.kithForm.roleType == 1) {
-            //     let info = this.roleList.find((item) => item.jx3id == value);
-            //     this.kithForm.info = info;
-            // } else {
-            //     let info = this.myKithRoles.find((item) => item.jx3id == value);
-            //     this.kithForm.info = info;
-            // }
-            let info = this.myKithRoles.find((item) => item.jx3id == value);
-            this.kithForm.info = info;
+            if (this.kithForm.roleType == 1) {
+                let info = this.roleList.find((item) => item.jx3id == value);
+                this.kithForm.info = info;
+            } else {
+                let info = this.myKithRoles.find((item) => item.jx3id == value);
+                this.kithForm.info = info;
+            }
+            // let info = this.myKithRoles.find((item) => item.jx3id == value);
+            // this.kithForm.info = info;
         },
         //获取对应角色成就列表
         addRoleConfirm(jx3Id, type) {
@@ -436,7 +436,7 @@ export default {
     background: #e2d3b9;
 }
 .p-compare {
-    padding-top: 35px;
+    padding-top: 65px;
     width: 960px;
     height: 100%;
     box-sizing: border-box;
@@ -551,9 +551,19 @@ export default {
                 display: none;
                 color: rgba(255, 236, 204, 1);
                 padding: 4px 0 4px 20px;
-
+                .pr;
                 &.active {
                     background: #3d342a;
+                    &::before {
+                        content: "";
+                        .ps;
+                        .lt(0,50%);
+                        .size(4px);
+                        transform: translateY(-50%);
+                        background-color: #fff;
+                        .r(50%);
+                        .dbi;
+                    }
                 }
             }
         }
@@ -641,13 +651,14 @@ export default {
                         .size(22px);
                         background: #fff;
                         border: 1px solid #6e6e6d;
+                        .r(4px);
                         i {
                             .fz(22px);
                             color: #000;
                             display: none;
                         }
                         &.finish {
-                            background-color: #e0c7a8;
+                            background: linear-gradient(180deg, rgba(181, 148, 87, 1) 0%, rgba(227, 211, 191, 1) 100%);
                             i {
                                 display: block;
                             }

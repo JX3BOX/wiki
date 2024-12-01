@@ -5,8 +5,8 @@
             <div class="u-name">
                 <!-- 折叠侧栏按钮 -->
                 <!-- el-icon-s-fold -->
-                <i :class="isFold ? 'el-icon-s-fold ' : 'el-icon-s-unfold'" @click="changeFold" />&nbsp;
-                {{ currentRole.name }}
+                <i :class="!isFold ? 'el-icon-s-fold ' : 'el-icon-s-unfold'" @click="changeFold" />&nbsp;
+                <!-- {{ currentRole.name }}
                 {{ currentRole.server && "·" }}
                 {{ currentRole.server }} &nbsp;
                 <div>
@@ -35,7 +35,7 @@
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
-                </div>
+                </div> -->
             </div>
 
             <div class="u-select">
@@ -60,7 +60,7 @@
                 </el-dropdown>
             </div>
             <!-- 添加对比 -->
-            <div class="u-add-btn" @click="addRole"><i class="el-icon-circle-plus-outline u-add-icon"></i></div>
+            <!-- <div class="u-add-btn" @click="addRole"><i class="el-icon-circle-plus-outline u-add-icon"></i></div> -->
         </div>
         <!--成就分类 -->
         <div class="m-achievement-tab" v-show="!isFold">
@@ -87,12 +87,14 @@
         <div class="m-compare-main">
             <!-- 竖向布局 -->
             <div class="u-zl-box">
-                <div class="u-zl_table" :style="'width:' + (contrastKith.length + 1) * 120 + 'px'">
-                    <div class="u-table_label ps">亲友对比</div>
+                <div class="u-zl_table" :style="'max-width:' + (contrastKith.length + 1) * 60 + 120 + 'px'">
+                    <div class="u-table_label ps">
+                        <span class="u-compare-title">亲友对比</span>
+                    </div>
                     <!-- 对比亲友及自身 -->
                     <div class="u-table_label kith" v-for="(item, index) in contrastKith" :key="index">
-                        <div class="u-name" v-if="index == 0">{{ item.name.slice(0, 1) }}</div>
-                        <el-dropdown trigger="click" v-else>
+                        <!-- <div class="u-name" v-if="index == 0">{{ item.name.slice(0, 1) }}</div> -->
+                        <el-dropdown trigger="click">
                             <div class="u-name">{{ item.name.slice(0, 1) }}</div>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item>
@@ -101,8 +103,11 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
+                    <div class="u-table_label add" @click="addRole">
+                        <i class="el-icon-circle-plus-outline u-add-icon"></i>
+                    </div>
                 </div>
-                <div class="u-zl_cell" :style="'width:' + (contrastKith.length + 1) * 120 + 'px'">
+                <div class="u-zl_cell" :style="'max-width:' + (contrastKith.length + 1) * 60 + 120 + 'px'">
                     <div class="u-zl-list ps">
                         <div class="u-zl-list_item" v-for="(item, index) in achievements" :key="index">
                             <span class="u-name">[{{ item?.Name }}]</span>
@@ -115,13 +120,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="u-zl-list add">
+                        <div class="u-zl-list_item kith" v-for="(item2, index2) in achievements" :key="index2"></div>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- 添加角色弹窗 -->
-        <el-dialog title="添加角色" :visible.sync="showAddRole" width="80vw" draggable :close-on-click-modal="false">
-            <el-form :model="kithForm" :rules="rules">
-                <!-- <el-form-item label="角色类型" prop="roleType">
+        <el-dialog title="添加角色" :visible.sync="showAddRole" width="400px" draggable :close-on-click-modal="false">
+            <el-form :model="kithForm" :rules="rules" ref="roleRef">
+                <el-form-item label="角色类型" prop="roleType">
                     <el-radio-group
                         v-model="kithForm.roleType"
                         @input="
@@ -132,8 +140,8 @@
                         <el-radio label="1">自身</el-radio>
                         <el-radio label="2">亲友</el-radio>
                     </el-radio-group>
-                </el-form-item> -->
-                <el-form-item label="我的亲友" prop="uid">
+                </el-form-item>
+                <el-form-item label="我的亲友" prop="uid" v-if="kithForm.roleType == 2">
                     <el-select v-model="kithForm.uid" placeholder="请选择" @change="getKithRolesList">
                         <el-option
                             :label="item?.kith_info?.display_name || '-'"
@@ -148,7 +156,7 @@
                         <el-option
                             :label="item.name"
                             :value="item.jx3id"
-                            v-for="(item, index) in myKithRoles"
+                            v-for="(item, index) in kithForm.roleType == 1 ? roleList : myKithRoles"
                             :key="index"
                         ></el-option>
                     </el-select>
@@ -192,10 +200,10 @@ export default {
                     name: "共同未完成的",
                     value: 1,
                 },
-                {
-                    name: "我未完成的",
-                    value: 2,
-                },
+                // {
+                //     name: "我未完成的",
+                //     value: 2,
+                // },
             ],
             activeIndex: 1,
             activeIndexChildren: null,
@@ -498,20 +506,23 @@ export default {
             }
         }
     }
+    // 成就分类
     .m-achievement-tab {
         position: fixed;
         left: 10px;
         bottom: 10px;
         height: calc(100vh - 360px);
+        .w(127px);
         overflow: auto;
         background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
-        padding: 0 18px;
+        padding: 0 14px;
         box-sizing: border-box;
         .u-zl-item {
             color: #ffeccc;
             padding: 0;
             &.active {
                 .u-zl-item_title {
+                    color: #fff;
                     background: #3d342a;
                 }
                 .u-zl-item_children {
@@ -530,9 +541,20 @@ export default {
                 display: none;
                 color: rgba(255, 236, 204, 1);
                 padding: 4px 0 4px 10px;
-
+                .pr;
                 &.active {
                     background: #3d342a;
+                    color: #fff;
+                    &::before {
+                        content: "";
+                        .ps;
+                        .lt(0,50%);
+                        .size(4px);
+                        transform: translateY(-50%);
+                        background-color: #fff;
+                        .r(50%);
+                        .dbi;
+                    }
                 }
             }
         }
@@ -548,6 +570,7 @@ export default {
             .fz(14px);
             .bold(400);
         }
+        // 表格顶部
         .u-zl_table {
             .flex;
             .w(100%);
@@ -555,9 +578,10 @@ export default {
             top: 0;
             .z(3);
             .u-table_label {
-                .size(120px,50px);
+                // .size(120px,50px);
+                .h(50px);
                 flex-shrink: 0;
-                background-color: #463c34;
+                background-color: #12100e;
                 padding: 0px 12px 0px 12px;
                 box-sizing: border-box;
                 color: #ffeccc;
@@ -572,18 +596,27 @@ export default {
                     .flex(o);
                 }
 
-                &.kith {
+                &.kith,
+                &.add {
+                    .w(60px);
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     justify-content: center;
                 }
+                &.add {
+                    .fz(24px);
+                }
                 &.ps {
+                    .w(120px);
                     position: sticky;
                     left: 0;
-                    .fz(20px);
-                    color: #fff;
-                    mask-image: linear-gradient(180deg, rgba(255, 255, 255, 1) 43.06%, rgba(255, 255, 255, 0) 100%);
+                    .z(2);
+                    .u-compare-title {
+                        .fz(20px);
+                        color: #fff;
+                        mask-image: linear-gradient(180deg, rgba(255, 255, 255, 1) 43.06%, rgba(255, 255, 255, 0) 100%);
+                    }
                 }
                 i {
                     cursor: pointer;
@@ -597,22 +630,26 @@ export default {
         }
 
         .u-zl-list {
-            .size(120px,100%);
+            .size(60px,100%);
             flex-shrink: 0;
             &.ps {
+                .w(120px);
                 position: sticky;
                 left: 0;
 
                 .z(2);
+                .u-zl-list_item {
+                    .pl(12px);
+                    align-items: center;
+                }
             }
-
+            &.add {
+            }
             .u-zl-list_item {
                 color: #ffeccc;
                 .w(100%);
                 min-height: 36px;
                 .flex;
-                .flex(o);
-                color: rgba(112, 83, 45, 1);
 
                 &:nth-child(odd) {
                     background: #ebe5df;
@@ -623,17 +660,20 @@ export default {
                 &.kith {
                     .flex(o);
                 }
+
                 .u-self-checked {
                     .size(24px);
                     background: #fff;
                     border: 1px solid #6e6e6d;
+                    .r(4px);
                     i {
                         .fz(24px);
+                        .bold(600);
                         color: #000;
                         display: none;
                     }
                     &.finish {
-                        background-color: #e0c7a8;
+                        background: linear-gradient(180deg, rgba(181, 148, 87, 1) 0%, rgba(227, 211, 191, 1) 100%);
                         i {
                             display: block;
                         }
