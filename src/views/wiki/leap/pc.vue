@@ -61,6 +61,10 @@
                     <template slot-scope="scope"> {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }} </template>
                 </el-table-column>
             </el-table>
+            <div class="u-page">
+                <el-pagination background hide-on-single-page layout="prev, pager, next" :total="pageTotal">
+                </el-pagination>
+            </div>
         </div>
         <!-- 主要位置 -->
         <div class="m-main">
@@ -222,7 +226,7 @@ export default {
             //方案列表
             list: [],
             queryParams: { page: 1, per: 20 },
-
+            pageTotal: 0, //总条数
             //创建方案配置
             dialogTableVisible: false,
             leapForm: {
@@ -309,10 +313,9 @@ export default {
         getSchemaList() {
             getWikiAchievementLeapSchemaList(this.queryParams).then((res) => {
                 this.list = res.data?.data?.list || [];
+                this.pageTotal = res.data?.data?.total || 0;
                 this.list.forEach((item) => {
-                    console.log(item);
                     let json = this.schemeCompute(item.schema);
-                    console.log(json);
                 });
             });
         },
@@ -528,6 +531,7 @@ export default {
             .flex(o);
             .size(28px);
             color: #ffeccc;
+            cursor: pointer;
         }
         .u-user-all_achievement {
             .fz(16px,25px);
@@ -580,6 +584,18 @@ export default {
             }
             &:nth-child(even) {
                 background: #fff;
+            }
+        }
+        .u-page {
+            .mt(6px);
+            text-align: right;
+
+            .el-pagination.is-background .el-pager li:not(.disabled):hover {
+                color: rgba(112, 83, 45, 1);
+            }
+            .el-pagination.is-background .el-pager li:not(.disabled).active {
+                background-color: #ffeccc;
+                color: rgba(112, 83, 45, 1);
             }
         }
     }
