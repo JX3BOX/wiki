@@ -22,3 +22,25 @@ export function getMyKith(uid) {
 export function getMyKithRoles(uid) {
     return $cms().get(`/api/cms/user/kith/game-roles/${uid}`);
 }
+//获取渡劫方案列表
+export function getWikiAchievementLeapSchemaList(params) {
+    return $cms().get(`/api/cms/pvx/wiki_achievement_leap_schema`, {
+        params,
+    });
+}
+//创建渡劫方案
+export function createdWikiAchievementLeapSchema(params) {
+    return $cms().post(`/api/cms/pvx/wiki_achievement_leap_schema`, params);
+}
+//获取单个渡劫方案
+export function getWikiAchievementLeapSchema(id) {
+    return $cms().get(`/api/cms/pvx/wiki_achievement_leap_schem/${id}`);
+}
+//更新单个渡劫方案
+export function updateWikiAchievementLeapSchema(id, params) {
+    return $cms().put(`/api/cms/pvx/wiki_achievement_leap_schem/${id}`, params);
+}
+//删除单个渡劫方案
+export function deleteWikiAchievementLeapSchema(id) {
+    return $cms().delete(`/api/cms/pvx/wiki_achievement_leap_schem/${id}`);
+}

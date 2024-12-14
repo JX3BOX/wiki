@@ -21,6 +21,11 @@ const routes = [
         path: "/achievement/compare",
         component: () => import("../views/wiki/compare.vue"),
     },
+    {
+        name: "leap",
+        path: "/achievement/leap",
+        component: () => import("../views/wiki/leap.vue"),
+    },
 ];
 
 const router = new VueRouter({

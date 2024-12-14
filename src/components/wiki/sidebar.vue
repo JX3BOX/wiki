@@ -25,13 +25,10 @@
                     >亲友对比</router-link
                 >
             </li>
-            <li>
+            <li :class="{ active: $route.name === 'leap' }">
                 <router-link
-                    :style="{
-                        pointerEvents: 'none',
-                    }"
                     :to="{
-                        name: 'overview',
+                        name: 'leap',
                     }"
                     >渡劫方案</router-link
                 >
