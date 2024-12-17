@@ -1,7 +1,12 @@
 <template>
     <div class="p-leap-pc">
         <div class="m-title">
-            <div class="u-label">渡劫方案</div>
+            <div class="u-label-box">
+                <div class="u-label">渡劫方案</div>
+                <div class="u-btn-created" v-show="list.length > 0" @click="createLeap">
+                    <i class="el-icon-circle-plus-outline u-add-icon"></i>定制方案
+                </div>
+            </div>
 
             <!-- 用户信息展示 -->
             <div
@@ -40,41 +45,136 @@
             </div>
         </div>
         <!-- tabl 列表 -->
-        <div class="m-tables">
-            <el-table
-                :data="list"
-                style="width: 100%"
-                stripe
-                row-class-name="u-table-row"
-                cell-class-name="u-table-cell"
-                header-row-class-name="u-table-header_row"
-                header-cell-class-name="u-table-header_cell"
-            >
-                <el-table-column prop="title" label="方案名称"> </el-table-column>
-                <el-table-column label="方案资历总点数" width="180">
-                    <template slot-scope="scope"> {{ scope.row.number || 0 }} </template>
-                </el-table-column>
-                <el-table-column label="方案资历总点数" width="180">
-                    <template slot-scope="scope"> {{ scope.row.number || 0 }} </template>
-                </el-table-column>
-                <el-table-column label="来源" width="180">
-                    <template slot-scope="scope"> {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }} </template>
-                </el-table-column>
-            </el-table>
-            <div class="u-page">
-                <el-pagination background hide-on-single-page layout="prev, pager, next" :total="pageTotal">
-                </el-pagination>
-            </div>
-        </div>
+
         <!-- 主要位置 -->
-        <div class="m-main">
+        <div class="m-main" v-if="!showDetail">
+            <div class="m-tables">
+                <el-table
+                    :data="list"
+                    style="width: 100%"
+                    stripe
+                    row-class-name="u-table-row"
+                    cell-class-name="u-table-cell"
+                    header-row-class-name="u-table-header_row"
+                    header-cell-class-name="u-table-header_cell"
+                >
+                    <el-table-column prop="title" label="方案名称">
+                        <template slot-scope="scope">
+                            <router-link target="_blank" :to="{ name: 'leap', query: { id: scope.row.id } }">
+                                {{ scope.row.title }}
+                            </router-link>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="方案资历总点数" width="180">
+                        <template slot-scope="scope"> {{ getSchemePoints(scope.row.schema)?.all || 0 }} </template>
+                    </el-table-column>
+                    <el-table-column label="可提升资历点数" width="180">
+                        <template slot-scope="scope"> {{ getSchemePoints(scope.row.schema)?.diffNum || 0 }} </template>
+                    </el-table-column>
+                    <el-table-column label="来源" width="180">
+                        <template slot-scope="scope"> {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }} </template>
+                    </el-table-column>
+                </el-table>
+                <div class="u-page">
+                    <el-pagination background hide-on-single-page layout="prev, pager, next" :total="pageTotal">
+                    </el-pagination>
+                </div>
+            </div>
             <!-- 定制按钮 -->
-            <div class="u-btn" @click="createLeap">
+            <div class="u-btn" @click="createLeap" v-show="list.length == 0">
                 <i class="el-icon-circle-plus-outline u-add-icon"></i>
                 <div>定制方案</div>
             </div>
         </div>
+        <!-- 详情区域 -->
+        <div class="m-detail" v-if="showDetail">
+            <!-- 左侧列表，右侧table -->
+            <!-- 左侧根据成就信息判断是否显示菜单 -->
+            <div class="u-detail-left">
+                <ul class="u-detail-left_item">
+                    <li
+                        class="u-menu-parent u-menu-text"
+                        :class="{ active: detailSelectMenu == null }"
+                        @click="changeDetailMenu(null, 0)"
+                    >
+                        全部
+                    </li>
+                </ul>
+                <div v-for="(item, index) in menuList" :key="index" @click="changeDetailMenu(item, 1)">
+                    <ul v-if="item.show" class="u-detail-left_item">
+                        <li class="u-menu-parent u-menu-text" :class="{ active: detailSelectMenu == item.id }">
+                            {{ item.name }}
+                        </li>
+                        <div
+                            v-for="(item2, index2) in item.children"
+                            :key="index2"
+                            @click.stop="changeDetailMenu(item2, 2)"
+                        >
+                            <li
+                                v-if="item2.show"
+                                class="u-menu-item_children u-menu-text"
+                                :class="{ active: detailSelectMenu == item2.id }"
+                            >
+                                {{ item2.name }}
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <div class="u-detail-right">
+                <el-table
+                    :data="detail.achievements || []"
+                    style="width: 100%"
+                    stripe
+                    height="100%"
+                    row-class-name="u-table-row"
+                    cell-class-name="u-table-cell"
+                    header-row-class-name="u-table-header_row"
+                    header-cell-class-name="u-table-header_cell"
+                >
+                    <el-table-column prop="Name" label="成就名称">
+                        <template slot-scope="scope">
+                            <a :href="getLink('achievement', scope.row.ID)" target="_blank">
+                                <div class="u-achievement-name">
+                                    <img class="u-icon" :src="iconLink(scope.row?.IconID)" />
+                                    <span>{{ scope.row.Name }}</span>
+                                </div></a
+                            >
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="资历点数" width="100">
+                        <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
+                    </el-table-column>
 
+                    <el-table-column label="全服完成度" width="260">
+                        <template slot-scope="scope">
+                            <div class="u-process-box">
+                                <div class="u-process-item" :style="{ width: scope.row.process }"></div>
+                                <div class="u-process-text">{{ scope.row.process }}</div>
+                            </div></template
+                        >
+                    </el-table-column>
+                    <el-table-column label="难度" width="140">
+                        <template slot-scope="scope">
+                            <el-rate :value="scope.row.difficulty" disabled allow-half disabled-void-color="#574938">
+                            </el-rate>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="奖励" width="100">
+                        <template slot-scope="scope">
+                            <el-tooltip placement="top" v-if="scope.row.item">
+                                <div slot="content"><jx3-item :item="scope.row.item" /></div>
+                                <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" />
+                            </el-tooltip>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="u-page">
+                    <el-pagination background hide-on-single-page layout="prev, pager, next" :total="detailPageTotal">
+                    </el-pagination>
+                </div>
+            </div>
+        </div>
         <!-- 定制方案弹出层 -->
         <el-dialog
             title="创建方案"
@@ -210,19 +310,34 @@
 </template>
 
 <script>
-import { getRoleGameAchievements, getMenuAchievements, getMenus, getAchievementPoints } from "@/service/achievement";
-import { getWikiAchievementLeapSchemaList, createdWikiAchievementLeapSchema } from "@/service/wiki";
+import {
+    getRoleGameAchievements,
+    getMenuAchievements,
+    getMenus,
+    getAchievementPoints,
+    getAchievements,
+    getAchievementsPost,
+} from "@/service/achievement";
+import {
+    getWikiAchievementLeapSchemaList,
+    createdWikiAchievementLeapSchema,
+    getWikiAchievementLeapSchema,
+    deleteWikiAchievementLeapSchema,
+    getWikiAchievementLeapSchemaProgress,
+} from "@/service/wiki";
+import Item from "@jx3box/jx3box-editor/src/Item";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import { getUserRoles } from "@/service/team";
 import { cloneDeep, isEmpty } from "lodash";
 
 export default {
-    components: {},
+    components: { "jx3-item": Item },
     data() {
         return {
             currentRole: {}, //当前角色
             roleList: [],
+            showDetail: false, //是否显示详情
             //方案列表
             list: [],
             queryParams: { page: 1, per: 20 },
@@ -252,6 +367,11 @@ export default {
             selectMenuItem: {},
             selectMenuChildrenItem: {},
             achievements: [],
+
+            //详情相关
+            detail: {},
+            detailSelectMenu: null,
+            detailPageTotal: 0,
         };
     },
     watch: {
@@ -269,18 +389,21 @@ export default {
         },
     },
     created() {
+        if (this.$route.query.id) this.showDetail = true;
         this.loadUserRoles();
         this.getMenuList();
-        this.getSchemaList();
     },
     mounted() {},
     methods: {
+        iconLink,
+        getLink,
         // 获取当前用户角色列表
         loadUserRoles() {
             User.isLogin() &&
                 getUserRoles().then((res) => {
                     this.roleList = res.data?.data?.list || [];
                     this.currentRole = res.data?.data?.list[0] || {};
+
                     this.getPoints();
                 });
         },
@@ -289,7 +412,12 @@ export default {
             return getAchievementPoints().then((res) => {
                 const data = res.data.data.points;
                 this.pointsData = data;
-                this.getRoleGameAchievements();
+                if (this.$route.query.id) {
+                    this.getRoleGameAchievements(); //获取当前角色成就
+                } else {
+                    //获取方案列表
+                    this.getSchemaList();
+                }
             });
         },
         onChangeRole(val) {
@@ -314,10 +442,92 @@ export default {
             getWikiAchievementLeapSchemaList(this.queryParams).then((res) => {
                 this.list = res.data?.data?.list || [];
                 this.pageTotal = res.data?.data?.total || 0;
-                this.list.forEach((item) => {
-                    let json = this.schemeCompute(item.schema);
-                });
+                this.getRoleGameAchievements(); //获取当前角色成就
             });
+        },
+        //根据方案列表获取方案的成就ID及对应Point
+        getSchemePoints(schema) {
+            let pointsData = this.pointsData;
+
+            let schemaArr = [];
+            schema.forEach((item) => {
+                schemaArr.push({ ID: item, Point: pointsData[item] });
+            });
+            let info = this.schemeCompute(schemaArr);
+            return { all: info.all, diffNum: info.diffNum };
+        },
+        //获取方案详情
+        getSchemaDetail() {
+            getWikiAchievementLeapSchema(this.$route.query.id).then((res) => {
+                this.detail = res.data?.data || {};
+                this.getAchievements(res.data?.data?.schema);
+                this.getAchievementProgress(res.data?.data?.schema);
+            });
+        },
+        //根据成就ID获取成就列表,同时配置分类菜单
+        getAchievements(data) {
+            getAchievementsPost({ ids: data.toString(), attributes: "Name,Sub,Detail,IconID,Item,Point" }).then(
+                (res) => {
+                    this.detail.achievements = res.data?.data || [];
+                    this.detail.achievementsBak = cloneDeep(this.detail.achievements);
+                    //筛选可显示的分类
+
+                    let menu = cloneDeep(this.menuList);
+                    Object.keys(menu).map((key) => {
+                        menu[key].children.forEach((item_c) => {
+                            this.detail.achievements.forEach((item2) => {
+                                if (menu[key].sub == item2.Sub) {
+                                    menu[key].show = true;
+                                }
+                                if (item2.Detail == item_c.detail) {
+                                    item_c.show = true;
+                                }
+                            });
+                        });
+                    });
+
+                    this.$set(this, "menuList", menu);
+                }
+            );
+        },
+        //全服完成进度及难度
+        getAchievementProgress(data) {
+            getWikiAchievementLeapSchemaProgress(data).then((res) => {
+                this.detail.progressAndDifficulty = res.data?.data || [];
+                this.getDifficulty();
+            });
+        },
+        getDifficulty() {
+            let arr = [];
+            this.detail.achievementsBak.forEach((item) => {
+                let findInfo = this.detail.progressAndDifficulty.find((item2) => item2.achievement_id == item.ID);
+                item.difficulty = (findInfo?.difficulty || 0) / 10;
+
+                item.process =
+                    ((findInfo.completed_role_count / findInfo.total_role_count) * 100).toFixed(2) || 0 + "%";
+                arr.push(item);
+            });
+            this.detail.achievements = arr;
+        },
+
+        //详情界面时菜单分类切换
+        changeDetailMenu(item, type) {
+            if (type == 0) {
+                this.detailSelectMenu = null;
+                this.detail.achievements = cloneDeep(this.detail.achievementsBak);
+                return;
+            }
+            this.detailSelectMenu = item.id;
+            let arr = [];
+            this.detail.achievementsBak.forEach((item2) => {
+                if (type == 1 && item2.Sub == item.sub) {
+                    arr.push(item2);
+                }
+                if (type == 2 && item2.Detail == item.detail) {
+                    arr.push(item2);
+                }
+            });
+            this.detail.achievements = arr;
         },
         createLeap() {
             this.dialogTableVisible = true;
@@ -357,7 +567,10 @@ export default {
             }).then((res) => {
                 const data = res.data.data.menus;
                 this.menuList = data;
-
+                if (this.$route.query.id) {
+                    this.getSchemaDetail();
+                    return;
+                }
                 this.selectMenuItem = data[1];
                 // this.selectMenuChildrenItem = data[1]?.children?.[0] || {};
                 this.selectMenuChildrenItem = {};
@@ -459,10 +672,11 @@ export default {
                 remaining = 0;
             let _this = this;
             let customList = data || this.customList;
+
             //计算成就差值
             let arr = customList.filter(function (v) {
                 all = all + v.Point;
-                return _this.currentRole.achievements.indexOf(v.ID) == -1;
+                return _this.currentRole.achievements?.indexOf(v.ID) == -1 || false;
             });
             arr.forEach((item) => {
                 diffNum = diffNum + item.Point;
@@ -483,15 +697,14 @@ export default {
         },
         //提交方案
         submitLeap() {
-            console.log(this.leapForm);
-            console.log(this.customList);
             let schema = [];
             this.customList.forEach((item) => {
-                schema.push({
-                    ID: item.ID,
-                    Sub: item.Sub,
-                    Detail: item.Detail,
-                });
+                // schema.push({
+                //     ID: item.ID,
+                //     Sub: item.Sub,
+                //     Detail: item.Detail,
+                // });
+                schema.push(item.ID);
             });
             let params = {
                 title: this.leapForm.title,
@@ -547,12 +760,34 @@ export default {
         align-items: center;
         justify-content: space-between;
         .mb(8px);
+        .u-label-box {
+            .flex;
+            align-items: center;
+            .w(130px);
+            flex-shrink: 0;
+        }
         .u-label {
-            flex: 0 0 115px;
+            .w(115px);
+            flex-shrink: 0;
             mask-image: linear-gradient(180deg, rgba(255, 255, 255, 1) 43.06%, rgba(255, 255, 255, 0) 100%);
             .fz(26px);
             .bold(900);
             color: #fff;
+        }
+        .u-btn-created {
+            .size(120px,20px);
+            flex-shrink: 0;
+            border: 1px solid #ffeccc;
+            .r(10px);
+            .flex;
+            .flex(o);
+            padding: 4px 0;
+            color: #e2d3b9;
+            cursor: pointer;
+            .fz(14px);
+            .u-add-icon {
+                .fz(16px);
+            }
         }
         .u-tip {
             flex: 1;
@@ -561,7 +796,8 @@ export default {
             .bold(400);
         }
     }
-    .m-tables {
+    .m-tables,
+    .m-detail {
         .mb(8px);
         .el-table,
         .u-table-header_row,
@@ -576,6 +812,9 @@ export default {
         .u-table-cell {
             .x;
             color: rgba(112, 83, 45, 1);
+            a {
+                color: rgba(112, 83, 45, 1);
+            }
         }
         .u-table-row {
             //奇偶选择器
@@ -611,6 +850,117 @@ export default {
             cursor: pointer;
             .u-add-icon {
                 .fz(42px);
+            }
+        }
+    }
+    // 详情
+    .m-detail {
+        .h(100%);
+        .flex;
+        border-top: 2px solid #ffeccc;
+        .u-detail-left,
+        .u-detail-right .el-table__body-wrapper {
+            /* 针对Webkit内核的浏览器 */
+            &::-webkit-scrollbar {
+                /* 设置滚动条的宽度 */
+                width: 2px;
+            }
+
+            /* 滚动条轨道 - 背景颜色/白底 */
+            &::-webkit-scrollbar-track {
+                background: #595958;
+                border-radius: 4px;
+            }
+
+            /* 滚动条的滑块部分 */
+            &::-webkit-scrollbar-thumb {
+                background: #e2d3b9;
+                border-radius: 4px;
+            }
+
+            /* 当鼠标悬停在滚动条滑块上时改变颜色 */
+            &::-webkit-scrollbar-thumb:hover {
+                background: #e2d3b9;
+            }
+        }
+        .u-detail-left {
+            .h(100%);
+            .w(120px);
+            .fz(14px);
+            .bold(400);
+            overflow-y: auto;
+            padding: 6px;
+            box-sizing: border-box;
+            color: rgba(255, 236, 204, 1);
+            flex-shrink: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(87, 73, 56, 1) 100%);
+
+            .u-detail-left_item {
+                margin: 0;
+                padding: 0;
+                list-style-type: none;
+                .u-menu-text {
+                    .mb(8px);
+                    padding: 2px;
+                    box-sizing: border-box;
+                    cursor: pointer;
+                    &:hover {
+                        color: #fff;
+                        .bold(700);
+                        background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
+                    }
+                    &.active {
+                        color: #fff;
+                        .bold(700);
+                        background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
+                    }
+                }
+            }
+            .u-menu-parent_name {
+                .mb(8px);
+            }
+            .u-menu-item_children {
+                .ml(10px);
+            }
+        }
+        .u-detail-right {
+            .w(calc(100% - 120px));
+            .u-table-header_row {
+                .gutter {
+                    display: none !important;
+                }
+            }
+            .u-achievement-name {
+                .flex;
+                align-items: center;
+                span {
+                    color: #70532d;
+                }
+            }
+            .u-icon {
+                .size(24px);
+                .mr(4px );
+            }
+            .u-process-box {
+                background-color: #574938;
+                .h(18px);
+                .pr;
+                .u-process-text {
+                    .pa;
+                    .lt(0);
+                    .size(100%,100%);
+                    color: #fff;
+                    .fz(16px,18px);
+
+                    .x;
+                    .bold(700);
+                    z-index: 3;
+                }
+                .u-process-item {
+                    .h(100%);
+
+                    background: linear-gradient(90deg, #3d342a 0%, #cbb79a 100%);
+                }
             }
         }
     }
@@ -671,6 +1021,7 @@ export default {
                     .fz(14px);
                     .bold(700);
                     cursor: pointer;
+                    &:hover,
                     &.active {
                         color: #fff;
                         background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
@@ -717,6 +1068,7 @@ export default {
                         color: #ffeccc;
                         .fz(14px);
                         .bold(400);
+                        &:hover,
                         &.active {
                             color: #fff;
                             background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
@@ -810,6 +1162,11 @@ export default {
                 .size(120px,48px);
                 margin: 10px auto;
                 cursor: pointer;
+                &:hover {
+                    background: linear-gradient(180deg, rgba(173, 126, 16, 1) 0%, rgba(173, 126, 16, 0) 100%);
+
+                    border: 1px solid rgba(255, 255, 255, 0.88);
+                }
             }
         }
     }

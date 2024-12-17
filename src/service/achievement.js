@@ -80,6 +80,10 @@ export function getAchievements(params) {
         params: Object.assign(params, { client }),
     });
 }
+// 获取成就列表Post
+export function getAchievementsPost(params) {
+    return $.post(`/api/node/achievement/list`, Object.assign(params, { client }));
+}
 
 export function searchAchievements(params) {
     return $.get(`/api/node/achievement/search`, {
