@@ -239,8 +239,18 @@
                             <!-- 方案描述 -->
                             <div class="u-recommend-desc" v-if="recommendList.length">
                                 <!-- 点数根据schema计算 -->
-                                <div class="u-recommend-desc_title">方案总资历点数：0</div>
-                                <div class="u-recommend-desc_source">来源：魔盒</div>
+                                <div class="u-recommend-desc_title">
+                                    方案总资历点数：{{ selectRecommendItem?.all || 0 }}
+                                </div>
+                                <div class="u-recommend-desc_source">
+                                    来源：{{
+                                        selectRecommendItem
+                                            ? selectRecommendItem.is_official == 1
+                                                ? "魔盒"
+                                                : "玩家"
+                                            : "-"
+                                    }}
+                                </div>
                                 <div class="u-recommend-desc_text">
                                     <span>简介：</span>
                                     <div v-html="selectRecommendItem.desc"></div>
@@ -547,6 +557,13 @@ export default {
         },
         //弹窗方案方向切换
         changeCategory(value) {
+            this.leapForm = {
+                title: "",
+                all: 0,
+                diffNum: 0,
+                remaining: 0,
+                number: 0,
+            };
             this.dialogQueryParams.is_official = value;
             value == 1 ? this.dialogQuery() : "";
         },
@@ -558,6 +575,14 @@ export default {
         },
         selectRecommend(item) {
             this.selectRecommendItem = item;
+            let info = this.getSchemePoints(this.selectRecommendItem.schema);
+            let remaining = 0;
+            if (this.leapForm.number > 0 && this.leapForm.number > info.diffNum) {
+                remaining = this.leapForm.number - info.diffNum;
+            }
+            this.leapForm.all = info.all;
+            this.leapForm.diffNum = info.diffNum;
+            this.leapForm.remaining = remaining;
         },
         // 获取成就菜单列表
         getMenuList() {
