@@ -30,6 +30,9 @@
         </div>
         <!--成就分类 -->
         <div class="m-achievement-tab" v-show="!isFold && isDetail">
+            <ul class="u-zl-item" :class="{ active: detailSelectMenu == null }">
+                <div class="u-zl-item_title" @click="changeDetailMenu(null, 0)">全部</div>
+            </ul>
             <div v-for="(item, index) in menuList" :key="index" @click="changeDetailMenu(item, 1)">
                 <ul class="u-zl-item" v-if="item.show" :class="{ active: detailSelectMenu == item.id }">
                     <div class="u-zl-item_title">{{ item.name }}</div>
@@ -115,26 +118,30 @@
                     <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
                 </el-table-column>
 
-                <el-table-column label="全服完成度" width="260">
+                <!-- <el-table-column label="全服完成度" width="260">
                     <template slot-scope="scope">
                         <div class="u-process-box">
                             <div class="u-process-item" :style="{ width: scope.row.process }"></div>
                             <div class="u-process-text">{{ scope.row.process }}</div>
                         </div></template
                     >
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column label="难度" width="140">
                     <template slot-scope="scope">
                         <el-rate :value="scope.row.difficulty" disabled allow-half disabled-void-color="#574938">
                         </el-rate>
                     </template>
                 </el-table-column>
-                <el-table-column label="奖励" width="100">
+                <el-table-column label="奖励" width="60">
                     <template slot-scope="scope">
-                        <el-tooltip placement="top" v-if="scope.row.item">
-                            <div slot="content"><jx3-item :item="scope.row.item" /></div>
-                            <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" />
-                        </el-tooltip>
+                        <el-popover placement="right" width="400" trigger="click" v-if="scope.row.item">
+                            <div><jx3-item :item="scope.row.item" /></div>
+                            <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" slot="reference" />
+                        </el-popover>
+
+                        <!-- <el-tooltip placement="top" v-if="scope.row.item">
+                           
+                        </el-tooltip> -->
                     </template>
                 </el-table-column>
             </el-table>
