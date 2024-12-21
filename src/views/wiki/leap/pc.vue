@@ -170,7 +170,13 @@
                     </el-table-column>
                 </el-table>
                 <div class="u-page">
-                    <el-pagination background hide-on-single-page layout="prev, pager, next" :total="detailPageTotal">
+                    <el-pagination
+                        background
+                        hide-on-single-page
+                        layout="prev, pager, next"
+                        :total="detailPageTotal"
+                        @current-change="pageChange"
+                    >
                     </el-pagination>
                 </div>
             </div>
@@ -223,7 +229,9 @@
                         </div>
                         <!-- 推荐 -->
                         <div v-if="dialogQueryParams.is_official == 1" class="u-dialog-main_recommend">
-                            <el-empty description="暂无推荐" v-if="!recommendList.length"></el-empty>
+                            <div class="u-recommend-empty" v-if="!recommendList.length">
+                                <img src="../../../assets/img/wiki/leap/leap_empty.png" width="300px" />
+                            </div>
                             <!-- 方案列表 -->
                             <div class="u-recommend-list u-common-list" v-if="recommendList.length">
                                 <div
@@ -232,6 +240,7 @@
                                     v-for="item in recommendList"
                                     :key="item.id"
                                     @click="selectRecommend(item)"
+                                    :title="item.title"
                                 >
                                     {{ item.title }}
                                 </div>
@@ -299,7 +308,10 @@
                                     @click="selectAchievement(item)"
                                 >
                                     <img src="../../../assets/img/wiki/leap/tick.svg" />
-                                    {{ item.Name }}
+
+                                    <el-tooltip effect="dark" :content="item.Name" placement="top-start">
+                                        <div>{{ item.Name }}</div>
+                                    </el-tooltip>
                                 </div>
                             </div>
                         </div>
@@ -447,12 +459,16 @@ export default {
                 this.$set(this.currentRole, "total", total);
             });
         },
+        pageChange(page) {
+            this.queryParams.page = page;
+            this.getSchemaList(true);
+        },
         //获取方案列表
-        getSchemaList() {
+        getSchemaList(status) {
             getWikiAchievementLeapSchemaList(this.queryParams).then((res) => {
                 this.list = res.data?.data?.list || [];
                 this.pageTotal = res.data?.data?.total || 0;
-                this.getRoleGameAchievements(); //获取当前角色成就
+                if (!status) this.getRoleGameAchievements(); //获取当前角色成就
             });
         },
         //根据方案列表获取方案的成就ID及对应Point
@@ -471,12 +487,11 @@ export default {
             getWikiAchievementLeapSchema(this.$route.query.id).then((res) => {
                 this.detail = res.data?.data || {};
                 this.getAchievements(res.data?.data?.schema);
-                this.getAchievementProgress(res.data?.data?.schema);
             });
         },
         //根据成就ID获取成就列表,同时配置分类菜单
         getAchievements(data) {
-            getAchievementsPost({ ids: data.toString(), attributes: "Name,Sub,Detail,IconID,Item,Point" }).then(
+            getAchievementsPost({ ids: data.toString(), attributes: "Name,Sub,Detail,IconID,Item,Point,ID" }).then(
                 (res) => {
                     this.detail.achievements = res.data?.data || [];
                     this.detail.achievementsBak = cloneDeep(this.detail.achievements);
@@ -497,6 +512,7 @@ export default {
                     });
 
                     this.$set(this, "menuList", menu);
+                    this.getAchievementProgress(data);
                 }
             );
         },
@@ -514,10 +530,11 @@ export default {
                 item.difficulty = (findInfo?.difficulty || 0) / 10;
 
                 item.process =
-                    ((findInfo.completed_role_count / findInfo.total_role_count) * 100).toFixed(2) || 0 + "%";
+                    (((findInfo.completed_role_count / findInfo.total_role_count) * 100).toFixed(2) || 0) + "%";
                 arr.push(item);
             });
-            this.detail.achievements = arr;
+            this.$set(this.detail, "achievements", arr);
+            this.$forceUpdate();
         },
 
         //详情界面时菜单分类切换
@@ -1104,6 +1121,12 @@ export default {
                 }
                 .u-dialog-main_recommend {
                     .flex;
+                    .u-recommend-empty {
+                        .w(100%);
+                        flex-shrink: 0;
+                        .flex;
+                        .flex(o);
+                    }
                     .u-recommend-list {
                         .size(120px,300px);
                     }
