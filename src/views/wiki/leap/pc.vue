@@ -44,8 +44,6 @@
                 </div>
             </div>
         </div>
-        <!-- tabl 列表 -->
-
         <!-- 主要位置 -->
         <div class="m-main" v-if="!showDetail">
             <div class="m-tables">
@@ -76,7 +74,13 @@
                     </el-table-column>
                 </el-table>
                 <div class="u-page">
-                    <el-pagination background hide-on-single-page layout="prev, pager, next" :total="pageTotal">
+                    <el-pagination
+                        background
+                        hide-on-single-page
+                        layout="prev, pager, next"
+                        :total="pageTotal"
+                        @current-change="pageChange"
+                    >
                     </el-pagination>
                 </div>
             </div>
@@ -169,16 +173,16 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="u-page">
+                <!-- <div class="u-page">
                     <el-pagination
                         background
                         hide-on-single-page
                         layout="prev, pager, next"
                         :total="detailPageTotal"
-                        @current-change="pageChange"
+                       
                     >
                     </el-pagination>
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- 定制方案弹出层 -->

@@ -30,31 +30,31 @@
         </div>
         <!--成就分类 -->
         <div class="m-achievement-tab" v-show="!isFold && isDetail">
-            <ul
-                class="u-zl-item"
-                :class="{ active: detailSelectMenu == item.id }"
-                v-for="(item, index) in menuList"
-                :key="index"
-                @click="changeDetailMenu(item, 1)"
-            >
-                <div class="u-zl-item_title">{{ item.name }}</div>
-                <li
-                    class="u-zl-item_children"
-                    :class="{ active: detailSelectMenu == item2.id }"
-                    v-for="(item2, index2) in item.children"
-                    :key="index2"
-                    @click.stop="changeDetailMenu(item2, 2)"
-                >
-                    {{ item2.name }}
-                </li>
-            </ul>
+            <div v-for="(item, index) in menuList" :key="index" @click="changeDetailMenu(item, 1)">
+                <ul class="u-zl-item" v-if="item.show" :class="{ active: detailSelectMenu == item.id }">
+                    <div class="u-zl-item_title">{{ item.name }}</div>
+                    <div
+                        v-for="(item2, index2) in item.children"
+                        :key="index2"
+                        @click.stop="changeDetailMenu(item2, 2)"
+                    >
+                        <li
+                            class="u-zl-item_children"
+                            v-if="item2.show"
+                            :class="{ active: detailSelectMenu == item2.id }"
+                        >
+                            {{ item2.name }}
+                        </li>
+                    </div>
+                </ul>
+            </div>
         </div>
         <!-- 列表主要位置，左侧收缩后展开为最宽调整p-leap-mobile类包裹的宽度 -->
         <div class="m-leap-main" v-if="!isDetail">
             <el-table
                 :data="list"
-                style="width: 100%; max-height: calc(100% - 45px)"
-                height="auto"
+                style="width: 100%; max-height: calc(100vh - 85px)"
+                height="100%"
                 stripe
                 row-class-name="u-table-row"
                 cell-class-name="u-table-cell"
@@ -90,7 +90,55 @@
             </div>
         </div>
         <!-- 详情界面 -->
-        <div class="m-leap-detail" v-else></div>
+        <div class="m-leap-detail" v-else>
+            <el-table
+                :data="detail.achievements || []"
+                style="width: 100%"
+                stripe
+                height="100%"
+                row-class-name="u-table-row"
+                cell-class-name="u-table-cell"
+                header-row-class-name="u-table-header_row"
+                header-cell-class-name="u-table-header_cell"
+            >
+                <el-table-column prop="Name" label="成就名称">
+                    <template slot-scope="scope">
+                        <a :href="getLink('achievement', scope.row.ID)" target="_blank">
+                            <div class="u-achievement-name">
+                                <img class="u-icon" :src="iconLink(scope.row?.IconID)" />
+                                <span>{{ scope.row.Name }}</span>
+                            </div></a
+                        >
+                    </template>
+                </el-table-column>
+                <el-table-column label="资历点数" width="100">
+                    <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
+                </el-table-column>
+
+                <el-table-column label="全服完成度" width="260">
+                    <template slot-scope="scope">
+                        <div class="u-process-box">
+                            <div class="u-process-item" :style="{ width: scope.row.process }"></div>
+                            <div class="u-process-text">{{ scope.row.process }}</div>
+                        </div></template
+                    >
+                </el-table-column>
+                <el-table-column label="难度" width="140">
+                    <template slot-scope="scope">
+                        <el-rate :value="scope.row.difficulty" disabled allow-half disabled-void-color="#574938">
+                        </el-rate>
+                    </template>
+                </el-table-column>
+                <el-table-column label="奖励" width="100">
+                    <template slot-scope="scope">
+                        <el-tooltip placement="top" v-if="scope.row.item">
+                            <div slot="content"><jx3-item :item="scope.row.item" /></div>
+                            <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" />
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
     </div>
 </template>
 
@@ -116,7 +164,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { getUserRoles } from "@/service/team";
 import { cloneDeep, isEmpty } from "lodash";
 export default {
-    components: {},
+    components: { "jx3-item": Item },
     data() {
         return {
             isFold: false, //侧栏是否隐藏
@@ -257,7 +305,7 @@ export default {
                             });
                         });
                     });
-
+                    console.log(menu);
                     this.$set(this, "menuList", menu);
                     this.getAchievementProgress(data);
                 }
@@ -327,7 +375,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .p-leap-mobile {
     height: calc(100vh - 40px);
     width: calc(100vw - 137px);
@@ -400,14 +448,11 @@ export default {
         .u-zl-item {
             color: #ffeccc;
             padding: 0;
+            list-style-type: none;
             &.active {
                 .u-zl-item_title {
                     color: #fff;
                     background: #3d342a;
-                }
-                .u-zl-item_children {
-                    transition: display 0.5s ease-out;
-                    display: block;
                 }
             }
             .u-zl-item_title {
@@ -418,8 +463,9 @@ export default {
             .u-zl-item_children {
                 .bold(400);
                 .fz(12px);
-                display: none;
+                // display: none;
                 color: rgba(255, 236, 204, 1);
+                margin: 4px 0;
                 padding: 4px 0 4px 10px;
                 .pr;
                 &.active {
@@ -439,12 +485,16 @@ export default {
             }
         }
     }
-    .m-leap-main {
+    .m-leap-main,
+    .m-leap-detail {
         .size(100%,100%);
         .mb(8px);
         .el-table,
         .u-table-header_row,
         .u-table-header_cell {
+            background-color: transparent;
+        }
+        .el-table__fixed::before {
             background-color: transparent;
         }
 
@@ -475,6 +525,46 @@ export default {
             :deep(.el-pagination.is-background .el-pager li:not(.disabled).active) {
                 background-color: #ffeccc;
                 color: rgba(112, 83, 45, 1);
+            }
+        }
+    }
+    .m-leap-detail {
+        .u-table-header_row {
+            .gutter {
+                display: none !important;
+            }
+        }
+        .u-achievement-name {
+            .flex;
+            flex-direction: column;
+            align-items: center;
+            span {
+                color: #70532d;
+            }
+        }
+        .u-icon {
+            .size(24px);
+            .mr(4px );
+        }
+        .u-process-box {
+            background-color: #574938;
+            .h(18px);
+            .pr;
+            .u-process-text {
+                .pa;
+                .lt(0);
+                .size(100%,100%);
+                color: #fff;
+                .fz(16px,18px);
+
+                .x;
+                .bold(700);
+                z-index: 3;
+            }
+            .u-process-item {
+                .h(100%);
+
+                background: linear-gradient(90deg, #3d342a 0%, #cbb79a 100%);
             }
         }
     }
