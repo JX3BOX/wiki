@@ -103,6 +103,7 @@
                 cell-class-name="u-table-cell"
                 header-row-class-name="u-table-header_row"
                 header-cell-class-name="u-table-header_cell"
+                v-loading="loading"
             >
                 <el-table-column prop="Name" label="成就名称">
                     <template slot-scope="scope">
@@ -178,6 +179,7 @@ export default {
             isDetail: false, //是否是详情界面
             currentRole: {}, //当前角色
             roleList: [],
+            loading: false,
             menuList: [],
             selectMenuItem: {},
             selectMenuChildrenItem: {},
@@ -293,6 +295,7 @@ export default {
         },
         //根据成就ID获取成就列表,同时配置分类菜单
         getAchievements(data) {
+            this.loading = true;
             getAchievementsPost({ ids: data.toString(), attributes: "Name,Sub,Detail,IconID,Item,Point,ID" }).then(
                 (res) => {
                     this.detail.achievements = res.data?.data || [];
@@ -312,7 +315,7 @@ export default {
                             });
                         });
                     });
-                    console.log(menu);
+                    this.loading = false;
                     this.$set(this, "menuList", menu);
                     this.getAchievementProgress(data);
                 }
