@@ -448,6 +448,12 @@ export default {
 ::-webkit-scrollbar-thumb:hover {
     background: #e2d3b9;
 }
+.u-left {
+    &::-webkit-scrollbar {
+        /* 设置滚动条的宽度 */
+        width: 2px;
+    }
+}
 .p-compare {
     padding-top: 65px;
     // width: 960px;
