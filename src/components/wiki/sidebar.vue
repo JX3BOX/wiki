@@ -1,6 +1,6 @@
 <template>
     <div class="m-achievement-sidebar" :class="{ is_mobile: mobile }">
-        <img class="u-title_img" src="@/assets/img/wiki/overview/title.svg" alt="" />
+        <img class="u-title_img" src="@/assets/img/wiki/overview/title.png" alt="" />
         <ul class="m-sidebar-nav">
             <li :class="{ active: $route.name === 'overview' }">
                 <router-link
@@ -133,6 +133,9 @@ export default {
                 color: rgba(204, 161, 108, 1);
             }
         }
+    }
+    .u-title_img {
+        .w(180px);
     }
     &.is_mobile {
         .w(137px);

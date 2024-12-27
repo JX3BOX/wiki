@@ -80,7 +80,9 @@
                         <div class="u-table_label ps">成就名称</div>
                         <!-- 对比亲友及自身 -->
                         <div class="u-table_label kith" v-for="(item, index) in contrastKith" :key="index">
-                            <div class="u-name">{{ item.name }}·{{ item.server }}</div>
+                            <div class="u-name" :title="item.name + '·' + item.server">
+                                {{ item.name }}·{{ item.server }}
+                            </div>
                             <i class="el-icon-circle-close" @click="delRole(item, index)"></i>
                         </div>
                     </div>
@@ -427,7 +429,7 @@ export default {
 /* 针对Webkit内核的浏览器 */
 ::-webkit-scrollbar {
     /* 设置滚动条的宽度 */
-    width: 2px;
+    width: 10px;
 }
 
 /* 滚动条轨道 - 背景颜色/白底 */
@@ -448,8 +450,10 @@ export default {
 }
 .p-compare {
     padding-top: 65px;
-    width: 960px;
+    // width: 960px;
     height: 100%;
+    min-width: 960px;
+    max-width: 1520px;
     box-sizing: border-box;
     .m-info-user {
         .mb(8px);
@@ -581,9 +585,13 @@ export default {
         .u-right {
             .h(100%);
             .flex;
+            max-width: 1414px;
+            min-width: 854px;
+            justify-content: space-between;
             .u-zl-box {
                 .h(100%);
-                max-width: 642px;
+                // max-width: 642px;
+                max-width: 1200px;
                 overflow: scroll;
                 .pr;
                 .fz(16px,24px);

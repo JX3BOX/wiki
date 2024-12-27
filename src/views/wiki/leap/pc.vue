@@ -56,21 +56,36 @@
                     header-row-class-name="u-table-header_row"
                     header-cell-class-name="u-table-header_cell"
                 >
-                    <el-table-column prop="title" label="方案名称">
+                    <el-table-column prop="title">
+                        <template slot="header">
+                            <div class="u-table-cell_left">方案名称</div>
+                        </template>
                         <template slot-scope="scope">
                             <router-link target="_blank" :to="{ name: 'leap', query: { id: scope.row.id } }">
-                                {{ scope.row.title }}
+                                <div style="text-align: left; height: 24px">{{ scope.row.title }}</div>
                             </router-link>
                         </template>
                     </el-table-column>
                     <el-table-column label="方案资历总点数" width="180">
                         <template slot-scope="scope"> {{ getSchemePoints(scope.row.schema)?.all || 0 }} </template>
                     </el-table-column>
-                    <el-table-column label="可提升资历点数" width="180">
-                        <template slot-scope="scope"> {{ getSchemePoints(scope.row.schema)?.diffNum || 0 }} </template>
+                    <el-table-column width="180">
+                        <template slot="header">
+                            <div class="u-table-cell_right">可提升资历点数</div>
+                        </template>
+                        <template slot-scope="scope">
+                            <div style="text-align: right">{{ getSchemePoints(scope.row.schema)?.diffNum || 0 }}</div>
+                        </template>
                     </el-table-column>
-                    <el-table-column label="来源" width="180">
-                        <template slot-scope="scope"> {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }} </template>
+                    <el-table-column width="180">
+                        <template slot="header">
+                            <div class="u-table-cell_right">来源</div>
+                        </template>
+                        <template slot-scope="scope">
+                            <div style="text-align: right">
+                                {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }}
+                            </div></template
+                        >
                     </el-table-column>
                 </el-table>
                 <div class="u-page">
@@ -273,9 +288,9 @@
                         </div>
                         <!-- 自选方案区域 -->
                         <div class="u-dialog-main_custom" v-else>
-                            <div class="u-dialog-main_custom_list u-common-list">
+                            <div class="u-dialog-main_custom_list u-common-list u-first-box">
                                 <div
-                                    class="u-item"
+                                    class="u-item u-first"
                                     :class="{ active: selectMenuItem.id == item.id }"
                                     v-for="item in menuList"
                                     :key="item.id"
@@ -304,9 +319,9 @@
                             </div>
                             <!-- 成就区域 -->
                             <div class="u-dialog-main_custom_list u-common-list">
-                                <div class="u-item" @click="selectAllAchievement()">全部</div>
+                                <div class="u-item u-select-all" @click="selectAllAchievement()">全部</div>
                                 <div
-                                    class="u-item"
+                                    class="u-item u-select"
                                     :class="{ 'achievement-active': isSelectAchievement(item) }"
                                     v-for="item in achievements"
                                     :key="item.ID"
@@ -325,9 +340,12 @@
 
                 <div class="u-dialog-footer">
                     <div class="u-dialog-footer_tips">
-                        当前方案共 <span>{{ leapForm.all }}</span> 资历，可为你提供
-                        <span>{{ this.leapForm.diffNum }}</span> 资历提升，距离目标还剩
-                        <span>{{ leapForm.remaining }}</span> 资历。
+                        当前方案共
+                        <span>{{ leapForm.all.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span>
+                        资历，可为你提供
+                        <span>{{ this.leapForm.diffNum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span>
+                        资历提升，距离目标还剩
+                        <span>{{ leapForm.remaining.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</span> 资历。
                     </div>
                     <div class="u-btn" @click="submitLeap()">生成方案</div>
                 </div>
@@ -711,8 +729,13 @@ export default {
         },
         // 选择单个成就
         selectAchievement(item) {
-            //根据ID判断选中状态
-            this.customList.push(item);
+            console.log(item);
+            //根据ID判断选中状态,未选中加入数组,选中择从数组里移除
+            if (this.isSelectAchievement(item)) {
+                this.customList = this.customList.filter((e) => e.ID != item.ID);
+            } else {
+                this.customList.push(item);
+            }
         },
         //方案计算
         schemeCompute(data) {
@@ -756,10 +779,9 @@ export default {
                 schema.push(item.ID);
             });
             let params = {
-                title: this.leapForm.title,
+                title: isEmpty(this.leapForm.title) ? "未命名方案" : this.leapForm.title,
                 schema,
             };
-
             createdWikiAchievementLeapSchema(params).then((res) => {
                 this.dialogTableVisible = false;
                 this.getSchemaList();
@@ -808,7 +830,9 @@ export default {
         .flex;
         align-items: center;
         justify-content: space-between;
-        .mb(8px);
+        .pb(12px);
+        border-bottom: 2px solid #fff;
+        // .mb(8px);
         .u-label-box {
             .flex;
             align-items: center;
@@ -852,11 +876,26 @@ export default {
         .u-table-header_row,
         .u-table-header_cell {
             background-color: transparent;
+            .el-table__body tr:hover > td {
+                background-color: #f3f0ed;
+            }
         }
 
         .u-table-header_cell {
             .x;
             color: rgba(245, 224, 201, 1);
+            .u-table-cell_left {
+                padding-left: 0;
+                padding-right: 0;
+                .w(100%);
+                text-align: left;
+            }
+            .u-table-cell_right {
+                padding-left: 0;
+                padding-right: 0;
+                .w(100%);
+                text-align: right;
+            }
         }
         .u-table-cell {
             .x;
@@ -912,7 +951,7 @@ export default {
             /* 针对Webkit内核的浏览器 */
             &::-webkit-scrollbar {
                 /* 设置滚动条的宽度 */
-                width: 2px;
+                width: 10px;
             }
 
             /* 滚动条轨道 - 背景颜色/白底 */
@@ -1014,7 +1053,7 @@ export default {
         }
     }
     .m-custom-dialog {
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.85);
         .el-dialog__title {
             color: #ffeccc;
         }
@@ -1086,10 +1125,11 @@ export default {
                     border-right: 1px solid #ffffff;
                     overflow-y: auto;
                     flex-shrink: 0;
+                    .pt(4px);
                     /* 针对Webkit内核的浏览器 */
                     &::-webkit-scrollbar {
                         /* 设置滚动条的宽度 */
-                        width: 2px;
+                        width: 10px;
                     }
 
                     /* 滚动条轨道 - 背景颜色/白底 */
@@ -1109,7 +1149,7 @@ export default {
                         background: #e2d3b9;
                     }
                     .u-item {
-                        padding: 10px 0;
+                        // padding: 10px 0;
                         .size(100%,24px);
                         .flex;
                         .flex(o);
@@ -1117,13 +1157,16 @@ export default {
                         color: #ffeccc;
                         .fz(14px);
                         .bold(400);
+                        box-sizing: border-box;
                         &:hover,
                         &.active {
                             color: #fff;
                             background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
-
                             border-bottom: 0.5px solid #706456;
                         }
+                    }
+                    .u-first {
+                        height: 34px;
                     }
                 }
                 .u-dialog-main_recommend {
@@ -1150,6 +1193,7 @@ export default {
                             .bold(700);
                             border-bottom: 2px solid #f5e0c9;
                             padding-bottom: 12px;
+                            box-sizing: border-box;
                             .mb(12px);
                         }
                         .u-recommend-desc_text {
@@ -1164,10 +1208,15 @@ export default {
                 }
                 .u-dialog-main_custom {
                     .flex;
+
                     .u-dialog-main_custom_list {
-                        .w(calc(100% / 3));
+                        // .w(calc(calc(100% / 2) - 100px));
+                        .w(calc(calc(calc(100% - 120px) / 2) - 12px));
                         .h(300px);
                         overflow-y: auto;
+                        &.u-first-box {
+                            .w(140px);
+                        }
                         .u-badge-item {
                             .el-badge__content {
                                 .h(12px);
@@ -1218,7 +1267,7 @@ export default {
                 margin: 10px auto;
                 cursor: pointer;
                 &:hover {
-                    background: linear-gradient(180deg, rgba(173, 126, 16, 1) 0%, rgba(173, 126, 16, 0) 100%);
+                    background: linear-gradient(0, rgba(173, 126, 16, 1) 0%, rgba(173, 126, 16, 0) 100%);
 
                     border: 1px solid rgba(255, 255, 255, 0.88);
                 }
