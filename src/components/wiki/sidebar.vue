@@ -76,6 +76,16 @@ export default {
 
 <style lang="less" scoped>
 .m-achievement-sidebar {
+    &::after {
+        .size(320px,176px);
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: url(~@/assets/img/wiki/overview/bamboo.svg) no-repeat;
+        background-size: cover;
+        z-index: 0;
+    }
     ul {
         padding: 0;
     }
