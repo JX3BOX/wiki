@@ -45,6 +45,8 @@ export default {
             page: 1,
             length: 15,
             isAll: false,
+            keyword: "",
+            scene: "",
         };
     },
     computed: {
@@ -73,8 +75,16 @@ export default {
             immediate: true,
             async handler() {
                 this.isAll = false;
-                this.page = parseInt(this.$route.query.page) || 1;
-                let data = await this.get_achievements(this.$route.params.keyword, this.page, this.length);
+                const scene = this.$route.query?.scene || "";
+                const keyword = this.$route.params?.keyword || "";
+                if ((scene && this.scene != scene) || (keyword && this.keyword != keyword)) {
+                    this.page_change_handle(1);
+                } else {
+                    this.page = parseInt(this.$route.query.page) || 1;
+                }
+                this.scene = scene;
+                this.keyword = keyword;
+                let data = await this.get_achievements();
                 const achievements =
                     data.achievements?.map((item) => {
                         return {
@@ -97,11 +107,10 @@ export default {
             });
         },
         // 获取成就搜索列表
-        get_achievements(keyword, page, length) {
-            let data = { keyword: keyword, page: page };
-            if (this.$route.query.scene) data["scene"] = this.$route.query.scene;
-
-            if (typeof length !== "undefined") data["limit"] = length;
+        get_achievements() {
+            let data = { limit: this.length, page: this.page };
+            if (this.scene) data["scene"] = this.scene;
+            if (this.keyword) data["keyword"] = this.keyword;
             return new Promise((resolve, reject) => {
                 searchAchievements(data).then(
                     (data) => {
@@ -118,7 +127,7 @@ export default {
             this.$router.push({
                 name: "search",
                 params: { keyword: this.$route.params.keyword },
-                query: { page: page },
+                query: { ...this.$route.query, page: page },
             });
         },
         finishVirtual() {

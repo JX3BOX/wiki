@@ -1,7 +1,6 @@
 <template>
     <div>
         <Header></Header>
-
         <Breadcrumb
             :name="name"
             :slug="slug"
@@ -15,6 +14,9 @@
             :withoutLeft="withoutLeft"
             :adminMarks="adminMarks"
         >
+            <template #logo>
+                <img svg-inline :src="logo" />
+            </template>
             <slot name="breadcrumb"></slot>
         </Breadcrumb>
         <LeftSidebar>
@@ -35,6 +37,7 @@
 </template>
 
 <script>
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "DefaultLayout",
     props: {
@@ -94,6 +97,11 @@ export default {
         pageName : function (){
             return this.$route.name
         }
+    },
+    data() {
+        return {
+            logo: __cdn + "logo/logo-light/cj.svg",
+        };
     },
 };
 </script>
