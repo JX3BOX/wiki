@@ -1,15 +1,15 @@
 <template>
     <div class="m-achievement-sidebar" :class="{ is_mobile: mobile }">
-        <img class="u-title_img" src="@/assets/img/wiki/overview/title.svg" alt="" />
+        <img class="u-title_img" src="@/assets/img/wiki/overview/title.png" alt="" />
         <ul class="m-sidebar-nav">
-            <li class="active">
+            <li :class="{ active: $route.name === 'overview' }">
                 <router-link
                     :to="{
                         name: 'overview',
                     }"
                     >完成进度</router-link
                 >
-                <ul>
+                <ul v-show="$route.name === 'overview'">
                     <li>
                         <router-link class="is-child" :to="{ name: 'overview' }">{{
                             viewAchievementsName ? viewAchievementsName + "资历" : "总览"
@@ -17,24 +17,18 @@
                     </li>
                 </ul>
             </li>
-            <li>
+            <li :class="{ active: $route.name === 'compare' }">
                 <router-link
-                    :style="{
-                        pointerEvents: 'none',
-                    }"
                     :to="{
-                        name: 'overview',
+                        name: 'compare',
                     }"
                     >亲友对比</router-link
                 >
             </li>
-            <li>
+            <li :class="{ active: $route.name === 'leap' }">
                 <router-link
-                    :style="{
-                        pointerEvents: 'none',
-                    }"
                     :to="{
-                        name: 'overview',
+                        name: 'leap',
                     }"
                     >渡劫方案</router-link
                 >
@@ -82,6 +76,16 @@ export default {
 
 <style lang="less" scoped>
 .m-achievement-sidebar {
+    &::after {
+        .size(320px,176px);
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: url(~@/assets/img/wiki/overview/bamboo.svg) no-repeat;
+        background-size: cover;
+        z-index: 0;
+    }
     ul {
         padding: 0;
     }
@@ -139,6 +143,9 @@ export default {
                 color: rgba(204, 161, 108, 1);
             }
         }
+    }
+    .u-title_img {
+        .w(180px);
     }
     &.is_mobile {
         .w(137px);

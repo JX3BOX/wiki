@@ -45,7 +45,9 @@
                         </el-dropdown-menu>
                     </el-dropdown>
 
-                    <div v-if="viewAchievementsName" class="u-overview" @click="onSeeOverview">查看总览</div>
+                    <div v-if="viewAchievementsName" class="u-overview" @click="onSeeOverview">
+                        <i class="el-icon-back"></i>返回总览
+                    </div>
                 </div>
 
                 <!-- 资历展示 -->
@@ -122,7 +124,7 @@
             </el-dropdown>
         </div>
         <!-- 移动端查看总览位置 -->
-        <div class="u-overview_mobile" :class="{ isScroll }" v-show="mobile" @click="onSeeOverview">查看总览</div>
+        <div class="u-overview_mobile" :class="{ isScroll }" v-show="mobile" @click="onSeeOverview">返回总览</div>
         <div
             ref="overviewList"
             class="m-overview-main"

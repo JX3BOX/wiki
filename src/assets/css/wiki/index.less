@@ -14,15 +14,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: right bottom;
-    &::after {
-        .size(320px,176px);
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: url(~@/assets/img/wiki/overview/bamboo.svg) no-repeat;
-        background-size: cover;
-    }
+
     &.is_mobile {
         .pb(0);
         align-items: flex-start;
@@ -34,6 +26,8 @@
 
 .m-achievement-content {
     margin-left: 64px;
+    height: 100%;
+    .pr;
     &.is_mobile {
         margin-left: 0;
     }
