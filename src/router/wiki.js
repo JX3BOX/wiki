@@ -18,12 +18,12 @@ const routes = [
     },
     {
         name: "compare",
-        path: "/achievement/compare",
+        path: "/achievement/overview/compare",
         component: () => import("../views/wiki/compare.vue"),
     },
     {
         name: "leap",
-        path: "/achievement/leap",
+        path: "/achievement/overview/leap",
         component: () => import("../views/wiki/leap.vue"),
     },
 ];

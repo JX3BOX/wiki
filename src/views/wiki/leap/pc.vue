@@ -511,7 +511,7 @@ export default {
         getSchemaDetail() {
             getWikiAchievementLeapSchema(this.$route.query.id).then((res) => {
                 this.detail = res.data?.data || {};
-                this.getAchievements(res.data?.data?.schema);
+                if (res?.data?.data?.schema?.length > 0) this.getAchievements(res.data?.data?.schema);
             });
         },
         //根据成就ID获取成就列表,同时配置分类菜单
