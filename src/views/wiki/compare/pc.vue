@@ -56,12 +56,22 @@
             <div class="u-left">
                 <ul
                     class="u-zl-item"
-                    :class="{ active: item.sub == activeIndex }"
+                    :class="{
+                        active: item.sub == activeIndex,
+                        show: item.sub == activeIndex && !activeShow,
+                    }"
                     v-for="(item, index) in menuList"
                     :key="index"
                     @click="setActiveIndex(item.sub)"
                 >
-                    <div class="u-zl-item_title">{{ item.name }}</div>
+                    <div class="u-zl-item_title">
+                        {{ item.name }}&nbsp;<i
+                            :class="
+                                item.sub == activeIndex && activeShow ? 'el-icon-caret-top' : 'el-icon-caret-bottom'
+                            "
+                            @click.stop="setActiveShow(item.sub)"
+                        ></i>
+                    </div>
                     <li
                         class="u-zl-item_children"
                         :class="{ active: item2.detail == activeIndexChildren }"
@@ -115,7 +125,7 @@
             </div>
         </div>
         <!-- 添加角色弹窗 -->
-        <el-dialog title="添加角色" :visible.sync="showAddRole" width="400px" draggable :close-on-click-modal="false">
+        <el-dialog title="添加角色" :visible.sync="showAddRole" width="420px" draggable :close-on-click-modal="false">
             <el-form :model="kithForm" :rules="rules" ref="roleRef">
                 <el-form-item label="角色类型" prop="roleType">
                     <el-radio-group
@@ -150,6 +160,11 @@
                     </el-select>
                 </el-form-item>
             </el-form>
+            <div class="u-tips">
+                <div><i class="el-icon-info"></i>&nbsp;提示</div>
+                1. 添加亲友角色后，可对比亲友角色与自身角色的成就进度。<br />
+                2. 去<a href="https://www.jx3box.com/dashboard/privacy?tab=whitelist" target="_blank">添加亲友</a>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="showAddRole = false">取 消</el-button>
                 <el-button type="primary" @click="addRoleConfirm">确 定</el-button>
@@ -189,6 +204,7 @@ export default {
                 // },
             ],
             activeIndex: 1,
+            activeShow: true,
             activeIndexChildren: null,
             achievements: [],
             achievements_bak: [],
@@ -222,14 +238,25 @@ export default {
         icon_url: function (id) {
             return iconLink(id);
         },
+        setActiveShow(sub) {
+            if (this.activeIndex == sub) {
+                this.activeShow = !this.activeShow;
+                return;
+            }
+            this.setActiveIndex(sub);
+        },
         setActiveIndex(sub, detail) {
+            if (this.activeIndex != sub && !detail) {
+                this.activeShow = true;
+            }
+
             this.activeIndex = sub;
             if (detail) {
                 this.activeIndexChildren = detail;
             } else {
                 this.activeIndexChildren = null;
             }
-            this.selectTab = "";
+            // this.selectTab = "";
             this.getMenuAchievements(sub, detail);
         },
         // 获取成就菜单列表
@@ -248,7 +275,8 @@ export default {
             getMenuAchievements(sub, detail).then((data) => {
                 this.achievements = data.data.data.achievements || [];
                 this.achievements_bak = cloneDeep(this.achievements);
-                this.queryFinish(); //查询完成情况
+                this.queryFinish(1); //查询完成情况
+                this.selectTabChange();
             });
         },
         addRole() {
@@ -286,6 +314,7 @@ export default {
         getKithRolesList() {
             getMyKithRoles(this.kithForm.uid).then((res) => {
                 this.myKithRoles = res.data.data;
+                this.kithForm.jx3Id = "";
             });
         },
         //删除角色
@@ -330,12 +359,12 @@ export default {
                         my_achievements: achievements.split(","),
                         achievements: [],
                     };
-                    //同时向select内追加个人选择
-                    this.selectOptions.push({
-                        value: this.kithForm.jx3Id,
-                        name: contrastKith.name + "未完成",
-                    });
                 }
+                //同时向select内追加个人选择
+                this.selectOptions.push({
+                    value: contrastKith.jx3id,
+                    name: contrastKith.name + "未完成",
+                });
                 if (type == 1 && this.contrastKith[0]) {
                     this.$set(this.contrastKith, 0, contrastKith);
                 } else {
@@ -347,7 +376,7 @@ export default {
             });
         },
         //判断成就是否完成
-        queryFinish() {
+        queryFinish(type) {
             let kith = this.contrastKith,
                 achievements = this.achievements;
             kith.forEach((item, index) => {
@@ -360,7 +389,7 @@ export default {
                     }
                 });
             });
-            if (!this.selectTab) {
+            if (!this.selectTab || type) {
                 this.contrastKith_bak = cloneDeep(this.contrastKith);
             }
         },
@@ -377,7 +406,9 @@ export default {
             });
         },
         //根据条件筛选
-        selectTabChange(value) {
+        selectTabChange() {
+            let value = this.selectTab;
+
             let achievements = cloneDeep(this.achievements_bak);
             let contrastKith = cloneDeep(this.contrastKith_bak);
             if (!value) {
@@ -416,7 +447,7 @@ export default {
             let keys = this.getIntersectionByKey(arr, "key");
             let achievementsFilter = [];
             keys.map((item) => {
-                achievementsFilter.push(this.achievements_bak[item]);
+                this.achievements_bak[item] ? achievementsFilter.push(this.achievements_bak[item]) : "";
             });
             this.achievements = achievementsFilter;
             this.queryFinish();
@@ -549,15 +580,21 @@ export default {
             }
             .u-zl-item {
                 cursor: pointer;
-                padding: 4px 4px 4px 14px;
+                padding: 4px 4px 4px 2px;
                 box-sizing: border-box;
                 &.active {
                     .u-zl-item_title {
                         background: #3d342a;
                     }
                     .u-zl-item_children {
-                        transition: display 0.5s ease-out;
+                        transition: display 0.5s ease-in;
                         display: block;
+                    }
+                }
+                &.show {
+                    .u-zl-item_children {
+                        display: none;
+                        transition: display 0.5s ease-out;
                     }
                 }
                 .u-zl-item_title {

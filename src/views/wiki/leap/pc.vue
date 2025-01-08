@@ -93,6 +93,7 @@
                         background
                         hide-on-single-page
                         layout="prev, pager, next"
+                        :page-size="queryParams.per"
                         :total="pageTotal"
                         @current-change="pageChange"
                     >
@@ -386,7 +387,7 @@ export default {
             loading: false,
             //方案列表
             list: [],
-            queryParams: { page: 1, per: 20 },
+            queryParams: { page: 1, per: 12 },
             pageTotal: 0, //总条数
             //创建方案配置
             dialogTableVisible: false,
@@ -778,6 +779,12 @@ export default {
                 // });
                 schema.push(item.ID);
             });
+            if (isEmpty(this.leapForm.title)) {
+                return this.$message.warning("请输入方案名称");
+            }
+            if (isEmpty(this.leapForm.number)) {
+                return this.$message.warning("请输入目标资历");
+            }
             let params = {
                 title: isEmpty(this.leapForm.title) ? "未命名方案" : this.leapForm.title,
                 schema,
