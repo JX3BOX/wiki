@@ -24,12 +24,12 @@
                             </div>
                         </div>
                         <el-dropdown-menu class="m-role-dropdown" slot="dropdown">
-                            <el-dropdown-item v-if="isLogin">
+                            <!-- <el-dropdown-item v-if="isLogin">
                                 <div class="m-role-item" @click="onChangeRole(virtualRole)">
                                     <span>{{ virtualRole.name }}</span>
                                     <span>&lt;虚拟角色&gt;</span>
                                 </div>
-                            </el-dropdown-item>
+                            </el-dropdown-item> -->
                             <el-dropdown-item v-for="role in roleList" :key="role.ID">
                                 <div
                                     @click="onChangeRole(role)"
@@ -102,12 +102,12 @@
                     <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" width="16px" height="16px" />
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-if="isLogin">
+                    <!-- <el-dropdown-item v-if="isLogin">
                         <div class="m-role-item" @click="onChangeRole(virtualRole)">
                             <span>{{ virtualRole.name }}</span>
                             <span>&lt;虚拟角色&gt;</span>
                         </div>
-                    </el-dropdown-item>
+                    </el-dropdown-item> -->
                     <el-dropdown-item v-for="role in roleList" :key="role.ID">
                         <div
                             @click="onChangeRole(role)"
@@ -265,8 +265,6 @@ export default {
         avatar_frame() {
             if (this.userInfo) {
                 const { user_avatar_frame } = this.userInfo;
-                console.log(user_avatar_frame);
-
                 if (user_avatar_frame) {
                     return __imgPath + `avatar/images/${user_avatar_frame}/${user_avatar_frame}.svg`;
                 }
@@ -321,13 +319,14 @@ export default {
                 if (jx3id) {
                     this.$store.commit("SET_STATE", { key: "achievementsVirtual", value: [] });
                     this.loadRoleAchievements(jx3id);
-                } else {
-                    if (jx3id === 0) {
-                        // 虚拟角色
-                        this.loadVirtualAchievements();
-                    }
-                    this.$store.commit("SET_STATE", { key: "achievements", value: [], isSession: true });
                 }
+                // else {
+                //     if (jx3id === 0) {
+                //         // 虚拟角色
+                //         this.loadVirtualAchievements();
+                //     }
+                //     this.$store.commit("SET_STATE", { key: "achievements", value: [], isSession: true });
+                // }
                 this.getRenderList();
             },
         },

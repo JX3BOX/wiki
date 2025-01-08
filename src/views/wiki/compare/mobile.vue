@@ -66,12 +66,17 @@
         <div class="m-achievement-tab" v-show="!isFold">
             <ul
                 class="u-zl-item"
-                :class="{ active: item.sub == activeIndex }"
+                :class="{ active: item.sub == activeIndex, show: item.sub == activeIndex && !activeShow }"
                 v-for="(item, index) in menuList"
                 :key="index"
                 @click="setActiveIndex(item.sub)"
             >
-                <div class="u-zl-item_title">{{ item.name }}</div>
+                <div class="u-zl-item_title">
+                    {{ item.name }}&nbsp;<i
+                        :class="item.sub == activeIndex && activeShow ? 'el-icon-caret-top' : 'el-icon-caret-bottom'"
+                        @click.stop="setActiveShow(item.sub)"
+                    ></i>
+                </div>
                 <li
                     class="u-zl-item_children"
                     :class="{ active: item2.detail == activeIndexChildren }"
@@ -206,6 +211,7 @@ export default {
                 // },
             ],
             activeIndex: 1,
+            activeShow: true,
             activeIndexChildren: null,
             achievements: [],
             achievements_bak: [],
@@ -240,14 +246,25 @@ export default {
         icon_url: function (id) {
             return iconLink(id);
         },
+        setActiveShow(sub) {
+            if (this.activeIndex == sub) {
+                this.activeShow = !this.activeShow;
+                return;
+            }
+            this.setActiveIndex(sub);
+        },
         setActiveIndex(sub, detail) {
+            if (this.activeIndex != sub && !detail) {
+                this.activeShow = true;
+            }
+
             this.activeIndex = sub;
             if (detail) {
                 this.activeIndexChildren = detail;
             } else {
                 this.activeIndexChildren = null;
             }
-            this.selectTab = "";
+            // this.selectTab = "";
             this.getMenuAchievements(sub, detail);
         },
         // 获取成就菜单列表
@@ -266,7 +283,8 @@ export default {
             getMenuAchievements(sub, detail).then((data) => {
                 this.achievements = data.data.data.achievements || [];
                 this.achievements_bak = cloneDeep(this.achievements);
-                this.queryFinish(); //查询完成情况
+                this.queryFinish(1); //查询完成情况
+                this.selectTabChange();
             });
         },
         addRole() {
@@ -304,6 +322,7 @@ export default {
         getKithRolesList() {
             getMyKithRoles(this.kithForm.uid).then((res) => {
                 this.myKithRoles = res.data.data;
+                this.kithForm.jx3Id = "";
             });
         },
         //删除角色
@@ -336,6 +355,24 @@ export default {
             getRoleGameAchievements(type == 1 ? jx3Id : this.kithForm.jx3Id).then((res) => {
                 const achievements = res.data?.data?.achievements || "";
                 let contrastKith = {};
+                // if (type) {
+                //     contrastKith = {
+                //         ...this.currentRole,
+                //         my_achievements: achievements.split(","),
+                //         achievements: [],
+                //     };
+                // } else {
+                //     contrastKith = {
+                //         ...this.kithForm.info,
+                //         my_achievements: achievements.split(","),
+                //         achievements: [],
+                //     };
+                //     //同时向select内追加个人选择
+                //     this.selectOptions.push({
+                //         value: this.kithForm.jx3Id,
+                //         name: contrastKith.name + "未完成",
+                //     });
+                // }
                 if (type) {
                     contrastKith = {
                         ...this.currentRole,
@@ -348,14 +385,13 @@ export default {
                         my_achievements: achievements.split(","),
                         achievements: [],
                     };
-                    //同时向select内追加个人选择
-                    this.selectOptions.push({
-                        value: this.kithForm.jx3Id,
-                        name: contrastKith.name + "未完成",
-                    });
                 }
+                //同时向select内追加个人选择
+                this.selectOptions.push({
+                    value: contrastKith.jx3id,
+                    name: contrastKith.name + "未完成",
+                });
                 if (type == 1 && this.contrastKith[0]) {
-                    console.log("xxxxfenzhi");
                     this.$set(this.contrastKith, 0, contrastKith);
                 } else {
                     this.contrastKith.push(contrastKith);
@@ -366,7 +402,7 @@ export default {
             });
         },
         //判断成就是否完成
-        queryFinish() {
+        queryFinish(type) {
             let kith = this.contrastKith,
                 achievements = this.achievements;
             kith.forEach((item, index) => {
@@ -379,7 +415,7 @@ export default {
                     }
                 });
             });
-            if (!this.selectTab) {
+            if (!this.selectTab || type) {
                 this.contrastKith_bak = cloneDeep(this.contrastKith);
             }
         },
@@ -397,11 +433,18 @@ export default {
         },
         //根据条件筛选
         selectTabChange(item) {
-            let value = item.value;
-            this.selectTab = value;
-            this.selectTabName = item.name;
             let achievements = cloneDeep(this.achievements_bak);
             let contrastKith = cloneDeep(this.contrastKith_bak);
+            if (item && !item.value) {
+                this.selectTab = "";
+                this.selectTabName = item.name;
+                this.achievements = achievements;
+                this.queryFinish();
+                return;
+            }
+            let value = item?.value || this.selectTab;
+            this.selectTab = value;
+            this.selectTabName = item?.name || this.selectTabName;
             if (!value) {
                 this.achievements = achievements;
                 this.queryFinish();
@@ -438,7 +481,7 @@ export default {
             let keys = this.getIntersectionByKey(arr, "key");
             let achievementsFilter = [];
             keys.map((item) => {
-                achievementsFilter.push(this.achievements_bak[item]);
+                this.achievements_bak[item] ? achievementsFilter.push(this.achievements_bak[item]) : "";
             });
             this.achievements = achievementsFilter;
             this.queryFinish();
@@ -528,6 +571,12 @@ export default {
                 .u-zl-item_children {
                     transition: display 0.5s ease-out;
                     display: block;
+                }
+            }
+            &.show {
+                .u-zl-item_children {
+                    display: none;
+                    transition: display 0.5s ease-out;
                 }
             }
             .u-zl-item_title {
