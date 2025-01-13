@@ -175,3 +175,10 @@ export function getRoleGameAchievements(jx3id) {
         },
     });
 }
+
+// 获取地图列表
+export function getMapList(params) {
+    return $.get("/api/node/v2/map/list", {
+        params,
+    });
+}

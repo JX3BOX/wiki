@@ -46,7 +46,7 @@
                     </el-dropdown>
 
                     <div v-if="viewAchievementsName" class="u-overview" @click="onSeeOverview">
-                        <i class="el-icon-back"></i>返回总览
+                        <i class="el-icon-back"></i>{{ showList ? "返回" : "返回总览" }}
                     </div>
                 </div>
 
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="m-info-avatar" v-if="viewAchievementsName">
+            <div class="m-info-avatar" v-if="viewAchievementsName && !showList">
                 <img
                     class="u-achievement-icon"
                     height="70"
@@ -130,6 +130,7 @@
             class="m-overview-main"
             :class="{ is_mobile: mobile, isScroll }"
             @scroll="overviewListScroll"
+            v-if="!showList"
         >
             <!-- 移动端资历总览 -->
             <div class="m-info-zl" v-if="mobile">
@@ -200,6 +201,46 @@
                 </div>
             </div>
         </div>
+        <!-- 最下级list -->
+        <div class="m-cj-list" v-else>
+            <el-table
+                :data="achievements_list || []"
+                style="width: 100%"
+                stripe
+                height="100%"
+                row-class-name="u-table-row"
+                cell-class-name="u-table-cell"
+                header-row-class-name="u-table-header_row"
+                header-cell-class-name="u-table-header_cell"
+                v-loading="loading"
+            >
+                <el-table-column prop="Name" label="成就名称">
+                    <template slot-scope="scope">
+                        <a :href="getLink('achievement', scope.row.ID)" target="_blank">
+                            <div class="u-achievement-name">
+                                <img class="u-icon" :src="iconLink(scope.row?.IconID)" />
+                                &nbsp;<span>{{ scope.row.Name }}</span>
+                            </div></a
+                        >
+                    </template>
+                </el-table-column>
+                <el-table-column label="成就简介">
+                    <template slot-scope="scope"> {{ scope.row.ShortDesc || "-" }} </template>
+                </el-table-column>
+                <el-table-column label="资历点数" width="100">
+                    <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
+                </el-table-column>
+
+                <el-table-column label="奖励" width="100">
+                    <template slot-scope="scope">
+                        <el-tooltip placement="top" v-if="scope.row.item">
+                            <div slot="content"><jx3-item :item="scope.row.item" /></div>
+                            <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" />
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
         <div class="m-zl-info_bottom" v-if="isScroll">
             <div class="m-box_bottom">
                 <span class="u-title"
@@ -223,22 +264,25 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
-import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
+import { showSchoolIcon, iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 
 import {
     getAchievementPoints,
     getVirtualRoleAchievements,
     getRoleGameAchievements,
     getMenus,
+    getAchievementsPost,
 } from "@/service/achievement";
 import { getUserRoles } from "@/service/team";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import { getUserInfo } from "@/service/wiki";
 import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import Item from "@jx3box/jx3box-editor/src/Item";
+import { cloneDeep } from "lodash";
 export default {
     name: "wiki-achievement-overview",
     props: [],
-    components: { RoleAvatar },
+    components: { RoleAvatar, "jx3-item": Item },
     data: function () {
         return {
             userInfo: null,
@@ -254,6 +298,11 @@ export default {
                 ID: ~~User.getInfo().uid,
             },
             isScroll: false, //移动端滚动后总览数据移至底部
+            showList: false,
+            achievements_list: [],
+            loading: false,
+            list_bak: [],
+            name_bak: "",
         };
     },
     computed: {
@@ -337,6 +386,8 @@ export default {
         this.loadData();
     },
     methods: {
+        iconLink,
+        getLink,
         overviewListScroll($event) {
             if (!this.mobile) return;
             if (this.$refs.overviewList.scrollTop > 70) {
@@ -362,15 +413,44 @@ export default {
         },
         showSchoolIcon,
         onEnterCategory(data) {
+            console.log(data);
+            this.name_bak = cloneDeep(this.viewAchievementsName);
+            this.list_bak = cloneDeep(this.list);
+            this.$store.commit("SET_STATE", { key: "viewAchievementsName", value: data.name });
+
             if (data.children) {
-                this.$store.commit("SET_STATE", { key: "viewAchievementsName", value: data.name });
                 this.getRenderList(data.children);
                 this.$nextTick(() => {
                     this.$refs.overviewList.scrollTop = 0;
                 });
+            } else {
+                this.list = [data];
+                this.getAchievements(data.allAchievements);
             }
         },
+        //根据成就ID获取成就列表,同时配置分类菜单
+        getAchievements(data) {
+            this.loading = true;
+            getAchievementsPost({ ids: data.toString(), attributes: "Name,Sub,Detail,ShortDesc,IconID,Item,Point,ID" })
+                .then((res) => {
+                    this.achievements_list = res.data?.data || [];
+                    this.showList = true;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
         onSeeOverview() {
+            if (this.showList) {
+                this.list = cloneDeep(this.list_bak);
+                this.$store.commit("SET_STATE", { key: "viewAchievementsName", value: this.name_bak });
+                this.showList = false;
+                this.achievements_list = [];
+                return;
+            }
+            this.showList = false;
+            this.achievements_list = [];
+
             this.$store.commit("SET_STATE", { key: "viewAchievementsName", value: null });
             this.getRenderList();
             this.$nextTick(() => {
@@ -520,7 +600,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .p-achievement-overview {
     padding-top: 65px;
     width: 960px;
@@ -811,6 +891,7 @@ export default {
                 }
             }
         }
+
         //列表手机端
         &.is_mobile {
             .mt(40px);
@@ -867,6 +948,86 @@ export default {
         }
         &.isScroll {
             height: calc(100vh - 140px);
+        }
+    }
+    .m-cj-list,
+    .el-table__body-wrapper {
+        height: 560px;
+        overflow-y: auto;
+        /* 针对Webkit内核的浏览器 */
+        &::-webkit-scrollbar {
+            /* 设置滚动条的宽度 */
+            width: 10px;
+        }
+
+        /* 滚动条轨道 - 背景颜色/白底 */
+        &::-webkit-scrollbar-track {
+            background: #595958;
+            border-radius: 10px;
+        }
+
+        /* 滚动条的滑块部分 */
+        &::-webkit-scrollbar-thumb {
+            background: #e2d3b9;
+            border-radius: 10px;
+        }
+
+        /* 当鼠标悬停在滚动条滑块上时改变颜色 */
+        &::-webkit-scrollbar-thumb:hover {
+            background: #e2d3b9;
+        }
+        .el-table,
+        .u-table-header_row,
+        .u-table-header_cell {
+            background-color: transparent;
+            .el-table__body tr:hover > td {
+                background-color: #f3f0ed;
+            }
+        }
+
+        .u-table-header_cell {
+            // .x;
+            color: rgba(245, 224, 201, 1);
+            .u-table-cell_left {
+                padding-left: 0;
+                padding-right: 0;
+                .w(100%);
+                text-align: left;
+            }
+            .u-table-cell_right {
+                padding-left: 0;
+                padding-right: 0;
+                .w(100%);
+                text-align: right;
+            }
+        }
+        .u-table-cell {
+            // .x;
+            color: rgba(112, 83, 45, 1);
+            a {
+                color: rgba(112, 83, 45, 1);
+            }
+        }
+        .u-table-row {
+            //奇偶选择器
+            &:nth-child(odd) {
+                background: #ebe5df;
+            }
+            &:nth-child(even) {
+                background: #fff;
+            }
+        }
+        .u-table-header_row {
+            .gutter {
+                display: none !important;
+            }
+        }
+        .u-achievement-name {
+            .flex;
+            align-items: center;
+            span {
+                color: #70532d;
+            }
         }
     }
 }
