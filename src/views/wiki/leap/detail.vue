@@ -224,7 +224,7 @@ export default {
                 this.getAchievements(schema);
             });
         },
-        isCompleted(id) {},
+
         //根据成就ID获取成就列表,同时配置分类菜单
         getAchievements(data) {
             this.loading = true;

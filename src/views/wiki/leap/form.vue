@@ -274,7 +274,6 @@ export default {
         "leapForm.number": {
             deep: true,
             handler(val) {
-                console.log(val);
                 this.schemeCompute();
             },
         },
@@ -655,7 +654,7 @@ export default {
             });
             if (!data) {
                 remaining = Number(this.leapForm.number) - this.currentRole.total - diffNum;
-                console.log(remaining);
+
                 this.leapForm.all = all;
                 this.leapForm.diffNum = diffNum;
                 this.leapForm.remaining = remaining > 0 ? remaining : 0;
@@ -689,10 +688,16 @@ export default {
             };
             createdWikiAchievementLeapSchema(params).then((res) => {
                 this.dialogTableVisible = false;
-
                 this.$message.success("创建成功");
                 //   this.getSchemaList();
-                this.$emit("reloadList");
+                this.$emit("reloadList", res.data.data);
+                let routeUrl = this.$router.resolve({
+                    name: "leap",
+                    query: {
+                        id: res.data.data.id,
+                    },
+                });
+                window.open(routeUrl.href, "_blank");
             });
         },
     },

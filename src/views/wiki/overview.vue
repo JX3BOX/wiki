@@ -230,7 +230,13 @@
                 <el-table-column label="资历点数" width="100">
                     <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
                 </el-table-column>
-
+                <el-table-column label="完成情况">
+                    <template slot-scope="scope">
+                        <el-tag :type="scope.row.isCompleted == false ? 'danger' : 'success'">{{
+                            scope.row.isCompleted == false ? "未完成" : "已完成"
+                        }}</el-tag></template
+                    >
+                </el-table-column>
                 <el-table-column label="奖励" width="100">
                     <template slot-scope="scope">
                         <el-tooltip placement="top" v-if="scope.row.item">
@@ -271,7 +277,7 @@ import {
     getVirtualRoleAchievements,
     getRoleGameAchievements,
     getMenus,
-    getAchievementsPost,
+    getMenuAchievements,
 } from "@/service/achievement";
 import { getUserRoles } from "@/service/team";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
@@ -383,7 +389,6 @@ export default {
 
     mounted() {
         this.getUserInfo();
-        this.loadData();
     },
     methods: {
         iconLink,
@@ -397,11 +402,19 @@ export default {
             }
         },
         getUserInfo() {
+            if (!User.isLogin()) {
+                this.$confirm("请先登录").then((_) => {
+                    User.toLogin(window.location.href);
+                });
+
+                return;
+            }
             const uid = User.getInfo().uid;
             uid &&
                 getUserInfo(uid).then((res) => {
                     if (res.data.code == 0) {
                         this.userInfo = res.data.data;
+                        this.loadData();
                     }
                 });
         },
@@ -425,21 +438,29 @@ export default {
                 });
             } else {
                 this.list = [data];
-                this.getAchievements(data.allAchievements);
+
+                this.getMenuAchievements(data);
             }
         },
-        //根据成就ID获取成就列表,同时配置分类菜单
-        getAchievements(data) {
+        // 获取成就列表
+        getMenuAchievements(menu) {
             this.loading = true;
-            getAchievementsPost({ ids: data.toString(), attributes: "Name,Sub,Detail,ShortDesc,IconID,Item,Point,ID" })
-                .then((res) => {
-                    this.achievements_list = res.data?.data || [];
+            getMenuAchievements(menu.sub, menu.detail)
+                .then((data) => {
+                    let list = data.data.data.achievements || [];
+
+                    list.forEach((item) => {
+                        item.isCompleted = menu.ownAchievements.includes(item.ID);
+                    });
+                    console.log(list);
+                    this.achievements_list = list;
                     this.showList = true;
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
+
         onSeeOverview() {
             if (this.showList) {
                 this.list = cloneDeep(this.list_bak);
@@ -469,6 +490,8 @@ export default {
                 const item = data[key];
                 const allData = this.getAllachievementsData(item);
                 return {
+                    sub: item.sub,
+                    detail: item.detail,
                     name: item.name,
                     allAchievements: allData.allAchievements,
                     ownAchievements: allData.ownAchievements,
@@ -975,6 +998,11 @@ export default {
         /* 当鼠标悬停在滚动条滑块上时改变颜色 */
         &::-webkit-scrollbar-thumb:hover {
             background: #e2d3b9;
+        }
+        .el-table {
+            &::before {
+                height: 0;
+            }
         }
         .el-table,
         .u-table-header_row,

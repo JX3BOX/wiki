@@ -227,7 +227,7 @@ export default {
     },
     created() {
         this.getList();
-        this.getMyKith();
+
         this.loadUserRoles();
     },
     mounted() {},
@@ -298,13 +298,21 @@ export default {
         },
         // 获取当前用户角色列表
         loadUserRoles() {
-            User.isLogin() &&
-                getUserRoles().then((res) => {
-                    this.roleList = res.data?.data?.list || [];
-                    this.currentRole = res.data?.data?.list[0] || {};
-
-                    if (this.currentRole?.jx3id) this.addRoleConfirm(this.currentRole.jx3id, 1);
+            if (!User.isLogin()) {
+                this.$confirm("请先登录").then((_) => {
+                    User.toLogin(window.location.href);
                 });
+
+                return;
+            }
+
+            getUserRoles().then((res) => {
+                this.roleList = res.data?.data?.list || [];
+                this.currentRole = res.data?.data?.list[0] || {};
+
+                if (this.currentRole?.jx3id) this.addRoleConfirm(this.currentRole.jx3id, 1);
+                this.getMyKith(); //获取我的亲友
+            });
         },
         onChangeRole(role) {
             this.currentRole = role;
