@@ -45,7 +45,14 @@
             </div>
             <div class="u-radio">
                 <!-- <el-radio value="1" size="large">仅显示共同未完成</el-radio> -->
-                <el-select v-model="selectTab" placeholder="请选择" clearable @change="selectTabChange">
+                <el-select
+                    v-model="selectTab"
+                    placeholder="请选择"
+                    multiple
+                    collapse-tags
+                    clearable
+                    @change="selectTabChange"
+                >
                     <el-option v-for="item in selectOptions" :key="item.value" :label="item.name" :value="item.value">
                     </el-option>
                 </el-select>
@@ -225,6 +232,7 @@ export default {
             contrastKith_bak: [], //对比的亲友及自身
         };
     },
+
     created() {
         this.getList();
 
@@ -263,7 +271,7 @@ export default {
         getList() {
             getMenus({
                 general: 1,
-                client: "std",
+                client: this.$store.state.client,
             }).then((res) => {
                 const data = res.data.data.menus;
                 this.menuList = data;
@@ -273,7 +281,19 @@ export default {
         // 获取成就列表
         getMenuAchievements(sub = 1, detail) {
             getMenuAchievements(sub, detail).then((data) => {
-                this.achievements = data.data.data.achievements || [];
+                let list = data.data.data.achievements || [];
+                let arr = [];
+                list.forEach((item) => {
+                    arr.push(item);
+                    if (item.SeriesAchievementList) {
+                        item.SeriesAchievementList.forEach((sub, index) => {
+                            if (index > 0) {
+                                arr.push(sub);
+                            }
+                        });
+                    }
+                });
+                this.achievements = arr;
                 this.achievements_bak = cloneDeep(this.achievements);
                 this.queryFinish(1); //查询完成情况
                 this.selectTabChange();
@@ -302,10 +322,8 @@ export default {
                 this.$confirm("请先登录").then((_) => {
                     User.toLogin(window.location.href);
                 });
-
                 return;
             }
-
             getUserRoles().then((res) => {
                 this.roleList = res.data?.data?.list || [];
                 this.currentRole = res.data?.data?.list[0] || {};
@@ -397,17 +415,20 @@ export default {
                     }
                 });
             });
-            if (!this.selectTab || type) {
+            if ((!this.selectTab && this.selectTab.length == 0) || type) {
                 this.contrastKith_bak = cloneDeep(this.contrastKith);
             }
         },
         //多数组取交集
-        getIntersectionByKey(arrays, key, type) {
+        getIntersectionByKey(arrays, key) {
             if (arrays.length === 0) {
                 return [];
             }
             // 将每个对象数组映射为只包含指定键值的数组
             const mappedArrays = arrays.map((array) => array.map((obj) => obj[key]));
+            if (typeof this.selectTab == "object" && this.selectTab instanceof Array) {
+                return [...new Set(mappedArrays.flat())];
+            }
             // 使用 reduce 方法进行交集操作
             return mappedArrays.reduce((acc, curr) => {
                 return acc.filter((value) => curr.includes(value));
@@ -415,41 +436,44 @@ export default {
         },
         //根据条件筛选
         selectTabChange() {
-            let value = this.selectTab;
-
+            let selectTab = this.selectTab,
+                value = "";
             let achievements = cloneDeep(this.achievements_bak);
             let contrastKith = cloneDeep(this.contrastKith_bak);
-            if (!value) {
+            if (!selectTab || selectTab.length == 0) {
                 this.achievements = achievements;
                 this.queryFinish();
                 return;
             }
+            if (selectTab[selectTab.length - 1] == 1) {
+                value = 1;
+                this.selectTab = [value];
+            }
+            if (selectTab.length > 1 && selectTab[0] == 1) {
+                value = selectTab[selectTab.length - 1];
+                this.selectTab = [value];
+            }
+            if (selectTab.length == 1 && selectTab[0] != 1) value = selectTab[0];
+            if (selectTab.length > 1 && (selectTab[0] != 1 || selectTab[selectTab.length - 1] != 1)) value = selectTab;
             let arr = [];
-            this.contrastKith.forEach((item, index) => {
+            contrastKith.forEach((item, index) => {
+                let a = [];
+                const ach_filter = function (array) {
+                    array.forEach((item2, index2) => {
+                        if (item2.value == "-1") {
+                            a.push({ key: item2.key, value: item2.value });
+                        }
+                    });
+                    arr.push(a);
+                };
                 if (value == 2 && index == 0) {
-                    let a = [];
-                    contrastKith[index].achievements.forEach((item2, index2) => {
-                        if (item2.value == "-1") {
-                            a.push({ key: item2.key, value: item2.value });
-                        }
-                    });
-                    arr.push(a);
+                    ach_filter(item.achievements);
                 } else if (value == 1) {
-                    let a = [];
-                    contrastKith[index].achievements.forEach((item2, index2) => {
-                        if (item2.value == "-1") {
-                            a.push({ key: item2.key, value: item2.value });
-                        }
-                    });
-                    arr.push(a);
+                    ach_filter(item.achievements);
                 } else if (item.jx3id == value) {
-                    let a = [];
-                    contrastKith[index].achievements.forEach((item2, index2) => {
-                        if (item2.value == "-1") {
-                            a.push({ key: item2.key, value: item2.value });
-                        }
-                    });
-                    arr.push(a);
+                    ach_filter(item.achievements);
+                } else if (typeof value == "object" && value instanceof Array && value.includes(item.jx3id)) {
+                    ach_filter(item.achievements);
                 }
             });
             let keys = this.getIntersectionByKey(arr, "key");
@@ -549,7 +573,8 @@ export default {
         align-items: center;
         .mb(8px);
         .u-label {
-            flex: 0 0 115px;
+            .w(115px);
+            flex-shrink: 0;
             mask-image: linear-gradient(180deg, rgba(255, 255, 255, 1) 43.06%, rgba(255, 255, 255, 0) 100%);
             .fz(26px);
             .bold(900);
@@ -562,7 +587,11 @@ export default {
             .bold(400);
         }
         .u-radio {
-            flex: 0 0 150px;
+            min-width: 200px;
+            flex-shrink: 0;
+            :deep(.el-select__tags) {
+                max-width: 100% !important;
+            }
             :deep(.el-input__inner) {
                 background-color: rgba(255, 255, 255, 0);
                 color: #fff;

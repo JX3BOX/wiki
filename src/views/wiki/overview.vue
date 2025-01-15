@@ -124,7 +124,9 @@
             </el-dropdown>
         </div>
         <!-- 移动端查看总览位置 -->
-        <div class="u-overview_mobile" :class="{ isScroll }" v-show="mobile" @click="onSeeOverview">返回总览</div>
+        <div class="u-overview_mobile" :class="{ isScroll }" v-show="mobile" @click="onSeeOverview">
+            <i class="el-icon-back"></i>{{ showList ? "返回" : "返回总览" }}
+        </div>
         <div
             ref="overviewList"
             class="m-overview-main"
@@ -219,18 +221,18 @@
                         <a :href="getLink('achievement', scope.row.ID)" target="_blank">
                             <div class="u-achievement-name">
                                 <img class="u-icon" :src="iconLink(scope.row?.IconID)" />
-                                &nbsp;<span>{{ scope.row.Name }}</span>
+                                <span>{{ scope.row.Name }}</span>
                             </div></a
                         >
                     </template>
                 </el-table-column>
-                <el-table-column label="成就简介">
+                <el-table-column label="成就简介" :width="mobile ? '200' : ''">
                     <template slot-scope="scope"> {{ scope.row.ShortDesc || "-" }} </template>
                 </el-table-column>
-                <el-table-column label="资历点数" width="100">
+                <el-table-column label="资历点数" :width="mobile ? '80' : '100'">
                     <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
                 </el-table-column>
-                <el-table-column label="完成情况">
+                <el-table-column label="完成情况" :width="mobile ? '80' : '100'">
                     <template slot-scope="scope">
                         <el-tag :type="scope.row.isCompleted == false ? 'danger' : 'success'">{{
                             scope.row.isCompleted == false ? "未完成" : "已完成"
@@ -239,9 +241,11 @@
                 </el-table-column>
                 <el-table-column label="奖励" width="100">
                     <template slot-scope="scope">
-                        <el-tooltip placement="top" v-if="scope.row.item">
-                            <div slot="content"><jx3-item :item="scope.row.item" /></div>
-                            <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" />
+                        <el-tooltip placement="top" v-if="scope.row.ItemID">
+                            <div slot="content">
+                                <jx3-item :item_id="scope.row.ItemType + '_' + scope.row.ItemID.toString()" />
+                            </div>
+                            <img class="u-icon" :src="getIconRewards(scope.row)" />
                         </el-tooltip>
                     </template>
                 </el-table-column>
@@ -288,6 +292,7 @@ import { cloneDeep } from "lodash";
 export default {
     name: "wiki-achievement-overview",
     props: [],
+    // "jx3-item": Item
     components: { RoleAvatar, "jx3-item": Item },
     data: function () {
         return {
@@ -332,6 +337,7 @@ export default {
 
         // 总进度
         totalProgress() {
+            if (!this.ownPointsCount && !this.allPointsCount) return 0;
             return ((this.ownPointsCount / this.allPointsCount) * 100).toFixed(2);
         },
         // 总资历点数
@@ -393,6 +399,14 @@ export default {
     methods: {
         iconLink,
         getLink,
+        //成就奖励图标
+        getIconRewards(row) {
+            let key = `item-${this.$store.state.client}-${row.ItemType}_${row.ItemID}`;
+            try {
+                let item = JSON.parse(sessionStorage.getItem(key));
+                return item?.IconID ? this.iconLink(item.IconID) : "";
+            } catch (error) {}
+        },
         overviewListScroll($event) {
             if (!this.mobile) return;
             if (this.$refs.overviewList.scrollTop > 70) {
@@ -426,7 +440,6 @@ export default {
         },
         showSchoolIcon,
         onEnterCategory(data) {
-            console.log(data);
             this.name_bak = cloneDeep(this.viewAchievementsName);
             this.list_bak = cloneDeep(this.list);
             this.$store.commit("SET_STATE", { key: "viewAchievementsName", value: data.name });
@@ -438,7 +451,7 @@ export default {
                 });
             } else {
                 this.list = [data];
-
+                this.showList = true;
                 this.getMenuAchievements(data);
             }
         },
@@ -448,13 +461,20 @@ export default {
             getMenuAchievements(menu.sub, menu.detail)
                 .then((data) => {
                     let list = data.data.data.achievements || [];
-
+                    let arr = [];
                     list.forEach((item) => {
                         item.isCompleted = menu.ownAchievements.includes(item.ID);
+                        arr.push(item);
+                        if (item.SeriesAchievementList) {
+                            item.SeriesAchievementList.forEach((sub, index) => {
+                                if (index > 0) {
+                                    sub.isCompleted = menu.ownAchievements.includes(sub.ID);
+                                    arr.push(sub);
+                                }
+                            });
+                        }
                     });
-                    console.log(list);
-                    this.achievements_list = list;
-                    this.showList = true;
+                    this.achievements_list = arr;
                 })
                 .finally(() => {
                     this.loading = false;
@@ -572,7 +592,7 @@ export default {
         getList() {
             return getMenus({
                 general: 1,
-                client: "std",
+                client: this.$store.state.client,
             }).then((res) => {
                 const data = res.data.data.menus;
                 this.achievementData = data;
@@ -629,7 +649,18 @@ export default {
     width: 960px;
     &.is_mobile {
         width: calc(100vw - 137px);
+        height: 100%;
         .pt(0);
+        .m-cj-list {
+            height: calc(100% - 40px) !important;
+            .pt(40px);
+            .u-achievement-name {
+                flex-direction: column;
+                img {
+                    padding-right: 0 !important;
+                }
+            }
+        }
     }
     .m-overview-header {
         .mb(18px);
@@ -1053,6 +1084,9 @@ export default {
         .u-achievement-name {
             .flex;
             align-items: center;
+            img {
+                padding-right: 4px;
+            }
             span {
                 color: #70532d;
             }
