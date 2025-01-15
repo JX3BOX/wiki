@@ -164,12 +164,19 @@ export default {
         },
         // 获取当前用户角色列表
         loadUserRoles() {
-            User.isLogin() &&
-                getUserRoles().then((res) => {
-                    this.roleList = res.data?.data?.list || [];
-                    this.currentRole = res.data?.data?.list[0] || {};
-                    this.getPoints();
+            if (!User.isLogin()) {
+                this.$confirm("请先登录").then((_) => {
+                    User.toLogin(window.location.href);
                 });
+
+                return;
+            }
+
+            getUserRoles().then((res) => {
+                this.roleList = res.data?.data?.list || [];
+                this.currentRole = res.data?.data?.list[0] || {};
+                this.getPoints();
+            });
         },
         // 获取成就对应点数
         getPoints() {

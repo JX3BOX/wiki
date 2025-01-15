@@ -146,6 +146,7 @@ export default {
     },
     data() {
         return {
+            currentRole_bak: {},
             menuList: [],
             // 地图列表
             mapList: [],
@@ -159,7 +160,10 @@ export default {
         currentRole: {
             deep: true,
             handler(val) {
-                this.getSchemaDetail();
+                if (val?.jx3id != this.currentRole_bak?.jx3id) {
+                    this.getSchemaDetail();
+                }
+                this.currentRole_bak = val;
             },
         },
     },
@@ -170,9 +174,9 @@ export default {
         getLink,
         //获取方案详情
         getSchemaDetail() {
+            console.log(new Date());
             getWikiAchievementLeapSchema(this.$route.query.id).then((res) => {
                 this.detail = res.data?.data || {};
-                console.log(this.detail);
                 if (res?.data?.data?.schema?.length > 0) {
                     this.detail?.meta?.createBy == "map"
                         ? this.loadMapList(res?.data?.data?.schema)
@@ -209,7 +213,6 @@ export default {
                     }, {})
                 );
                 this.mapList = regions;
-
                 this.getAchievements(schema);
             });
         },
@@ -217,14 +220,14 @@ export default {
         getMenuList(schema) {
             getMenus({
                 general: 1,
-                client: "std",
+                client: this.$store.state.client,
             }).then((res) => {
                 const data = res.data.data.menus;
                 this.menuList = data;
                 this.getAchievements(schema);
             });
         },
-        isCompleted(id) {},
+
         //根据成就ID获取成就列表,同时配置分类菜单
         getAchievements(data) {
             this.loading = true;
@@ -236,27 +239,27 @@ export default {
                 ids: data.toString(),
                 attributes: attributes,
             }).then((res) => {
-                this.detail.achievements = res.data?.data || [];
-                this.detail.achievements.forEach((item) => {
-                    if (this.currentRole.achievements.indexOf(item.ID) == -1) {
-                        item.isCompleted = false;
+                let achievements = res.data?.data || [];
+                let length = achievements.length,
+                    currentRole = this.currentRole_bak;
+                console.log(currentRole);
+                for (let i = 0; i < length; i++) {
+                    if (currentRole?.achievements?.indexOf(achievements[i].ID) == -1) {
+                        achievements[i].isCompleted = false;
                     }
-                });
-                this.detail.achievementsBak = cloneDeep(this.detail.achievements);
+                }
                 //筛选可显示的分类，按总览及地图区分
-                //  this.detail?.meta?.createBy == "map"
-
                 if (this.detail?.meta?.createBy == "map") {
                     let mapList = cloneDeep(this.mapList); //按地图分类
 
                     mapList.forEach((item) => {
                         item.children.forEach((item_c) => {
-                            this.detail.achievements.forEach((item2) => {
-                                if (item_c.value == item2.SceneID) {
-                                    item.show = true;
+                            for (let i = 0; i < length; i++) {
+                                if (item_c.value == achievements[i].SceneID) {
+                                    achievements[i].show = true;
                                     item_c.show = true;
                                 }
-                            });
+                            }
                         });
                     });
 
@@ -265,19 +268,21 @@ export default {
                     let menu = cloneDeep(this.menuList);
                     Object.keys(menu).map((key) => {
                         menu[key].children.forEach((item_c) => {
-                            this.detail.achievements.forEach((item2) => {
-                                if (menu[key].sub == item2.Sub) {
+                            for (let i = 0; i < length; i++) {
+                                if (menu[key].sub == achievements[i].Sub) {
                                     menu[key].show = true;
                                 }
-                                if (item2.Detail == item_c.detail) {
+                                if (achievements[i].Detail == item_c.detail) {
                                     item_c.show = true;
                                 }
-                            });
+                            }
                         });
                     });
 
                     this.$set(this, "menuList", menu);
                 }
+                this.detail.achievements = achievements;
+                this.detail.achievementsBak = cloneDeep(this.detail.achievements);
                 this.loading = false;
                 this.getAchievementProgress(data);
             });
@@ -318,18 +323,23 @@ export default {
                 ? (this.detailSelectMenu = item.value)
                 : (this.detailSelectMenu = item.id);
 
-            let arr = [];
-            this.detail.achievementsBak.forEach((item2) => {
+            let arr = [],
+                achievementsBak = this.detail.achievementsBak,
+                length = achievementsBak.length;
+            for (let i = 0; i < length; i++) {
                 if (this.detail.meta?.createBy == "map") {
-                    if (item2.SceneID == item.value) {
-                        arr.push(item2);
+                    if (achievementsBak[i].SceneID == item.value) {
+                        arr.push(achievementsBak[i]);
                     }
                 } else {
-                    if ((type == 1 && item2.Sub == item.sub) || (type == 2 && item2.Detail == item.detail)) {
-                        arr.push(item2);
+                    if (
+                        (type == 1 && achievementsBak[i].Sub == item.sub) ||
+                        (type == 2 && achievementsBak[i].Detail == item.detail)
+                    ) {
+                        arr.push(achievementsBak[i]);
                     }
                 }
-            });
+            }
             this.detail.achievements = arr;
         },
     },

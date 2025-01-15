@@ -47,6 +47,16 @@ import { getAchievementsTotal } from "@/service/achievement";
 
 export default {
     name: "AchievementCount",
+    // 监听路由变化
+    watch: {
+        $route: {
+            handler(to, from) {
+                if (from.name == "overview") {
+                    this.$store.commit("SET_STATE", { key: "viewAchievementsName", value: "" });
+                }
+            },
+        },
+    },
     data() {
         return {
             count: 0,

@@ -215,7 +215,7 @@ export default {
         getMenuList() {
             getMenus({
                 general: 1,
-                client: "std",
+                client: this.$store.state.client,
             }).then((res) => {
                 const data = res.data.data.menus;
                 this.menuList = data;

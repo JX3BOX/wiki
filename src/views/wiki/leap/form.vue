@@ -135,7 +135,7 @@
                                     </div>
                                 </div>
                                 <!-- 成就区域 -->
-                                <div class="u-dialog-main_custom_list u-common-list">
+                                <div class="u-dialog-main_custom_list u-common-list" v-loading="loadingAchievement">
                                     <img
                                         src="../../../assets/img/wiki/leap/leap_empty.png"
                                         width="90%"
@@ -187,7 +187,7 @@
                                     </div>
                                 </div>
                                 <!-- 成就区域 -->
-                                <div class="u-dialog-main_custom_list u-common-list">
+                                <div class="u-dialog-main_custom_list u-common-list" v-loading="loadingAchievement">
                                     <img
                                         src="../../../assets/img/wiki/leap/leap_empty.png"
                                         width="90%"
@@ -274,7 +274,6 @@ export default {
         "leapForm.number": {
             deep: true,
             handler(val) {
-                console.log(val);
                 this.schemeCompute();
             },
         },
@@ -331,6 +330,7 @@ export default {
             //成就列表，切换地图或总览时需重新赋值
             achievements: [],
             achievements_bak: [],
+            loadingAchievement: false,
         };
     },
     created() {},
@@ -452,7 +452,7 @@ export default {
         getMenuList() {
             getMenus({
                 general: 1,
-                client: "std",
+                client: this.$store.state.client,
             }).then((res) => {
                 const data = res.data.data.menus;
                 this.menuList = data;
@@ -486,43 +486,64 @@ export default {
         },
         // 获取成就列表
         getMenuAchievements(sub = 1, detail) {
-            getMenuAchievements(sub, detail).then((data) => {
-                let achievements = data.data.data.achievements || [];
-                if (this.isFilter) {
-                    // 根据角色已有成就过滤出未有的
-                    let arr = [];
-                    achievements.forEach((item) => {
-                        if (this.currentRole.achievements.indexOf(item.ID) == -1) {
-                            arr.push(item);
+            this.loadingAchievement = true;
+            getMenuAchievements(sub, detail)
+                .then((data) => {
+                    let list = data.data.data.achievements || [];
+                    let achievements = [];
+                    list.forEach((item) => {
+                        achievements.push(item);
+                        if (item.SeriesAchievementList) {
+                            item.SeriesAchievementList.forEach((sub, index) => {
+                                if (index > 0) {
+                                    achievements.push(sub);
+                                }
+                            });
                         }
                     });
-                    this.achievements = arr;
-                } else {
-                    this.achievements = data.data.data.achievements || [];
-                }
-            });
+                    if (this.isFilter) {
+                        // 根据角色已有成就过滤出未有的
+                        let arr = [];
+                        achievements.forEach((item) => {
+                            if (this.currentRole.achievements.indexOf(item.ID) == -1) {
+                                arr.push(item);
+                            }
+                        });
+                        this.achievements = arr;
+                    } else {
+                        this.achievements = achievements;
+                    }
+                })
+                .finally(() => {
+                    this.loadingAchievement = false;
+                });
         },
         //一级菜单判断子集选中数量
         selectMenuNum(item) {
             let number = 0;
-            this.customList.forEach((c) => {
-                if (c.Sub == item.sub) {
+            let customList = this.customList,
+                length = customList.length;
+            for (let i = 0; i < length; i++) {
+                if (customList[i].Sub == item.sub) {
                     number++;
                 }
-            });
+            }
+
             return number;
         },
         //总览分类菜单判断是否有选中值
         isSelectMenu(item, type) {
-            let status = false;
-            for (let i = 0; i < this.customList.length; i++) {
+            let status = false,
+                customList = this.customList,
+                length = customList.length;
+            for (let i = 0; i < length; i++) {
                 if (type == 1) {
-                    if (this.customList[i].Sub == item.sub && !this.customList[i].Detail) {
+                    if (customList[i].Sub == item.sub && !customList[i].Detail) {
                         status = true;
                         break;
                     }
                 } else {
-                    if (this.customList[i].Detail == item.detail) {
+                    if (customList[i].Detail == item.detail) {
                         status = true;
                         break;
                     }
@@ -532,9 +553,11 @@ export default {
         },
         //总览菜单内单项是否选中判断
         isSelectAchievement(item) {
-            let status = false;
-            for (let i = 0; i < this.customList.length; i++) {
-                if (this.customList[i].ID == item.ID) {
+            let status = false,
+                customList = this.customList,
+                length = customList.length;
+            for (let i = 0; i < length; i++) {
+                if (customList[i].ID == item.ID) {
                     status = true;
                     break;
                 }
@@ -554,12 +577,23 @@ export default {
         getMapAchievements(value) {
             let params = {
                 scene: value,
-                client: "std",
+                client: this.$store.state.client,
                 _no_page: 1,
                 limit: 99999,
             };
             searchAchievements(params).then((data) => {
+                let list = data.data.data.achievements || [];
                 let achievements = data.data.data.achievements || [];
+                // list.forEach((item) => {
+                //     achievements.push(item);
+                //     if (item.SeriesAchievementList) {
+                //         item.SeriesAchievementList.forEach((sub, index) => {
+                //             if (index > 0) {
+                //                 achievements.push(sub);
+                //             }
+                //         });
+                //     }
+                // });
                 if (this.isFilter) {
                     // 根据角色已有成就过滤出未有的
                     let arr = [];
@@ -570,7 +604,7 @@ export default {
                     });
                     this.achievements = arr;
                 } else {
-                    this.achievements = data.data.data.achievements || [];
+                    this.achievements = achievements;
                 }
                 this.$forceUpdate();
             });
@@ -587,9 +621,11 @@ export default {
             return number;
         },
         isSelectMap(item) {
-            let status = false;
-            for (let i = 0; i < this.customList.length; i++) {
-                if (this.customList[i].SceneID == item.value) {
+            let status = false,
+                customList = this.customList,
+                length = customList.length;
+            for (let i = 0; i < length; i++) {
+                if (customList[i].SceneID == item.value) {
                     status = true;
                     break;
                 }
@@ -625,7 +661,13 @@ export default {
                 }
             } else {
                 // 地图
-                this.customList = this.customList.concat(this.achievements);
+                if (this.isSelectMap(this.selectMapChildrenItem)) {
+                    this.customList = this.customList.filter(
+                        (item) => item.SceneID != this.selectMapChildrenItem.value
+                    );
+                } else {
+                    this.customList = this.customList.concat(this.achievements);
+                }
             }
         },
         // 选择单个成就
@@ -655,7 +697,7 @@ export default {
             });
             if (!data) {
                 remaining = Number(this.leapForm.number) - this.currentRole.total - diffNum;
-                console.log(remaining);
+
                 this.leapForm.all = all;
                 this.leapForm.diffNum = diffNum;
                 this.leapForm.remaining = remaining > 0 ? remaining : 0;
@@ -689,10 +731,15 @@ export default {
             };
             createdWikiAchievementLeapSchema(params).then((res) => {
                 this.dialogTableVisible = false;
-
                 this.$message.success("创建成功");
-                //   this.getSchemaList();
-                this.$emit("reloadList");
+                this.$emit("reloadList", res.data.data);
+                let routeUrl = this.$router.resolve({
+                    name: "leap",
+                    query: {
+                        id: res.data.data.id,
+                    },
+                });
+                window.open(routeUrl.href, "_blank");
             });
         },
     },
@@ -832,6 +879,9 @@ export default {
                 }
                 .u-recommend-list {
                     .size(120px,100%);
+                    .u-item {
+                        .mb(8px);
+                    }
                 }
                 .u-recommend-desc {
                     .w(100% );
