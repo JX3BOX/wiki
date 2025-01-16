@@ -1,42 +1,5 @@
 <template>
     <div class="p-compare">
-        <!-- <div>
-         
-            <div
-                :style="{
-                    opacity: currentRole ? 1 : 0.5,
-                }"
-                class="m-info-user"
-            >
-                <span class="u-name"
-                    >{{ currentRole.name }}
-                    {{ currentRole.server && "·" }}
-                    {{ currentRole.server }}</span
-                >
-                <el-dropdown trigger="click">
-                    <div class="u-toggle-btn">
-                        <div>
-                            <span>切换角色</span>
-                            <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" />
-                        </div>
-                    </div>
-                    <el-dropdown-menu class="m-role-dropdown" slot="dropdown">
-                        <el-dropdown-item v-for="role in roleList" :key="role.ID">
-                            <div
-                                @click="onChangeRole(role)"
-                                class="m-role-item"
-                                :class="{
-                                    active: role.jx3id === currentRole.jx3id,
-                                }"
-                            >
-                                <span>{{ role.name }}</span>
-                                <span>{{ role.server }}</span>
-                            </div>
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-            </div>
-        </div> -->
         <!-- 顶部信息 -->
         <div class="u-title">
             <div class="u-label">亲友对比</div>
@@ -103,7 +66,11 @@
                             <i class="el-icon-circle-close" @click="delRole(item, index)"></i>
                         </div>
                     </div>
-                    <div class="u-zl_cell" :style="'width:' + (contrastKith.length + 1) * 200 + 'px'">
+                    <div
+                        class="u-zl_cell"
+                        :style="'width:' + (contrastKith.length + 1) * 200 + 'px'"
+                        v-loading="achievementsLoading"
+                    >
                         <div class="u-zl-list ps">
                             <div class="u-zl-list_item" v-for="(item, index) in achievements" :key="index">
                                 <el-tooltip effect="dark" :content="item.Desc" placement="top">
@@ -215,6 +182,7 @@ export default {
             activeIndexChildren: null,
             achievements: [],
             achievements_bak: [],
+            achievementsLoading: false,
             showAddRole: false,
             myKith: [],
             myKithRoles: [],
@@ -252,6 +220,7 @@ export default {
             this.setActiveIndex(sub);
         },
         setActiveIndex(sub, detail) {
+            if (this.achievementsLoading) return;
             if (this.activeIndex != sub && !detail) {
                 this.activeShow = true;
             }
@@ -278,29 +247,34 @@ export default {
         },
         // 获取成就列表
         getMenuAchievements(sub = 1, detail, type) {
-            getMenuAchievements(sub, detail).then((data) => {
-                let list = data.data.data.achievements || [];
-                let arr = [];
-                list.forEach((item) => {
-                    arr.push(item);
-                    if (item.SeriesAchievementList) {
-                        item.SeriesAchievementList.forEach((sub, index) => {
-                            if (index > 0) {
-                                arr.push(sub);
-                            }
-                        });
+            this.achievementsLoading = true;
+            getMenuAchievements(sub, detail)
+                .then((data) => {
+                    let list = data.data.data.achievements || [];
+                    let arr = [];
+                    list.forEach((item) => {
+                        arr.push(item);
+                        if (item.SeriesAchievementList) {
+                            item.SeriesAchievementList.forEach((sub, index) => {
+                                if (index > 0) {
+                                    arr.push(sub);
+                                }
+                            });
+                        }
+                    });
+                    this.achievements = arr;
+                    this.achievements_bak = cloneDeep(this.achievements);
+                    //不是首次查询
+                    if (type != 1) {
+                        this.queryFinish(1); //查询完成情况
+                        this.selectTabChange();
+                    } else {
+                        if (this.currentRole?.jx3id) this.addRoleConfirm(this.currentRole.jx3id, 1); // 添加角色
                     }
+                })
+                .finally(() => {
+                    this.achievementsLoading = false;
                 });
-                this.achievements = arr;
-                this.achievements_bak = cloneDeep(this.achievements);
-                //不是首次查询
-                if (type != 1) {
-                    // this.queryFinish(1); //查询完成情况
-                    this.selectTabChange();
-                } else {
-                    if (this.currentRole?.jx3id) this.addRoleConfirm(this.currentRole.jx3id, 1); // 添加角色
-                }
-            });
         },
         addRole() {
             this.kithForm = {
@@ -357,7 +331,7 @@ export default {
                 }
             });
             this.selectOptions = arr;
-            this.selectTabChange();
+            this.selectTabChange(true);
         },
         setRoleInfo(value) {
             if (this.kithForm.roleType == 1) {
@@ -388,7 +362,6 @@ export default {
                         achievements: [],
                     };
                 }
-                console.log(this.selectOptions);
                 //判断是否已经存在
                 let flag = false;
                 this.selectOptions.forEach((item) => {
@@ -412,7 +385,7 @@ export default {
                 }
 
                 this.showAddRole = false;
-                this.queryFinish(true);
+                this.selectTabChange(true);
             });
         },
         //判断成就是否完成
@@ -432,7 +405,6 @@ export default {
             if (this.selectTab.length == 0 || type) {
                 this.contrastKith_bak = cloneDeep(this.contrastKith);
             }
-            this.$forceUpdate();
         },
         //多数组取交集
         getIntersectionByKey(arrays, key) {
@@ -450,15 +422,14 @@ export default {
             });
         },
         //根据条件筛选
-        selectTabChange() {
+        selectTabChange(finishType = false) {
             let selectTab = this.selectTab,
                 value = "";
             let achievements = cloneDeep(this.achievements_bak);
             let contrastKith = cloneDeep(this.contrastKith_bak);
-
             if (!selectTab || selectTab.length == 0) {
                 this.achievements = achievements;
-                this.queryFinish();
+                this.queryFinish(finishType);
                 return;
             }
             if (selectTab[selectTab.length - 1] == 1) {
@@ -472,6 +443,7 @@ export default {
             if (selectTab.length == 1 && selectTab[0] != 1) value = selectTab[0];
             if (selectTab.length > 1 && (selectTab[0] != 1 || selectTab[selectTab.length - 1] != 1)) value = selectTab;
             let arr = [];
+
             contrastKith.forEach((item, index) => {
                 let a = [];
                 const ach_filter = function (array) {
@@ -485,24 +457,21 @@ export default {
                 if (value == 2 && index == 0) {
                     ach_filter(item.achievements);
                 } else if (value == 1) {
-                    console.log("共同");
                     ach_filter(item.achievements);
-                    console.log(arr);
                 } else if (item.jx3id == value) {
-                    console.log("单");
                     ach_filter(item.achievements);
                 } else if (typeof value == "object" && value instanceof Array && value.includes(item.jx3id)) {
-                    console.log("多");
                     ach_filter(item.achievements);
                 }
             });
+
             let keys = this.getIntersectionByKey(arr, "key");
             let achievementsFilter = [];
             keys.map((item) => {
                 this.achievements_bak[item] ? achievementsFilter.push(this.achievements_bak[item]) : "";
             });
             this.achievements = achievementsFilter;
-            this.queryFinish();
+            this.queryFinish(finishType);
         },
     },
 };
