@@ -242,12 +242,12 @@ export default {
                 let achievements = res.data?.data || [];
                 let length = achievements.length,
                     currentRole = this.currentRole_bak;
-                console.log(currentRole);
                 for (let i = 0; i < length; i++) {
                     if (currentRole?.achievements?.indexOf(achievements[i].ID) == -1) {
                         achievements[i].isCompleted = false;
                     }
                 }
+                console.log(achievements);
                 //筛选可显示的分类，按总览及地图区分
                 if (this.detail?.meta?.createBy == "map") {
                     let mapList = cloneDeep(this.mapList); //按地图分类
@@ -258,11 +258,12 @@ export default {
                                 if (item_c.value == achievements[i].SceneID) {
                                     achievements[i].show = true;
                                     item_c.show = true;
+                                    item.show = true;
                                 }
                             }
                         });
                     });
-
+                    console.log(mapList);
                     this.$set(this, "mapList", mapList);
                 } else {
                     let menu = cloneDeep(this.menuList);
