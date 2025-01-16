@@ -240,8 +240,7 @@ export default {
         //方案计算
         schemeCompute(data) {
             let all = 0,
-                diffNum = 0,
-                remaining = 0;
+                diffNum = 0;
             let _this = this;
             let customList = data || this.customList;
 
