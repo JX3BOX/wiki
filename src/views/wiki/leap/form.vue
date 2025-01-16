@@ -45,7 +45,35 @@
                     </div>
                     <div class="u-dialog-main_right">
                         <div class="u-dialog-main_title">
-                            {{ dialogQueryParams.is_official == 1 ? "推荐方案" : "自选方案" }}
+                            <span v-if="dialogQueryParams.is_official == 1">推荐方案</span>
+                            <div v-else class="u-dialog-main_search">
+                                <div class="u-dialog-main_search_title">
+                                    自选方案
+                                    <!-- -{{ isSelectType == 1 ? "总览" : "地图" }} -->
+                                </div>
+                                <!-- 地图搜索框-->
+                                <div class="u-select-input" v-if="isSelectType == 2">
+                                    <el-input
+                                        placeholder="输入成就名称/成就描述/称号/奖励物品「回车」进行搜索"
+                                        v-model="searchInput"
+                                        @keydown.enter.native="searchHandle"
+                                    >
+                                        <!-- <el-select v-model="isSelectSearchType" slot="prepend" placeholder="请选择">
+                                            <el-option label="全局" value="1"></el-option>
+                                            <el-option label="地图" value="2"></el-option>
+                                        </el-select> -->
+                                        <template #prepend>
+                                            <slot
+                                                ><i class="el-icon-search"></i> <span class="u-text">关键词</span></slot
+                                            >
+                                        </template>
+                                        <el-button slot="append" type="primary" plain @click="searchHandle"
+                                            ><i class="el-icon-position"></i>
+                                            <span class="u-text">搜索</span></el-button
+                                        >
+                                    </el-input>
+                                </div>
+                            </div>
                         </div>
                         <!-- 推荐 -->
                         <div v-if="dialogQueryParams.is_official == 1" class="u-dialog-main_recommend">
@@ -230,16 +258,7 @@
 </template>
 
 <script>
-import {
-    getRoleGameAchievements,
-    getMenuAchievements,
-    getMenus,
-    getAchievementPoints,
-    getAchievements,
-    getAchievementsPost,
-    searchAchievements,
-    getMapList,
-} from "@/service/achievement";
+import { getMenuAchievements, getMenus, searchAchievements, getMapList } from "@/service/achievement";
 import { getWikiAchievementLeapSchemaList, createdWikiAchievementLeapSchema } from "@/service/wiki";
 
 import { cloneDeep, isEmpty } from "lodash";
@@ -331,6 +350,8 @@ export default {
             achievements: [],
             achievements_bak: [],
             loadingAchievement: false,
+            searchInput: "",
+            isSelectSearchType: "",
         };
     },
     created() {},
@@ -573,27 +594,24 @@ export default {
             }
             this.getMapAchievements(this.selectMapChildrenItem.value);
         },
+        //地图根据关键字全局搜索成就
+        searchHandle() {
+            const keyword = this.searchInput;
+            this.selectMapItem = {};
+            this.selectMapChildrenItem = {};
+            this.getMapAchievements("", keyword);
+        },
         //根据地图获取成就列表
-        getMapAchievements(value) {
+        getMapAchievements(value = "", keyword = "") {
             let params = {
+                keyword,
                 scene: value,
                 client: this.$store.state.client,
                 _no_page: 1,
                 limit: 99999,
             };
             searchAchievements(params).then((data) => {
-                let list = data.data.data.achievements || [];
                 let achievements = data.data.data.achievements || [];
-                // list.forEach((item) => {
-                //     achievements.push(item);
-                //     if (item.SeriesAchievementList) {
-                //         item.SeriesAchievementList.forEach((sub, index) => {
-                //             if (index > 0) {
-                //                 achievements.push(sub);
-                //             }
-                //         });
-                //     }
-                // });
                 if (this.isFilter) {
                     // 根据角色已有成就过滤出未有的
                     let arr = [];
@@ -784,9 +802,9 @@ export default {
         .h(324px);
         border: 1px solid #ffffff;
         .u-dialog-main_title {
-            .size(100%,24px);
+            .size(100%,42px);
             background-color: #fff;
-            .fz(14px,24px);
+            .fz(14px,42px);
             .bold(700);
             color: #000;
         }
@@ -816,6 +834,25 @@ export default {
             .w(calc(100% - 64px));
             flex: 1;
             .x;
+            .u-dialog-main_search {
+                .flex;
+                justify-content: space-between;
+                .u-dialog-main_search_title {
+                    .w(64px);
+                    flex-shrink: 0;
+                }
+                .u-select-input {
+                    .w(580px);
+                }
+            }
+            //TODO 备用配置功能
+            .u-select-input {
+                .el-input-group__prepend {
+                    .el-input__inner {
+                        .w(100px);
+                    }
+                }
+            }
             //成就列表
             .u-common-list {
                 background: linear-gradient(180deg, #000000 0%, #574938 100%);
@@ -870,7 +907,7 @@ export default {
             //推荐模块展示
             .u-dialog-main_recommend {
                 .flex;
-                .h(calc(100% - 24px));
+                .h(calc(100% - 42px));
                 .u-recommend-empty {
                     .w(100%);
                     flex-shrink: 0;
@@ -912,7 +949,7 @@ export default {
             //自选模块展示
             .u-dialog-main_custom {
                 .flex;
-                .h(calc(100% - 24px));
+                .h(calc(100% - 42px));
                 flex: 1;
                 .u-dialog-main_category {
                     .size(64px,100%);
