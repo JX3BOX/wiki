@@ -94,8 +94,8 @@
                 </el-table-column> -->
                 <el-table-column label="完成情况" width="100">
                     <template slot-scope="scope">
-                        <el-tag :type="scope.row.isCompleted == false ? 'danger' : 'success'">{{
-                            scope.row.isCompleted == false ? "未完成" : "已完成"
+                        <el-tag :type="scope.row.isCompleted ? 'success' : 'danger'">{{
+                            scope.row.isCompleted ? "已完成" : "未完成"
                         }}</el-tag>
                     </template>
                 </el-table-column>
@@ -139,14 +139,10 @@ export default {
     props: {
         currentRole: {
             type: Object,
-            default: function () {
-                return {};
-            },
         },
     },
     data() {
         return {
-            currentRole_bak: {},
             menuList: [],
             // 地图列表
             mapList: [],
@@ -159,11 +155,8 @@ export default {
     watch: {
         currentRole: {
             deep: true,
-            handler(val) {
-                if (val?.jx3id != this.currentRole_bak?.jx3id) {
-                    this.getSchemaDetail();
-                }
-                this.currentRole_bak = val;
+            handler(val, old) {
+                this.getSchemaDetail();
             },
         },
     },
@@ -174,7 +167,6 @@ export default {
         getLink,
         //获取方案详情
         getSchemaDetail() {
-            console.log(new Date());
             getWikiAchievementLeapSchema(this.$route.query.id).then((res) => {
                 this.detail = res.data?.data || {};
                 if (res?.data?.data?.schema?.length > 0) {
@@ -241,10 +233,10 @@ export default {
             }).then((res) => {
                 let achievements = res.data?.data || [];
                 let length = achievements.length,
-                    currentRole = this.currentRole_bak;
+                    currentRole = this.currentRole;
                 for (let i = 0; i < length; i++) {
-                    if (currentRole?.achievements?.indexOf(achievements[i].ID) == -1) {
-                        achievements[i].isCompleted = false;
+                    if (currentRole?.achievements?.indexOf(achievements[i].ID) != -1) {
+                        achievements[i].isCompleted = true;
                     }
                 }
                 console.log(achievements);

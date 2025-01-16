@@ -116,7 +116,7 @@
             @cancel="showForm = false"
         ></createFrom>
         <!-- 方案详情 -->
-        <detail v-if="showDetail" :currentRole="currentRole" />
+        <detail v-if="showDetail && !isEmpty(currentRole)" :currentRole="currentRole" />
     </div>
 </template>
 
@@ -158,6 +158,7 @@ export default {
     methods: {
         iconLink,
         getLink,
+        isEmpty,
         reloadList() {
             this.showForm = false;
             this.getSchemaList(); //重新加载方案列表
