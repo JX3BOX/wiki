@@ -842,7 +842,7 @@ export default {
             color: #ffeccc;
             &:hover {
                 color: #fff;
-                background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
+                background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%) !important;
             }
         }
     }
@@ -852,11 +852,15 @@ export default {
     .el-select-dropdown__list {
         .el-select-dropdown__item {
             color: #ffeccc;
-            &.selected,
-            &:hover {
+            &.selected {
                 color: #fff;
-                background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
+                background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%) !important;
             }
+        }
+        .el-select-dropdown__item.hover,
+        .el-select-dropdown__item:hover {
+            color: #fff;
+            background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%) !important;
         }
     }
 }
