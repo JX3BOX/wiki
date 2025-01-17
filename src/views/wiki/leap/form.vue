@@ -287,9 +287,13 @@
 
 <script>
 import { getMenuAchievements, getMenus, searchAchievements, getMapList } from "@/service/achievement";
-import { getWikiAchievementLeapSchemaList, createdWikiAchievementLeapSchema } from "@/service/wiki";
+import {
+    getWikiAchievementLeapSchemaList,
+    createdWikiAchievementLeapSchema,
+    getWikiAchievementLeapSchemaProgress,
+} from "@/service/wiki";
 
-import { cloneDeep, isEmpty } from "lodash";
+import { cloneDeep, isEmpty, sortBy } from "lodash";
 export default {
     components: {},
     props: {
@@ -376,7 +380,6 @@ export default {
             selectMapChildrenItem: {},
             //成就列表，切换地图或总览时需重新赋值
             achievements: [],
-            achievements_bak: [],
             loadingAchievement: false,
             searchInput: "",
             isSelectSearchType: "2",
@@ -422,6 +425,34 @@ export default {
         //过滤选项切换，重载成就列表
         reloadCustom() {
             this.initCustomList();
+        },
+        //获取成就难度并进行排序
+        getAchievementProgress() {
+            let achievements = cloneDeep(this.achievements),
+                ids = [];
+            achievements.forEach((item) => {
+                ids.push(item.ID);
+            });
+            console.log(ids);
+            if (ids.length == 0) return;
+            getWikiAchievementLeapSchemaProgress(ids).then((res) => {
+                let progressAndDifficulty = res.data?.data || [];
+                let arr = [];
+                progressAndDifficulty.forEach((item, index) => {
+                    let findItem = achievements.find((i) => i.ID == item.achievement_id);
+                    if (findItem) {
+                        item.difficulty = item.difficulty ? item.difficulty / 10 : 0;
+                        arr.push(Object.assign(findItem, item));
+                    }
+                });
+                this.$set(
+                    this,
+                    "achievements",
+                    sortBy(arr, function (o) {
+                        return o.difficulty;
+                    })
+                );
+            });
         },
         //自选方案切换
         changeSelfCategory(value) {
@@ -584,6 +615,8 @@ export default {
                     } else {
                         this.achievements = achievements;
                     }
+                    //获取难度并排序
+                    this.getAchievementProgress();
                 })
                 .finally(() => {
                     this.loadingAchievement = false;
@@ -674,7 +707,8 @@ export default {
                 } else {
                     this.achievements = achievements;
                 }
-                this.$forceUpdate();
+                //获取难度并排序
+                this.getAchievementProgress();
             });
         },
         handleSelect(item) {

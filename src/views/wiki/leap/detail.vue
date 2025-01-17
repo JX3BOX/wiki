@@ -133,7 +133,7 @@ import { getMenus, getAchievementsPost, getMapList } from "@/service/achievement
 import { getWikiAchievementLeapSchema, getWikiAchievementLeapSchemaProgress } from "@/service/wiki";
 import Item from "@jx3box/jx3box-editor/src/Item";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
-import { cloneDeep } from "lodash";
+import { cloneDeep, sortBy } from "lodash";
 export default {
     components: { "jx3-item": Item },
     props: {
@@ -233,13 +233,14 @@ export default {
             }).then((res) => {
                 let achievements = res.data?.data || [];
                 let length = achievements.length,
-                    currentRole = this.currentRole;
+                    currentRole = this.currentRole,
+                    ids = [];
                 for (let i = 0; i < length; i++) {
+                    ids.push(achievements[i].ID);
                     if (currentRole?.achievements?.indexOf(achievements[i].ID) != -1) {
                         achievements[i].isCompleted = true;
                     }
                 }
-                console.log(achievements);
                 //筛选可显示的分类，按总览及地图区分
                 if (this.detail?.meta?.createBy == "map") {
                     let mapList = cloneDeep(this.mapList); //按地图分类
@@ -247,15 +248,19 @@ export default {
                     mapList.forEach((item) => {
                         item.children.forEach((item_c) => {
                             for (let i = 0; i < length; i++) {
-                                if (item_c.value == achievements[i].SceneID) {
-                                    achievements[i].show = true;
+                                let findItem = achievements.find((i) => i.SceneID == item_c.value);
+                                if (findItem) {
                                     item_c.show = true;
                                     item.show = true;
                                 }
+                                // if (item_c.value == achievements[i].SceneID) {
+                                //     achievements[i].show = true;
+                                //     item_c.show = true;
+                                //     item.show = true;
+                                // }
                             }
                         });
                     });
-                    console.log(mapList);
                     this.$set(this, "mapList", mapList);
                 } else {
                     let menu = cloneDeep(this.menuList);
@@ -277,14 +282,31 @@ export default {
                 this.detail.achievements = achievements;
                 this.detail.achievementsBak = cloneDeep(this.detail.achievements);
                 this.loading = false;
-                this.getAchievementProgress(data);
+                this.getAchievementProgress(ids);
             });
         },
         //全服完成进度及难度
         getAchievementProgress(data) {
             getWikiAchievementLeapSchemaProgress(data).then((res) => {
-                this.detail.progressAndDifficulty = res.data?.data || [];
-                // this.getDifficulty();
+                let achievements = cloneDeep(this.detail.achievements);
+                let progressAndDifficulty = res.data?.data || [];
+                this.detail.progressAndDifficulty = progressAndDifficulty;
+                let arr = [];
+                progressAndDifficulty.forEach((item, index) => {
+                    let findItem = achievements.find((i) => i.ID == item.achievement_id);
+                    if (findItem) {
+                        item.difficulty = item.difficulty ? item.difficulty / 10 : 0;
+                        arr.push(Object.assign(findItem, item));
+                    }
+                });
+                this.$set(
+                    this.detail,
+                    "achievements",
+                    sortBy(arr, function (o) {
+                        return o.difficulty;
+                    })
+                );
+                this.detail.achievementsBak = cloneDeep(this.detail.achievements);
             });
         },
         //TODO 全服完成度计算，暂时作废20250113
