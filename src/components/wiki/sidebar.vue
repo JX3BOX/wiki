@@ -141,7 +141,7 @@ export default {
     }
     .u-img-btn {
         .pa;
-        bottom: 10px;
+        bottom: 18px;
     }
     .u-wiki-btn {
         .mt(8px);

@@ -341,7 +341,7 @@ export default {
 
 <style lang="less">
 .m-detail {
-    .mb(8px);
+    height: calc(100% - 42px) !important;
     .el-table {
         &::before {
             height: 0;
