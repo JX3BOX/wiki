@@ -165,7 +165,8 @@
                                         @click="selectMenu(item, 1)"
                                     >
                                         <!-- <el-badge is-dot> {{ item.name }} </el-badge> -->
-                                        <el-badge :value="selectMenuNum(item)" class="u-badge-item">
+                                        <span v-if="selectMenuNum(item) == 0"> {{ item.name }}</span>
+                                        <el-badge :value="selectMenuNum(item)" class="u-badge-item" v-else>
                                             {{ item.name }}
                                         </el-badge>
                                     </div>
@@ -217,7 +218,8 @@
                                         @click="selectMap(item, 1)"
                                     >
                                         <!-- <el-badge is-dot> {{ item.name }} </el-badge> -->
-                                        <el-badge :value="selectMapNum(item)" class="u-badge-item">
+                                        <span v-if="selectMapNum(item) == 0"> {{ item.label }}</span>
+                                        <el-badge :value="selectMapNum(item)" class="u-badge-item" v-else>
                                             {{ item.label }}
                                         </el-badge>
                                     </div>
