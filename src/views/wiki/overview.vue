@@ -645,8 +645,9 @@ export default {
 
 <style lang="less">
 .p-achievement-overview {
-    .pa;
-    bottom: 10px;
+    // .pa;
+    // bottom: 10px;
+    .pt(86px);
     width: 960px;
     &.is_mobile {
         width: calc(100vw - 137px);

@@ -141,8 +141,8 @@ export default {
         }
     }
     .u-img-btn {
-        .pa;
-        bottom: 18px;
+        // .pa;
+        // bottom: 18px;
     }
     .u-wiki-btn {
         .mt(8px);
