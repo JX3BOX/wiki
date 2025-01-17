@@ -779,7 +779,7 @@ export default {
                 }
             }
             .u-zl_cell {
-                .h(calc(100% - 50px));
+                .h(calc(100% - 86px));
                 .flex;
                 // .pr;
                 .w(100%);
