@@ -16,7 +16,13 @@
                     clearable
                     @change="selectTabChange"
                 >
-                    <el-option v-for="item in selectOptions" :key="item.value" :label="item.name" :value="item.value">
+                    <el-option
+                        v-for="item in selectOptions"
+                        :key="item.type"
+                        :label="item.name"
+                        :value="item.type"
+                        :disabled="isSelectDisabled(item.type)"
+                    >
                     </el-option>
                 </el-select>
             </div>
@@ -170,16 +176,13 @@ export default {
         return {
             currentRole: {}, //当前角色
             menuList: [],
-            selectTab: "",
+            selectTab: [],
             selectOptions: [
                 {
                     name: "共同未完成的",
                     value: 1,
+                    type: "1,1",
                 },
-                // {
-                //     name: "我未完成的",
-                //     value: 2,
-                // },
             ],
             activeIndex: 1,
             activeShow: true,
@@ -236,7 +239,6 @@ export default {
             } else {
                 this.activeIndexChildren = null;
             }
-            // this.selectTab = "";
             this.getMenuAchievements(sub, detail);
         },
         // 获取成就对应点数
@@ -394,6 +396,12 @@ export default {
                 this.selectOptions.push({
                     value: contrastKith.jx3id,
                     name: contrastKith.name + "未完成",
+                    type: `${contrastKith.jx3id},1`,
+                });
+                this.selectOptions.push({
+                    value: contrastKith.jx3id,
+                    name: contrastKith.name + "已完成",
+                    type: `${contrastKith.jx3id},2`,
                 });
                 if (type == 1 && this.contrastKith[0]) {
                     this.$set(this.contrastKith, 0, contrastKith);
@@ -437,9 +445,20 @@ export default {
                 return acc.filter((value) => curr.includes(value));
             });
         },
+        //同一个角色不能同时选中完成和未完成
+        isSelectDisabled(type) {
+            let selectTab = cloneDeep(this.selectTab);
+            let typeArr = type.split(",");
+            let status = false;
+            selectTab.forEach((item, index) => {
+                let itemArr = item.split(",");
+                if (itemArr[0] == typeArr[0] && itemArr[1] != typeArr[1]) status = true;
+            });
+            return status;
+        },
         //根据条件筛选
         selectTabChange() {
-            let selectTab = this.selectTab,
+            let selectTab = cloneDeep(this.selectTab),
                 value = "";
             let achievements = cloneDeep(this.achievements_bak);
             let contrastKith = cloneDeep(this.contrastKith_bak);
@@ -449,35 +468,43 @@ export default {
                 this.queryFinish();
                 return;
             }
-            if (selectTab[selectTab.length - 1] == 1) {
-                value = 1;
-                this.selectTab = [value];
+            let all_select = "1,1";
+            if (selectTab[selectTab.length - 1] == all_select) {
+                value = all_select;
+                selectTab = [all_select];
             }
-            if (selectTab.length > 1 && selectTab[0] == 1) {
+            if (selectTab.length == 1 && selectTab[0] != all_select) value = selectTab[0];
+            if (selectTab.length > 1 && selectTab[0] == all_select) {
                 value = selectTab[selectTab.length - 1];
-                this.selectTab = [value];
+                selectTab = [value];
             }
-            if (selectTab.length == 1 && selectTab[0] != 1) value = selectTab[0];
-            if (selectTab.length > 1 && (selectTab[0] != 1 || selectTab[selectTab.length - 1] != 1)) value = selectTab;
+
+            if (selectTab.length > 1 && (selectTab[0] != all_select || selectTab[selectTab.length - 1] != all_select))
+                value = selectTab;
+            this.selectTab = selectTab;
             let arr = [];
+            let selectTabArr = [];
+            if (typeof value == "string") selectTabArr = value.split(",");
             contrastKith.forEach((item, index) => {
                 let a = [];
-                const ach_filter = function (array) {
+                const ach_filter = function (array, type = 1) {
                     array.forEach((item2, index2) => {
-                        if (item2.value == "-1") {
+                        if ((item2.value == "-1" && type == 1) || (item2.value != "-1" && type == 2)) {
                             a.push({ key: item2.key, value: item2.value });
                         }
                     });
                     arr.push(a);
                 };
-                if (value == 2 && index == 0) {
-                    ach_filter(item.achievements);
-                } else if (value == 1) {
-                    ach_filter(item.achievements);
-                } else if (item.jx3id == value) {
-                    ach_filter(item.achievements);
-                } else if (typeof value == "object" && value instanceof Array && value.includes(item.jx3id)) {
-                    ach_filter(item.achievements);
+                if (value == all_select) {
+                    ach_filter(item.achievements, selectTabArr[1]);
+                } else if (item.jx3id == selectTabArr[0]) {
+                    ach_filter(item.achievements, selectTabArr[1]);
+                } else if (typeof value == "object" && value instanceof Array) {
+                    // && value.includes(item.jx3id)
+                    value.forEach((item2) => {
+                        let itemArr = item2.split(",");
+                        if (item.jx3id == itemArr[0]) ach_filter(item.achievements, itemArr[1]);
+                    });
                 }
                 item.achievements = a;
             });
@@ -752,7 +779,7 @@ export default {
                 }
             }
             .u-zl_cell {
-                .h(calc(100% - 50px));
+                .h(calc(100% - 86px));
                 .flex;
                 // .pr;
                 .w(100%);
