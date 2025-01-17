@@ -66,6 +66,16 @@
                             <i class="el-icon-circle-close" @click="delRole(item, index)"></i>
                         </div>
                     </div>
+                    <!-- 总资历模块 -->
+                    <div class="u-zl-number_table" :style="'width:' + (contrastKith.length + 1) * 200 + 'px'">
+                        <div class="u-table_label ps">总资历</div>
+                        <!-- 对比亲友及自身 -->
+                        <div class="u-table_label kith" v-for="(item, index) in contrastKith" :key="index">
+                            <div class="u-name" :title="item.name + '·' + item.server + '总资历：' + item.number">
+                                {{ item.number }}
+                            </div>
+                        </div>
+                    </div>
                     <div
                         class="u-zl_cell"
                         :style="'width:' + (contrastKith.length + 1) * 200 + 'px'"
@@ -148,12 +158,7 @@
 </template>
 
 <script>
-import {
-    getRoleGameAchievements,
-    getMenuAchievements,
-    getMenus,
-    getVirtualRoleAchievements,
-} from "@/service/achievement";
+import { getRoleGameAchievements, getMenuAchievements, getMenus, getAchievementPoints } from "@/service/achievement";
 import { getMyKith, getMyKithRoles } from "@/service/wiki";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
@@ -166,7 +171,6 @@ export default {
             currentRole: {}, //当前角色
             menuList: [],
             selectTab: "",
-
             selectOptions: [
                 {
                     name: "共同未完成的",
@@ -198,6 +202,7 @@ export default {
             },
             contrastKith: [], //对比的亲友及自身
             contrastKith_bak: [], //对比的亲友及自身备份
+            pointsData: [],
         };
     },
 
@@ -233,6 +238,14 @@ export default {
             }
             // this.selectTab = "";
             this.getMenuAchievements(sub, detail);
+        },
+        // 获取成就对应点数
+        getPoints() {
+            return getAchievementPoints().then((res) => {
+                const data = res.data.data.points;
+                this.pointsData = data;
+                this.getList();
+            });
         },
         // 获取成就菜单列表
         getList() {
@@ -304,7 +317,8 @@ export default {
             getUserRoles().then((res) => {
                 this.roleList = res.data?.data?.list || [];
                 this.currentRole = res.data?.data?.list[0] || {};
-                this.getList();
+                this.getPoints();
+
                 this.getMyKith(); //获取我的亲友
             });
         },
@@ -355,17 +369,24 @@ export default {
             getRoleGameAchievements(type == 1 ? jx3Id : this.kithForm.jx3Id).then((res) => {
                 const my_achievements = (res.data?.data?.achievements || "").split(",");
                 let contrastKith = {};
+                //计算角色总资历
+                let total = 0;
+                my_achievements.forEach((item) => {
+                    total = total + (this.pointsData[item] || 0);
+                });
                 if (type) {
                     contrastKith = {
                         ...this.currentRole,
                         my_achievements,
                         achievements: [],
+                        number: total,
                     };
                 } else {
                     contrastKith = {
                         ...this.kithForm.info,
                         my_achievements,
                         achievements: [],
+                        number: total,
                     };
                 }
 
@@ -676,6 +697,38 @@ export default {
                     flex-shrink: 0;
                     color: #ffeccc;
 
+                    .flex;
+                    .flex(o);
+                    .u-name {
+                        .mr(4px);
+                        max-width: 170px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    &.kith {
+                        justify-content: center;
+                    }
+                    &.ps {
+                        position: sticky;
+                        left: 0;
+                    }
+                    i {
+                        cursor: pointer;
+                    }
+                }
+            }
+            .u-zl-number_table {
+                .flex;
+                .w(100%);
+                .u-table_label {
+                    background-color: #fff;
+                    padding: 0px 12px 0px 12px;
+                    box-sizing: border-box;
+                    .size(200px,36px);
+                    flex-shrink: 0;
+                    color: #846b4b;
                     .flex;
                     .flex(o);
                     .u-name {
