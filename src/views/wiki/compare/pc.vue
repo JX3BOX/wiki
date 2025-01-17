@@ -587,6 +587,7 @@ export default {
     }
     .m-main {
         height: calc(100% - 40px);
+        padding: 0;
         .flex;
         .u-left {
             flex: 0 0 106px;

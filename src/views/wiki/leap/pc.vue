@@ -264,7 +264,7 @@ export default {
 
 <style lang="less">
 .p-leap-pc {
-    padding-top: 65px;
+    padding-top: 45px;
     width: 960px;
     height: 97%;
     box-sizing: border-box;
