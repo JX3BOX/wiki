@@ -52,26 +52,46 @@
                                     <!-- -{{ isSelectType == 1 ? "总览" : "地图" }} -->
                                 </div>
                                 <!-- 地图搜索框-->
-                                <div class="u-select-input" v-if="isSelectType == 2">
-                                    <el-input
-                                        placeholder="输入成就名称/成就描述/称号/奖励物品「回车」进行搜索"
+                                <div
+                                    class="u-select-input"
+                                    :class="{ noMap: isSelectSearchType == 1 }"
+                                    v-if="isSelectType == 2"
+                                >
+                                    <el-autocomplete
+                                        :placeholder="
+                                            isSelectSearchType == 1
+                                                ? '输入成就名称/成就描述/称号/奖励物品「回车」进行搜索'
+                                                : '输入地图名称「回车」进行搜索'
+                                        "
                                         v-model="searchInput"
                                         @keydown.enter.native="searchHandle"
+                                        :fetch-suggestions="querySearch"
+                                        :trigger-on-focus="false"
+                                        value-key="label"
+                                        size="mini"
+                                        popper-class="m-select-input_popper"
+                                        @select="handleSelect"
                                     >
-                                        <!-- <el-select v-model="isSelectSearchType" slot="prepend" placeholder="请选择">
-                                            <el-option label="全局" value="1"></el-option>
-                                            <el-option label="地图" value="2"></el-option>
-                                        </el-select> -->
                                         <template #prepend>
                                             <slot
-                                                ><i class="el-icon-search"></i> <span class="u-text">关键词</span></slot
-                                            >
+                                                ><el-select
+                                                    v-model="isSelectSearchType"
+                                                    placeholder="请选择"
+                                                    popper-class="m-select-input_type"
+                                                >
+                                                    <el-option label="成就" value="1"></el-option>
+                                                    <el-option label="地图" value="2"></el-option> </el-select
+                                            ></slot>
                                         </template>
-                                        <el-button slot="append" type="primary" plain @click="searchHandle"
-                                            ><i class="el-icon-position"></i>
-                                            <span class="u-text">搜索</span></el-button
+                                        <div
+                                            slot="append"
+                                            @click="searchHandle"
+                                            class="u-select-input_btn"
+                                            v-if="isSelectSearchType == 1"
                                         >
-                                    </el-input>
+                                            搜索成就
+                                        </div>
+                                    </el-autocomplete>
                                 </div>
                             </div>
                         </div>
@@ -203,9 +223,15 @@
                                     </div>
                                 </div>
                                 <!-- 地图分类二级区域 -->
-                                <div class="u-dialog-main_custom_list u-common-list">
+                                <div class="u-dialog-main_custom_list u-common-list" ref="mapChildren">
+                                    <img
+                                        src="../../../assets/img/wiki/leap/leap_empty.png"
+                                        width="90%"
+                                        v-if="isEmpty(selectMapChildrenItem)"
+                                    />
                                     <div
                                         class="u-item"
+                                        :ref="'itemMap' + item.value"
                                         :class="{ active: selectMapChildrenItem.value == item.value }"
                                         v-for="item in selectMapItem.children"
                                         :key="item.value"
@@ -351,12 +377,15 @@ export default {
             achievements_bak: [],
             loadingAchievement: false,
             searchInput: "",
-            isSelectSearchType: "",
+            isSelectSearchType: "2",
         };
     },
-    created() {},
+    created() {
+        // this.createLeap(true);
+    },
     mounted() {},
     methods: {
+        isEmpty,
         //创建弹窗
         createLeap(val) {
             this.getMenuList();
@@ -469,6 +498,25 @@ export default {
                 this.mapList = regions;
             });
         },
+        //自选-地图模糊搜索
+        querySearch(queryString, cb) {
+            if (this.isSelectSearchType == 1) {
+                cb([]);
+                return;
+            }
+            let mapList = cloneDeep(this.mapList);
+            const mapListData = [];
+            mapList.forEach((item) => {
+                mapListData.push(...item.children);
+            });
+            let results = queryString
+                ? mapListData.filter((value) => {
+                      return value.label.indexOf(queryString) != -1;
+                  })
+                : mapListData;
+            cb(results);
+        },
+
         // 自选-总览获取成就菜单列表
         getMenuList() {
             getMenus({
@@ -627,6 +675,25 @@ export default {
                 this.$forceUpdate();
             });
         },
+        handleSelect(item) {
+            //根据value获取parent
+            let parent = this.mapList.find((map) => map.value == item.parent);
+            this.selectMapItem = parent;
+            this.selectMapChildrenItem = item;
+            this.getMapAchievements(item.value);
+            //选中后进行滚动反馈
+            this.$nextTick(() => {
+                let itemDom = this.$refs["itemMap" + item.value]; //获取当前元素
+                if (itemDom) {
+                    let parentDom = this.$refs.mapChildren; //获取父元素
+                    let itemTop = itemDom[0].offsetTop; //获取元素距离父元素顶部的高度
+
+                    let itemHeight = itemDom[0].offsetHeight; //获取元素自身的高度
+                    let scrollTop = itemTop - 240; //计算滚动高度
+                    parentDom.scrollTop = scrollTop; //滚动到指定位置
+                }
+            });
+        },
         selectMapNum(item) {
             let number = 0;
             item.children.forEach((c) => {
@@ -765,6 +832,33 @@ export default {
 </script>
 
 <style lang="less">
+//搜索下拉样式
+.m-select-input_popper {
+    background: linear-gradient(180deg, #000000 0%, #574938 100%);
+    .el-autocomplete-suggestion__list {
+        li {
+            color: #ffeccc;
+            &:hover {
+                color: #fff;
+                background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
+            }
+        }
+    }
+}
+.m-select-input_type {
+    background: linear-gradient(180deg, #000000 0%, #574938 100%);
+    .el-select-dropdown__list {
+        .el-select-dropdown__item {
+            color: #ffeccc;
+            &.selected,
+            &:hover {
+                color: #fff;
+                background: linear-gradient(90deg, #3d342a 0%, #806241 52.78%, #3d342a 100%);
+            }
+        }
+    }
+}
+
 .m-custom-dialog {
     background: rgba(0, 0, 0, 0.85);
     .el-dialog__title {
@@ -842,17 +936,48 @@ export default {
                     flex-shrink: 0;
                 }
                 .u-select-input {
-                    .w(580px);
-                }
-            }
-            //TODO 备用配置功能
-            .u-select-input {
-                .el-input-group__prepend {
+                    .pr(20px);
+                    .el-input-group__prepend {
+                        .el-select {
+                            .w(80px);
+                            .el-input__inner {
+                                .w(80px);
+                                color: #fff;
+                                background: linear-gradient(180deg, rgba(173, 37, 16, 1) 0%, rgba(166, 91, 61, 1) 100%);
+
+                                // &:hover {
+                                //     background: linear-gradient(
+                                //         180deg,
+                                //         rgba(189, 170, 136, 1) 0%,
+                                //         rgba(181, 148, 87, 1) 100%
+                                //     );
+                                // }
+                            }
+                        }
+                    }
                     .el-input__inner {
-                        .w(100px);
+                        .w(200px);
+                        border: 1px solid rgba(173, 37, 16, 1);
+                    }
+                    .el-input-group__append {
+                        background: linear-gradient(180deg, rgba(173, 37, 16, 1) 0%, rgba(166, 91, 61, 1) 100%);
+                        cursor: pointer;
+                        &:hover {
+                            background: linear-gradient(180deg, rgba(189, 170, 136, 1) 0%, rgba(181, 148, 87, 1) 100%);
+                        }
+                        .u-select-input_btn {
+                            padding: 0 16px;
+                            color: #fff;
+                        }
+                    }
+                    &.noMap {
+                        .el-input__inner {
+                            .w(340px);
+                        }
                     }
                 }
             }
+
             //成就列表
             .u-common-list {
                 background: linear-gradient(180deg, #000000 0%, #574938 100%);
