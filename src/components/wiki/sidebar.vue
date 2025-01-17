@@ -34,6 +34,9 @@
                 >
             </li>
         </ul>
+        <a href="https://www.jx3box.com/notice/95651" target="_blank">
+            <img src="@/assets/img/wiki/zlbdzn.png" alt="" class="u-img-guide" />
+        </a>
         <a class="u-wiki-btn" href="/cj" v-show="!mobile">
             <p class="u-text">
                 已收录资历点：<span>{{ count }}</span>
@@ -133,6 +136,7 @@ export default {
         }
     }
     .u-wiki-btn {
+        .mt(12px);
         .db;
         .size(180px, 120px);
         .r(10px);
@@ -156,6 +160,11 @@ export default {
     }
     .u-title_img {
         .w(180px);
+    }
+    .u-img-guide {
+        .size(180px,50px);
+        object-fit: cover;
+        .r(5px);
     }
     &.is_mobile {
         .w(137px);

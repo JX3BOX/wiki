@@ -155,12 +155,7 @@
 </template>
 
 <script>
-import {
-    getRoleGameAchievements,
-    getMenuAchievements,
-    getMenus,
-    getVirtualRoleAchievements,
-} from "@/service/achievement";
+import { getRoleGameAchievements, getMenuAchievements, getMenus } from "@/service/achievement";
 import { getMyKith, getMyKithRoles } from "@/service/wiki";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
@@ -176,18 +171,10 @@ export default {
             selectTab: "",
             selectTabName: "请选择筛选条件",
             selectOptions: [
-                // {
-                //     name: "请选择筛选条件",
-                //     value: "",
-                // },
                 {
                     name: "共同未完成的",
                     value: 1,
                 },
-                // {
-                //     name: "我未完成的",
-                //     value: 2,
-                // },
             ],
             activeIndex: 1,
             activeShow: true,
@@ -212,8 +199,6 @@ export default {
         };
     },
     created() {
-        this.getList();
-
         this.loadUserRoles();
     },
     mounted() {},
@@ -233,6 +218,7 @@ export default {
             this.setActiveIndex(sub);
         },
         setActiveIndex(sub, detail) {
+            if (this.achievementsLoading) return;
             if (this.activeIndex != sub && !detail) {
                 this.activeShow = true;
             }
@@ -250,15 +236,15 @@ export default {
         getList() {
             getMenus({
                 general: 1,
-                client: "std",
+                client: this.$store.state.client,
             }).then((res) => {
                 const data = res.data.data.menus;
                 this.menuList = data;
-                this.getMenuAchievements();
+                this.getMenuAchievements(1, "", 1);
             });
         },
         // 获取成就列表
-        getMenuAchievements(sub = 1, detail) {
+        getMenuAchievements(sub = 1, detail, type) {
             getMenuAchievements(sub, detail).then((data) => {
                 let list = data.data.data.achievements || [];
                 let arr = [];
@@ -274,8 +260,13 @@ export default {
                 });
                 this.achievements = arr;
                 this.achievements_bak = cloneDeep(this.achievements);
-                this.queryFinish(1); //查询完成情况
-                this.selectTabChange();
+                //不是首次查询
+                if (type != 1) {
+                    this.queryFinish();
+                    this.selectTabChange();
+                } else {
+                    if (this.currentRole?.jx3id) this.addRoleConfirm(this.currentRole.jx3id, 1); // 添加角色
+                }
             });
         },
         addRole() {
@@ -303,19 +294,12 @@ export default {
                 });
                 return;
             }
-
             getUserRoles().then((res) => {
                 this.roleList = res.data?.data?.list || [];
                 this.currentRole = res.data?.data?.list[0] || {};
-
-                if (this.currentRole?.jx3id) this.addRoleConfirm(this.currentRole.jx3id, 1);
+                this.getList();
                 this.getMyKith(); //获取我的亲友
             });
-        },
-        onChangeRole(role) {
-            this.currentRole = role;
-            this.selectTab = "";
-            this.addRoleConfirm(this.currentRole.jx3id, 1);
         },
         getKithRolesList() {
             getMyKithRoles(this.kithForm.uid).then((res) => {
@@ -338,34 +322,46 @@ export default {
             this.selectTabChange();
         },
         setRoleInfo(value) {
-            // if (this.kithForm.roleType == 1) {
-            //     let info = this.roleList.find((item) => item.jx3id == value);
-            //     this.kithForm.info = info;
-            // } else {
-            //     let info = this.myKithRoles.find((item) => item.jx3id == value);
-            //     this.kithForm.info = info;
-            // }
-            let info = this.myKithRoles.find((item) => item.jx3id == value);
-            this.kithForm.info = info;
+            if (this.kithForm.roleType == 1) {
+                let info = this.roleList.find((item) => item.jx3id == value);
+                this.kithForm.info = info;
+            } else {
+                let info = this.myKithRoles.find((item) => item.jx3id == value);
+                this.kithForm.info = info;
+            }
+            // let info = this.myKithRoles.find((item) => item.jx3id == value);
+            // this.kithForm.info = info;
         },
         //获取对应角色成就列表
         addRoleConfirm(jx3Id, type) {
+            //判断是否已经存在
+            let flag = false;
+            this.contrastKith.forEach((item) => {
+                if (item.jx3id == (type == 1 ? jx3Id : this.kithForm.jx3Id)) {
+                    flag = true;
+                }
+            });
+            if (flag) {
+                this.$message.warning("该角色已存在");
+                return;
+            }
             getRoleGameAchievements(type == 1 ? jx3Id : this.kithForm.jx3Id).then((res) => {
-                const achievements = res.data?.data?.achievements || "";
+                const my_achievements = (res.data?.data?.achievements || "").split(",");
                 let contrastKith = {};
                 if (type) {
                     contrastKith = {
                         ...this.currentRole,
-                        my_achievements: achievements.split(","),
+                        my_achievements,
                         achievements: [],
                     };
                 } else {
                     contrastKith = {
                         ...this.kithForm.info,
-                        my_achievements: achievements.split(","),
+                        my_achievements,
                         achievements: [],
                     };
                 }
+
                 //同时向select内追加个人选择
                 this.selectOptions.push({
                     value: contrastKith.jx3id,
@@ -376,13 +372,14 @@ export default {
                 } else {
                     this.contrastKith.push(contrastKith);
                 }
-
-                this.showAddRole = false;
+                this.achievements = cloneDeep(this.achievements_bak);
                 this.queryFinish();
+                this.showAddRole = false;
+                this.selectTabChange();
             });
         },
         //判断成就是否完成
-        queryFinish(type) {
+        queryFinish(status) {
             let kith = this.contrastKith,
                 achievements = this.achievements;
             kith.forEach((item, index) => {
@@ -395,9 +392,7 @@ export default {
                     }
                 });
             });
-            if ((!this.selectTab && this.selectTab.length == 0) || type) {
-                this.contrastKith_bak = cloneDeep(this.contrastKith);
-            }
+            if (!status) this.contrastKith_bak = cloneDeep(this.contrastKith);
         },
         //多数组取交集
         getIntersectionByKey(arrays, key) {
@@ -420,7 +415,8 @@ export default {
                 value = "";
             let achievements = cloneDeep(this.achievements_bak);
             let contrastKith = cloneDeep(this.contrastKith_bak);
-            if (!selectTab || selectTab.length == 0) {
+
+            if (selectTab.length == 0) {
                 this.achievements = achievements;
                 this.queryFinish();
                 return;
@@ -455,6 +451,7 @@ export default {
                 } else if (typeof value == "object" && value instanceof Array && value.includes(item.jx3id)) {
                     ach_filter(item.achievements);
                 }
+                item.achievements = a;
             });
             let keys = this.getIntersectionByKey(arr, "key");
             let achievementsFilter = [];
@@ -462,7 +459,7 @@ export default {
                 this.achievements_bak[item] ? achievementsFilter.push(this.achievements_bak[item]) : "";
             });
             this.achievements = achievementsFilter;
-            this.queryFinish();
+            this.queryFinish(true);
         },
     },
 };

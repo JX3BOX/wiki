@@ -266,7 +266,7 @@ export default {
                     this.achievements_bak = cloneDeep(this.achievements);
                     //不是首次查询
                     if (type != 1) {
-                        this.queryFinish(1); //查询完成情况
+                        this.queryFinish();
                         this.selectTabChange();
                     } else {
                         if (this.currentRole?.jx3id) this.addRoleConfirm(this.currentRole.jx3id, 1); // 添加角色
@@ -308,11 +308,6 @@ export default {
                 this.getMyKith(); //获取我的亲友
             });
         },
-        onChangeRole(role) {
-            this.currentRole = role;
-            this.selectTab = "";
-            this.addRoleConfirm(this.currentRole.jx3id, 1);
-        },
         getKithRolesList() {
             getMyKithRoles(this.kithForm.uid).then((res) => {
                 this.myKithRoles = res.data.data;
@@ -346,33 +341,34 @@ export default {
         },
         //获取对应角色成就列表
         addRoleConfirm(jx3Id, type) {
+            //判断是否已经存在
+            let flag = false;
+            this.contrastKith.forEach((item) => {
+                if (item.jx3id == (type == 1 ? jx3Id : this.kithForm.jx3Id)) {
+                    flag = true;
+                }
+            });
+            if (flag) {
+                this.$message.warning("该角色已存在");
+                return;
+            }
             getRoleGameAchievements(type == 1 ? jx3Id : this.kithForm.jx3Id).then((res) => {
-                const achievements = res.data?.data?.achievements || "";
+                const my_achievements = (res.data?.data?.achievements || "").split(",");
                 let contrastKith = {};
                 if (type) {
                     contrastKith = {
                         ...this.currentRole,
-                        my_achievements: achievements.split(","),
+                        my_achievements,
                         achievements: [],
                     };
                 } else {
                     contrastKith = {
                         ...this.kithForm.info,
-                        my_achievements: achievements.split(","),
+                        my_achievements,
                         achievements: [],
                     };
                 }
-                //判断是否已经存在
-                let flag = false;
-                this.selectOptions.forEach((item) => {
-                    if (item.value == contrastKith.jx3id) {
-                        flag = true;
-                    }
-                });
-                if (flag) {
-                    this.$message.warning("该角色已存在");
-                    return;
-                }
+
                 //同时向select内追加个人选择
                 this.selectOptions.push({
                     value: contrastKith.jx3id,
@@ -383,13 +379,14 @@ export default {
                 } else {
                     this.contrastKith.push(contrastKith);
                 }
-
+                this.achievements = cloneDeep(this.achievements_bak);
+                this.queryFinish();
                 this.showAddRole = false;
-                this.selectTabChange(true);
+                this.selectTabChange();
             });
         },
         //判断成就是否完成
-        queryFinish(type = false) {
+        queryFinish(status) {
             let kith = this.contrastKith,
                 achievements = this.achievements;
             kith.forEach((item, index) => {
@@ -402,9 +399,7 @@ export default {
                     }
                 });
             });
-            if (this.selectTab.length == 0 || type) {
-                this.contrastKith_bak = cloneDeep(this.contrastKith);
-            }
+            if (!status) this.contrastKith_bak = cloneDeep(this.contrastKith);
         },
         //多数组取交集
         getIntersectionByKey(arrays, key) {
@@ -422,14 +417,15 @@ export default {
             });
         },
         //根据条件筛选
-        selectTabChange(finishType = false) {
+        selectTabChange() {
             let selectTab = this.selectTab,
                 value = "";
             let achievements = cloneDeep(this.achievements_bak);
             let contrastKith = cloneDeep(this.contrastKith_bak);
-            if (!selectTab || selectTab.length == 0) {
+
+            if (selectTab.length == 0) {
                 this.achievements = achievements;
-                this.queryFinish(finishType);
+                this.queryFinish();
                 return;
             }
             if (selectTab[selectTab.length - 1] == 1) {
@@ -443,7 +439,6 @@ export default {
             if (selectTab.length == 1 && selectTab[0] != 1) value = selectTab[0];
             if (selectTab.length > 1 && (selectTab[0] != 1 || selectTab[selectTab.length - 1] != 1)) value = selectTab;
             let arr = [];
-
             contrastKith.forEach((item, index) => {
                 let a = [];
                 const ach_filter = function (array) {
@@ -463,15 +458,15 @@ export default {
                 } else if (typeof value == "object" && value instanceof Array && value.includes(item.jx3id)) {
                     ach_filter(item.achievements);
                 }
+                item.achievements = a;
             });
-
             let keys = this.getIntersectionByKey(arr, "key");
             let achievementsFilter = [];
             keys.map((item) => {
                 this.achievements_bak[item] ? achievementsFilter.push(this.achievements_bak[item]) : "";
             });
             this.achievements = achievementsFilter;
-            this.queryFinish(finishType);
+            this.queryFinish(true);
         },
     },
 };
