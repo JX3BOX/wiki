@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- <Header></Header> -->
+        <Header></Header>
         <div class="m-achievement-main" :class="{ is_mobile: mobile }">
             <SideBar v-if="!is_fold" />
             <div class="m-achievement-content" :class="{ is_mobile: mobile }">

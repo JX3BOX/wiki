@@ -645,7 +645,7 @@ export default {
 
 <style lang="less">
 .p-achievement-overview {
-    padding-top: 65px;
+    .pt(110px);
     width: 960px;
     &.is_mobile {
         width: calc(100vw - 137px);
@@ -845,7 +845,7 @@ export default {
         grid-template-rows: repeat(6, 1fr);
         height: 540px;
         overflow-y: auto;
-        row-gap: 24px;
+        row-gap: 15px;
         column-gap: 12px;
         padding-right: 10px;
 

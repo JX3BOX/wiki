@@ -103,7 +103,7 @@ export default {
         padding: 0;
     }
     .m-sidebar-nav {
-        .mb(46px);
+        .mb(18px);
         .flex;
         flex-direction: column;
         gap: 8px;
@@ -136,10 +136,10 @@ export default {
         }
     }
     .u-wiki-btn {
-        .mt(12px);
+        .mt(8px);
         .db;
         .size(180px, 120px);
-        .r(10px);
+        .r(5px);
         cursor: pointer;
         color: rgba(150, 150, 150, 1);
         font-size: 12px;

@@ -502,9 +502,9 @@ export default {
     }
 }
 .p-compare {
-    padding-top: 65px;
+    padding-top: 45px;
     // width: 960px;
-    height: 100%;
+    height: 97%;
     min-width: 960px;
     max-width: 1520px;
     box-sizing: border-box;

@@ -266,7 +266,7 @@ export default {
 .p-leap-pc {
     padding-top: 65px;
     width: 960px;
-    height: 100%;
+    height: 97%;
     box-sizing: border-box;
     .m-info-user {
         .flex;
