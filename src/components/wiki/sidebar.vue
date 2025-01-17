@@ -34,14 +34,16 @@
                 >
             </li>
         </ul>
-        <a href="https://www.jx3box.com/notice/95651" target="_blank">
-            <img src="@/assets/img/wiki/zlbdzn.png" alt="" class="u-img-guide" />
-        </a>
-        <a class="u-wiki-btn" href="/cj" v-show="!mobile">
-            <p class="u-text">
-                已收录资历点：<span>{{ count }}</span>
-            </p>
-        </a>
+        <div class="u-img-btn">
+            <a href="https://www.jx3box.com/notice/95651" target="_blank">
+                <img src="@/assets/img/wiki/zlbdzn.png" alt="" class="u-img-guide" />
+            </a>
+            <a class="u-wiki-btn" href="/cj" v-show="!mobile">
+                <p class="u-text">
+                    已收录资历点：<span>{{ count }}</span>
+                </p>
+            </a>
+        </div>
     </div>
 </template>
 
@@ -89,6 +91,7 @@ export default {
 
 <style lang="less" scoped>
 .m-achievement-sidebar {
+    height: 100%;
     &::after {
         .size(320px,176px);
         content: "";
@@ -101,6 +104,7 @@ export default {
     }
     ul {
         padding: 0;
+        // margin: 0 0 10px 18px;
     }
     .m-sidebar-nav {
         .mb(18px);
@@ -113,7 +117,7 @@ export default {
             flex-direction: column;
             gap: 8px;
             ul {
-                margin-left: 18px;
+                .ml(18px);
             }
             &.active {
                 a {
@@ -134,6 +138,10 @@ export default {
                 }
             }
         }
+    }
+    .u-img-btn {
+        .pa;
+        bottom: 10px;
     }
     .u-wiki-btn {
         .mt(8px);
