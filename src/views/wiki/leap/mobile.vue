@@ -29,7 +29,30 @@
             </div>
         </div>
         <!--成就分类 -->
-        <div class="m-achievement-tab" v-show="!isFold && isDetail">
+        <div class="m-achievement-tab" v-if="!isFold && isDetail && detail.meta?.createBy == 'map'">
+            <ul class="u-zl-item" :class="{ active: detailSelectMenu == null }">
+                <div class="u-zl-item_title" @click="changeDetailMenu(null, 0)">全部</div>
+            </ul>
+            <div v-for="(item, index) in mapList" :key="index">
+                <ul class="u-zl-item" v-if="item.show">
+                    <div class="u-zl-item_title">{{ item.label }}</div>
+                    <div
+                        v-for="(item2, index2) in item.children"
+                        :key="index2"
+                        @click.stop="changeDetailMenu(item2, 2)"
+                    >
+                        <li
+                            class="u-zl-item_children"
+                            v-if="item2.show"
+                            :class="{ active: detailSelectMenu == item2.id }"
+                        >
+                            {{ item2.label }}
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+        <div class="m-achievement-tab" v-else>
             <ul class="u-zl-item" :class="{ active: detailSelectMenu == null }">
                 <div class="u-zl-item_title" @click="changeDetailMenu(null, 0)">全部</div>
             </ul>
@@ -86,6 +109,7 @@
                     background
                     hide-on-single-page
                     layout="prev, pager, next"
+                    :page-size="queryParams.per"
                     :total="pageTotal"
                     @current-change="pageChange"
                 >
@@ -127,6 +151,13 @@
                         </div></template
                     >
                 </el-table-column> -->
+                <el-table-column label="完成情况" width="100">
+                    <template slot-scope="scope">
+                        <el-tag :type="scope.row.isCompleted ? 'success' : 'danger'">{{
+                            scope.row.isCompleted ? "已完成" : "未完成"
+                        }}</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="难度" width="140">
                     <template slot-scope="scope">
                         <el-rate :value="scope.row.difficulty" disabled allow-half disabled-void-color="#574938">
@@ -139,10 +170,6 @@
                             <div><jx3-item :item="scope.row.item" /></div>
                             <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" slot="reference" />
                         </el-popover>
-
-                        <!-- <el-tooltip placement="top" v-if="scope.row.item">
-                           
-                        </el-tooltip> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -153,24 +180,21 @@
 <script>
 import {
     getRoleGameAchievements,
-    getMenuAchievements,
     getMenus,
     getAchievementPoints,
-    getAchievements,
     getAchievementsPost,
+    getMapList,
 } from "@/service/achievement";
 import {
     getWikiAchievementLeapSchemaList,
-    createdWikiAchievementLeapSchema,
     getWikiAchievementLeapSchema,
-    deleteWikiAchievementLeapSchema,
     getWikiAchievementLeapSchemaProgress,
 } from "@/service/wiki";
 import Item from "@jx3box/jx3box-editor/src/Item";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import { getUserRoles } from "@/service/team";
-import { cloneDeep, isEmpty } from "lodash";
+import { cloneDeep, sortBy } from "lodash";
 export default {
     components: { "jx3-item": Item },
     data() {
@@ -194,13 +218,11 @@ export default {
             detail: {},
             detailSelectMenu: null,
             detailPageTotal: 0,
+            // 地图列表
+            mapList: [],
         };
     },
     created() {
-        if (this.$route.query.id) {
-            this.isDetail = true;
-            this.getMenuList();
-        }
         this.loadUserRoles();
     },
     mounted() {},
@@ -212,14 +234,14 @@ export default {
         iconLink,
         getLink,
         // 获取成就菜单列表
-        getMenuList() {
+        getMenuList(schema) {
             getMenus({
                 general: 1,
                 client: this.$store.state.client,
             }).then((res) => {
                 const data = res.data.data.menus;
                 this.menuList = data;
-                this.getSchemaDetail();
+                if (this.isDetail) this.getAchievements(schema);
             });
         },
         // 获取当前用户角色列表
@@ -229,7 +251,12 @@ export default {
                     this.roleList = res.data?.data?.list || [];
                     this.currentRole = res.data?.data?.list[0] || {};
 
-                    this.getPoints();
+                    if (this.$route.query.id) {
+                        this.isDetail = true;
+                        this.getRoleGameAchievements();
+                    } else {
+                        this.getPoints();
+                    }
                 });
         },
         // 获取成就对应点数
@@ -237,12 +264,7 @@ export default {
             return getAchievementPoints().then((res) => {
                 const data = res.data.data.points;
                 this.pointsData = data;
-                if (this.$route.query.id) {
-                    this.getRoleGameAchievements(); //获取当前角色成就
-                } else {
-                    //获取方案列表
-                    this.getSchemaList();
-                }
+                this.getRoleGameAchievements(); //获取当前角色成就
             });
         },
         onChangeRole(val) {
@@ -253,6 +275,25 @@ export default {
         getRoleGameAchievements() {
             getRoleGameAchievements(this.currentRole.jx3id).then((res) => {
                 this.currentRole.achievements = res.data?.data?.achievements || [];
+
+                if (this.isDetail) {
+                    if (this.detail?.achievements?.length > 0) {
+                        let length = this.detail?.achievements?.length,
+                            achievements = this.detail?.achievements,
+                            currentRole_achievements = this.currentRole?.achievements?.split(",") || [];
+
+                        for (let i = 0; i < length; i++) {
+                            achievements[i].isCompleted = currentRole_achievements.includes(
+                                achievements[i].ID.toString()
+                            );
+                        }
+                        this.$set(this.detail, "achievements", achievements);
+                        this.detail.achievementsBak = cloneDeep(this.detail.achievements);
+                        return;
+                    }
+                    this.getSchemaDetail();
+                    return;
+                }
                 //计算角色总资历
                 let total = 0,
                     arr = cloneDeep(this.currentRole.achievements).split(",") || [];
@@ -290,75 +331,155 @@ export default {
         getSchemaDetail() {
             getWikiAchievementLeapSchema(this.$route.query.id).then((res) => {
                 this.detail = res.data?.data || {};
-                this.getAchievements(res.data?.data?.schema);
+                if (res?.data?.data?.schema?.length > 0) {
+                    this.detail?.meta?.createBy == "map"
+                        ? this.loadMapList(res?.data?.data?.schema)
+                        : this.getMenuList(res?.data?.data?.schema);
+                }
+            });
+        },
+        //自选-地图查询
+        loadMapList(schema) {
+            const client = this.$store.state.client;
+            const params = {
+                client,
+                _no_page: 1,
+            };
+            getMapList(params).then((res) => {
+                const data = res.data.data || [];
+                let regions = Object.values(
+                    data.reduce((acc, cur) => {
+                        if (!cur.RegionName) return acc;
+                        if (!acc[cur.RegionName]) {
+                            acc[cur.RegionName] = {
+                                value: Number(cur.Region),
+                                label: cur.RegionName,
+                                children: [],
+                            };
+                        }
+                        acc[cur.RegionName].children.push({
+                            value: Number(cur.ID),
+                            label: cur.MapName,
+                            parent: Number(cur.Region),
+                        });
+
+                        return acc;
+                    }, {})
+                );
+                this.mapList = regions;
+                this.getAchievements(schema);
             });
         },
         //根据成就ID获取成就列表,同时配置分类菜单
         getAchievements(data) {
             this.loading = true;
-            getAchievementsPost({ ids: data.toString(), attributes: "Name,Sub,Detail,IconID,Item,Point,ID" }).then(
-                (res) => {
-                    this.detail.achievements = res.data?.data || [];
-                    this.detail.achievementsBak = cloneDeep(this.detail.achievements);
-                    //筛选可显示的分类
+            let attributes = "Name,Sub,Detail,IconID,Point,ID";
+            if (this.detail.meta?.createBy == "map") {
+                attributes = "Name,IconID,Point,SceneID,ID";
+            }
+            getAchievementsPost({
+                ids: data.toString(),
+                attributes: attributes,
+            }).then((res) => {
+                let achievements = res.data?.data || [];
+                let length = achievements.length,
+                    currentRole_achievements = this.currentRole?.achievements?.split(",") || [],
+                    ids = [];
+                for (let i = 0; i < length; i++) {
+                    ids.push(achievements[i].ID);
+                    achievements[i].isCompleted = currentRole_achievements.includes(achievements[i].ID.toString());
+                }
+                //筛选可显示的分类，按总览及地图区分
+                if (this.detail?.meta?.createBy == "map") {
+                    let mapList = cloneDeep(this.mapList); //按地图分类
 
+                    mapList.forEach((item) => {
+                        item.children.forEach((item_c) => {
+                            for (let i = 0; i < length; i++) {
+                                let findItem = achievements.find((i) => i.SceneID == item_c.value);
+                                if (findItem) {
+                                    item_c.show = true;
+                                    item.show = true;
+                                }
+                            }
+                        });
+                    });
+                    this.$set(this, "mapList", mapList);
+                } else {
                     let menu = cloneDeep(this.menuList);
                     Object.keys(menu).map((key) => {
                         menu[key].children.forEach((item_c) => {
-                            this.detail.achievements.forEach((item2) => {
-                                if (menu[key].sub == item2.Sub) {
+                            for (let i = 0; i < length; i++) {
+                                if (menu[key].sub == achievements[i].Sub) {
                                     menu[key].show = true;
                                 }
-                                if (item2.Detail == item_c.detail) {
+                                if (achievements[i].Detail == item_c.detail) {
                                     item_c.show = true;
                                 }
-                            });
+                            }
                         });
                     });
-                    this.loading = false;
+
                     this.$set(this, "menuList", menu);
-                    this.getAchievementProgress(data);
                 }
-            );
+
+                this.loading = false;
+                this.getAchievementProgress(ids, achievements);
+            });
         },
-        //全服完成进度及难度
-        getAchievementProgress(data) {
+        getAchievementProgress(data, achievements) {
             getWikiAchievementLeapSchemaProgress(data).then((res) => {
-                this.detail.progressAndDifficulty = res.data?.data || [];
-                this.getDifficulty();
+                let progressAndDifficulty = res.data?.data || [];
+                this.detail.progressAndDifficulty = progressAndDifficulty;
+                let arr = [];
+                progressAndDifficulty.forEach((item, index) => {
+                    let findItem = achievements.find((i) => i.ID == item.achievement_id);
+                    if (findItem) {
+                        item.difficulty = item.difficulty ? item.difficulty / 10 : 0;
+                        arr.push(Object.assign(findItem, item));
+                    }
+                });
+                this.$set(
+                    this.detail,
+                    "achievements",
+                    sortBy(arr, function (o) {
+                        return o.difficulty;
+                    })
+                );
+                this.detail.achievementsBak = cloneDeep(this.detail.achievements);
             });
         },
-        getDifficulty() {
-            let arr = [];
-            this.detail.achievementsBak.forEach((item) => {
-                let findInfo = this.detail.progressAndDifficulty.find((item2) => item2.achievement_id == item.ID);
-                item.difficulty = (findInfo?.difficulty || 0) / 10;
 
-                item.process =
-                    (((findInfo.completed_role_count / findInfo.total_role_count) * 100).toFixed(2) || 0) + "%";
-                arr.push(item);
-            });
-            this.$set(this.detail, "achievements", arr);
-            this.$forceUpdate();
-        },
-
-        //详情界面时菜单分类切换
         changeDetailMenu(item, type) {
             if (type == 0) {
                 this.detailSelectMenu = null;
                 this.detail.achievements = cloneDeep(this.detail.achievementsBak);
                 return;
             }
-            this.detailSelectMenu = item.id;
-            let arr = [];
-            this.detail.achievementsBak.forEach((item2) => {
-                if (type == 1 && item2.Sub == item.sub) {
-                    arr.push(item2);
+            if (this.detail.meta?.createBy == "map") {
+                this.detailSelectMenu = item.value;
+            }
+            this.detail.meta?.createBy == "map"
+                ? (this.detailSelectMenu = item.value)
+                : (this.detailSelectMenu = item.id);
+
+            let arr = [],
+                achievementsBak = this.detail.achievementsBak,
+                length = achievementsBak.length;
+            for (let i = 0; i < length; i++) {
+                if (this.detail.meta?.createBy == "map") {
+                    if (achievementsBak[i].SceneID == item.value) {
+                        arr.push(achievementsBak[i]);
+                    }
+                } else {
+                    if (
+                        (type == 1 && achievementsBak[i].Sub == item.sub) ||
+                        (type == 2 && achievementsBak[i].Detail == item.detail)
+                    ) {
+                        arr.push(achievementsBak[i]);
+                    }
                 }
-                if (type == 2 && item2.Detail == item.detail) {
-                    arr.push(item2);
-                }
-            });
+            }
             this.detail.achievements = arr;
         },
         //方案计算
@@ -387,17 +508,17 @@ export default {
 
 <style lang="less">
 .p-leap-mobile {
-    height: calc(100vh - 40px);
+    height: calc(100vh - 104px);
     width: calc(100vw - 137px);
     &.fold {
         width: 100vw;
     }
-    padding-top: 40px;
     .m-overview-header_mobile {
         position: fixed;
         .z(21);
         width: 100vw;
-        .lt(0);
+        left: 0;
+        top: 64px;
         background-color: #fff;
         .h(40px);
         padding: 8px 24px;
@@ -449,7 +570,7 @@ export default {
         position: fixed;
         left: 10px;
         bottom: 10px;
-        height: calc(100vh - 360px);
+        height: calc(100vh - 440px);
         .w(127px);
         overflow: auto;
         background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
@@ -497,8 +618,14 @@ export default {
     }
     .m-leap-main,
     .m-leap-detail {
-        .size(100%,100%);
+        .pt(40px);
+        .size(100%,calc(100% - 40px));
         .mb(8px);
+        .el-table {
+            &::before {
+                height: 0;
+            }
+        }
         .el-table,
         .u-table-header_row,
         .u-table-header_cell {

@@ -114,16 +114,6 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <!-- <div class="u-page">
-                    <el-pagination
-                        background
-                        hide-on-single-page
-                        layout="prev, pager, next"
-                        :total="detailPageTotal"
-                       
-                    >
-                    </el-pagination>
-                </div> -->
         </div>
     </div>
 </template>
@@ -156,6 +146,7 @@ export default {
         currentRole: {
             deep: true,
             handler(val, old) {
+                console.log(val, old);
                 this.getSchemaDetail();
             },
         },
@@ -167,6 +158,18 @@ export default {
         getLink,
         //获取方案详情
         getSchemaDetail() {
+            if (this.detail?.achievements?.length > 0) {
+                let length = this.detail?.achievements?.length,
+                    achievements = this.detail?.achievements,
+                    currentRole_achievements = this.currentRole?.achievements?.split(",") || [];
+
+                for (let i = 0; i < length; i++) {
+                    achievements[i].isCompleted = currentRole_achievements.includes(achievements[i].ID.toString());
+                }
+                this.$set(this.detail, "achievements", achievements);
+                this.detail.achievementsBak = cloneDeep(this.detail.achievements);
+                return;
+            }
             getWikiAchievementLeapSchema(this.$route.query.id).then((res) => {
                 this.detail = res.data?.data || {};
                 if (res?.data?.data?.schema?.length > 0) {
@@ -233,13 +236,11 @@ export default {
             }).then((res) => {
                 let achievements = res.data?.data || [];
                 let length = achievements.length,
-                    currentRole = this.currentRole,
+                    currentRole_achievements = this.currentRole?.achievements?.split(",") || [],
                     ids = [];
                 for (let i = 0; i < length; i++) {
                     ids.push(achievements[i].ID);
-                    if (currentRole?.achievements?.indexOf(achievements[i].ID) != -1) {
-                        achievements[i].isCompleted = true;
-                    }
+                    achievements[i].isCompleted = currentRole_achievements.includes(achievements[i].ID.toString());
                 }
                 //筛选可显示的分类，按总览及地图区分
                 if (this.detail?.meta?.createBy == "map") {
@@ -253,11 +254,6 @@ export default {
                                     item_c.show = true;
                                     item.show = true;
                                 }
-                                // if (item_c.value == achievements[i].SceneID) {
-                                //     achievements[i].show = true;
-                                //     item_c.show = true;
-                                //     item.show = true;
-                                // }
                             }
                         });
                     });
@@ -279,16 +275,14 @@ export default {
 
                     this.$set(this, "menuList", menu);
                 }
-                this.detail.achievements = achievements;
-                this.detail.achievementsBak = cloneDeep(this.detail.achievements);
                 this.loading = false;
-                this.getAchievementProgress(ids);
+                this.getAchievementProgress(ids, achievements);
             });
         },
         //全服完成进度及难度
-        getAchievementProgress(data) {
+        getAchievementProgress(data, achievements) {
+            this.loading = true;
             getWikiAchievementLeapSchemaProgress(data).then((res) => {
-                let achievements = cloneDeep(this.detail.achievements);
                 let progressAndDifficulty = res.data?.data || [];
                 this.detail.progressAndDifficulty = progressAndDifficulty;
                 let arr = [];
@@ -307,6 +301,7 @@ export default {
                     })
                 );
                 this.detail.achievementsBak = cloneDeep(this.detail.achievements);
+                this.loading = false;
             });
         },
         //TODO 全服完成度计算，暂时作废20250113

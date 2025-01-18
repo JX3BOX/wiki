@@ -9,25 +9,6 @@
             </div>
 
             <div class="u-select">
-                <!-- <el-dropdown trigger="click">
-                    <div class="u-select-btn">
-                        <span>{{ selectTabName }}</span>
-                        <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" width="16px" height="16px" />
-                    </div>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item v-for="item in selectOptions" :key="item.value">
-                            <div
-                                @click="selectTabChange(item)"
-                                class="m-role-item"
-                                :class="{
-                                    active: item.value == selectTab,
-                                }"
-                            >
-                                <span>{{ item.name }}</span>
-                            </div>
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown> -->
                 <el-select
                     v-model="selectTab"
                     placeholder="请选择"
@@ -36,7 +17,13 @@
                     clearable
                     @change="selectTabChange"
                 >
-                    <el-option v-for="item in selectOptions" :key="item.value" :label="item.name" :value="item.value">
+                    <el-option
+                        v-for="item in selectOptions"
+                        :key="item.type"
+                        :label="item.name"
+                        :value="item.type"
+                        :disabled="isSelectDisabled(item.type)"
+                    >
                     </el-option>
                 </el-select>
             </div>
@@ -155,7 +142,7 @@
 </template>
 
 <script>
-import { getRoleGameAchievements, getMenuAchievements, getMenus } from "@/service/achievement";
+import { getRoleGameAchievements, getMenuAchievements, getMenus, getAchievementPoints } from "@/service/achievement";
 import { getMyKith, getMyKithRoles } from "@/service/wiki";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
@@ -168,12 +155,13 @@ export default {
             isFold: false, //侧栏是否隐藏
             currentRole: {}, //当前角色
             menuList: [],
-            selectTab: "",
+            selectTab: [],
             selectTabName: "请选择筛选条件",
             selectOptions: [
                 {
                     name: "共同未完成的",
                     value: 1,
+                    type: "1,1",
                 },
             ],
             activeIndex: 1,
@@ -231,6 +219,14 @@ export default {
             }
             // this.selectTab = "";
             this.getMenuAchievements(sub, detail);
+        },
+        // 获取成就对应点数
+        getPoints() {
+            return getAchievementPoints().then((res) => {
+                const data = res.data.data.points;
+                this.pointsData = data;
+                this.getList();
+            });
         },
         // 获取成就菜单列表
         getList() {
@@ -297,7 +293,7 @@ export default {
             getUserRoles().then((res) => {
                 this.roleList = res.data?.data?.list || [];
                 this.currentRole = res.data?.data?.list[0] || {};
-                this.getList();
+                this.getPoints();
                 this.getMyKith(); //获取我的亲友
             });
         },
@@ -310,7 +306,7 @@ export default {
         //删除角色
         delRole(role, index) {
             this.contrastKith.splice(index, 1);
-            this.selectTab = "";
+            this.selectTab = [];
             let arr = [],
                 selectOptions = cloneDeep(this.selectOptions);
             selectOptions.forEach((item, index) => {
@@ -348,17 +344,24 @@ export default {
             getRoleGameAchievements(type == 1 ? jx3Id : this.kithForm.jx3Id).then((res) => {
                 const my_achievements = (res.data?.data?.achievements || "").split(",");
                 let contrastKith = {};
+                //计算角色总资历
+                let total = 0;
+                my_achievements.forEach((item) => {
+                    total = total + (this.pointsData[item] || 0);
+                });
                 if (type) {
                     contrastKith = {
                         ...this.currentRole,
                         my_achievements,
                         achievements: [],
+                        number: total,
                     };
                 } else {
                     contrastKith = {
                         ...this.kithForm.info,
                         my_achievements,
                         achievements: [],
+                        number: total,
                     };
                 }
 
@@ -366,6 +369,12 @@ export default {
                 this.selectOptions.push({
                     value: contrastKith.jx3id,
                     name: contrastKith.name + "未完成",
+                    type: `${contrastKith.jx3id},1`,
+                });
+                this.selectOptions.push({
+                    value: contrastKith.jx3id,
+                    name: contrastKith.name + "已完成",
+                    type: `${contrastKith.jx3id},2`,
                 });
                 if (type == 1 && this.contrastKith[0]) {
                     this.$set(this.contrastKith, 0, contrastKith);
@@ -401,17 +410,27 @@ export default {
             }
             // 将每个对象数组映射为只包含指定键值的数组
             const mappedArrays = arrays.map((array) => array.map((obj) => obj[key]));
-            if (typeof this.selectTab == "object" && this.selectTab instanceof Array) {
-                return [...new Set(mappedArrays.flat())];
-            }
+            // if (typeof this.selectTab == "object" && this.selectTab instanceof Array) {
+            //     return [...new Set(mappedArrays.flat())];
+            // }
             // 使用 reduce 方法进行交集操作
             return mappedArrays.reduce((acc, curr) => {
                 return acc.filter((value) => curr.includes(value));
             });
         },
-        //根据条件筛选
+        //同一个角色不能同时选中完成和未完成
+        isSelectDisabled(type) {
+            let selectTab = cloneDeep(this.selectTab);
+            let typeArr = type.split(",");
+            let status = false;
+            selectTab.forEach((item, index) => {
+                let itemArr = item.split(",");
+                if (itemArr[0] == typeArr[0] && itemArr[1] != typeArr[1]) status = true;
+            });
+            return status;
+        },
         selectTabChange() {
-            let selectTab = this.selectTab,
+            let selectTab = cloneDeep(this.selectTab),
                 value = "";
             let achievements = cloneDeep(this.achievements_bak);
             let contrastKith = cloneDeep(this.contrastKith_bak);
@@ -421,38 +440,47 @@ export default {
                 this.queryFinish();
                 return;
             }
-            if (selectTab[selectTab.length - 1] == 1) {
-                value = 1;
-                this.selectTab = [value];
+            let all_select = "1,1";
+            if (selectTab[selectTab.length - 1] == all_select) {
+                value = all_select;
+                selectTab = [all_select];
             }
-            if (selectTab.length > 1 && selectTab[0] == 1) {
+            if (selectTab.length == 1 && selectTab[0] != all_select) value = selectTab[0];
+            if (selectTab.length > 1 && selectTab[0] == all_select) {
                 value = selectTab[selectTab.length - 1];
-                this.selectTab = [value];
+                selectTab = [value];
             }
-            if (selectTab.length == 1 && selectTab[0] != 1) value = selectTab[0];
-            if (selectTab.length > 1 && (selectTab[0] != 1 || selectTab[selectTab.length - 1] != 1)) value = selectTab;
+
+            if (selectTab.length > 1 && (selectTab[0] != all_select || selectTab[selectTab.length - 1] != all_select))
+                value = selectTab;
+            this.selectTab = selectTab;
             let arr = [];
+            let selectTabArr = [];
+            if (typeof value == "string") selectTabArr = value.split(",");
             contrastKith.forEach((item, index) => {
                 let a = [];
-                const ach_filter = function (array) {
+                const ach_filter = function (array, type = 1) {
                     array.forEach((item2, index2) => {
-                        if (item2.value == "-1") {
+                        if ((item2.value == "-1" && type == 1) || (item2.value != "-1" && type == 2)) {
                             a.push({ key: item2.key, value: item2.value });
                         }
                     });
                     arr.push(a);
                 };
-                if (value == 2 && index == 0) {
-                    ach_filter(item.achievements);
-                } else if (value == 1) {
-                    ach_filter(item.achievements);
-                } else if (item.jx3id == value) {
-                    ach_filter(item.achievements);
-                } else if (typeof value == "object" && value instanceof Array && value.includes(item.jx3id)) {
-                    ach_filter(item.achievements);
+                if (value == all_select) {
+                    ach_filter(item.achievements, selectTabArr[1]);
+                } else if (item.jx3id == selectTabArr[0]) {
+                    ach_filter(item.achievements, selectTabArr[1]);
+                } else if (typeof value == "object" && value instanceof Array) {
+                    // && value.includes(item.jx3id)
+                    value.forEach((item2) => {
+                        let itemArr = item2.split(",");
+                        if (item.jx3id == itemArr[0]) ach_filter(item.achievements, itemArr[1]);
+                    });
                 }
                 item.achievements = a;
             });
+            console.log(arr);
             let keys = this.getIntersectionByKey(arr, "key");
             let achievementsFilter = [];
             keys.map((item) => {
@@ -467,17 +495,18 @@ export default {
 
 <style lang="less" scoped>
 .p-compare-mobile {
-    height: calc(100vh - 40px);
+    height: calc(100vh - 104px);
     width: calc(100vw - 137px);
     &.fold {
         width: 100vw;
     }
-    padding-top: 40px;
+    // padding-top: 40px;
     .m-overview-header_mobile {
         position: fixed;
         .z(21);
         width: 100vw;
-        .lt(0);
+        left: 0;
+        top: 64px;
         background-color: #fff;
         .h(40px);
         padding: 8px 24px;
@@ -542,7 +571,7 @@ export default {
         position: fixed;
         left: 10px;
         bottom: 10px;
-        height: calc(100vh - 360px);
+        height: calc(100vh - 440px);
         .w(127px);
         overflow: auto;
         background: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
@@ -598,6 +627,7 @@ export default {
     }
     .m-compare-main {
         .size(100%,100%);
+        .pt(40px);
         .flex;
         .u-zl-box {
             .h(100%);

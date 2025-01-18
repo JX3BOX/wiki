@@ -194,12 +194,13 @@ export default {
             });
         },
         onChangeRole(val) {
-            this.currentRole = val;
-            this.getRoleGameAchievements();
+            // this.currentRole = val;
+            this.getRoleGameAchievements(val);
         },
         //获取当前角色成就
-        getRoleGameAchievements() {
-            getRoleGameAchievements(this.currentRole.jx3id).then((res) => {
+        getRoleGameAchievements(val) {
+            getRoleGameAchievements(val?.jx3id || this.currentRole.jx3id).then((res) => {
+                val ? (this.currentRole = val) : "";
                 this.currentRole.achievements = res.data?.data?.achievements || [];
                 //计算角色总资历
                 let total = 0,

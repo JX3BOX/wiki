@@ -333,7 +333,7 @@ export default {
         //删除角色
         delRole(role, index) {
             this.contrastKith.splice(index, 1);
-            this.selectTab = "";
+            this.selectTab = [];
             let arr = [],
                 selectOptions = cloneDeep(this.selectOptions);
             selectOptions.forEach((item, index) => {
@@ -508,7 +508,6 @@ export default {
                 }
                 item.achievements = a;
             });
-            console.log(arr);
             let keys = this.getIntersectionByKey(arr, "key");
             let achievementsFilter = [];
             keys.map((item) => {
