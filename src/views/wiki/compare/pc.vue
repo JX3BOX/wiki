@@ -437,9 +437,9 @@ export default {
             }
             // 将每个对象数组映射为只包含指定键值的数组
             const mappedArrays = arrays.map((array) => array.map((obj) => obj[key]));
-            if (typeof this.selectTab == "object" && this.selectTab instanceof Array && this.selectTab[0] != 1) {
-                return [...new Set(mappedArrays.flat())];
-            }
+            // if (typeof this.selectTab == "object" && this.selectTab instanceof Array && this.selectTab[0] != 1) {
+            //     return [...new Set(mappedArrays.flat())];
+            // }
             // 使用 reduce 方法进行交集操作
             return mappedArrays.reduce((acc, curr) => {
                 return acc.filter((value) => curr.includes(value));
@@ -508,6 +508,7 @@ export default {
                 }
                 item.achievements = a;
             });
+            console.log(arr);
             let keys = this.getIntersectionByKey(arr, "key");
             let achievementsFilter = [];
             keys.map((item) => {
