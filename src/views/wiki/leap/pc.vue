@@ -46,6 +46,12 @@
         </div>
         <!-- 主要位置 -->
         <div class="m-main" v-if="!showDetail">
+            <div class="u-tips">
+                本功能提供自定义的渡劫成就速成方案<br />
+                ①点击定制方案<br />
+                ②输出方案名称，如地图，并输入你想达到的成就点数<br />
+                ③在自选中，你可以通过选择总览按照分类或地图，选择相应的成就，系统将会按照难度从低到高排列生成
+            </div>
             <div class="m-tables">
                 <el-table
                     :data="list"
@@ -85,6 +91,23 @@
                         <template slot-scope="scope">
                             <div style="text-align: right">
                                 {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }}
+                            </div></template
+                        >
+                    </el-table-column>
+                    <el-table-column width="180">
+                        <template slot="header">
+                            <div class="u-table-cell_right">操作</div>
+                        </template>
+                        <template slot-scope="scope">
+                            <div style="text-align: right">
+                                <el-button
+                                    type="danger"
+                                    icon="el-icon-delete"
+                                    size="mini"
+                                    round
+                                    @click="deleteItem(scope.row)"
+                                    >删除</el-button
+                                >
                             </div></template
                         >
                     </el-table-column>
@@ -139,7 +162,7 @@ export default {
             loading: false,
             //方案列表
             list: [],
-            queryParams: { page: 1, per: 12 },
+            queryParams: { page: 1, per: 10 },
             pageTotal: 0, //总条数
             showForm: false,
             pointsData: {}, //成就点数
@@ -185,12 +208,8 @@ export default {
                 const data = res.data.data.points;
                 this.pointsData = data;
 
-                if (this.$route.query.id) {
-                    this.getRoleGameAchievements(); //获取当前角色成就
-                } else {
-                    //获取方案列表
-                    this.getSchemaList();
-                }
+                //获取方案列表
+                this.getSchemaList();
             });
         },
         onChangeRole(val) {
@@ -258,6 +277,19 @@ export default {
                 all,
                 diffNum,
             };
+        },
+        //删除方案
+        deleteItem(row) {
+            this.$confirm(`是否确定要删除方案${row.title}?`, "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            }).then(() => {
+                deleteWikiAchievementLeapSchema(row.id).then((res) => {
+                    this.$message.success("删除成功");
+                    this.getSchemaList();
+                });
+            });
         },
     },
 };
@@ -402,6 +434,11 @@ export default {
         }
     }
     .m-main {
+        .u-tips {
+            .pt(10px);
+            color: rgba(245, 224, 201, 1);
+            .fz(14px,24px);
+        }
         .u-btn {
             border: 1px solid #ffeccc;
             .r(10px);
