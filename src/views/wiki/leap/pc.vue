@@ -162,7 +162,7 @@ export default {
             loading: false,
             //方案列表
             list: [],
-            queryParams: { page: 1, per: 10 },
+            queryParams: { page: 1, per: 9 },
             pageTotal: 0, //总条数
             showForm: false,
             pointsData: {}, //成就点数
