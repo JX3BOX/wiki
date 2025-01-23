@@ -350,6 +350,14 @@ export default {
         },
         // 我拥有的所有资历点数
         ownPointsCount() {
+            if (!this.viewAchievementsName) {
+                let total = 0,
+                    my_achievements = this.$store.state.achievements;
+                my_achievements.forEach((item) => {
+                    total = total + (this.pointsData[item] || 0);
+                });
+                return total;
+            }
             let count = 0;
             this.list.forEach((item) => {
                 count += item.ownPoints || 0;
@@ -361,9 +369,9 @@ export default {
         achievementData() {
             this.getRenderList();
         },
-        pointsData() {
-            this.getRenderList();
-        },
+        // pointsData() {
+        //     this.getRenderList();
+        // },
         "$store.state.achievements": {
             deep: true,
             handler(val) {
@@ -499,13 +507,11 @@ export default {
             });
         },
         loadData() {
-            this.loadUserRoles();
             this.getList();
             this.getPoints();
         },
         getRenderList(data) {
             data = data ? data : this.achievementData;
-
             const list = Object.keys(data).map((key) => {
                 const item = data[key];
                 const allData = this.getAllachievementsData(item);
@@ -549,6 +555,7 @@ export default {
         ) {
             // 我完成的成就
             const ownAllAchievements = this.$store.state.achievements;
+            // console.log("成就循环", data);
             data.achievements.forEach((aItem) => {
                 // 判断aItem是否是数组
                 if (Array.isArray(aItem)) {
@@ -603,6 +610,7 @@ export default {
             return getAchievementPoints().then((res) => {
                 const data = res.data.data.points;
                 this.pointsData = data;
+                this.loadUserRoles(); // 获取用户角色列表
             });
         },
         // 获取用户角色列表
