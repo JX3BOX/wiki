@@ -5,6 +5,26 @@
             <div class="u-label">亲友对比</div>
             <div class="u-tip">
                 <!-- *根据成就未完成人数由多到少排序。 -->
+                <el-input
+                    placeholder="输入成就名称/成就描述/称号/奖励物品「回车」进行搜索"
+                    v-model="searchKeyword"
+                    class="u-search-input"
+                    @keydown.enter.native="searchHandle"
+                >
+                    <template #prepend>
+                        <slot
+                            ><el-cascader
+                                v-model="searchMap"
+                                :options="mapList"
+                                @change="searchHandle"
+                                :show-all-levels="false"
+                                clearable
+                                class="u-cascader"
+                            ></el-cascader
+                        ></slot>
+                    </template>
+                    <el-button slot="append" icon="el-icon-search" class="u-btn" @click="searchHandle"></el-button>
+                </el-input>
             </div>
             <div class="u-radio">
                 <!-- <el-radio value="1" size="large">仅显示共同未完成</el-radio> -->
@@ -122,7 +142,7 @@
                         v-model="kithForm.roleType"
                         @input="
                             kithForm.userId = '';
-                            kithForm.jx3Id = '';
+                            kithForm.jx3Id = [];
                         "
                     >
                         <el-radio label="1">自身</el-radio>
@@ -140,7 +160,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="对应角色" prop="jx3Id">
-                    <el-select v-model="kithForm.jx3Id" placeholder="请选择对应角色" @change="setRoleInfo">
+                    <el-select v-model="kithForm.jx3Id" placeholder="请选择对应角色" @change="setRoleInfo" multiple>
                         <el-option
                             :label="item.name"
                             :value="item.jx3id"
@@ -164,7 +184,14 @@
 </template>
 
 <script>
-import { getRoleGameAchievements, getMenuAchievements, getMenus, getAchievementPoints } from "@/service/achievement";
+import {
+    getRoleGameAchievements,
+    getMenuAchievements,
+    getMenus,
+    getAchievementPoints,
+    searchAchievements,
+    getMapList,
+} from "@/service/achievement";
 import { getMyKith, getMyKithRoles } from "@/service/wiki";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
@@ -196,7 +223,7 @@ export default {
             roleList: [],
             kithForm: {
                 uid: "",
-                jx3Id: "",
+                jx3Id: [],
             },
             rules: {
                 roleType: { required: true, message: "请选择类型", trigger: "change" },
@@ -206,11 +233,16 @@ export default {
             contrastKith: [], //对比的亲友及自身
             contrastKith_bak: [], //对比的亲友及自身备份
             pointsData: [],
+
+            searchKeyword: "", //搜索成就关键字
+            searchMap: "",
+            mapList: [],
         };
     },
 
     created() {
         this.loadUserRoles();
+        this.loadMapList();
     },
     mounted() {},
     methods: {
@@ -240,6 +272,76 @@ export default {
                 this.activeIndexChildren = null;
             }
             this.getMenuAchievements(sub, detail);
+        },
+        //地图
+        loadMapList() {
+            const client = this.$store.state.client;
+            const params = {
+                client,
+                _no_page: 1,
+            };
+            getMapList(params).then((res) => {
+                const data = res.data.data || [];
+                let regions = Object.values(
+                    data.reduce((acc, cur) => {
+                        if (!cur.RegionName) return acc;
+                        if (!acc[cur.RegionName]) {
+                            acc[cur.RegionName] = {
+                                value: Number(cur.Region),
+                                label: cur.RegionName,
+                                children: [],
+                            };
+                        }
+                        acc[cur.RegionName].children.push({
+                            value: Number(cur.ID),
+                            label: cur.MapName,
+                            parent: Number(cur.Region),
+                        });
+
+                        return acc;
+                    }, {})
+                );
+                this.mapList = regions;
+            });
+        },
+        //搜索
+        searchHandle() {
+            this.activeIndex = null;
+            this.activeIndexChildren = null;
+            this.getSearchAchievements();
+        },
+        //根据搜索获取成就
+        getSearchAchievements() {
+            this.achievementsLoading = true;
+            let params = {
+                keyword: this.searchKeyword,
+                scene: this.searchMap[1],
+                client: this.$store.state.client,
+                _no_page: 1,
+                limit: 99999,
+            };
+            searchAchievements(params)
+                .then((data) => {
+                    let list = data.data.data.achievements || [];
+                    let arr = [];
+                    list.forEach((item) => {
+                        arr.push(item);
+                        if (item.SeriesAchievementList) {
+                            item.SeriesAchievementList.forEach((sub, index) => {
+                                if (index > 0) {
+                                    arr.push(sub);
+                                }
+                            });
+                        }
+                    });
+                    this.achievements = arr;
+                    this.achievements_bak = cloneDeep(this.achievements);
+                    this.queryFinish();
+                    this.selectTabChange();
+                })
+                .finally(() => {
+                    this.achievementsLoading = false;
+                });
         },
         // 获取成就对应点数
         getPoints() {
@@ -345,30 +447,50 @@ export default {
             this.selectTabChange(true);
         },
         setRoleInfo(value) {
-            if (this.kithForm.roleType == 1) {
-                let info = this.roleList.find((item) => item.jx3id == value);
-                this.kithForm.info = info;
-            } else {
-                let info = this.myKithRoles.find((item) => item.jx3id == value);
-                this.kithForm.info = info;
-            }
+            value.map((jx3Id, index) => {
+                if (this.kithForm.roleType == 1) {
+                    let info = this.roleList.find((item) => item.jx3id == jx3Id);
+                    this.kithForm.info[index] = info;
+                } else {
+                    let info = this.myKithRoles.find((item) => item.jx3id == jx3Id);
+                    this.kithForm.info[index] = info;
+                }
+            });
+
             // let info = this.myKithRoles.find((item) => item.jx3id == value);
             // this.kithForm.info = info;
         },
         //获取对应角色成就列表
         addRoleConfirm(jx3Id, type) {
-            //判断是否已经存在
-            let flag = false;
-            this.contrastKith.forEach((item) => {
-                if (item.jx3id == (type == 1 ? jx3Id : this.kithForm.jx3Id)) {
-                    flag = true;
-                }
-            });
-            if (flag) {
-                this.$message.warning("该角色已存在");
-                return;
+            if (type == 1) {
+                this.addRoleAndInfo(jx3Id, type);
+            } else {
+                // //判断是否已经存在
+                // let flag = false,
+                //     jx3IdArr = [];
+                // this.contrastKith.forEach((item) => {
+                this.kithForm.jx3Id.forEach((jx3Id) => {
+                    let info = null;
+                    if (this.kithForm.roleType == 1) {
+                        info = this.roleList.find((item) => item.jx3id == jx3Id);
+                    } else {
+                        info = this.myKithRoles.find((item) => item.jx3id == jx3Id);
+                    }
+                    let flag = false;
+                    this.contrastKith.forEach((item) => {
+                        if (item.jx3id == jx3Id) {
+                            flag = true;
+                            return;
+                        }
+                    });
+                    flag ? "" : this.addRoleAndInfo(jx3Id, type, info);
+                });
             }
-            getRoleGameAchievements(type == 1 ? jx3Id : this.kithForm.jx3Id).then((res) => {
+            this.showAddRole = false;
+        },
+        addRoleAndInfo(jx3Id, type, info) {
+            // getRoleGameAchievements(type == 1 ? jx3Id : this.kithForm.jx3Id).then((res) => {
+            getRoleGameAchievements(jx3Id).then((res) => {
                 const my_achievements = (res.data?.data?.achievements || "").split(",");
                 let contrastKith = {};
                 //计算角色总资历
@@ -385,7 +507,7 @@ export default {
                     };
                 } else {
                     contrastKith = {
-                        ...this.kithForm.info,
+                        ...info,
                         my_achievements,
                         achievements: [],
                         number: total,
@@ -410,7 +532,7 @@ export default {
                 }
                 this.achievements = cloneDeep(this.achievements_bak);
                 this.queryFinish();
-                this.showAddRole = false;
+
                 this.selectTabChange();
             });
         },
@@ -614,9 +736,26 @@ export default {
         }
         .u-tip {
             flex: 1;
-            color: rgba(255, 236, 204, 1);
-            .fz(14px);
-            .bold(400);
+            // color: rgba(255, 236, 204, 1);
+            // .fz(14px);
+            // .bold(400);
+            .u-search-input {
+                .w(600px);
+            }
+            :deep(.el-input-group__prepend) {
+                padding: 0;
+            }
+            :deep(.el-input-group__append),
+            :deep(.el-input-group__prepend) {
+                border: 0;
+            }
+            .u-cascader {
+                .w(160px);
+            }
+            .u-btn {
+                background-color: rgba(255, 236, 204, 1);
+                color: #000;
+            }
         }
         .u-radio {
             min-width: 200px;
