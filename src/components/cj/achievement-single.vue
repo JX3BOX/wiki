@@ -58,6 +58,17 @@
                         取消完成
                     </el-button>
                 </template>
+                <template v-if="isLogin && !isVirtual">
+                    <el-button
+                        class="u-attr u-fav"
+                        plain
+                        size="mini"
+                        icon="el-icon-plus"
+                        @click.stop="onAppendToLeapSchema"
+                    >
+                        加入渡劫方案
+                    </el-button>
+                </template>
                 <Fav
                     v-if="showFavorite"
                     class="u-attr u-fav"
@@ -180,6 +191,7 @@ import ItemSimple from "@jx3box/jx3box-editor/src/ItemSimple.vue";
 import star from "@/utils/star";
 import { setVirtualRoleAchievements, cancelVirtualRoleAchievements } from "@/service/achievement";
 import User from "@jx3box/jx3box-common/js/user";
+import bus from "@/store/bus.js";
 
 export default {
     name: "AchievementSingle",
@@ -296,6 +308,9 @@ export default {
         },
     },
     methods: {
+        onAppendToLeapSchema() {
+            bus.emit("append-to-leap-schema", this.achievement.ID);
+        },
         hadCompleted(id) {
             const list = this.isVirtual ? this.achievementsVirtual : this.completeAchievements;
             return list.includes(id + "");

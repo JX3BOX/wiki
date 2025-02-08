@@ -31,6 +31,7 @@
         <template #right>
             <Info type="achievement" />
         </template>
+        <schema-select ref="schema-select"></schema-select>
     </DefaultLayout>
 </template>
 
@@ -43,6 +44,9 @@ import Sidebar from "@/components/cj/sidebar.vue";
 import Info from "@/components/cj/extend.vue";
 import { getAppIcon } from "@jx3box/jx3box-common/js/utils";
 import CommonNav from "@/components/common/nav.vue";
+
+import bus from "@/store/bus";
+import SchemaSelect from "@/components/cj/schema-select.vue";
 
 export default {
     name: "App",
@@ -61,6 +65,7 @@ export default {
         Info,
         DefaultLayout,
         CommonNav,
+        SchemaSelect
     },
     computed: {
         isSingle() {
@@ -148,6 +153,10 @@ export default {
     },
     mounted() {
         this.loadMapList();
+        bus.on("append-to-leap-schema", (param) => {
+            console.log(param);
+            this.$refs["schema-select"].open(param);
+        });
     },
 };
 </script>
