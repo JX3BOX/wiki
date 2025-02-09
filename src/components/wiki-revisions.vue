@@ -28,7 +28,7 @@
                         <td>
                             <a
                                 :href="link(type, `${ver.source_id}/${ver.id}`)"
-                                v-text="'v' + (versions.length - key)"
+                                v-text="'v' + ver.v"
                                 @click="redirectRevision(ver, $event)"
                             ></a>
                         </td>
@@ -39,6 +39,18 @@
                         <td v-text="ver.remark"></td>
                     </tr>
                 </table>
+                <div class="u-op" v-if="remainVersions.length">
+                    <el-button
+                        class="u-btn"
+                        type="primary"
+                        :class="isExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
+                        size="small"
+                        plain
+                        @click="onToggle"
+                    >
+                        {{ isExpand ? "折叠版本" : "查看全部" }}</el-button
+                    >
+                </div>
             </div>
             <WikiDiff v-if="visible" :visible="visible" :data="versions" @close="visible = false"></WikiDiff>
         </template>
@@ -61,8 +73,10 @@ export default {
     props: ["type", "sourceId", "isGame"],
     data: function () {
         return {
-            versions: [],
+            originData: [],
+            defaultNum: 5,
             visible: false,
+            isExpand: false,
         };
     },
     computed: {
@@ -79,8 +93,25 @@ export default {
                 return "";
             }
         },
+        versions() {
+            const list = this.originData;
+            if (!this.isExpand && list.length > 5) {
+                return list.slice(0, this.defaultNum);
+            }
+            return list;
+        },
+        remainVersions() {
+            const list = this.originData;
+            if (list.length > 5) {
+                return list.slice(this.defaultNum);
+            }
+            return [];
+        },
     },
     methods: {
+        onToggle() {
+            this.isExpand = !this.isExpand;
+        },
         link: function (type, id) {
             return this.prefix + getLink(type, id);
         },
@@ -102,11 +133,16 @@ export default {
                 if (this.sourceId) {
                     wiki.versions({ type: this.type, id: this.sourceId }, { client: this.client }).then(
                         (res) => {
-                            res = res.data;
-                            this.versions = res.data || [];
+                            const data = res.data?.data || [];
+                            this.originData = data.map((item, index) => {
+                                return {
+                                    ...item,
+                                    v: data.length - index,
+                                };
+                            });
                         },
                         () => {
-                            this.versions = [];
+                            this.originData = [];
                         }
                     );
                 }
