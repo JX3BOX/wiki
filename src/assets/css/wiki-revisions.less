@@ -3,11 +3,6 @@
         padding: 5px 0;
         text-align: center;
     }
-    .u-op {
-        .flex;
-        justify-content: center;
-        margin: 10px auto;
-    }
     .m-histories {
         width: 100%;
         margin: -5px 0;
@@ -61,6 +56,28 @@
 
         tr:last-child td {
             border-bottom: none;
+        }
+    }
+
+    .m-revisions-panel{
+        .pr;
+        padding-bottom: 30px;
+
+        .u-op{
+            .pa;
+            bottom:-15px;
+            .pointer;
+            .x;
+            .w(100%);
+            .flex;
+            justify-content: center;
+        }
+        .u-btn{
+            background-color:#ebeef5;
+            padding:5px 20px;
+            &:hover{
+                color:@color-link;
+            }
         }
     }
 }

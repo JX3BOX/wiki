@@ -39,17 +39,11 @@
                         <td v-text="ver.remark"></td>
                     </tr>
                 </table>
-                <div class="u-op" v-if="remainVersions.length">
-                    <el-button
-                        class="u-btn"
-                        type="primary"
-                        :class="isExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
-                        size="small"
-                        plain
-                        @click="onToggle"
-                    >
-                        {{ isExpand ? "折叠版本" : "查看全部" }}</el-button
-                    >
+                <div class="u-op" v-if="remainVersions.length" @click="onToggle">
+                    <div class="u-btn">
+                        <i :class="isExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+                        {{ isExpand ? "折叠" : "展开" }}
+                    </div>
                 </div>
             </div>
             <WikiDiff v-if="visible" :visible="visible" :data="versions" @close="visible = false"></WikiDiff>
