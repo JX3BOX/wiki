@@ -128,7 +128,6 @@ export default {
                 post_type: this.wikiPost?.post?.type,
                 ID: this.wikiPost?.post?.source_id,
             };
-            console.log(this.currentPost.ID);
         },
     },
     components: {
