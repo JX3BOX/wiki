@@ -1,0 +1,131 @@
+.v-miniprogram {
+    // dark vars
+    @color-dark: #ffffff;
+    @font-color: rgba(#ffffff, 0.8);
+    @bg-dark: #060606;
+    @brand2: #24292e;
+    @input-bg: rgba(#ffffff, 0.1);
+    @brand3: #fedaa3;
+    background-color: @bg-dark;
+
+    @media (prefers-color-scheme: dark) {
+        .c-breadcrumb {
+            background-color: @bg-dark;
+            border-color: @brand2;
+            color: @font-color;
+            .u-channel span {
+                color: @font-color;
+            }
+        }
+        .c-main,
+        .p-search,
+        .p-view,
+        .p-home,
+        .p-waiting {
+            background-color: @bg-dark;
+        }
+
+        .el-input__inner,
+        .el-input-group__prepend {
+            background-color: @input-bg;
+            border-color: @input-bg;
+            color: @font-color;
+            border-right: 1px solid @bg-dark !important;
+        }
+        .m-cj-search .m-search .el-input-group__prepend .el-cascader .el-input__inner {
+            background-color: @input-bg;
+            border-color: @input-bg;
+        }
+        .m-achievement-single {
+            background-color: @brand2;
+            border: none;
+        }
+        .m-achievement-single .u-body .u-desc,
+        .m-achievement-single .u-body .u-point,
+        .m-achievement-single .u-footer .u-subs .u-sub a {
+            color: @font-color;
+        }
+        .m-achievement-single .u-footer .u-seriess {
+            background-color: @brand2;
+            border-color: @brand2;
+        }
+        .c-article-tinymce h4 {
+            background-color: @brand2;
+        }
+        .m-achievement-single .u-header,
+        .m-home-view .m-posts .m-post,
+        .m-home-view .wiki-post-list .wiki-post,
+        .m-guide .u-guide {
+            border-color: @input-bg !important;
+        }
+        .el-button,
+        .el-checkbox.is-bordered {
+            background-color: @brand3;
+            border-color: @input-bg;
+            color: @brand2;
+        }
+        .m-wiki-top,
+        .c-wiki-panel,
+        .c-wiki-panel .m-panel-head,
+        .w-thx-copyright,
+        .c-wiki-panel .m-wiki-metas .u-label,
+        .m-home-view .m-carousel .u-item,
+        .c-article-tinymce h5,
+        .c-wiki-revisions .m-revisions-panel .u-btn,
+        .m-items .m-item-container .m-link,
+        #m-item-view .m-item-viewer,
+        .v-plan-list .m-plan-list .m-item,
+        .m-knowledge-panel .m-title,
+        .m-guide,
+        .m-jargon,
+        .m-knowledge-item {
+            background-color: @brand2 !important;
+            border-color: @brand2 !important;
+            color: @font-color !important;
+        }
+        .m-quest-carousel .u-item,
+        .m-newest-post .u-post,
+        .m-guide .u-guide .u-title,
+        .m-recent .m-post,
+        .m-related-roles .u-prefix {
+            background-color: @input-bg !important;
+            border-color: @input-bg !important;
+            color: @font-color !important;
+        }
+        .c-wiki-panel .m-panel-head .m-panel-title,
+        .c-article-tinymce,
+        .m-carousel-content .u-desc,
+        .v-plan-list .m-plan-list .m-item .u-user .u-time,
+        .v-plan-list .m-plan-title,
+        .el-collapse-item__content,
+        .el-tabs__item,
+        .m-achievement-single .u-header .u-other .u-attr:not(.u-fav) {
+            color: @font-color;
+        }
+
+        .c-wiki-nav .c-nav-content,
+        .c-sidebar-left,
+        .c-wiki-nav .c-wiki-menu,
+        .c-sidebar-right,
+        .el-collapse-item__header,
+        .el-collapse-item__wrap,
+        .el-tabs__nav-wrap::after {
+            background-color: @brand2 !important;
+            border-color: @input-bg !important;
+            color: @font-color !important;
+        }
+        .c-wiki-nav .c-wiki-menu {
+            border-right: 1px solid @input-bg;
+        }
+        .el-collapse,
+        .m-right-side .m-title,
+        .m-wiki-rank .u-list li {
+            border-color: @input-bg;
+        }
+        .c-sidebar-right-toggle {
+            background-color: @brand3;
+            border-color: @input-bg;
+            color: @brand2;
+        }
+    }
+}

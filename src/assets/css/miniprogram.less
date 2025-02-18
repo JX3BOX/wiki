@@ -1,0 +1,96 @@
+.v-miniprogram {
+    .c-header {
+        .none;
+    }
+    .p-search,
+    .p-view,
+    .p-home,
+    .p-waiting,
+    .p-normal {
+        .el-input-group {
+            .flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            .el-input-group__prepend,
+            .el-cascader {
+                width: 100% !important;
+            }
+        }
+        .el-input-group__prepend {
+            border-right: 1px solid #dcdfe6;
+        }
+        .m-search-bar .m-search {
+            border: none;
+        }
+    }
+    .m-search-view .m-normal-op {
+        .flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        .el-button + .el-button {
+            margin-left: 0;
+        }
+    }
+    .m-cj-search .m-search .el-input-group__prepend .el-cascader .el-input__inner {
+        background-color: #fff;
+    }
+    // cj/view
+    .m-search-bar.can-return .m-return {
+        .none;
+    }
+    .c-wiki-panel .m-panel-head .m-panel-actions .el-button {
+        margin-right: 0 !important;
+    }
+    .u-other {
+        .el-button [class*="el-icon-"] + span {
+            // .none;
+            font-size: 10px;
+        }
+    }
+    // 资历宝典
+    .m-achievement-content {
+        width: 100%;
+        min-width: 100%;
+        margin-left: 10px;
+    }
+    .m-achievement-main {
+        margin-top: 0;
+        height: 100%;
+        flex-direction: column;
+        gap: 0;
+    }
+    .p-achievement-overview {
+        padding-top: 0;
+        width: 100%;
+        .m-overview-main {
+            grid-template-columns: repeat(1, 1fr);
+            grid-template-rows: repeat(1, 1fr);
+        }
+    }
+    .p-achievement-overview .m-overview-header .m-header-info {
+        flex: none;
+        width: calc(100% - 20px);
+        margin: 0 10px;
+    }
+    .m-achievement-sidebar .m-sidebar-nav li ul {
+        margin-left: 0;
+    }
+
+    // item
+    .m-item-search {
+        .el-input-group__prepend {
+            .none !important;
+        }
+    }
+
+    // knowledge
+    .m-search-bar .m-search {
+        border: none;
+    }
+    
+    .m-achievement-single .u-header .u-other .u-attr:not(:last-of-type) {
+        .none;
+    }
+}
+
+@import "./miniprogram-dark.less";

@@ -1170,4 +1170,5 @@ export default {
         }
     }
 }
+@import "../../assets/css/miniprogram.less";
 </style>

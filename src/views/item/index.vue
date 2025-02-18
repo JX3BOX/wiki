@@ -15,7 +15,7 @@
                 <Sidebar :sidebar="globalSidebar" />
             </CommonNav>
         </template>
-        <Search :placeholder="placeholder" @search="search($event)">
+        <Search class="m-item-search" :placeholder="placeholder" @search="search($event)">
             <template #filter>
                 <el-popover placement="bottom-end" trigger="click" popper-class="m-search-filter-popper">
                     <div class="m-search-filter">
@@ -118,7 +118,7 @@ export default {
         },
         client() {
             return this.$store.state.client;
-        }
+        },
     },
     watch: {
         $route: {
@@ -188,7 +188,7 @@ export default {
     },
     mounted() {
         this.initQuery();
-        get_item_enums({client: this.client}).then((res) => {
+        get_item_enums({ client: this.client }).then((res) => {
             const data = res.data?.data;
             if (!data) return;
             this.enums = data;
