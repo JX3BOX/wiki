@@ -9,7 +9,7 @@
         <div class="m-panel-head">
             <slot name="head-before"></slot>
             <div class="m-panel-actions">
-                <el-button v-if="wikiPost" type="primary" @click="onPush">
+                <el-button class="u-push" v-if="wikiPost && isEditor" type="warning" @click="onPush">
                     <i class="el-icon-position"></i>
                     推送</el-button
                 >
@@ -71,6 +71,7 @@ import { authorLink, ts2str, showAvatar } from "@jx3box/jx3box-common/js/utils";
 import { getStat } from "@jx3box/jx3box-common/js/stat";
 import DesignTask from "@jx3box/jx3box-common-ui/src/bread/DesignTask.vue";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "WikiPost",
     props: {
@@ -96,6 +97,7 @@ export default {
             stat: null,
             showDesignTask: false,
             currentPost: {},
+            isEditor: User.isEditor(),
         };
     },
     watch: {
