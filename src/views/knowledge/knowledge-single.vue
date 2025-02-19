@@ -1,11 +1,12 @@
 <template>
     <div class="v-knowledge-single" v-loading="loading">
+        <div v-if="isMiniProgram" class="u-detail-title">{{ title }}</div>
         <notice></notice>
         <div class="m-wiki" v-if="data && data.post">
             <WikiPanel class="m-knowledge-panel" :wiki-post="data">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge.svg" />
-                    <span>{{ title }} </span>
+                    <span>{{ isMiniProgram ? "通识详情" : title }} </span>
                 </template>
                 <template slot="head-actions">
                     <a class="el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
@@ -75,6 +76,7 @@ import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import Comment from "@jx3box/jx3box-comment-ui/src/Comment.vue";
 import notice from "@/components/cj/notice.vue";
+import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 
 export default {
     name: "Detail",
@@ -129,6 +131,9 @@ export default {
         isEditor: function () {
             return User.isEditor();
         },
+        isMiniProgram() {
+            return isMiniProgram();
+        },
     },
     methods: {
         onSearchKey(val) {
@@ -141,12 +146,13 @@ export default {
                     this.data = res.data.data;
                     if (this.data.source) this.data.source.post = this.data.post;
 
-                    User.isLogin() && postHistory({
-                        source_type: 'knowledge',
-                        source_id: ~~this.id,
-                        link: location.href,
-                        title: this.title,
-                    });
+                    User.isLogin() &&
+                        postHistory({
+                            source_type: "knowledge",
+                            source_id: ~~this.id,
+                            link: location.href,
+                            title: this.title,
+                        });
                 })
                 .finally(() => {
                     this.loading = false;
@@ -263,5 +269,10 @@ export default {
             background-color: #fff;
         }
     }
+}
+.v-knowledge-single .u-detail-title {
+    font-size: 18px;
+    .bold;
+    margin: 5px 0 15px;
 }
 </style>

@@ -14,7 +14,7 @@
         </template>
 
         <!-- 搜索 -->
-        <Search @search="onSearchKey"></Search>
+        <Search class="u-knowledge-search" @search="onSearchKey"></Search>
 
         <router-view></router-view>
     </DefaultLayout>

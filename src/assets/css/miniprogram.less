@@ -34,50 +34,27 @@
     .m-cj-search .m-search .el-input-group__prepend .el-cascader .el-input__inner {
         background-color: #fff;
     }
+    .m-achievement-single .u-header .u-other .u-fav {
+        .r(50%);
+        padding: 7px;
+        & [class*="el-icon-"] + span {
+            .none;
+        }
+    }
     // cj/view
     .m-search-bar.can-return .m-return {
         .none;
     }
-    .c-wiki-panel .m-panel-head .m-panel-actions .el-button {
-        margin-right: 0 !important;
-    }
-    .u-other {
-        .el-button [class*="el-icon-"] + span {
-            // .none;
-            font-size: 10px;
+    .c-wiki-panel .m-panel-head .m-panel-actions {
+        .none;
+        .el-button {
+            margin-right: 0 !important;
         }
-    }
-    // 资历宝典
-    .m-achievement-content {
-        width: 100%;
-        min-width: 100%;
-        margin-left: 10px;
-    }
-    .m-achievement-main {
-        margin-top: 0;
-        height: 100%;
-        flex-direction: column;
-        gap: 0;
-    }
-    .p-achievement-overview {
-        padding-top: 0;
-        width: 100%;
-        .m-overview-main {
-            grid-template-columns: repeat(1, 1fr);
-            grid-template-rows: repeat(1, 1fr);
-        }
-    }
-    .p-achievement-overview .m-overview-header .m-header-info {
-        flex: none;
-        width: calc(100% - 20px);
-        margin: 0 10px;
-    }
-    .m-achievement-sidebar .m-sidebar-nav li ul {
-        margin-left: 0;
     }
 
     // item
-    .m-item-search {
+    .m-item-search,
+    .u-knowledge-search {
         .el-input-group__prepend {
             .none !important;
         }
@@ -87,7 +64,7 @@
     .m-search-bar .m-search {
         border: none;
     }
-    
+
     .m-achievement-single .u-header .u-other .u-attr:not(:last-of-type) {
         .none;
     }
