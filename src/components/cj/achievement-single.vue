@@ -39,7 +39,7 @@
                 <template v-if="isLogin && isVirtual">
                     <el-button
                         v-if="!completedVirtual"
-                        class="u-attr u-fav"
+                        class="u-attr u-fav u-check"
                         plain
                         size="mini"
                         icon="el-icon-check"
@@ -49,10 +49,10 @@
                     </el-button>
                     <el-button
                         v-else
-                        class="u-attr u-fav"
-                        type="info"
+                        class="u-attr u-fav u-check"
+                        type="success"
                         size="mini"
-                        icon="el-icon-close"
+                        icon="el-icon-check"
                         @click.stop="cancelVirtual()"
                     >
                         取消完成

@@ -34,11 +34,23 @@
     .m-cj-search .m-search .el-input-group__prepend .el-cascader .el-input__inner {
         background-color: #fff;
     }
-    .m-achievement-single .u-header .u-other .u-fav {
-        .r(50%);
-        padding: 7px;
-        & [class*="el-icon-"] + span {
+    .m-achievement-single{
+        .u-complete-status{
             .none;
+        }
+        .u-header .u-other{
+            .flex;
+            align-items: center;
+            .u-fav {
+                & [class*="el-icon-"] + span {
+                    .none;
+                }
+            }
+            .u-check{
+                .size(16px);
+                padding:0;
+                margin:0 0 0 10px;
+            }
         }
     }
     // cj/view

@@ -57,58 +57,58 @@ module.exports = {
     },
 
     // ❤️ Porxy ~
-    devServer: {
-        proxy: {
-            "/api/inspire": {
-                target: "https://pay.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/vip": {
-                target: "https://pay.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/summary": {
-                target: "https://next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/comment": {
-                target: "https://next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/cms": {
-                target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7100" : "https://cms.jx3box.com",
-            },
-            "/api/node": {
-                target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7002" : "https://node.jx3box.com",
-            },
-            "/api/team": {
-                target: "https://team.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/cny": {
-                target: "https://pay.jx3box.com/",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api": {
-                target: "https://next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-        },
-    },
+    // devServer: {
+        // proxy: {
+            // "/api/inspire": {
+            //     target: "https://pay.jx3box.com",
+            //     onProxyReq: function (request) {
+            //         request.setHeader("origin", "");
+            //     },
+            // },
+            // "/api/vip": {
+            //     target: "https://pay.jx3box.com",
+            //     onProxyReq: function (request) {
+            //         request.setHeader("origin", "");
+            //     },
+            // },
+            // "/api/summary": {
+            //     target: "https://next2.jx3box.com",
+            //     onProxyReq: function (request) {
+            //         request.setHeader("origin", "");
+            //     },
+            // },
+            // "/api/comment": {
+            //     target: "https://next2.jx3box.com",
+            //     onProxyReq: function (request) {
+            //         request.setHeader("origin", "");
+            //     },
+            // },
+            // "/api/cms": {
+            //     target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7100" : "https://cms.jx3box.com",
+            // },
+            // "/api/node": {
+            //     target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7002" : "https://node.jx3box.com",
+            // },
+            // "/api/team": {
+            //     target: "https://team.jx3box.com",
+            //     onProxyReq: function (request) {
+            //         request.setHeader("origin", "");
+            //     },
+            // },
+            // "/api/cny": {
+            //     target: "https://pay.jx3box.com/",
+            //     onProxyReq: function (request) {
+            //         request.setHeader("origin", "");
+            //     },
+            // },
+            // "/api": {
+            //     target: "https://next2.jx3box.com",
+            //     onProxyReq: function (request) {
+            //         request.setHeader("origin", "");
+            //     },
+            // },
+        // },
+    // },
 
     //webpack配置
     // configureWebpack: (config) => {
