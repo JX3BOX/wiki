@@ -1,12 +1,12 @@
 <template>
     <div class="v-knowledge-single" v-loading="loading">
-        <div v-if="isMiniProgram" class="u-detail-title">{{ title }}</div>
+        <div class="u-detail-title">{{ title }}</div>
         <notice></notice>
         <div class="m-wiki" v-if="data && data.post">
-            <WikiPanel class="m-knowledge-panel" :wiki-post="data">
+            <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge.svg" />
-                    <span>{{ isMiniProgram ? "通识详情" : title }} </span>
+                    <span>通识攻略</span>
                 </template>
                 <template slot="head-actions">
                     <a class="el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
@@ -77,6 +77,7 @@ import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import Comment from "@jx3box/jx3box-comment-ui/src/Comment.vue";
 import notice from "@/components/cj/notice.vue";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import bus from "@/store/bus";
 
 export default {
     name: "Detail",
@@ -180,6 +181,15 @@ export default {
         },
         publishLink,
     },
+    mounted() {
+        bus.on("openWikiPush", (param) => {
+            console.log(this.wiki_post);
+            if (!this.data?.source?.post?.id) {
+                return this.$message.warning("该通识没有攻略");
+            }
+            this.$refs.wikiPanel?.onPush();
+        });
+    },
     watch: {
         "$route.params.post_id": {
             immediate: true,
@@ -270,9 +280,9 @@ export default {
         }
     }
 }
-.v-knowledge-single .u-detail-title {
+.u-detail-title {
     font-size: 18px;
     .bold;
-    margin: 5px 0 15px;
+    line-height: 2;
 }
 </style>

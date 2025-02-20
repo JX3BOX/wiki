@@ -170,7 +170,7 @@
             </el-tabs>
         </div>
         <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
-            <WikiPanel :wiki-post="wiki_post">
+            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline :src="icon" />
                     <span class="u-txt">任务攻略</span>
@@ -261,6 +261,7 @@ import { getQuest, completeUserQuest, cancelUserQuest } from "@/service/quest";
 import { buildPoints, schoolIcon, questDescFormat, questTargetDescFormat } from "@/utils/quest.js";
 import isArray from "lodash/isArray";
 import { mapState } from "vuex";
+import bus from "@/store/bus";
 
 export default {
     name: "QuestSingle",
@@ -390,12 +391,13 @@ export default {
                     this.is_empty = isEmpty;
                     this.compatible = compatible;
 
-                    User.isLogin() && postHistory({
-                        source_type: this.client == "origin" ? "origin_quest" : "quest",
-                        source_id: ~~this.id,
-                        link: location.href,
-                        title: this.quest.name,
-                    });
+                    User.isLogin() &&
+                        postHistory({
+                            source_type: this.client == "origin" ? "origin_quest" : "quest",
+                            source_id: ~~this.id,
+                            link: location.href,
+                            title: this.quest.name,
+                        });
                 });
             }
             this.triggerStat();
@@ -423,6 +425,12 @@ export default {
         } else {
             this.loadData();
         }
+        bus.on("openWikiPush", (param) => {
+            if (!this.wiki_post?.post?.id) {
+                return this.$message.warning("该任务没有攻略");
+            }
+            this.$refs.wikiPanel?.onPush();
+        });
     },
     computed: {
         ...mapState({

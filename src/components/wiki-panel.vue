@@ -9,10 +9,10 @@
         <div class="m-panel-head">
             <slot name="head-before"></slot>
             <div class="m-panel-actions">
-                <el-button class="u-push" v-if="wikiPost && isEditor" type="warning" @click="onPush">
+                <!-- <el-button class="u-push" v-if="wikiPost && isEditor" type="warning" @click="onPush">
                     <i class="el-icon-position"></i>
                     推送</el-button
-                >
+                > -->
                 <QRcode v-if="wikiPost && showQR" class="u-qr" />
                 <slot name="head-actions"></slot>
             </div>
@@ -136,6 +136,7 @@ export default {
         QRcode,
         DesignTask,
     },
+    mounted() {},
 };
 </script>
 

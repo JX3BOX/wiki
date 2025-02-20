@@ -18,6 +18,12 @@
                 <img svg-inline :src="logo" />
             </template>
             <slot name="breadcrumb"></slot>
+            <template #op-append>
+                <el-button class="u-wiki-push" size="small" v-if="showPush" type="warning" @click="onPush">
+                    <i class="el-icon-position"></i>
+                    推送</el-button
+                >
+            </template>
         </Breadcrumb>
         <LeftSidebar>
             <slot name="left"></slot>
@@ -38,6 +44,8 @@
 
 <script>
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import User from "@jx3box/jx3box-common/js/user";
+import bus from "@/store/bus.js";
 export default {
     name: "DefaultLayout",
     props: {
@@ -94,14 +102,25 @@ export default {
         computedRoot: function () {
             return this.root ? this.root : this.slug;
         },
-        pageName : function (){
-            return this.$route.name
-        }
+        pageName: function () {
+            return this.$route.name;
+        },
+        showPush() {
+            return this.$route.name === "view" && User.isEditor();
+        },
     },
     data() {
         return {
             logo: __cdn + "logo/logo-light/cj.svg",
         };
+    },
+    methods: {
+        onPush() {
+            bus.emit("openWikiPush", true);
+        },
+    },
+    mounted() {
+        console.log(this.$route);
     },
 };
 </script>
@@ -114,5 +133,12 @@ export default {
     padding-left: 0;
     padding-top: 0;
 }
-
+.c-breadcrumb .u-op {
+    .u-wiki-push {
+        position: absolute;
+        top: -2px;
+        right: 95px;
+        height: 32px;
+    }
+}
 </style>

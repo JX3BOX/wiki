@@ -4,7 +4,7 @@
 
         <Notice></Notice>
         <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
-            <WikiPanel :wiki-post="wiki_post">
+            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/cj/achievement.svg" />
                     <span class="u-txt">成就攻略</span>
@@ -90,6 +90,7 @@ import { reportNow } from "@jx3box/jx3box-common/js/reporter";
 import { getConfig } from "@jx3box/jx3box-common/js/api_misc";
 import { report } from "@/service/user";
 import User from "@jx3box/jx3box-common/js/user";
+import bus from "@/store/bus.js";
 
 import { get_achievement } from "@/service/achievement";
 export default {
@@ -188,12 +189,13 @@ export default {
                         },
                     });
 
-                    User.isLogin() && postHistory({
-                        source_type: this.client == "origin" ? "origin_cj" : "cj",
-                        source_id: ~~this.id,
-                        link: location.href,
-                        title: post.title,
-                    });
+                    User.isLogin() &&
+                        postHistory({
+                            source_type: this.client == "origin" ? "origin_cj" : "cj",
+                            source_id: ~~this.id,
+                            link: location.href,
+                            title: post.title,
+                        });
                 });
             }
             this.triggerStat();
@@ -210,14 +212,14 @@ export default {
         },
         ts2str,
         loadConfig() {
-            getConfig({key:"test_user_ua"}).then((res) => {
+            getConfig({ key: "test_user_ua" }).then((res) => {
                 const isTest = ~~res.data.data.val;
 
                 if (isTest) {
                     report();
                 }
             });
-        }
+        },
     },
     watch: {
         id: {
@@ -239,6 +241,13 @@ export default {
         }
 
         this.loadConfig();
+
+        bus.on("openWikiPush", (param) => {
+            if (!this.wiki_post?.post?.id) {
+                return this.$message.warning("该成就没有攻略");
+            }
+            this.$refs.wikiPanel?.onPush();
+        });
 
         // const ua = navigator.userAgent;
         // // 当ua包含 Android 或 iPhone 或 Mobile 时

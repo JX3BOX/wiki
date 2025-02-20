@@ -186,7 +186,7 @@
 
         <Notice></Notice>
         <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
-            <WikiPanel :wiki-post="wiki_post">
+            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/item.svg" />
                     <span class="u-txt">物品攻略</span>
@@ -285,6 +285,7 @@ import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
 const DEFAULT_ACTIVE_TAB = "item-price-chart";
+import bus from "@/store/bus";
 
 export default {
     name: "Detail",
@@ -434,12 +435,13 @@ export default {
                     this.is_empty = isEmpty;
                     this.compatible = compatible;
 
-                    User.isLogin() && postHistory({
-                        source_type: this.client == "origin" ? "origin_item" : "item",
-                        source_id: ~~this.id,
-                        link: location.href,
-                        title: post.title,
-                    });
+                    User.isLogin() &&
+                        postHistory({
+                            source_type: this.client == "origin" ? "origin_item" : "item",
+                            source_id: ~~this.id,
+                            link: location.href,
+                            title: post.title,
+                        });
                 });
             }
             this.triggerStat();
@@ -554,6 +556,12 @@ export default {
             this.loadData();
         }
         this.loadUserDefaultServer();
+        bus.on("openWikiPush", (param) => {
+            if (!this.wiki_post?.post?.id) {
+                return this.$message.warning("该物品没有攻略");
+            }
+            this.$refs.wikiPanel?.onPush();
+        });
     },
     created() {
         if (this.$store.state.client == "origin") {
