@@ -19,10 +19,22 @@
             </template>
             <slot name="breadcrumb"></slot>
             <template #op-append>
-                <el-button class="u-wiki-push" size="small" v-if="showPush" type="warning" @click="onPush">
-                    <i class="el-icon-position"></i>
-                    推送</el-button
-                >
+                <div class="m-wiki-admin-drop" v-if="showAdmin">
+                    <el-dropdown trigger="click" @command="handleCommand">
+                        <el-button type="primary" class="c-admin-button c-admin-drop__button" size="medium"
+                            ><i class="el-icon-setting"></i> 管理<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item
+                                icon="el-icon-upload"
+                                command="designTask"
+                                v-if="hasPermission('push_banner')"
+                            >
+                                <span>推送</span>
+                            </el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
             </template>
         </Breadcrumb>
         <LeftSidebar>
@@ -45,6 +57,7 @@
 <script>
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import User from "@jx3box/jx3box-common/js/user";
+import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 import bus from "@/store/bus.js";
 export default {
     name: "DefaultLayout",
@@ -105,8 +118,8 @@ export default {
         pageName: function () {
             return this.$route.name;
         },
-        showPush() {
-            return this.$route.name === "view" && User.isEditor();
+        showAdmin() {
+            return !isMiniProgram() && this.$route.name === "view" && User.isEditor();
         },
     },
     data() {
@@ -115,12 +128,15 @@ export default {
         };
     },
     methods: {
-        onPush() {
+        hasPermission(permission) {
+            return User.hasPermission(permission);
+        },
+        handleCommand(command) {
+            this[command]();
+        },
+        designTask() {
             bus.emit("openWikiPush", true);
         },
-    },
-    mounted() {
-        console.log(this.$route);
     },
 };
 </script>
@@ -133,8 +149,8 @@ export default {
     padding-left: 0;
     padding-top: 0;
 }
-.c-breadcrumb .u-op {
-    .u-wiki-push {
+.c-breadcrumb {
+    .m-wiki-admin-drop {
         position: absolute;
         top: -2px;
         right: 95px;

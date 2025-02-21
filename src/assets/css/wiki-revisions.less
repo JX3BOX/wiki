@@ -5,8 +5,6 @@
     }
     .m-histories {
         width: 100%;
-        margin: -5px 0;
-        opacity: 0.8;
         font-size: 14px;
         text-align: left;
         border-collapse: collapse;
@@ -24,13 +22,8 @@
             }
 
             @media screen and (max-width: @phone) {
-                min-width: 35px;
                 padding: 3px;
                 font-size: 12px;
-
-                &:first-child {
-                    min-width: 15px;
-                }
             }
         }
 
@@ -59,24 +52,27 @@
         }
     }
 
-    .m-revisions-panel{
+    .m-revisions-panel {
         .pr;
-        padding-bottom: 30px;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-bottom: 40px;
 
-        .u-op{
+        .u-op {
             .pa;
-            bottom:-15px;
+            bottom: 0;
             .pointer;
             .x;
             .w(100%);
             .flex;
             justify-content: center;
         }
-        .u-btn{
-            background-color:#ebeef5;
-            padding:5px 20px;
-            &:hover{
-                color:@color-link;
+        .u-btn {
+            background-color: #ebeef5;
+            padding: 5px 20px;
+            &:hover {
+                color: @color-link;
             }
         }
     }
