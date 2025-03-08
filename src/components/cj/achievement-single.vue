@@ -90,7 +90,7 @@
                         "
                     />
                 </div>
-                <div class="u-attr u-desc" v-html="achievement.Desc"></div>
+                <div class="u-attr u-desc" v-html="achievementDesc"></div>
             </div>
             <div class="u-right">
                 <item-simple
@@ -225,6 +225,9 @@ export default {
         },
         hasContent: function () {
             return this.achievement && Object.keys(this.achievement).length;
+        },
+        achievementDesc() {
+            return (this.achievement?.Desc || "").replace(/\\n/g, "<br />");
         },
         currentRole() {
             return this.$store.state.role;
