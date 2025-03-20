@@ -322,7 +322,7 @@ export default {
             //     return;
             // }
 
-            getMenus(general).then(
+            getMenus({ general }).then(
                 (data) => {
                     data = data.data;
                     if (data.code === 200) {
