@@ -1,10 +1,10 @@
 import { $helper, $cms, $node, $next } from "@jx3box/jx3box-common/js/https";
 import axios from "axios";
 
-const $ = axios.create({
-    baseURL: "http://localhost:7002",
-});
-// const $ = $node();
+// const $ = axios.create({
+//     baseURL: "http://localhost:7002",
+// });
+const $ = $node();
 
 // 获取成就公告
 export function getBreadcrumb(key = "wiki_cj_ac") {
