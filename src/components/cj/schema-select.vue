@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import User from "@jx3box/jx3box-common/js/user";
 import { getWikiAchievementLeapSchemaList, updateWikiAchievementLeapSchema } from "@/service/wiki";
 
 export default {
@@ -87,12 +88,14 @@ export default {
         },
     },
     mounted() {
-        getWikiAchievementLeapSchemaList({
-            is_official: 0,
-            _no_page: 1,
-        }).then((res) => {
-            this.schemas = res.data.data;
-        });
+        if (User.isLogin()) {
+            getWikiAchievementLeapSchemaList({
+                is_official: 0,
+                _no_page: 1,
+            }).then((res) => {
+                this.schemas = res.data.data;
+            });
+        }
     },
 };
 </script>
