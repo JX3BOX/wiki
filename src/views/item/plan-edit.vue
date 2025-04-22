@@ -87,10 +87,23 @@
                     <el-row v-if="data.type == '1'" class="u-list-box" :gutter="20">
                         <el-col v-for="(relation, index) in data.relation" :key="index" :span="6">
                             <div class="u-list">
-                                <i
-                                    class="u-list-close el-icon-circle-close"
-                                    @click="data.relation.splice(index, 1)"
-                                ></i>
+                                <div class="u-button-group">
+                                    <i
+                                        v-if="index != 0"
+                                        class="u-to-left el-icon-d-arrow-left"
+                                        @click="data.relation.splice(index, 0, data.relation.splice(index - 1, 1)[0])"
+                                    ></i>
+                                    <i
+                                        v-if="index != data.relation.length - 1"
+                                        class="u-to-right el-icon-d-arrow-right"
+                                        @click="data.relation.splice(index, 0, data.relation.splice(index + 1, 1)[0])"
+                                    ></i>
+                                    <i
+                                        class="u-list-close el-icon-circle-close"
+                                        @click="data.relation.splice(index, 1)"
+                                    ></i>
+                                </div>
+
                                 <el-input
                                     class="u-title"
                                     type="text"
