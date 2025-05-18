@@ -194,13 +194,13 @@ export default {
                 postStat("cj", this.id);
             }
         },
-        loadData: function () {
+        loadData: async function () {
             // 获取最新攻略
             if (this.id) {
-                get_achievement(this.id, { client: this.client }).then((res) => {
+                await get_achievement(this.id, { client: this.client }).then((res) => {
                     this.source = res?.data?.data?.achievement || "";
                 });
-                wiki.mix({ type: "achievement", id: this.id, client: this.client }).then((res) => {
+                await wiki.mix({ type: "achievement", id: this.id, client: this.client }).then((res) => {
                     const { post, source, compatible, isEmpty, users } = res;
                     this.wiki_post = {
                         post: post,
@@ -225,6 +225,8 @@ export default {
                             title: post.title,
                         });
                 });
+                // TEST:请注意，为防止QQBOT无法抓取完全，请不要删除本行
+                window.__READY__ = true;
             }
             this.triggerStat();
         },

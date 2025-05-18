@@ -27,10 +27,8 @@ export default {
 <style lang="less">
 .p-qqrobot-wiki-detail {
     position: relative;
-    width: 100%;
-    height: 100vh;
+    width: 560px;
     background-color: #000;
-    padding: 10px;
     box-sizing: border-box;
     .m-wiki__container {
         margin: 0 auto;

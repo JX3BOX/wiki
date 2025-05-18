@@ -3,7 +3,12 @@
         <div class="m-wiki-top__header">
             <h3 class="u-title"><i class="el-icon-news"></i>公告</h3>
         </div>
-        <div class="m-wiki-top__content" v-html="data"></div>
+        <!-- <div class="m-wiki-top__content" v-html="data"></div> -->
+        <div class="m-wiki-top__content">
+            如发现攻略不全，请直接在游戏内或魔盒官方网站百科栏目修订提交或评论。
+            基于玩家共建的魔盒百科平台，人人都可参与。
+            
+        </div>
     </div>
 </template>
 
@@ -17,7 +22,7 @@ export default {
         };
     },
     mounted() {
-        this.loadData();
+        // this.loadData();
     },
     methods: {
         loadData() {

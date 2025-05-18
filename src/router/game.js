@@ -14,7 +14,7 @@ const routes = [
     // 无界成就单页
     { name: "wujie-cj-detail", path: "/wujie/cj/view/:source_id(\\d+)/:post_id(\\d+)?", component: wujieDetail },
     // 通用qq机器人详情页
-    { name: "qqrobot-wiki-detail", path: "/qqrobot", component: qqrobot },
+    { name: "qqbot-wiki-detail", path: "/qqbot/wiki", component: qqrobot },
 ];
 
 const router = new VueRouter({
