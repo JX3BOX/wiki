@@ -1,5 +1,5 @@
 <template>
-    <div class="m-achievement-single" :class="{ fold: fold, hidden: isHidden }" v-if="hasContent">
+    <div class="m-achievement-single" :class="{ fold: fold, hidden: isHidden }" v-if="hasContent && !isRobot">
         <el-checkbox
             v-if="initFold && isLogin && isVirtual"
             class="u-achievement-checkbox"
@@ -182,6 +182,29 @@
             <i class="u-icon el-icon-caret-bottom"></i>
         </div>
     </div>
+    <div class="m-achievement-single__robot" v-else>
+        <div class="u-top">
+            <div class="u-top__left">
+                <img
+                    class="u-icon"
+                    :src="icon_url(achievement.IconID)"
+                    @error.once="
+                        () => {
+                            $event.target.src = icon_url();
+                        }
+                    "
+                />
+                <div class="u-title">{{ achievement.Name }}</div>
+            </div>
+            <div class="u-right u-top__right">
+                <div class="u-point" v-text="achievement.Point ? achievement.Point : 0"></div>
+            </div>
+        </div>
+        <div class="u-bottom">
+            <span>成就描述：</span>
+            <span class="u-desc" v-html="achievementDesc"></span>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -199,7 +222,7 @@ export default {
         "item-simple": ItemSimple,
         // Fav,
     },
-    props: ["achievement", "initFold", "target", "jump", "showFavorite"],
+    props: ["achievement", "initFold", "target", "jump", "showFavorite", "isRobot"],
     data() {
         return {
             fold: true,
@@ -233,7 +256,7 @@ export default {
             return this.$store.state.role;
         },
         completeAchievements() {
-            return this.$store.state.achievements;
+            return this.$store.state.achievements || [];
         },
         completed() {
             if (this.routeName !== "view") {
@@ -276,7 +299,7 @@ export default {
             return this.onlyUncompleted && completed && this.routeName !== "view";
         },
         achievementsVirtual() {
-            return this.$store.state.achievementsVirtual;
+            return this.$store.state.achievementsVirtual || [];
         },
         completedVirtual() {
             if (this.routeName !== "view") {

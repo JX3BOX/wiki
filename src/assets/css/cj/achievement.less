@@ -2,7 +2,45 @@
     margin-top: -10px;
     padding: 0;
 }
-
+.m-achievement-single__robot {
+    background: linear-gradient(180deg, rgba(56, 56, 56, 1) 0%, rgba(0, 0, 0, 1) 100%);
+    border: 1px solid rgba(110, 110, 110, 1);
+    box-shadow: inset 0px 10px 5px rgba(0, 0, 0, 1);
+    .r(8px);
+    padding: 12px;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    .u-top {
+        .flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 20px;
+        .bold;
+        color: #fff;
+    }
+    .u-top__left {
+        .flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .u-icon {
+        .size(20px);
+        .r(4px);
+    }
+    .u-point {
+        margin-right: 24px;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        text-indent: 24px;
+        background: url(https://cdn.jx3box.com/img/dashboard/point.svg) no-repeat center center;
+    }
+    .u-bottom {
+        margin-top: 4px;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 12px;
+    }
+}
 .m-achievement-single {
     .pr;
     .w(100%);
@@ -17,7 +55,6 @@
     &.hidden {
         .none;
     }
-
     .u-achievement-checkbox {
         position: absolute;
         left: 0px;

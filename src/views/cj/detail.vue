@@ -1,15 +1,15 @@
 <template>
     <div class="m-detail-view">
-        <AchievementSingle v-if="source" :achievement="source" show-favorite="true" />
+        <AchievementSingle v-if="source" :isRobot="isRobot" :achievement="source" show-favorite="true" />
 
-        <Notice></Notice>
-        <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
+        <Notice v-if="!isRobot"></Notice>
+        <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/cj/achievement.svg" />
                     <span class="u-txt">成就攻略</span>
                 </template>
-                <template slot="head-actions">
+                <template v-if="!isRobot" slot="head-actions">
                     <a class="el-button el-button--primary" :href="publish_url(`achievement/${id}`)">
                         <i class="el-icon-edit"></i>
                         <span>完善成就攻略</span>
@@ -32,44 +32,53 @@
                 </template>
             </WikiPanel>
 
-            <Relations :source-id="id" />
+            <template v-if="!isRobot">
+                <Relations :source-id="id" />
 
-            <!-- 历史版本 -->
-            <WikiRevisions type="achievement" :source-id="id" />
+                <!-- 历史版本 -->
+                <WikiRevisions type="achievement" :source-id="id" />
 
-            <!-- 打赏 -->
-            <div class="m-wiki-thx-panel">
-                <WikiPanel>
-                    <template slot="head-title">
-                        <i class="el-icon-coin"></i>
-                        <span class="u-txt">参与打赏</span>
-                    </template>
-                    <template slot="body">
-                        <Thx
-                            class="m-thx"
-                            :postId="~~id"
-                            postType="achievement"
-                            :postTitle="favTitle"
-                            :userId="author_id"
-                            :adminBoxcoinEnable="true"
-                            :userBoxcoinEnable="true"
-                            mode="wiki"
-                            :authors="authors"
-                            :key="'achievement-thx-' + id"
-                            :client="client"
-                            showRss
-                        />
-                    </template>
-                </WikiPanel>
-            </div>
+                <!-- 打赏 -->
+                <div class="m-wiki-thx-panel">
+                    <WikiPanel>
+                        <template slot="head-title">
+                            <i class="el-icon-coin"></i>
+                            <span class="u-txt">参与打赏</span>
+                        </template>
+                        <template slot="body">
+                            <Thx
+                                class="m-thx"
+                                :postId="~~id"
+                                postType="achievement"
+                                :postTitle="favTitle"
+                                :userId="author_id"
+                                :adminBoxcoinEnable="true"
+                                :userBoxcoinEnable="true"
+                                mode="wiki"
+                                :authors="authors"
+                                :key="'achievement-thx-' + id"
+                                :client="client"
+                                showRss
+                            />
+                        </template>
+                    </WikiPanel>
+                </div>
 
-            <!-- 百科评论 -->
-            <WikiComments type="achievement" :source-id="id" />
+                <!-- 百科评论 -->
+                <WikiComments type="achievement" :source-id="id" />
+            </template>
         </div>
         <div class="m-wiki-post-empty" v-if="is_empty">
             <i class="el-icon-s-opportunity"></i>
             <span>暂无攻略，我要</span>
             <a class="s-link" :href="publish_url(`achievement/${id}`)">完善攻略</a>
+        </div>
+        <div v-if="isRobot" class="m-robot__bottom">
+            <div class="m-robot__notice">
+                <Notice></Notice>
+                <qrcode-vue class="u-qrcode" :value="qrcodeUrl" :size="64" level="H"></qrcode-vue>
+            </div>
+            <div class="u-bottom">—剑三魔盒QQ机器人—</div>
         </div>
     </div>
 </template>
@@ -82,6 +91,7 @@ import WikiComments from "@/components/wiki-comments.vue";
 import AchievementSingle from "@/components/cj/achievement-single.vue";
 import Relations from "@/components/relations.vue";
 import Notice from "@/components/cj/notice.vue";
+import QrcodeVue from "qrcode.vue";
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
@@ -91,6 +101,7 @@ import { getConfig } from "@jx3box/jx3box-common/js/api_misc";
 import { report } from "@/service/user";
 import User from "@jx3box/jx3box-common/js/user";
 import bus from "@/store/bus.js";
+import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
 
 import { get_achievement } from "@/service/achievement";
 export default {
@@ -103,6 +114,17 @@ export default {
         Relations,
         Article,
         Notice,
+        QrcodeVue,
+    },
+    props: {
+        sourceId: {
+            type: [String, Number],
+            default: "",
+        },
+        isRobot: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
@@ -113,8 +135,14 @@ export default {
         };
     },
     computed: {
+        rootPath: function () {
+            return this.client == "origin" ? __OriginRoot : __Root;
+        },
+        qrcodeUrl() {
+            return `${this.rootPath}cj/view/${this.id}`;
+        },
         id() {
-            return this.$route.params.source_id;
+            return this.$route.params.source_id || this.sourceId;
         },
         post_id: function () {
             return this.$route.params.post_id;
