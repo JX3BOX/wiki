@@ -73,13 +73,7 @@
             <span>暂无攻略，我要</span>
             <a class="s-link" :href="publish_url(`achievement/${id}`)">完善攻略</a>
         </div>
-        <div v-if="isRobot" class="m-robot__bottom">
-            <div class="m-robot__notice">
-                <Notice></Notice>
-                <qrcode-vue class="u-qrcode" :value="qrcodeUrl" :size="64" level="H"></qrcode-vue>
-            </div>
-            <div class="u-bottom">—剑三魔盒QQ机器人—</div>
-        </div>
+        <wiki-robot-bottom v-if="isRobot" type="cj" :id="id"></wiki-robot-bottom>
     </div>
 </template>
 
@@ -91,7 +85,7 @@ import WikiComments from "@/components/wiki-comments.vue";
 import AchievementSingle from "@/components/cj/achievement-single.vue";
 import Relations from "@/components/relations.vue";
 import Notice from "@/components/cj/notice.vue";
-import QrcodeVue from "qrcode.vue";
+import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
@@ -101,9 +95,9 @@ import { getConfig } from "@jx3box/jx3box-common/js/api_misc";
 import { report } from "@/service/user";
 import User from "@jx3box/jx3box-common/js/user";
 import bus from "@/store/bus.js";
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
 
 import { get_achievement } from "@/service/achievement";
+import WikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 export default {
     name: "Detail",
     components: {
@@ -114,7 +108,8 @@ export default {
         Relations,
         Article,
         Notice,
-        QrcodeVue,
+        WikiRobotBottom,
+        wikiRobotBottom,
     },
     props: {
         sourceId: {
@@ -135,12 +130,6 @@ export default {
         };
     },
     computed: {
-        rootPath: function () {
-            return this.client == "origin" ? __OriginRoot : __Root;
-        },
-        qrcodeUrl() {
-            return `${this.rootPath}cj/view/${this.id}`;
-        },
         id() {
             return this.$route.params.source_id || this.sourceId;
         },

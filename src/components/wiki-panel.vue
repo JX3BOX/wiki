@@ -30,7 +30,7 @@
                         <em class="u-label">参与贡献</em>
                         <a
                             class="u-value u-creator"
-                            v-for="(user, key) in wikiPost.users"
+                            v-for="(user, key) in wikiPost.users.slice(0, 5)"
                             :key="key"
                             target="_blank"
                             :href="user.id ? author_url(user.id) : null"
