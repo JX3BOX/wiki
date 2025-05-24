@@ -1,6 +1,6 @@
 <template>
-    <div class="m-quest-view">
-        <div class="w-quest">
+    <div class="m-quest-view" :class="isRobot ? 'm-quest-view__robot' : ''">
+        <div v-if="!isRobot" class="w-quest">
             <div class="u-actions" @click.stop>
                 <el-tooltip content="在左侧选择角色后可以标记任务完成情况" placement="top" v-if="!role">
                     <i class="el-icon-info"></i>
@@ -44,7 +44,7 @@
                     ><img src="@/assets/img/quest/player-62.png" alt="" />可协助任务</el-tag
                 >
             </div>
-            <div class="u-endpoint__warpper">
+            <div class="u-endpoint__wrapper">
                 <p class="u-endpoint" v-show="quest.start">
                     <span class="u-endpoint-label"><i class="el-icon-video-play"></i> 任务起点: </span>
                     <span>{{ quest.start.mapName }}</span>
@@ -153,7 +153,93 @@
             </div>
             <quest-chain :current="id" :data="quest.chain"></quest-chain>
         </div>
-        <div>
+        <div v-else class="m-quest-top">
+            <div class="m-quest-header">
+                <div class="m-quest-title">
+                    <div class="m-title">
+                        <div class="u-title">
+                            <img class="u-title-img" src="@/assets/img/quest_title_robot.svg" />
+                            {{ quest.name }}
+                        </div>
+                        <span class="u-title-id"> (ID:{{ quest.id }})</span>
+                    </div>
+
+                    <div class="u-endpoint__wrapper">
+                        <p class="u-endpoint" v-show="quest.start">
+                            <span class="u-endpoint-label">任务起点: </span>
+                            <span class="u-endpoint-name">{{ quest.start.mapName }}</span>
+                            <span class="u-endpoint-separate"> - </span>
+                            <item-icon
+                                class="u-endpoint-item"
+                                v-if="quest.start.type == 'item'"
+                                :item_id="quest.start.id"
+                                :size="14"
+                            ></item-icon>
+                            <span class="u-endpoint-name" v-else>{{ quest.start.name || "未知" }}</span>
+                            <span class="u-endpoint-id"
+                                >({{ quest.start.type | pointType }}ID: {{ quest.start.id | idFilter }})</span
+                            >
+                        </p>
+                        <img class="u-quest-to" src="@/assets/img/quest-to.svg" />
+                        <p class="u-endpoint">
+                            <span class="u-endpoint-label">任务终点: </span>
+                            <span class="u-endpoint-name">{{ quest.end.mapName }}</span>
+                            <span class="u-endpoint-separate"> - </span>
+                            <item-icon
+                                class="u-endpoint-item"
+                                v-if="quest.end.type == 'item'"
+                                :item_id="quest.end.id"
+                                :size="28"
+                            ></item-icon>
+                            <span v-else class="u-endpoint-name">{{ quest.end.name || "未知" }}</span>
+                            <span class="u-endpoint-id"
+                                >({{ quest.end.type | pointType }}ID: {{ quest.end.id | idFilter }})</span
+                            >
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="m-quest-desc">
+                <div class="u-desc-title">
+                    <img src="@/assets/img/quest_desc_robot.svg" class="u-title-img" />
+                    <div class="u-title">任务描述</div>
+                </div>
+                <div class="u-desc" v-html="questDesc"></div>
+            </div>
+            <div class="m-quest-target__reward">
+                <div class="m-quest-target">
+                    <div class="u-title">任务目标</div>
+                    <template v-if="quest.killNpcs && quest.killNpcs.length > 0">
+                        <div class="u-target-sub" v-for="(killNpc, i) in quest.killNpcs" :key="i">
+                            <span>击杀</span>
+                            <span>{{ killNpc.name }}</span>
+                            <el-tooltip v-if="killNpc.share" content="该目标可共享击杀" placement="top">
+                                <img src="@/assets/img/quest/target-15.png" style="width: 14px; height: 14px" alt="" />
+                            </el-tooltip>
+                            <span> x {{ killNpc.amount }}</span>
+                        </div>
+                    </template>
+                    <template v-if="quest.needItems && quest.needItems.length > 0">
+                        <div class="u-target-sub" v-for="(needItem, i) in quest.needItems" :key="i">
+                            <span>收集</span>
+                            <item-icon :item_id="needItem.id" :has_title="true" :size="14"></item-icon>
+                            <span>x {{ needItem.amount }}</span>
+                        </div>
+                    </template>
+                    <div class="u-target-sub" v-for="(questValue, i) in quest.questValues" :key="questValue + i">
+                        <span>{{ questValue.str }} x {{ questValue.value }}</span>
+                    </div>
+                    <p class="u-content" v-html="targetDesc"></p>
+                </div>
+                <div class="m-quest-reward">
+                    <div class="u-title">任务奖励</div>
+                    <div class="u-reward-list">
+                        <reward-item v-for="(reward, i) in quest.rewards" :key="i" :reward="reward"></reward-item>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="!isRobot">
             <Notice></Notice>
             <el-tabs v-model="activeTab" @tab-click="handleTabClick">
                 <el-tab-pane label="任务文案" v-if="showDialog" name="dialog">
@@ -169,13 +255,13 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
+        <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline :src="icon" />
                     <span class="u-txt">任务攻略</span>
                 </template>
-                <template slot="head-actions">
+                <template v-if="!isRobot" slot="head-actions">
                     <a class="el-button el-button--primary" :href="publish_url(`quest/${id}`)">
                         <i class="el-icon-edit"></i>
                         <span>完善任务攻略</span>
@@ -196,44 +282,49 @@
                     </div>
                 </template>
             </WikiPanel>
+            <template v-if="!isRobot">
+                <!-- 历史版本 -->
+                <WikiRevisions type="quest" :source-id="String(id)" />
 
-            <!-- 历史版本 -->
-            <WikiRevisions type="quest" :source-id="String(id)" />
+                <!-- 打赏 -->
+                <div class="m-wiki-thx-panel">
+                    <WikiPanel>
+                        <template slot="head-title">
+                            <i class="el-icon-coin"></i>
+                            <span>参与打赏</span>
+                        </template>
+                        <template slot="body">
+                            <Thx
+                                class="m-thx"
+                                :postId="id"
+                                postType="quest"
+                                :postTitle="wiki_post.source.QuestName"
+                                :userId="author_id"
+                                :adminBoxcoinEnable="true"
+                                :userBoxcoinEnable="true"
+                                :authors="authors"
+                                mode="wiki"
+                                :key="'quest-thx-' + id"
+                                :client="client"
+                                showRss
+                            />
+                        </template>
+                    </WikiPanel>
+                </div>
 
-            <!-- 打赏 -->
-            <div class="m-wiki-thx-panel">
-                <WikiPanel>
-                    <template slot="head-title">
-                        <i class="el-icon-coin"></i>
-                        <span>参与打赏</span>
-                    </template>
-                    <template slot="body">
-                        <Thx
-                            class="m-thx"
-                            :postId="id"
-                            postType="quest"
-                            :postTitle="wiki_post.source.QuestName"
-                            :userId="author_id"
-                            :adminBoxcoinEnable="true"
-                            :userBoxcoinEnable="true"
-                            :authors="authors"
-                            mode="wiki"
-                            :key="'quest-thx-' + id"
-                            :client="client"
-                            showRss
-                        />
-                    </template>
-                </WikiPanel>
-            </div>
-
-            <!-- 百科评论 -->
-            <WikiComments type="quest" :source-id="id_str" />
+                <!-- 百科评论 -->
+                <WikiComments type="quest" :source-id="id_str" />
+            </template>
         </div>
         <div class="m-wiki-post-empty" v-else>
             <i class="el-icon-s-opportunity"></i>
-            <span>暂无攻略，我要</span>
-            <a class="s-link" :href="publish_url(`quest/${id}`)">完善攻略</a>
+            <template v-if="!isRobot">
+                <span>暂无攻略，我要</span>
+                <a class="s-link" :href="publish_url(`quest/${id}`)">完善攻略</a>
+            </template>
+            <span v-else>暂无相关攻略，欢迎热心侠士前往补充！</span>
         </div>
+        <wiki-robot-bottom v-if="isRobot" type="quest" :id="id"></wiki-robot-bottom>
     </div>
 </template>
 
@@ -245,6 +336,7 @@ import PointFilter from "@/components/quest/single/point-filter.vue";
 import ItemIcon from "@/components/common/item-icon.vue";
 import QuestDialog from "@/components/quest/single/quest-dialog.vue";
 import Notice from "@/components/quest/single/notice.vue";
+import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat.js";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
@@ -265,6 +357,16 @@ import bus from "@/store/bus";
 
 export default {
     name: "QuestSingle",
+    props: {
+        sourceId: {
+            type: [String, Number],
+            default: "",
+        },
+        isRobot: {
+            type: Boolean,
+            default: false,
+        },
+    },
     components: {
         ItemIcon,
         QuestMap,
@@ -277,6 +379,7 @@ export default {
         WikiRevisions,
         WikiComments,
         Notice,
+        wikiRobotBottom,
     },
     data() {
         return {
@@ -438,13 +541,13 @@ export default {
             completed: (state) => state.completedQuests,
         }),
         isCompleted() {
-            return this.completed.includes(this.quest.id);
+            return this.completed?.includes(this.quest.id);
         },
         id_str: function () {
             return String(this.id);
         },
         id: function () {
-            return parseInt(this.$route.params.quest_id);
+            return parseInt(this.$route.params.quest_id) || parseInt(this.sourceId);
         },
         showMap: function () {
             return this.points && Object.keys(this.points).length > 0;

@@ -2,16 +2,22 @@
     <div class="p-qqrobot-wiki-detail">
         <div class="m-wiki__container">
             <AchievementDetail v-if="type === 'cj'" :is-robot="true" :source-id="id"></AchievementDetail>
+            <knowledgeSingle v-if="type === 'knowledge'" :is-robot="true" :source-id="id"></knowledgeSingle>
+            <questSingle v-if="type === 'quest'" :is-robot="true" :source-id="id"></questSingle>
         </div>
     </div>
 </template>
 
 <script>
 import AchievementDetail from "@/views/cj/detail.vue";
+import knowledgeSingle from "@/views/knowledge/knowledge-single.vue";
+import questSingle from "@/views/quest/single.vue";
 export default {
     name: "QQRobotWikiDetail",
     components: {
         AchievementDetail,
+        knowledgeSingle,
+        questSingle,
     },
     computed: {
         type() {

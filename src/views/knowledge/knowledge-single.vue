@@ -1,14 +1,21 @@
 <template>
     <div class="v-knowledge-single" v-loading="loading">
-        <div class="u-detail-title">{{ title }}</div>
-        <notice></notice>
-        <div class="m-wiki" v-if="data && data.post">
+        <div v-if="!isRobot" class="u-detail-title">{{ title }}</div>
+        <div v-else class="m-robot-header">
+            <div class="m-robot-header__left">
+                <div class="u-title">{{ title }}</div>
+                <div class="u-desc">剑网3魔盒通识百科 - 剑三世界概念全知道！</div>
+            </div>
+            <img class="u-robot-header__right" src="@/assets/img/knowledge_robot.svg" />
+        </div>
+        <notice v-if="!isRobot"></notice>
+        <div class="m-wiki" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
             <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge.svg" />
                     <span>通识攻略</span>
                 </template>
-                <template slot="head-actions">
+                <template v-if="!isRobot" slot="head-actions">
                     <a class="el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
                         <i class="el-icon-edit"></i>
                         <span>完善百科通识</span>
@@ -19,49 +26,56 @@
                 </template>
             </WikiPanel>
 
-            <WikiRevisions v-if="id" type="knowledge" :source-id="id" style="margin-bottom: 35px" />
+            <template v-if="!isRobot">
+                <WikiRevisions v-if="id" type="knowledge" :source-id="id" style="margin-bottom: 35px" />
 
-            <!-- 打赏 -->
-            <div class="m-wiki-thx-panel">
-                <WikiPanel>
+                <!-- 打赏 -->
+                <div class="m-wiki-thx-panel">
+                    <WikiPanel>
+                        <template slot="head-title">
+                            <i class="el-icon-coin"></i>
+                            <span class="u-txt">参与打赏</span>
+                        </template>
+                        <template slot="body">
+                            <Thx
+                                class="m-thx"
+                                :postId="~~id"
+                                postType="knowledge"
+                                :postTitle="title"
+                                :userId="author_id"
+                                :adminBoxcoinEnable="true"
+                                :userBoxcoinEnable="true"
+                                mode="wiki"
+                                :authors="authors"
+                                :key="'item-thx-' + id"
+                                showRss
+                            />
+                        </template>
+                    </WikiPanel>
+                </div>
+
+                <WikiPanel v-if="id" class="m-knowledge-panel">
                     <template slot="head-title">
-                        <i class="el-icon-coin"></i>
-                        <span class="u-txt">参与打赏</span>
+                        <i class="el-icon-chat-line-round"></i>
+                        <span class="u-title">讨论</span>
                     </template>
                     <template slot="body">
-                        <Thx
-                            class="m-thx"
-                            :postId="~~id"
-                            postType="knowledge"
-                            :postTitle="title"
-                            :userId="author_id"
-                            :adminBoxcoinEnable="true"
-                            :userBoxcoinEnable="true"
-                            mode="wiki"
-                            :authors="authors"
-                            :key="'item-thx-' + id"
-                            showRss
-                        />
+                        <Comment :id="id" category="knowledge" />
                     </template>
                 </WikiPanel>
-            </div>
-
-            <WikiPanel v-if="id" class="m-knowledge-panel">
-                <template slot="head-title">
-                    <i class="el-icon-chat-line-round"></i>
-                    <span class="u-title">讨论</span>
-                </template>
-                <template slot="body">
-                    <Comment :id="id" category="knowledge" />
-                </template>
-            </WikiPanel>
+            </template>
         </div>
 
         <div v-else class="m-wiki-null">
             <i class="el-icon-s-opportunity"></i>
-            <span>暂无内容，我要</span>
-            <a class="s-link" :href="publishLink(`knowledge/${id}`)">完善百科通识</a>
+
+            <template v-if="!isRobot">
+                <span>暂无内容，我要</span>
+                <a class="s-link" :href="publishLink(`knowledge/${id}`)">完善百科通识</a>
+            </template>
+            <span v-else>暂无内容</span>
         </div>
+        <wiki-robot-bottom v-if="isRobot" type="knowledge" :id="id"></wiki-robot-bottom>
     </div>
 </template>
 
@@ -76,11 +90,22 @@ import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import Comment from "@jx3box/jx3box-comment-ui/src/Comment.vue";
 import notice from "@/components/cj/notice.vue";
+import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 import bus from "@/store/bus";
 
 export default {
     name: "Detail",
+    props: {
+        sourceId: {
+            type: [String, Number],
+            default: "",
+        },
+        isRobot: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data: function () {
         return {
             loading: false,
@@ -93,10 +118,11 @@ export default {
         WikiRevisions,
         Comment,
         notice,
+        wikiRobotBottom,
     },
     computed: {
         id: function () {
-            return this.$route.params.source_id;
+            return this.$route.params.source_id || this.sourceId;
         },
         type: function () {
             return this.data?.source?.type;
@@ -158,6 +184,9 @@ export default {
                 .finally(() => {
                     this.loading = false;
                     postStat(this.type, this.id);
+
+                    // TEST:请注意，为防止QQBOT无法抓取完全，请不要删除本行
+                    window.__READY__ = true;
                 });
         },
         getPostData() {
@@ -237,6 +266,36 @@ export default {
 .w-boxcoin-records-list {
     background-color: #fff;
 }
+.m-robot-header {
+    width: 510px;
+    height: 75px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #383838 0%, #000000 100%);
+
+    border: 1px solid #6e6e6e;
+
+    box-shadow: inset 0px 10px 5px #000000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    .u-title {
+        font-size: 20px;
+        .bold;
+        color: #fff;
+        width: 420px;
+        .nobreak;
+    }
+    .u-desc {
+        margin-top: 4px;
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(#fff, 0.75);
+    }
+    .u-robot-header__right {
+        .size(48px);
+    }
+}
 .m-knowledge-panel {
     .m-panel-title {
         .flex;
@@ -284,5 +343,19 @@ export default {
     font-size: 18px;
     .bold;
     line-height: 2;
+}
+
+.m-wiki.is-robot {
+    .r(8px);
+    overflow: hidden;
+    .c-wiki-panel {
+        margin-bottom: 0;
+        .m-wiki-metas .u-value {
+            color: #3d454d;
+        }
+    }
+    .m-panel-head .m-panel-actions {
+        .none;
+    }
 }
 </style>
