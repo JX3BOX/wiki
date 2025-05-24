@@ -501,6 +501,9 @@ export default {
                             link: location.href,
                             title: this.quest.name,
                         });
+
+                    // TEST:请注意，为防止QQBOT无法抓取完全，请不要删除本行
+                    window.__READY__ = true;
                 });
             }
             this.triggerStat();
