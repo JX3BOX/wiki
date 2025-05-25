@@ -68,13 +68,13 @@
                 <WikiComments type="achievement" :source-id="id" />
             </template>
         </div>
-        <div class="m-wiki-post-empty" v-if="is_empty">
-            <i class="el-icon-s-opportunity"></i>
+        <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-empty' : ''" v-if="is_empty">
             <template v-if="!isRobot">
+                <i class="el-icon-s-opportunity"></i>
                 <span>暂无攻略，我要</span>
                 <a class="s-link" :href="publish_url(`achievement/${id}`)">完善攻略</a>
             </template>
-            <span v-else>暂无攻略</span>
+            <span v-else>暂无相关攻略，欢迎热心侠士前往补充！</span>
         </div>
         <wiki-robot-bottom v-if="isRobot" type="cj" :id="id"></wiki-robot-bottom>
     </div>

@@ -1,89 +1,288 @@
 <template>
     <div id="m-item-view">
-        <div v-if="source" class="w-item">
-            <div class="m-item-viewer">
-                <div class="w-left">
-                    <jx3-item :item_id="source.id" />
-                </div>
-                <div class="w-right">
-                    <div class="m-name">
-                        <div class="u-title">
-                            <item-icon :item="source" :dishoverable="true" />
-                            <h6
-                                class="u-name"
-                                :class="{ white: source.Quality == 1 }"
-                                v-text="source.Name"
-                                :style="{
-                                    color: item_color(source.Quality),
-                                }"
-                            ></h6>
+        <div class="m-item-detail" v-if="isRobot">
+            <div class="m-item-header">
+                <div class="m-item-header__left">
+                    <div class="u-top">
+                        <item-icon :size="20" :item="source" :dishoverable="true" />
+                        <div
+                            class="u-name"
+                            :class="{ white: source.Quality == 1 }"
+                            v-text="source.Name"
+                            :style="{
+                                color: item_color(source.Quality),
+                            }"
+                        ></div>
+                        <template v-if="source.MaxStrengthLevel">
+                            <img
+                                src="@/assets/img/star.svg"
+                                class="u-star"
+                                v-for="i in source.MaxStrengthLevel"
+                                :key="i"
+                            />
+                        </template>
+                    </div>
+                    <div class="u-bottom">
+                        <!-- 装备类型 -->
+                        <div class="u-usage" v-if="show_equip_usage">
+                            <template v-if="source.EquipUsage == 1">
+                                <img class="u-label-icon" src="@/assets/img/pve.png" alt="" />
+                                <span>秘境挑战(PVE)</span>
+                            </template>
+                            <template v-if="source.EquipUsage == 2">
+                                <img class="u-label-icon" src="@/assets/img/pvp.png" alt="" />
+                                <span>竞技对抗(PVP)</span>
+                            </template>
+                            <template v-if="source.EquipUsage == 3">
+                                <img class="u-label-icon" src="@/assets/img/pvx.png" alt="" />
+                                <span>休闲(PVX)</span>
+                            </template>
                         </div>
 
-                        <div class="m-buttons fr">
-                            <!-- 加入清单 -->
-                            <Plan class="u-plan" :itemId="id" />
-                            <!-- 收藏按钮 -->
-                            <Fav
-                                ref="fav"
-                                class="u-collect"
-                                post-type="item"
-                                :post-id="source.id"
-                                :post-title="fav_title"
-                            />
+                        <div v-if="source.AucGenre == 1" class="u-weapon-type-label">武器</div>
+                        <div v-if="source.AucGenre == 2" class="u-weapon-type-label">暗器</div>
+                        <!-- 物品类型文案 -->
+                        <div v-if="source.TypeLabel" class="u-type-label" v-text="source.TypeLabel"></div>
+                        <span class="u-from" v-if="source.GetType">获得途径: {{ source.GetType }}</span>
+                    </div>
+                </div>
+                <img src="@/assets/img/item_robot.svg" class="u-item-img__right" />
+            </div>
+            <div class="m-item-content">
+                <div class="u-line">
+                    <div v-if="source.Level" class="u-level u-yellow" v-text="'品质等级' + source.Level"></div>
+                    <div
+                        v-if="Number(source.EquipmentRating)"
+                        class="u-equipment-rating u-orange"
+                        v-text="'装备分数' + source.EquipmentRating"
+                    ></div>
+                </div>
+                <div class="u-line">
+                    <!-- 需要等级 -->
+                    <div
+                        v-if="source.Requires && source.Requires[5]"
+                        class="u-require-level"
+                        v-text="source.Requires[5]"
+                    ></div>
+                    <div
+                        v-if="source.Recommend"
+                        class="u-equipment-recommend"
+                        v-text="'推荐门派：' + source.Recommend"
+                    ></div>
+                </div>
+
+                <!-- 装备属性 -->
+                <div class="m-attributes" v-if="source.attributes && source.attributes.length">
+                    <!-- 白色 -->
+                    <div
+                        class="u-attributes"
+                        v-if="source.attributes && source.attributes.length && white_attributes.length"
+                    >
+                        <div
+                            v-for="(attribute, key) in white_attributes"
+                            :key="key"
+                            class="u-field"
+                            :class="[`u-${attribute.color}`]"
+                        >
+                            <span
+                                v-if="
+                                    attribute.type == 'atMeleeWeaponAttackSpeedBase' ||
+                                    attribute.type == 'atRangeWeaponAttackSpeedBase'
+                                "
+                                class="u-value u-speed"
+                                v-text="attribute.label"
+                            ></span>
+                            <span v-else-if="attribute.type == 'atHorseAttribute'" class="u-value u-horse-attribute">
+                                <div class="u-horse-desc" v-html="attribute.label"></div>
+                            </span>
+                            <span v-else class="u-value">
+                                <game-text :text="attribute.label"></game-text>
+                            </span>
                         </div>
                     </div>
-                    <!-- 原料 -->
-                    <div class="m-item-required" v-if="requiredList.length">
-                        <span class="u-label">制作原料</span>
-                        <router-link
-                            class="u-item"
-                            v-for="item in requiredList"
-                            :key="item.ID"
-                            target="_blank"
-                            :to="`/view/5_${item.ID}`"
+                    <!-- 绿色 -->
+                    <div
+                        class="u-attributes"
+                        v-if="source.attributes && source.attributes.length && green_attributes.length"
+                    >
+                        <div
+                            v-for="(attribute, key) in green_attributes"
+                            :key="key"
+                            class="u-field"
+                            :class="[`u-${attribute.color}`]"
                         >
-                            <img class="u-icon" :src="iconLink(item)" :alt="item.Name" :title="item.Name" />
-                            <span class="u-count">{{ item._count }}</span>
-                        </router-link>
+                            <span
+                                v-if="
+                                    attribute.type == 'atMeleeWeaponAttackSpeedBase' ||
+                                    attribute.type == 'atRangeWeaponAttackSpeedBase'
+                                "
+                                class="u-value u-speed"
+                                v-text="attribute.label"
+                            ></span>
+                            <span v-else-if="attribute.type == 'atHorseAttribute'" class="u-value u-horse-attribute">
+                                <img
+                                    v-if="attribute.icon_id > 0"
+                                    class="u-horse-icon"
+                                    :src="iconLink(attribute.icon_id)"
+                                />
+                                <div class="u-horse-desc" v-html="attribute.label"></div>
+                            </span>
+                            <span v-else class="u-value">
+                                <game-text :text="attribute.label"></game-text>
+                            </span>
+                        </div>
                     </div>
-                    <!-- 其余属性 -->
-                    <ul class="m-other-fields">
-                        <li class="m-other-field">
-                            <span class="u-label">拾取绑定</span>
-                            <span class="u-value">{{ item_bind(source.BindType) }}</span>
+                </div>
+                <div class="m-spec-wrapper">
+                    <div class="m-client-spec" v-if="orange_std_attribute.length > 0">
+                        <div class="u-spec-attribute-title u-yellow">
+                            <span>特殊属性效果 - <span class="u-client">旗舰</span></span>
+                        </div>
+                        <div
+                            class="u-value u-spec-attribute"
+                            v-for="(attribute, key) in orange_std_attribute"
+                            :key="key"
+                        >
+                            <game-text :text="attribute.label"></game-text>
+                        </div>
+                    </div>
+                    <div class="m-client-spec" v-if="orange_wujie_attribute.length > 0">
+                        <div class="u-spec-attribute-title u-yellow">
+                            <span>特殊属性效果 - <span class="u-client">无界</span></span>
+                        </div>
+                        <div
+                            class="u-value u-spec-attribute"
+                            v-for="(attribute, key) in orange_wujie_attribute"
+                            :key="key"
+                        >
+                            <game-text :text="attribute.label"></game-text>
+                        </div>
+                        <div class="u-value u-spec-attribute u-orange">属性效果双端一致</div>
+                    </div>
+                </div>
+
+                <!-- 套装信息 -->
+                <div v-if="source.Set" class="u-set">
+                    <div
+                        class="u-yellow u-set-title"
+                        v-html="`套装属性效果-<span>${source.Set.name}(1/${source.Set.siblings.length})</span>`"
+                    ></div>
+                    <ul class="u-set-siblings u-gray">
+                        <li
+                            v-for="(sibling, key) in source.Set.siblings"
+                            :key="key"
+                            :class="{
+                                'u-yellow': sibling && (sibling == source.Name || sibling.includes(source.Name)),
+                            }"
+                        >
+                            {{
+                                sibling
+                                    .split("/")
+                                    .map((s) => s.trim())
+                                    .sort((a, b) => a.localeCompare(b))
+                                    .join(" / ")
+                            }}
                         </li>
-                        <li class="m-other-field">
-                            <span class="u-label">可否交易</span>
-                            <span class="u-value">{{ source.CanTrade ? "✔️ 可以" : "❌ 不可以" }}</span>
+                    </ul>
+                    <ul class="u-set-attributes u-orange">
+                        <li v-for="(attribute, key) in source.Set.attributes" :key="key">
+                            <span>{{ `[${key}]` }}</span>
+                            <game-text :client="client" :text="attribute" :ignore-color="true"></game-text>
                         </li>
-                        <li>
-                            <span class="u-label">回购价格</span>
-                            <GamePrice class="u-value" :price="source.Price" v-if="source.Price" />
-                            <span class="u-value" v-else>-</span>
-                        </li>
-                        <!-- <li v-if="source.Level">
+                    </ul>
+                </div>
+
+                <!-- 描述 -->
+                <p v-if="source.Desc" class="u-desc">
+                    <game-text :client="client" :text="source.Desc"></game-text>
+                </p>
+            </div>
+        </div>
+        <template v-if="!isRobot">
+            <div v-if="source" class="w-item">
+                <div class="m-item-viewer">
+                    <div class="w-left">
+                        <jx3-item :item_id="source.id" />
+                    </div>
+                    <div class="w-right">
+                        <div class="m-name">
+                            <div class="u-title">
+                                <item-icon :item="source" :dishoverable="true" />
+                                <h6
+                                    class="u-name"
+                                    :class="{ white: source.Quality == 1 }"
+                                    v-text="source.Name"
+                                    :style="{
+                                        color: item_color(source.Quality),
+                                    }"
+                                ></h6>
+                            </div>
+
+                            <div class="m-buttons fr">
+                                <!-- 加入清单 -->
+                                <Plan class="u-plan" :itemId="id" />
+                                <!-- 收藏按钮 -->
+                                <Fav
+                                    ref="fav"
+                                    class="u-collect"
+                                    post-type="item"
+                                    :post-id="source.id"
+                                    :post-title="fav_title"
+                                />
+                            </div>
+                        </div>
+                        <!-- 原料 -->
+                        <div class="m-item-required" v-if="requiredList.length">
+                            <span class="u-label">制作原料</span>
+                            <router-link
+                                class="u-item"
+                                v-for="item in requiredList"
+                                :key="item.ID"
+                                target="_blank"
+                                :to="`/view/5_${item.ID}`"
+                            >
+                                <img class="u-icon" :src="iconLink(item)" :alt="item.Name" :title="item.Name" />
+                                <span class="u-count">{{ item._count }}</span>
+                            </router-link>
+                        </div>
+                        <!-- 其余属性 -->
+                        <ul class="m-other-fields">
+                            <li class="m-other-field">
+                                <span class="u-label">拾取绑定</span>
+                                <span class="u-value">{{ item_bind(source.BindType) }}</span>
+                            </li>
+                            <li class="m-other-field">
+                                <span class="u-label">可否交易</span>
+                                <span class="u-value">{{ source.CanTrade ? "✔️ 可以" : "❌ 不可以" }}</span>
+                            </li>
+                            <li>
+                                <span class="u-label">回购价格</span>
+                                <GamePrice class="u-value" :price="source.Price" v-if="source.Price" />
+                                <span class="u-value" v-else>-</span>
+                            </li>
+                            <!-- <li v-if="source.Level">
 							<span class="u-label">品质等级</span>
 							<span class="u-value" v-text="source.Level"></span>
 						</li> -->
-                        <!-- <li class="m-other-field">
+                            <!-- <li class="m-other-field">
 							<span class="u-label">品质</span>
 							<span class="u-value" v-html="`<span style='color:${item_color(source.Quality)}'>${item_quality(source.Quality)}</span>`"></span>
 						</li> -->
 
-                        <li class="m-other-field">
-                            <span class="u-label">可否堆叠</span>
-                            <span class="u-value">{{ source.CanStack ? "✔️ 可以" : "❌ 不可以" }}</span>
-                        </li>
-                        <li v-if="source.MaxExistAmount > 0">
-                            <span class="u-label">最大拥有数</span>
-                            <span class="u-value">{{ source.MaxExistAmount }}</span>
-                        </li>
-                        <li v-if="source.MaxExistTime > 0">
-                            <span class="u-label">限时有效</span>
-                            <span class="u-value">{{ showDuration(source.MaxExistTime) }}</span>
-                        </li>
+                            <li class="m-other-field">
+                                <span class="u-label">可否堆叠</span>
+                                <span class="u-value">{{ source.CanStack ? "✔️ 可以" : "❌ 不可以" }}</span>
+                            </li>
+                            <li v-if="source.MaxExistAmount > 0">
+                                <span class="u-label">最大拥有数</span>
+                                <span class="u-value">{{ source.MaxExistAmount }}</span>
+                            </li>
+                            <li v-if="source.MaxExistTime > 0">
+                                <span class="u-label">限时有效</span>
+                                <span class="u-value">{{ showDuration(source.MaxExistTime) }}</span>
+                            </li>
 
-                        <!-- <li v-if="source.BelongSchool">
+                            <!-- <li v-if="source.BelongSchool">
 							<span class="u-label">门派</span>
 							<span class="u-value">{{source.BelongSchool}}</span>
 						</li>
@@ -95,97 +294,99 @@
 							<span class="u-label">属性</span>
 							<span class="u-value">{{source.MagicType}}</span>
 						</li> -->
-                        <li v-if="source.GetType">
-                            <span class="u-label">获得途径</span>
-                            <span class="u-value">{{ source.GetType }}</span>
-                        </li>
-                        <li v-if="source.CanChangeMagic">
-                            <span class="u-label">可否附魔</span>
-                            <span class="u-value">✔️ 可以</span>
-                        </li>
-                        <li v-if="source.CanExterior">
-                            <span class="u-label">可否收集</span>
-                            <span class="u-value">✔️ 可以</span>
-                        </li>
-                        <li v-if="source.CanSetColor">
-                            <span class="u-label">可否染色</span>
-                            <span class="u-value">✔️ 可以</span>
-                        </li>
-                        <li class="m-other-field">
-                            <span class="u-label">可否分解</span>
-                            <span class="u-value">{{ source.CanApart ? "✔️ 可以" : "❌ 不可以" }}</span>
-                        </li>
-                        <li class="m-other-field">
-                            <span class="u-label">可否摧毁</span>
-                            <span class="u-value">{{
-                                source.CanDestroy || source.CanDestroy === null ? "✔️ 可以" : "❌ 不可以"
-                            }}</span>
-                        </li>
-                        <!-- <li v-if="source.CanShared">
+                            <li v-if="source.GetType">
+                                <span class="u-label">获得途径</span>
+                                <span class="u-value">{{ source.GetType }}</span>
+                            </li>
+                            <li v-if="source.CanChangeMagic">
+                                <span class="u-label">可否附魔</span>
+                                <span class="u-value">✔️ 可以</span>
+                            </li>
+                            <li v-if="source.CanExterior">
+                                <span class="u-label">可否收集</span>
+                                <span class="u-value">✔️ 可以</span>
+                            </li>
+                            <li v-if="source.CanSetColor">
+                                <span class="u-label">可否染色</span>
+                                <span class="u-value">✔️ 可以</span>
+                            </li>
+                            <li class="m-other-field">
+                                <span class="u-label">可否分解</span>
+                                <span class="u-value">{{ source.CanApart ? "✔️ 可以" : "❌ 不可以" }}</span>
+                            </li>
+                            <li class="m-other-field">
+                                <span class="u-label">可否摧毁</span>
+                                <span class="u-value">{{
+                                    source.CanDestroy || source.CanDestroy === null ? "✔️ 可以" : "❌ 不可以"
+                                }}</span>
+                            </li>
+                            <!-- <li v-if="source.CanShared">
 							<span class="u-label">可否分享</span>
 							<span class="u-value" v-text="'可以分享'"></span>
 						</li> -->
 
-                        <!-- <li v-if="source.Requires && source.Requires[100]">
+                            <!-- <li v-if="source.Requires && source.Requires[100]">
 							<span class="u-value" v-text="source.Requires[100]"></span>
 						</li> -->
-                        <!--<li v-if="source.Require1Type">
+                            <!--<li v-if="source.Require1Type">
                             <label class="u-title" v-text="item_require_1_type(source.Require1Type) + '：'"></label>
                             <span class="u-value" v-text="source.Require1Value"></span>
                         </li>-->
 
-                        <!-- <li v-if="source.AucGenre >= 1 && source.AucGenre <= 3">
+                            <!-- <li v-if="source.AucGenre >= 1 && source.AucGenre <= 3">
 							<span class="u-label">耐久度</span>
 							<span class="u-value" v-text="`${source.MaxDurability}/${source.MaxDurability}`"></span>
 						</li> -->
-                        <!--<li class="m-field">
+                            <!--<li class="m-field">
                             <label class="u-title">磨损率：</label>
                             <span class="u-value" v-text="source.AbradeRate"></span>
                         </li>-->
-                        <!--<li class="m-other-field">
+                            <!--<li class="m-other-field">
                             <label class="u-title">修理费：</label>
                             <span class="u-value" v-text="source.RepairPriceRebate"></span>
                         </li>-->
 
-                        <!-- <li v-if="source.CanConsume">
+                            <!-- <li v-if="source.CanConsume">
 							<span class="u-label">消耗品</span>
 							<span class="u-value" v-text="'是'"></span>
 						</li> -->
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="m-tabs" v-if="showPrice">
-            <div class="m-price-server">
-                <i class="el-icon-s-shop"></i> 全服价格
-                <el-select
-                    v-if="activeTab === 'item-price-chart' || activeTab === 'item-prices'"
-                    filterable
-                    class="u-server"
-                    v-model="server"
-                    placeholder="请选择服务器"
-                    size="mini"
-                >
-                    <el-option v-for="(serve, i) in servers" :key="i" :label="serve" :value="serve"></el-option>
-                </el-select>
-            </div>
+            <div class="m-tabs" v-if="showPrice">
+                <div class="m-price-server">
+                    <i class="el-icon-s-shop"></i> 全服价格
+                    <el-select
+                        v-if="activeTab === 'item-price-chart' || activeTab === 'item-prices'"
+                        filterable
+                        class="u-server"
+                        v-model="server"
+                        placeholder="请选择服务器"
+                        size="mini"
+                    >
+                        <el-option v-for="(serve, i) in servers" :key="i" :label="serve" :value="serve"></el-option>
+                    </el-select>
+                </div>
 
-            <el-tabs v-model="activeTab" type="border-card" @tab-click="active_tab_handle" v-loading="loading">
-                <el-tab-pane label="📈 价格波动" name="item-price-chart" v-if="source && source.BindType != 3">
-                    <item-price-chart ref="item_price_chart" :item_id="source.id" :server="server" />
-                </el-tab-pane>
-                <el-tab-pane label="💰 近期价格" name="item-prices" v-if="source && source.BindType != 3" lazy>
-                    <item-prices ref="item_prices" :item_id="source.id" :server="server" />
-                </el-tab-pane>
-                <!-- <el-tab-pane label="📜 相关物品清单" name="relation-plans" lazy>
+                <el-tabs v-model="activeTab" type="border-card" @tab-click="active_tab_handle" v-loading="loading">
+                    <el-tab-pane label="📈 价格波动" name="item-price-chart" v-if="source && source.BindType != 3">
+                        <item-price-chart ref="item_price_chart" :item_id="source.id" :server="server" />
+                    </el-tab-pane>
+                    <el-tab-pane label="💰 近期价格" name="item-prices" v-if="source && source.BindType != 3" lazy>
+                        <item-prices ref="item_prices" :item_id="source.id" :server="server" />
+                    </el-tab-pane>
+                    <!-- <el-tab-pane label="📜 相关物品清单" name="relation-plans" lazy>
                     <relation-plans :item_id="source.id" />
                 </el-tab-pane> -->
-            </el-tabs>
-        </div>
+                </el-tabs>
+            </div>
 
-        <Notice></Notice>
-        <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
+            <Notice></Notice>
+        </template>
+
+        <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/item.svg" />
@@ -212,44 +413,49 @@
                     </div>
                 </template>
             </WikiPanel>
+            <template v-if="!isRobot">
+                <!-- 历史版本 -->
+                <WikiRevisions type="item" :source-id="id" />
 
-            <!-- 历史版本 -->
-            <WikiRevisions type="item" :source-id="id" />
+                <!-- 打赏 -->
+                <div class="m-wiki-thx-panel">
+                    <WikiPanel>
+                        <template slot="head-title">
+                            <i class="el-icon-coin"></i>
+                            <span class="u-txt">参与打赏</span>
+                        </template>
+                        <template slot="body">
+                            <Thx
+                                class="m-thx"
+                                :postId="id"
+                                postType="item"
+                                :postTitle="source.Name"
+                                :userId="author_id"
+                                :adminBoxcoinEnable="true"
+                                :userBoxcoinEnable="true"
+                                :authors="authors"
+                                mode="wiki"
+                                :key="'item-thx-' + id"
+                                :client="client"
+                                showRss
+                            />
+                        </template>
+                    </WikiPanel>
+                </div>
 
-            <!-- 打赏 -->
-            <div class="m-wiki-thx-panel">
-                <WikiPanel>
-                    <template slot="head-title">
-                        <i class="el-icon-coin"></i>
-                        <span class="u-txt">参与打赏</span>
-                    </template>
-                    <template slot="body">
-                        <Thx
-                            class="m-thx"
-                            :postId="id"
-                            postType="item"
-                            :postTitle="source.Name"
-                            :userId="author_id"
-                            :adminBoxcoinEnable="true"
-                            :userBoxcoinEnable="true"
-                            :authors="authors"
-                            mode="wiki"
-                            :key="'item-thx-' + id"
-                            :client="client"
-                            showRss
-                        />
-                    </template>
-                </WikiPanel>
-            </div>
-
-            <!-- 百科评论 -->
-            <WikiComments type="item" :source-id="id" />
+                <!-- 百科评论 -->
+                <WikiComments type="item" :source-id="id" />
+            </template>
         </div>
-        <div class="m-wiki-post-empty" v-else>
-            <i class="el-icon-s-opportunity"></i>
-            <span>暂无攻略，我要</span>
-            <a class="s-link" :href="publish_url(`item/${id}`)">完善攻略</a>
+        <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-empty' : ''" v-else>
+            <template v-if="!isRobot">
+                <i class="el-icon-s-opportunity"></i>
+                <span>暂无攻略，我要</span>
+                <a class="s-link" :href="publish_url(`item/${id}`)">完善攻略</a>
+            </template>
+            <span v-else>暂无相关攻略，欢迎热心侠士前往补充！</span>
         </div>
+        <wiki-robot-bottom v-if="isRobot" type="item" :id="id"></wiki-robot-bottom>
     </div>
 </template>
 
@@ -258,6 +464,7 @@ import Article from "@jx3box/jx3box-editor/src/Article.vue";
 // import Fav from "@jx3box/jx3box-common-ui/src/interact/Fav.vue";
 import Fav from "./item-fav";
 import Item from "@jx3box/jx3box-editor/src/Item.vue";
+import GameText from "@jx3box/jx3box-editor/src/GameText.vue";
 import ItemIcon from "@/components/common/item-icon.vue";
 import Plan from "@/components/item/plan.vue";
 import WikiPanel from "@/components/wiki-panel.vue";
@@ -268,6 +475,7 @@ import ItemPriceChart from "@/components/item/item-price-chart.vue";
 import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import Notice from "@/components/cj/notice.vue";
+import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
@@ -289,7 +497,16 @@ import bus from "@/store/bus";
 
 export default {
     name: "Detail",
-    props: [],
+    props: {
+        sourceId: {
+            type: [String, Number],
+            default: "",
+        },
+        isRobot: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data: function () {
         return {
             source: {},
@@ -309,7 +526,7 @@ export default {
     },
     computed: {
         id: function () {
-            return this.$route.params.item_id;
+            return this.$route.params.item_id || this.sourceId;
         },
         post_id: function () {
             return this.$route.params.post_id;
@@ -366,6 +583,28 @@ export default {
         // favList() {
         //     return this.$store.state.myFavorites;
         // },
+        // 是否展示装备类型
+        show_equip_usage() {
+            if (Number(this.source?.AucGenre) === 1 && this.source.Quality > 4) return false;
+            if ([1, 2, 3].includes(Number(this.source?.AucGenre))) return true;
+            if (this.source?.AucGenre == 4 && this.source?.AucSubType < 4) return true;
+            return false;
+        },
+        common_attributes() {
+            return this.source?.attributes?.filter((item) => item.color != "orange") || [];
+        },
+        white_attributes() {
+            return this.common_attributes.filter((item) => item.color === "white") || [];
+        },
+        green_attributes() {
+            return this.common_attributes.filter((item) => item.color === "green") || [];
+        },
+        orange_std_attribute() {
+            return this.source?.attributes?.filter((item) => item.color == "orange" && !item.is_mobile) || [];
+        },
+        orange_wujie_attribute() {
+            return this.source?.attributes?.filter((item) => item.color == "orange" && item.is_mobile) || [];
+        },
     },
     components: {
         "jx3-item": Item,
@@ -380,6 +619,8 @@ export default {
         "item-price-chart": ItemPriceChart,
         GamePrice,
         Notice,
+        wikiRobotBottom,
+        GameText,
     },
     methods: {
         get_data() {
@@ -413,7 +654,7 @@ export default {
         item_bind,
         ts2str,
         iconLink(item) {
-            return iconLink(item.item_info[0]?.IconID || item.item_info?.IconID);
+            return iconLink(item.item_info?.[0]?.IconID || item.item_info?.IconID);
         },
         showAvatar: function (url) {
             return showAvatar(url, 32);
@@ -532,9 +773,13 @@ export default {
             deep: true,
             handler() {
                 let item = this.source;
-                this.activeTab = item && item.BindType != 3 ? DEFAULT_ACTIVE_TAB : "relation-plans";
-                this.$store.state.sidebar.AucGenre = Number(item.AucGenre);
-                this.$store.state.sidebar.AucSubTypeID = Number(item.AucSubType);
+                if (!this.isRobot) {
+                    this.activeTab = item && item.BindType != 3 ? DEFAULT_ACTIVE_TAB : "relation-plans";
+                }
+                if (this.$store.state.sidebar) {
+                    this.$store.state.sidebar.AucGenre = Number(item.AucGenre);
+                    this.$store.state.sidebar.AucSubTypeID = Number(item.AucSubType);
+                }
 
                 this.get_data();
                 this.loadItemDetail();

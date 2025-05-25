@@ -66,14 +66,13 @@
             </template>
         </div>
 
-        <div v-else class="m-wiki-null">
-            <i class="el-icon-s-opportunity"></i>
-
+        <div v-else class="m-wiki-null" :class="isRobot ? 'is-robot-empty' : ''">
             <template v-if="!isRobot">
+                <i class="el-icon-s-opportunity"></i>
                 <span>暂无内容，我要</span>
                 <a class="s-link" :href="publishLink(`knowledge/${id}`)">完善百科通识</a>
             </template>
-            <span v-else>暂无内容</span>
+            <span v-else>暂无相关攻略，欢迎热心侠士前往补充！</span>
         </div>
         <wiki-robot-bottom v-if="isRobot" type="knowledge" :id="id"></wiki-robot-bottom>
     </div>
@@ -256,6 +255,24 @@ export default {
 
     a:hover {
         box-shadow: 0 1px 0 @primary;
+    }
+    &.is-robot-empty {
+        width: 100%;
+        height: 42px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        background: linear-gradient(180deg, #383838 0%, #000000 100%);
+
+        border: 1px solid #6e6e6e !important;
+
+        box-shadow: inset 0px 10px 5px #000000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 12px;
+
+        color: rgba(#fff, 0.75) !important;
     }
 }
 .m-navigation {
