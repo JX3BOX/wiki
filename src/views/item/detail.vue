@@ -659,14 +659,14 @@ export default {
         showAvatar: function (url) {
             return showAvatar(url, 32);
         },
-        loadData: function () {
+        loadData: async function () {
             // 获取最新攻略
             if (this.id) {
-                get_item(this.id, this.client).then((res) => {
+                await get_item(this.id, this.client).then((res) => {
                     // console.log(res, "res");
                     this.source = res?.data?.data?.item;
                 });
-                wiki.mix({ type: "item", id: this.id, client: this.client }).then((res) => {
+                await wiki.mix({ type: "item", id: this.id, client: this.client }).then((res) => {
                     const { post, source, compatible, isEmpty, users } = res;
                     this.wiki_post = {
                         post: post,
@@ -684,6 +684,7 @@ export default {
                             title: post.title,
                         });
                 });
+                window.__READY__ = true;
             }
             this.triggerStat();
         },
