@@ -14,9 +14,7 @@
             :withoutLeft="withoutLeft"
             :adminMarks="adminMarks"
         >
-            <template #logo>
-                <img svg-inline :src="logo" />
-            </template>
+            <img svg-inline slot="logo" :src="logo" />
             <slot name="breadcrumb"></slot>
             <template #op-append>
                 <div class="m-wiki-admin-drop" v-if="showAdmin">
@@ -110,6 +108,10 @@ export default {
             type: Array,
             default: () => [],
         },
+        icon: {
+            type: String,
+            default: "",
+        },
     },
     computed: {
         computedRoot: function () {
@@ -121,11 +123,10 @@ export default {
         showAdmin() {
             return !isMiniProgram() && this.$route.name === "view" && User.isEditor();
         },
-    },
-    data() {
-        return {
-            logo: __cdn + "logo/logo-light/cj.svg",
-        };
+        logo() {
+            const key = this.icon || this.slug;
+            return __cdn + "logo/logo-light/" + key + ".svg";
+        }
     },
     methods: {
         hasPermission(permission) {
