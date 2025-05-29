@@ -254,7 +254,7 @@
         .m-quest-reward {
             height: 141px;
             border-radius: 8px;
-            background: linear-gradient(180deg, #283d69 0%, #000000 100%);
+            background: linear-gradient(to top, #283d69 0%, #000000 100%);
 
             border: 1px solid #6e6e6e;
 
@@ -272,8 +272,11 @@
         .m-quest-target .u-title {
             color: #3fc5f2;
         }
-        .m-quest-reward .u-title {
-            color: #ffc300;
+        .m-quest-reward {
+            background: linear-gradient(to top, rgba(89, 66, 22, 1) 0%, #000000 100%);
+            .u-title {
+                color: #ffc300;
+            }
         }
         .u-target-sub {
             .flex;

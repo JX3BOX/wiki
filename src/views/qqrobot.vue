@@ -51,7 +51,7 @@ export default {
         border: 0.5px solid transparent;
         background-clip: padding-box, border-box;
         background-origin: padding-box, border-box;
-        background-image: linear-gradient(180deg, rgba(64, 64, 64, 1), rgba(87, 87, 87, 1)),
+        background-image: linear-gradient(to top, rgba(64, 64, 64, 1), rgba(87, 87, 87, 1)),
             linear-gradient(to top, #000, rgba(255, 255, 255, 0.75));
 
         overflow-y: auto;

@@ -131,7 +131,7 @@ export default {
         height: 28px;
         margin-top: -20px;
         border-radius: 6px;
-        background: linear-gradient(180deg, #383838 0%, #000000 100%);
+        background: linear-gradient(to top, #383838 0%, #000000 100%);
 
         border: 0.5px solid #6e6e6e;
 
@@ -163,7 +163,7 @@ export default {
         padding: 4px;
         box-sizing: border-box;
         border-radius: 6px;
-        background: linear-gradient(180deg, #000000 0%, #383838 100%);
+        background: linear-gradient(to top, #000000 0%, #383838 100%);
         border: 0.5px solid #6e6e6e;
         box-shadow: inset 0px 10px 5px #000000;
         font-size: 9px;
