@@ -11,11 +11,12 @@
             </div>
             <div class="m-wiki-bottom__right">
                 <div class="m-qq">
-                    <img class="u-qq-img" src="@/assets/img/jx3box_qqbot.png" />
+                    <!-- <img class="u-qq-img" src="@/assets/img/jx3box_qqbot.png" />
                     <div class="m-qq-info">
                         <div class="u-label">魔盒机器人QQ</div>
                         <div class="u-value">3889010020</div>
-                    </div>
+                    </div> -->
+                    <img class="u-bottom-img" src="@/assets/img/jx3box_qqbot_bottom.svg" />
                 </div>
                 <div class="m-qrcode">
                     <qrcode-vue class="u-qrcode" :value="qrcodeUrl" :size="42" level="H"></qrcode-vue>
@@ -65,7 +66,7 @@ export default {
     width: 100%;
     height: 126px;
     border-radius: 8px;
-    background: linear-gradient(180deg, #383838 0%, #000000 100%);
+    background: linear-gradient(to top, #383838 0%, #000000 100%);
     border: 1px solid #6e6e6e;
     padding: 10px 8px;
     box-sizing: border-box;
@@ -147,6 +148,10 @@ export default {
     }
     .u-qq-img {
         .size(63px, 62px);
+    }
+    .u-bottom-img {
+        margin-top: 3px;
+        .size(78px, auto);
     }
     .m-qrcode {
         .flex;

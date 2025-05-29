@@ -261,7 +261,7 @@ export default {
         height: 42px;
         border-radius: 8px;
         box-sizing: border-box;
-        background: linear-gradient(180deg, #383838 0%, #000000 100%);
+        background: linear-gradient(to top, #383838 0%, #000000 100%);
 
         border: 1px solid #6e6e6e !important;
 
@@ -287,7 +287,7 @@ export default {
     width: 510px;
     height: 75px;
     border-radius: 8px;
-    background: linear-gradient(180deg, #383838 0%, #000000 100%);
+    background: linear-gradient(to top, #383838 0%, #000000 100%);
 
     border: 1px solid #6e6e6e;
 
