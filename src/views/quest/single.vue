@@ -316,7 +316,7 @@
                 <WikiComments type="quest" :source-id="id_str" />
             </template>
         </div>
-        <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-empty' : ''" v-else>
+        <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-quest-empty' : ''" v-else>
             <template v-if="!isRobot">
                 <i class="el-icon-s-opportunity"></i>
                 <span>暂无攻略，我要</span>

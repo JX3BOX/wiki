@@ -266,6 +266,7 @@ export default {
         border: 1px solid #6e6e6e !important;
 
         box-shadow: inset 0px 10px 5px #000000;
+        text-shadow: none !important;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -284,10 +285,11 @@ export default {
     background-color: #fff;
 }
 .m-robot-header {
-    width: 510px;
+    width: 100%;
     height: 75px;
     border-radius: 8px;
     background: linear-gradient(to top, #383838 0%, #000000 100%);
+    box-sizing: border-box;
 
     border: 1px solid #6e6e6e;
 
