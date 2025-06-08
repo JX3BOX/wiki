@@ -30,6 +30,9 @@
                             >
                                 <span>推送</span>
                             </el-dropdown-item>
+                            <el-dropdown-item icon="el-icon-refresh" command="pictureTask">
+                                <span>刷图</span>
+                            </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -57,6 +60,7 @@ import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 import bus from "@/store/bus.js";
+import { refreshQQBotImage } from "@/service/wiki";
 export default {
     name: "DefaultLayout",
     props: {
@@ -126,7 +130,7 @@ export default {
         logo() {
             const key = this.icon || this.slug;
             return __cdn + "logo/logo-light/" + key + ".svg";
-        }
+        },
     },
     methods: {
         hasPermission(permission) {
@@ -137,6 +141,29 @@ export default {
         },
         designTask() {
             bus.emit("openWikiPush", true);
+        },
+        pictureTask() {
+            const pathname = location.pathname;
+            const pattern = /\/([^/]+)\/view\/([\d_]+)/;
+            const match = pathname.match(pattern);
+            let task_type = "";
+            let task_target_id = "";
+            if (match) {
+                task_type = match[1];
+                task_target_id = match[2];
+            }
+            if (task_type && task_target_id) {
+                refreshQQBotImage({
+                    task_type,
+                    task_target_id,
+                }).then((res) => {
+                    if (!res.data.code) {
+                        this.$message.success("QQ机器人图片生成提交成功");
+                    }
+                });
+            } else {
+                this.$message.error("参数不正确");
+            }
         },
     },
 };
