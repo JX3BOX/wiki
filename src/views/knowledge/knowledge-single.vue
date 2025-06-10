@@ -10,6 +10,7 @@
         </div>
         <notice v-if="!isRobot"></notice>
         <div class="m-wiki" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
+            <WikiRobotTip type-name="通识" :reply="title"></WikiRobotTip>
             <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge.svg" />
@@ -92,6 +93,7 @@ import notice from "@/components/cj/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 import bus from "@/store/bus";
+import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 export default {
     name: "Detail",
@@ -118,6 +120,7 @@ export default {
         Comment,
         notice,
         wikiRobotBottom,
+        WikiRobotTip,
     },
     computed: {
         id: function () {

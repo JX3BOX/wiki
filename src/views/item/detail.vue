@@ -387,6 +387,7 @@
         </template>
 
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
+            <WikiRobotTip type-name="物品" :reply="source?.Name"></WikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/item.svg" />
@@ -476,6 +477,7 @@ import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import Notice from "@/components/cj/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
+import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
@@ -621,6 +623,7 @@ export default {
         Notice,
         wikiRobotBottom,
         GameText,
+        WikiRobotTip,
     },
     methods: {
         get_data() {

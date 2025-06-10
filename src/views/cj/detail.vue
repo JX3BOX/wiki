@@ -4,6 +4,7 @@
 
         <Notice v-if="!isRobot"></Notice>
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
+            <WikiRobotTip type-name="成就" :reply="source?.Name"></WikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/cj/achievement.svg" />
@@ -88,7 +89,6 @@ import WikiComments from "@/components/wiki-comments.vue";
 import AchievementSingle from "@/components/cj/achievement-single.vue";
 import Relations from "@/components/relations.vue";
 import Notice from "@/components/cj/notice.vue";
-import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
@@ -101,6 +101,7 @@ import bus from "@/store/bus.js";
 
 import { get_achievement } from "@/service/achievement";
 import WikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
+import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 export default {
     name: "Detail",
     components: {
@@ -112,7 +113,7 @@ export default {
         Article,
         Notice,
         WikiRobotBottom,
-        wikiRobotBottom,
+        WikiRobotTip,
     },
     props: {
         sourceId: {

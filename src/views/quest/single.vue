@@ -256,6 +256,7 @@
             </el-tabs>
         </div>
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
+            <wikiRobotTip type-name="任务" :reply="quest.name"></wikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline :src="icon" />
@@ -337,6 +338,7 @@ import ItemIcon from "@/components/common/item-icon.vue";
 import QuestDialog from "@/components/quest/single/quest-dialog.vue";
 import Notice from "@/components/quest/single/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
+import wikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat.js";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
@@ -380,6 +382,7 @@ export default {
         WikiComments,
         Notice,
         wikiRobotBottom,
+        wikiRobotTip,
     },
     data() {
         return {
