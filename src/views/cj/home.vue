@@ -20,7 +20,7 @@
                         <Counter></Counter>
                     </li>
                     <li class="u-qlink">
-                        <a target="_blank" href="/wiki/achievement/overview" style="background-color: #f7b044">
+                        <a target="_blank" href="/achievement/overview" style="background-color: #f7b044">
                             <i class="el-icon-notebook-1"></i>
                             <span>资历宝典</span>
                         </a>
