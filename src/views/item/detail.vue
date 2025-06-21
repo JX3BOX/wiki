@@ -10,7 +10,7 @@
                             :class="{ white: source.Quality == 1 }"
                             v-text="source.Name"
                             :style="{
-                                color: item_color(source.Quality),
+                                color: source.Quality ? item_color(source.Quality) : '#808080',
                             }"
                         ></div>
                         <template v-if="source.MaxStrengthLevel">
