@@ -12,23 +12,17 @@ module.exports = {
             template: "public/index.html",
             filename: "index.html",
         },
-        quest: {
-            title: "任务百科 - JX3BOX",
-            template: "public/index.html",
-            entry: "src/pages/quest.js",
-            filename: "quest/index.html",
-        },
         wiki: {
             title: "成就总览 - JX3BOX",
             template: "public/index.html",
             entry: "src/pages/wiki.js",
             filename: "wiki/index.html",
         },
-        knowledge: {
-            title: "通识百科 - JX3BOX",
+        cj: {
+            title: "成就百科 - JX3BOX",
             template: "public/index.html",
-            entry: "src/pages/knowledge.js",
-            filename: "knowledge/index.html",
+            entry: "src/pages/cj.js",
+            filename: "cj/index.html",
         },
         item: {
             title: "物品百科 - JX3BOX",
@@ -36,11 +30,17 @@ module.exports = {
             entry: "src/pages/item.js",
             filename: "item/index.html",
         },
-        cj: {
-            title: "成就百科 - JX3BOX",
+        quest: {
+            title: "任务百科 - JX3BOX",
             template: "public/index.html",
-            entry: "src/pages/cj.js",
-            filename: "cj/index.html",
+            entry: "src/pages/quest.js",
+            filename: "quest/index.html",
+        },
+        knowledge: {
+            title: "通识百科 - JX3BOX",
+            template: "public/index.html",
+            entry: "src/pages/knowledge.js",
+            filename: "knowledge/index.html",
         },
         macros: {
             title: "云端宏排行榜 - JX3BOX",
