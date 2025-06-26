@@ -256,7 +256,7 @@
             </el-tabs>
         </div>
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
-            <wikiRobotTip type-name="任务" :reply="quest.name"></wikiRobotTip>
+            <wikiRobotTip v-if="!isRobot" type-name="任务" :reply="quest.name"></wikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline :src="icon" />

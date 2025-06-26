@@ -4,7 +4,7 @@
 
         <Notice v-if="!isRobot"></Notice>
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
-            <WikiRobotTip type-name="成就" :reply="source?.Name"></WikiRobotTip>
+            <WikiRobotTip v-if="!isRobot" type-name="成就" :reply="source?.Name"></WikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/cj/achievement.svg" />

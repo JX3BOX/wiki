@@ -47,8 +47,6 @@
                 }
             }
 
-            .u-push{}
-
             .u-more {
                 color: @color-link;
             }
@@ -85,6 +83,7 @@
         .u-value {
             .dbi;
             vertical-align: middle;
+            color: #6c645c;
         }
 
         .u-meta {
@@ -136,6 +135,24 @@
             img {
                 .w(100%);
                 .h(auto);
+            }
+        }
+        .u-more {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            // background-color: #212429;
+            color: #666;
+            font-size: 12px;
+            height: 24px;
+            line-height: 24px;
+            min-width: 24px;
+            box-sizing: border-box;
+            // padding: 0 6px;
+            .r(50%);
+
+            &:last-child {
+                .mr(0);
             }
         }
 

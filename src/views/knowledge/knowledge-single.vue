@@ -10,7 +10,7 @@
         </div>
         <notice v-if="!isRobot"></notice>
         <div class="m-wiki" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
-            <WikiRobotTip type-name="通识" :reply="title"></WikiRobotTip>
+            <WikiRobotTip v-if="!isRobot" type-name="通识" :reply="title"></WikiRobotTip>
             <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge.svg" />

@@ -387,7 +387,7 @@
         </template>
 
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
-            <WikiRobotTip type-name="物品" :reply="source?.Name"></WikiRobotTip>
+            <WikiRobotTip v-if="!isRobot" type-name="物品" :reply="source?.Name"></WikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/item.svg" />

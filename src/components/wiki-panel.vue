@@ -37,6 +37,7 @@
                         >
                             <img :src="thumbnail_url(user.avatar)" :alt="user.nickname" :title="user.nickname" />
                         </a>
+                        <span v-if="wikiPost.users.length > 5" class="u-more">+{{ wikiPost.users.length - 5 }}人</span>
                     </div>
                     <!-- 综合难度 -->
                     <div class="u-meta" v-if="wikiPost.post && wikiPost.post.level">

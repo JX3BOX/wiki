@@ -40,7 +40,7 @@ export default {
     flex-wrap: wrap;
     gap: 48px;
     width: 100%;
-    height: 40px;
+    min-height: 40px;
     opacity: 1;
     padding: 8px 12px;
     box-sizing: border-box;
@@ -52,6 +52,9 @@ export default {
     color: #fff;
 
     font-size: 12px;
+    @media screen and (max-width: @phone) {
+        gap: 10px;
+    }
     .u-qq {
         display: inline-flex;
         justify-content: center;
