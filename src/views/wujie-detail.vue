@@ -67,7 +67,7 @@
                         <img class="u-icon" src="@/assets/img/wujie/strategy.svg" svg-inline alt="成就攻略" />
                         <div class="u-title">成就攻略</div>
                     </div>
-
+                    <WikiRobotTip class="m-wujie-cj-qqbot-tip" type-name="成就" :reply="source?.Name"></WikiRobotTip>
                     <div class="m-detail">
                         <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
                             <WikiPanel :wiki-post="wiki_post">
@@ -155,12 +155,14 @@ import { getAchievementsTotal, get_achievement } from "@/service/achievement";
 import WikiPanel from "@/components/wiki-panel.vue";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import WikiComments from "@/components/wiki-comments.vue";
+import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 export default {
     name: "WujieDetail",
     components: {
         WikiPanel,
         Article,
         WikiComments,
+        WikiRobotTip,
     },
     data() {
         return {
@@ -299,12 +301,13 @@ export default {
                         },
                     });
 
-                    User.isLogin() && postHistory({
-                        source_type: "wujie",
-                        source_id: ~~this.id,
-                        link: location.href,
-                        title: post.title,
-                    });
+                    User.isLogin() &&
+                        postHistory({
+                            source_type: "wujie",
+                            source_id: ~~this.id,
+                            link: location.href,
+                            title: post.title,
+                        });
                 });
 
                 wiki.versions({ type: "achievement", id: this.id }, { client: this.client }).then(

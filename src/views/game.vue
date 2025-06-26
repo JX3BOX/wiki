@@ -4,6 +4,13 @@
             <div class="m-warning" :class="{ none: !warning }">❌ 您的浏览器版本太低,将无法正常使用本应用</div>
             <!-- 公告 -->
             <Notice class="m-game-notice"></Notice>
+            <!-- 机器人成就提示 -->
+            <WikiRobotTip
+                class="m-game-qqbot-tip"
+                v-if="type === 'cj'"
+                type-name="成就"
+                :reply="wikiPost.source?.Name"
+            ></WikiRobotTip>
             <!-- 百科 -->
             <WikiContent v-if="type !== 'price'" :wiki-post="wikiPost" :compatible="compatible" />
             <!-- 物品价格 -->
@@ -43,6 +50,7 @@ import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import { postStat } from "@jx3box/jx3box-common/js/stat";
 import Notice from "@/components/cj/notice.vue";
 import GameLayout from "@/layout/game-layout.vue";
+import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 export default {
     name: "Wiki",
@@ -55,6 +63,7 @@ export default {
         GameLayout,
         Notice,
         Price,
+        WikiRobotTip,
     },
     data() {
         return {

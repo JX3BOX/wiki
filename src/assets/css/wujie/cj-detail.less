@@ -10,6 +10,22 @@ body {
     padding: 12px 0;
     box-sizing: border-box;
     overflow: hidden;
+    .m-wujie-cj-qqbot-tip {
+        background: linear-gradient(180deg, rgba(10, 13, 15, 1) 0%, rgba(25, 33, 38, 1) 100%);
+        border: 0.5px solid rgba(70, 79, 84, 1);
+        font-size: 9px;
+        .u-qq {
+            width: 76px;
+            height: 16px;
+            .u-icon {
+                .size(14px);
+            }
+        }
+        .u-reply {
+            height: 16px;
+            line-height: 12px;
+        }
+    }
 }
 .m-header {
     width: 100%;
@@ -26,8 +42,8 @@ body {
     gap: 4px;
     width: 60%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(127, 152, 167, 1) 0%, rgba(127, 152, 167, 0) 100%);
-    padding-left: 24px + 34px + 5px;
+    background: linear-gradient(90deg, rgba(65, 99, 120, 1) 0%, rgba(32, 53, 66, 0) 100%);
+    padding-left: 63px;
     box-sizing: border-box;
     .pr;
     .m-logo {
@@ -41,14 +57,14 @@ body {
         margin: 3px;
     }
     .u-title {
-        .fz(15px,20px);
+        .fz(16px,20px);
         font-weight: 700;
         color: #fff;
         padding: 2px 0;
     }
     .u-stat {
-        font-size: 12px;
-        color: #ceeef8;
+        font-size: 10px;
+        color: rgba(206, 238, 248, 1);
         font-weight: 400;
         white-space: nowrap;
         transform: scale(0.8);
@@ -72,8 +88,9 @@ body {
     .flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(180deg, rgba(86, 127, 153, 1) 0%, rgba(150, 194, 221, 1) 100%);
-    border: 1px solid rgba(173, 195, 199, 1);
+    background: linear-gradient(180deg, rgba(29, 54, 66, 1) 0%, rgba(62, 96, 117, 1) 100%);
+
+    border: 0.5px solid rgba(173, 195, 199, 1);
     font-size: 12px;
     font-weight: 700;
     color: #fff;
@@ -149,9 +166,9 @@ body {
             font-weight: 400;
             color: rgba(206, 238, 248, 1);
 
-            border: 1px solid rgba(124, 140, 146, 1);
+            border: 0.5px solid rgba(145, 160, 171, 1);
 
-            background: linear-gradient(180deg, rgba(118, 142, 153, 1) 0%, rgba(64, 84, 97, 1) 100%);
+            background: linear-gradient(180deg, rgba(39, 57, 69, 1) 0%, rgba(19, 26, 33, 1) 100%);
         }
         .u-content {
             margin-top: 0;
@@ -177,7 +194,9 @@ body {
                 justify-content: center;
                 border-radius: 0;
                 padding: 0;
-                background: linear-gradient(90deg, rgba(122, 158, 181, 1) 0%, rgba(150, 194, 221, 1) 100%);
+                background: rgba(65, 99, 120, 1);
+
+                border: 0.5px solid rgba(173, 195, 199, 1);
             }
         }
         .u-reply-left {
@@ -260,12 +279,12 @@ body {
     }
     .m-detail {
         width: 100%;
-        padding: 2px;
         height: 100%;
         padding-bottom: 40px;
         overflow-y: auto;
         box-sizing: border-box;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(199, 221, 235, 0.75) 100%);
+        // background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(199, 221, 235, 0.75) 100%);
+        background-color: #c0ccd5;
     }
     .m-meta-list {
         .flex;
@@ -273,10 +292,12 @@ body {
         height: 16px;
         align-items: center;
         padding: 0 10px;
+        margin: 2px 0;
         box-sizing: border-box;
         width: 100%;
         color: #fff;
         background: linear-gradient(90deg, rgba(51, 67, 76, 1) 0%, rgba(125, 161, 185, 1) 100%);
+
         .m-user-info {
             // width: 50%;
             width: 120px;
@@ -325,7 +346,7 @@ body {
         .none;
     }
     .c-wiki-panel .m-panel-body {
-        padding: 2px;
+        padding: 0;
         font-weight: 400;
         font-size: 10px;
         color: #000;
@@ -353,13 +374,13 @@ body {
         gap: 28px;
         width: 100%;
         overflow-x: auto;
+        overflow-y: hidden;
         margin-bottom: 12px;
     }
     .u-series {
         position: relative;
         flex: none;
         background: rgba(255, 255, 255, 0.2);
-        border: 0.5px solid rgba(255, 255, 255, 1);
         border-radius: 2px;
         min-width: 180px;
         height: 26px;
@@ -376,6 +397,9 @@ body {
             border-left: 4px solid #3a97eb;
             border-top-left-radius: 2px;
             border-bottom-left-radius: 2px;
+        }
+        &.active {
+            border: 0.5px solid rgba(255, 255, 255, 1);
         }
         &.active:before {
             border-color: #f3b252;
