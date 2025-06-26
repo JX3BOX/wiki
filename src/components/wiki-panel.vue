@@ -74,7 +74,7 @@ import DesignTask from "@jx3box/jx3box-common-ui/src/bread/DesignTask.vue";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
-    name: "WikiPost",
+    name: "WikiPanel",
     props: {
         wikiPost: {
             type: [Object, String],
