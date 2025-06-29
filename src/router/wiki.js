@@ -6,31 +6,25 @@ Vue.use(VueRouter);
 
 const routes = [
     {
-        name: "wiki",
-
-        path: "/",
-        redirect: "/achievement/overview",
-    },
-    {
         name: "overview",
-        path: "/achievement/overview",
+        path: "/overview",
         component: () => import("../views/wiki/overview.vue"),
     },
     {
         name: "compare",
-        path: "/achievement/overview/compare",
+        path: "/compare",
         component: () => import("../views/wiki/compare.vue"),
     },
     {
         name: "leap",
-        path: "/achievement/overview/leap",
+        path: "/leap",
         component: () => import("../views/wiki/leap.vue"),
     },
 ];
 
 const router = new VueRouter({
     mode: "history",
-    base: "/wiki",
+    base: "/achievement",
     routes,
 });
 
