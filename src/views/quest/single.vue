@@ -204,7 +204,7 @@
                     <img src="@/assets/img/quest_desc_robot.svg" class="u-title-img" />
                     <div class="u-title">任务描述</div>
                 </div>
-                <div class="u-desc" v-html="questDesc"></div>
+                <div class="u-desc u-quest-desc" v-html="questDesc.replaceAll('&emsp;', '')"></div>
             </div>
             <div class="m-quest-target__reward">
                 <div class="m-quest-target">
@@ -229,13 +229,14 @@
                     <div class="u-target-sub" v-for="(questValue, i) in quest.questValues" :key="questValue + i">
                         <span>{{ questValue.str }} x {{ questValue.value }}</span>
                     </div>
-                    <p class="u-content" v-html="targetDesc"></p>
+                    <p class="u-content" v-html="targetDesc.replaceAll('&emsp;', '')"></p>
                 </div>
                 <div class="m-quest-reward">
                     <div class="u-title">任务奖励</div>
-                    <div class="u-reward-list">
+                    <div class="u-reward-list" v-if="quest.rewards?.length">
                         <reward-item v-for="(reward, i) in quest.rewards" :key="i" :reward="reward"></reward-item>
                     </div>
+                    <div class="u-reward-list no-data" v-else>该任务无奖励</div>
                 </div>
             </div>
         </div>

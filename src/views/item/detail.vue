@@ -23,6 +23,7 @@
                         </template>
                     </div>
                     <div class="u-bottom">
+                        <span class="u-from">ID: {{ source.id }}</span>
                         <!-- 装备类型 -->
                         <div class="u-usage" v-if="show_equip_usage">
                             <template v-if="source.EquipUsage == 1">
@@ -70,7 +71,6 @@
                         v-text="'推荐门派：' + source.Recommend"
                     ></div>
                 </div>
-
                 <!-- 装备属性 -->
                 <div class="m-attributes" v-if="source.attributes && source.attributes.length">
                     <!-- 白色 -->
@@ -196,6 +196,9 @@
                 <p v-if="source.Desc" class="u-desc">
                     <game-text :client="client" :text="source.Desc"></game-text>
                 </p>
+
+                <!-- 五彩石属性 -->
+                <div class="m-attributes m-wucai-attributes" v-if="source.WuCaiHtml" v-html="source.WuCaiHtml"></div>
             </div>
         </div>
         <template v-if="!isRobot">
