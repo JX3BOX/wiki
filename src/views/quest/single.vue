@@ -180,7 +180,7 @@
                                 >({{ quest.start.type | pointType }}ID: {{ quest.start.id | idFilter }})</span
                             >
                         </p>
-                        <img class="u-quest-to" src="@/assets/img/quest-to.svg" />
+                        <!-- <img class="u-quest-to" src="@/assets/img/quest-to.svg" /> -->
                         <p class="u-endpoint">
                             <span class="u-endpoint-label">任务终点: </span>
                             <span class="u-endpoint-name">{{ quest.end.mapName }}</span>
