@@ -12,7 +12,7 @@ module.exports = {
             template: "public/index.html",
             filename: "index.html",
         },
-        wiki: {
+        achievement: {
             title: "成就总览 - JX3BOX",
             template: "public/index.html",
             entry: "src/pages/wiki.js",
