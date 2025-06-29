@@ -63,11 +63,17 @@
                 </div>
                 <!-- 攻略 -->
                 <div class="m-strategy">
-                    <div class="m-title">
-                        <img class="u-icon" src="@/assets/img/wujie/strategy.svg" svg-inline alt="成就攻略" />
-                        <div class="u-title">成就攻略</div>
+                    <div class="m-title-wrapper">
+                        <div class="m-title">
+                            <img class="u-icon" src="@/assets/img/wujie/strategy.svg" svg-inline alt="成就攻略" />
+                            <div class="u-title">成就攻略</div>
+                        </div>
+                        <WikiRobotTip
+                            class="m-wujie-cj-qqbot-tip"
+                            type-name="成就"
+                            :reply="source?.Name"
+                        ></WikiRobotTip>
                     </div>
-                    <WikiRobotTip class="m-wujie-cj-qqbot-tip" type-name="成就" :reply="source?.Name"></WikiRobotTip>
                     <div class="m-detail">
                         <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
                             <WikiPanel :wiki-post="wiki_post">
