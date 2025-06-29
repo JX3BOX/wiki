@@ -6,6 +6,11 @@ Vue.use(VueRouter);
 
 const routes = [
     {
+        name: "index",
+        path: "/",
+        redirect: "/overview",
+    },
+    {
         name: "overview",
         path: "/overview",
         component: () => import("../views/wiki/overview.vue"),
