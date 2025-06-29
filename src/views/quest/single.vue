@@ -198,6 +198,7 @@
                         </p>
                     </div>
                 </div>
+                <img src="@/assets/img/quest_robot.svg" class="u-item-img__right" />
             </div>
             <div class="m-quest-desc">
                 <div class="u-desc-title">

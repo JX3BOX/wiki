@@ -13,6 +13,7 @@
                                 color: source.Quality ? item_color(source.Quality) : '#808080',
                             }"
                         ></div>
+                        <span class="u-id">(ID: {{ source.id }})</span>
                         <template v-if="source.MaxStrengthLevel">
                             <img
                                 src="@/assets/img/star.svg"
@@ -23,7 +24,6 @@
                         </template>
                     </div>
                     <div class="u-bottom">
-                        <span class="u-from">ID: {{ source.id }}</span>
                         <!-- 装备类型 -->
                         <div class="u-usage" v-if="show_equip_usage">
                             <template v-if="source.EquipUsage == 1">
