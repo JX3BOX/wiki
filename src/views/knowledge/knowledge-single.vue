@@ -23,7 +23,7 @@
                     </a>
                 </template>
                 <template slot="body">
-                    <Article :content="content" />
+                    <Article id="wikiArticle" :content="content" />
                 </template>
             </WikiPanel>
 
@@ -111,6 +111,11 @@ export default {
         return {
             loading: false,
             data: "",
+
+            imageCount: 0,
+            loadedImageCount: 0,
+            images: [],
+            imagesLoaded: false,
         };
     },
     components: {
@@ -168,9 +173,112 @@ export default {
         onSearchKey(val) {
             this.$router.push({ path: "/", query: { search: val } });
         },
-        getData() {
+        initImageLoader() {
+            // 在DOM更新后获取所有图片
+            this.$nextTick(() => {
+                const container = document.getElementById("wikiArticle");
+                if (!container) {
+                    this.setGlobalReady();
+                    return;
+                }
+
+                const images = container.querySelectorAll("img");
+                this.images = images;
+                this.imageCount = images.length;
+
+                if (this.imageCount === 0) {
+                    this.setGlobalReady();
+                    return;
+                }
+
+                // 手动预加载所有图片
+                this.preloadAllImages(images);
+            });
+        },
+
+        // 手动预加载所有图片
+        preloadAllImages(images) {
+            let loadedInThisBatch = 0;
+            let totalProcessed = 0;
+            Array.from(images).forEach((img, index) => {
+                // 记录原始src
+                const originalSrc = img.src;
+
+                // 如果图片未加载
+                if (!img.complete) {
+                    // 创建一个Image对象来预加载
+                    const tempImg = new Image();
+
+                    tempImg.onload = () => {
+                        loadedInThisBatch++;
+
+                        // 在临时图片加载完成后，设置原始图片的src
+                        img.src = originalSrc;
+
+                        // 检查是否所有图片都已处理
+                        this.checkImageLoadCompletion(images, loadedInThisBatch);
+                    };
+
+                    tempImg.onerror = () => {
+                        console.error(`图片加载失败: ${originalSrc}`);
+                        totalProcessed++;
+
+                        // 即使加载失败，也要设置原始图片的src
+                        img.src = originalSrc;
+
+                        // 标记原始图片为已加载（错误情况）
+                        this.handleImageLoad();
+                    };
+
+                    // 开始预加载
+                    tempImg.src = originalSrc;
+                } else {
+                    // 图片已经加载完成
+                    this.handleImageLoad();
+                    totalProcessed++;
+                }
+            });
+        },
+
+        // 检查图片加载状态
+        checkImageLoadCompletion(images, loadedCount) {
+            if (images.length === this.loadedImageCount) {
+                this.setGlobalReady();
+                return;
+            }
+
+            // 设置超时检查，防止意外情况
+            setTimeout(() => {
+                const allLoaded = Array.from(images).every((img) => img.complete);
+
+                if (allLoaded) {
+                    this.setGlobalReady();
+                } else if (this.loadedImageCount === images.length) {
+                    this.setGlobalReady();
+                }
+            }, 3000);
+        },
+
+        // 判断是否全部完成
+        handleImageLoad() {
+            this.loadedImageCount++;
+            if (this.loadedImageCount === this.imageCount) {
+                this.setGlobalReady();
+            }
+        },
+
+        // 设置全局就绪状态
+        setGlobalReady() {
+            if (this.imagesLoaded) return; // 避免重复设置
+
+            this.imagesLoaded = true;
+            window.__READY__ = true;
+            console.log("全局状态设置成功: __READY__ = ", window.__READY__);
+        },
+        async getData() {
             this.loading = true;
-            wiki.get({ type: "knowledge", id: this.id })
+            await wiki
+                .get({ type: "knowledge", id: this.id })
                 .then((res) => {
                     this.data = res.data.data;
                     if (this.data.source) this.data.source.post = this.data.post;
@@ -186,10 +294,13 @@ export default {
                 .finally(() => {
                     this.loading = false;
                     postStat(this.type, this.id);
-
-                    // TEST:请注意，为防止QQBOT无法抓取完全，请不要删除本行
-                    window.__READY__ = true;
                 });
+
+            // 请注意，为防止QQBOT无法抓取完全，请不要删除
+            if (this.isRobot) {
+                // 数据加载后启动奇遇流程中的图片检测
+                this.initImageLoader();
+            }
         },
         getPostData() {
             this.loading = true;
@@ -211,6 +322,9 @@ export default {
             }
         },
         publishLink,
+    },
+    beforeUnmount() {
+        window.removeEventListener("load", this.initImageLoader);
     },
     mounted() {
         bus.on("openWikiPush", (param) => {
