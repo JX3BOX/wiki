@@ -256,7 +256,9 @@
                             </li>
                             <li class="m-other-field">
                                 <span class="u-label">可否交易</span>
-                                <span class="u-value">{{ source.CanTrade ? "✔️ 可以" : "❌ 不可以" }}</span>
+                                <span class="u-value">{{
+                                    [1, 2].includes(source.BindType) ? "✔️ 可以" : "❌ 不可以"
+                                }}</span>
                             </li>
                             <li>
                                 <span class="u-label">回购价格</span>
