@@ -40,6 +40,8 @@ const matchList = [
 ];
 
 export function getItemAuc(item) {
-    const match = matchList.find((match) => match.pattern(item));
+    const match = matchList.find(
+        (match) => match.pattern(item) && (match.auc[0] < 0 || match.auc[0] === item.AucGenre)
+    );
     return match?.auc;
 }
