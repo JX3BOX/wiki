@@ -494,6 +494,7 @@ import { publishLink, ts2str, showAvatar, iconLink } from "@jx3box/jx3box-common
 import { getManufactureDetail, getItemDetail } from "@/service/item";
 import { getMyInfo } from "@/service/user";
 import { get_item, show_item_prices } from "@/service/item";
+import { getItemAuc } from "@/utils/item.js";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -899,8 +900,17 @@ export default {
                     this.activeTab = item && item.BindType != 3 ? DEFAULT_ACTIVE_TAB : "relation-plans";
                 }
                 if (this.$store.state.sidebar) {
-                    this.$store.state.sidebar.AucGenre = Number(item.AucGenre);
-                    this.$store.state.sidebar.AucSubTypeID = Number(item.AucSubType);
+                    if (!item || !item.AucGenre || !item.AucSubType) {
+                        this.$store.state.sidebar.AucGenre = 0;
+                        this.$store.state.sidebar.AucSubTypeID = 0;
+                        return;
+                    }
+                    const [customAucGenre, customAucSubType] = getItemAuc(item) || [];
+                    const targetAucGenre = customAucGenre || item.AucGenre;
+                    const targetAucSubType = customAucSubType || item.AucSubType;
+                    
+                    this.$store.state.sidebar.AucGenre = Number(targetAucGenre);
+                    this.$store.state.sidebar.AucSubTypeID = Number(targetAucSubType);
                 }
 
                 this.get_data();
