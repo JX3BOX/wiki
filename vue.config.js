@@ -1,7 +1,7 @@
 const path = require("path");
 const pkg = require("./package.json");
 const { JX3BOX, SEO } = require("@jx3box/jx3box-common");
-const Setting = require("./setting.json");
+const VueProxyPlugin = require("@jx3box/jx3box-fe-proxy");
 
 module.exports = {
     //❤️ Multiple pages ~
@@ -57,97 +57,33 @@ module.exports = {
     },
 
     // ❤️ Porxy ~
-    // devServer: {
-        // proxy: {
-            // "/api/inspire": {
-            //     target: "https://pay.jx3box.com",
-            //     onProxyReq: function (request) {
-            //         request.setHeader("origin", "");
-            //     },
-            // },
-            // "/api/vip": {
-            //     target: "https://pay.jx3box.com",
-            //     onProxyReq: function (request) {
-            //         request.setHeader("origin", "");
-            //     },
-            // },
-            // "/api/summary": {
-            //     target: "https://next2.jx3box.com",
-            //     onProxyReq: function (request) {
-            //         request.setHeader("origin", "");
-            //     },
-            // },
-            // "/api/comment": {
-            //     target: "https://next2.jx3box.com",
-            //     onProxyReq: function (request) {
-            //         request.setHeader("origin", "");
-            //     },
-            // },
-            // "/api/cms": {
-            //     target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7100" : "https://cms.jx3box.com",
-            // },
-            // "/api/node": {
-            //     target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7002" : "https://node.jx3box.com",
-            // },
-            // "/api/team": {
-            //     target: "https://team.jx3box.com",
-            //     onProxyReq: function (request) {
-            //         request.setHeader("origin", "");
-            //     },
-            // },
-            // "/api/cny": {
-            //     target: "https://pay.jx3box.com/",
-            //     onProxyReq: function (request) {
-            //         request.setHeader("origin", "");
-            //     },
-            // },
-            // "/api": {
-            //     target: "https://next2.jx3box.com",
-            //     onProxyReq: function (request) {
-            //         request.setHeader("origin", "");
-            //     },
-            // },
-        // },
-    // },
-
-    //webpack配置
-    // configureWebpack: (config) => {
-    //     // 开启分离js
-    //     config.optimization = {
-    //         runtimeChunk: "single",
-    //         splitChunks: {
-    //             chunks: "all",
-    //             maxInitialRequests: Infinity,
-    //             minSize: 200000,
-    //             cacheGroups: {
-    //                 vendor: {
-    //                     test: /[\\/]node_modules[\\/]/,
-    //                     name(module) {
-    //                         // get the name. E.g. node_modules/packageName/not/this/part.js
-    //                         // or node_modules/packageName
-    //                         const packageName = module.context.match(
-    //                             /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-    //                         )[1];
-    //                         // npm package names are URL-safe, but some servers don't like @ symbols
-    //                         return `npm.${packageName.replace("@", "")}`;
-    //                     },
-    //                 },
-    //             },
-    //         },
-    //     };
-    //     // 取消webpack警告的性能提示
-    //     config.performance = {
-    //         hints: "warning",
-    //         //入口起点的最大体积
-    //         maxEntrypointSize: 50000000,
-    //         //生成文件的最大体积
-    //         maxAssetSize: 30000000,
-    //         //只给出 js 文件的性能提示
-    //         assetFilter: function(assetFilename) {
-    //             return assetFilename.endsWith(".js");
-    //         },
-    //     };
-    // },
+    devServer: {
+        proxy: {
+             ...VueProxyPlugin.generateBuiltinProxy(),
+            // 专门为直接的 /api/next2/ 路径配置代理到 dev.next2.jx3box.com
+            '/api/next2': {
+                target: 'https://dev.next2.jx3box.com',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api/next2': '/api/next2'
+                },
+                onProxyReq: function (request) {
+                    request.setHeader("origin", "");
+                },
+            },
+            '/api/summary-any': {
+                target: 'https://dev.next2.jx3box.com',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api/next2': '/api/next2'
+                },
+                onProxyReq: function (request) {
+                    request.setHeader("origin", "");
+                },
+            }
+        },
+        port: process.env.DEV_PORT || 12028, // 默认端口
+    },
 
     outputDir: process.env["BUILD_MODE"] == "preview" ? path.resolve(__dirname, pkg.name) : "dist", // 指定构建输出的目录
 
