@@ -38,7 +38,7 @@ export default {
     .flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 48px;
+    gap: 12px;
     width: 100%;
     min-height: 40px;
     opacity: 1;
