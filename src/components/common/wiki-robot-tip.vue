@@ -10,7 +10,7 @@
         <div class="m-reply">
             <span>回复</span>
             <span class="u-reply" @click="copy(`${typeName} ${reply}`)">{{ typeName }} {{ reply }}</span>
-            <span>即可快速获取一图流攻略！</span>
+            <span>获取一图流攻略</span>
         </div>
     </div>
 </template>
