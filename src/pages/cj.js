@@ -15,7 +15,7 @@ Vue.use(VueClipboard);
 
 import router from "../router/cj";
 import store from "../store/cj";
-import App from "../views/cj/index.vue";
+import App from "../views/base.vue";
 
 import reporter from "@jx3box/jx3box-common/js/reporter";
 reporter.install(Vue);
