@@ -51,11 +51,13 @@
                     <div class="u-action" @click="() => (userSelectShow = true)">
                         <img src="@/assets/img/cj/mobile/user.svg" svg-inline />
                     </div>
-                    <div class="u-action">
-                        <img src="@/assets/img/cj/mobile/menu.svg" svg-inline />
+                    <div class="u-action" @click="()=>$refs.suspendCommon.clickDrawer({ type: 'collect', text: '收藏' }, 1)">
+                        <img v-if="$refs.suspendCommon?.isCollect" src="@/assets/img/cj/mobile/collect_un.svg" svg-inline />
+                        <img v-else src="@/assets/img/cj/mobile/collect.svg" svg-inline  />
                     </div>
-                    <div class="u-action">
-                        <img src="@/assets/img/cj/mobile/map.svg" svg-inline />
+                    <div class="u-action" @click="()=> $refs.suspendCommon.clickDrawer({ type: 'pin', text: '固定按钮' }, 1)">
+                        <img v-if="$refs.suspendCommon?.fixIsActive" src="@/assets/img/cj/mobile/pin.svg" svg-inline />
+                        <img v-else src="@/assets/img/cj/mobile/pin_un.svg" svg-inline />
                     </div>
                 </div>
             </template>
@@ -127,7 +129,7 @@ export default {
             return !!this.$route.params.post_id;
         },
         author_id: function () {
-            return ~~this.wiki_post.post.user_id;
+            return ~~this.wiki_post.post?.user_id;
         },
         client: function () {
             return this.$store.state.client;
@@ -167,6 +169,21 @@ export default {
             return {
                 hideType: ['report'], //需要隐藏的type,如['search','pin']
                 direction: 'btt', //弹出框方向，btt、ttb、rtl、ltr
+                drawerTitle: this.source.Name,//弹出框标题
+                author: {
+                    name: this.author_info?.display_name, //作者名称
+                    avatar: this.author_info?.user_avatar, //作者头像
+                    author_id:this.author_id, //作者id
+                },
+                subscribeType: 'wiki', //订阅类型，用于区分调用百科、文章、作者、帖子等订阅接口，
+                postType: 'achievement',//订阅、收藏接口的type,如'face','bps','article'等
+                id: this.post_id, //页面数据ID，用于收藏订阅操作
+                title: this.source.Name || document.title || '', //默认固定标题,默认取页面标题
+                url: window.location.href, //默认取浏览器地址
+                laterOn: {
+                    author_id: this.author_id || 0, //作者id
+                    content_meta_id: this.post_id
+                }
             }
         },
         btnOptions(){
@@ -553,11 +570,15 @@ export default {
                 justify-content: center;
                 align-items: center;
                 flex: 1 0 0;
-
+                svg{
+                    height: 24px;
+                    width: 24px;
+                }
                 &.disabled {
                     img {
                         opacity: 0.5;
                     }
+
                 }
             }
         }
