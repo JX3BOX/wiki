@@ -620,11 +620,13 @@ export default {
                 getUserRoles().then((res) => {
                     this.roleList = res.data?.data?.list || [];
                     const wiki_last_sync_jx3id = localStorage.getItem("wiki_last_sync");
-                    if (!wiki_last_sync_jx3id || wiki_last_sync_jx3id === "0") {
-                        this.currentRole = this.roleList?.[0] || "";
+
+                    if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
+                        this.currentRole = this.roleList.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
                     } else {
-                        if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
-                            this.currentRole = this.roleList.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
+                        if (this.roleList.length) {
+                            this.currentRole = this.roleList[0];
+                            this.$store.commit("SET_STATE", { key: "role", value: this.currentRole });
                         } else {
                             this.currentRole = this.virtualRole;
                             this.$store.commit("SET_STATE", { key: "role", value: this.virtualRole });
