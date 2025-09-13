@@ -381,6 +381,7 @@ export default {
         currentRole: {
             deep: true,
             handler(val) {
+                console.log(val);
                 if (!val) return;
                 localStorage.setItem("wiki_last_sync", val.jx3id || 0);
                 this.$store.commit("SET_STATE", { key: "role", value: val });
@@ -619,12 +620,16 @@ export default {
                 getUserRoles().then((res) => {
                     this.roleList = res.data?.data?.list || [];
                     const wiki_last_sync_jx3id = localStorage.getItem("wiki_last_sync");
-                    if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
-                        this.currentRole = this.roleList.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
+                    if (!wiki_last_sync_jx3id || wiki_last_sync_jx3id === "0") {
+                        this.currentRole = this.roleList?.[0] || "";
                     } else {
-                        this.currentRole = this.virtualRole;
-                        this.$store.commit("SET_STATE", { key: "role", value: this.virtualRole });
-                        this.loadVirtualAchievements();
+                        if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
+                            this.currentRole = this.roleList.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
+                        } else {
+                            this.currentRole = this.virtualRole;
+                            this.$store.commit("SET_STATE", { key: "role", value: this.virtualRole });
+                            this.loadVirtualAchievements();
+                        }
                     }
                 });
         },
