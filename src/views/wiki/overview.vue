@@ -380,6 +380,7 @@ export default {
         },
         currentRole: {
             deep: true,
+            immediate: true,
             handler(val) {
                 console.log(val);
                 if (!val) return;
@@ -433,10 +434,12 @@ export default {
                 return;
             }
             const uid = User.getInfo().uid;
+            console.log("uid,", uid);
             uid &&
                 getUserInfo(uid).then((res) => {
                     if (res.data.code == 0) {
                         this.userInfo = res.data.data;
+                        console.log("userInfo,", this.userInfo);
                         this.loadData();
                     }
                 });
