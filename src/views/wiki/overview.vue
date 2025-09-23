@@ -98,7 +98,7 @@
 
             <el-dropdown trigger="click">
                 <div class="u-toggle-btn">
-                    <span>切换</span>
+                    <span>角色</span>
                     <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" width="16px" height="16px" />
                 </div>
                 <el-dropdown-menu slot="dropdown">
@@ -116,7 +116,7 @@
                                 active: role.jx3id === currentRole.jx3id,
                             }"
                         >
-                            <span>{{ role.name }}</span>
+                            <span>{{ role.name }}·</span>
                             <span>{{ role.server }}</span>
                         </div>
                     </el-dropdown-item>
@@ -275,7 +275,6 @@
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon, iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
-
 import {
     getAchievementPoints,
     getVirtualRoleAchievements,
@@ -403,8 +402,8 @@ export default {
     },
 
     mounted() {
-        console.log("Agent:", navigator.userAgent.toLowerCase());
         this.getUserInfo();
+        this.loadData();
     },
     methods: {
         iconLink,
@@ -438,7 +437,7 @@ export default {
                 getUserInfo(uid).then((res) => {
                     if (res.data.code == 0) {
                         this.userInfo = res.data.data;
-                        this.loadData();
+                        // this.loadData();
                     }
                 });
         },
@@ -1186,7 +1185,9 @@ export default {
     .m-achievement-content {
         width: 100%;
         min-width: 100%;
-        margin-left: 10px;
+        margin-left: 0;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
     .m-achievement-main {
         margin-top: 0;
