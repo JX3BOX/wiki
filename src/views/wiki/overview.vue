@@ -374,6 +374,7 @@ export default {
         // },
         "$store.state.achievements": {
             deep: true,
+            immediate: true,
             handler(val) {
                 this.getRenderList();
             },
@@ -382,7 +383,6 @@ export default {
             deep: true,
             immediate: true,
             handler(val) {
-                console.log(val);
                 if (!val) return;
                 localStorage.setItem("wiki_last_sync", val.jx3id || 0);
                 this.$store.commit("SET_STATE", { key: "role", value: val });
@@ -404,6 +404,7 @@ export default {
     },
 
     mounted() {
+        console.log("mounted", this.$store.state.achievements);
         this.getUserInfo();
     },
     methods: {
@@ -426,6 +427,7 @@ export default {
             }
         },
         getUserInfo() {
+            console.log("登录，", User.isLogin());
             if (!User.isLogin()) {
                 this.$confirm("请先登录").then((_) => {
                     User.toLogin(window.location.href);
@@ -434,12 +436,10 @@ export default {
                 return;
             }
             const uid = User.getInfo().uid;
-            console.log("uid,", uid);
             uid &&
                 getUserInfo(uid).then((res) => {
                     if (res.data.code == 0) {
                         this.userInfo = res.data.data;
-                        console.log("userInfo,", this.userInfo);
                         this.loadData();
                     }
                 });
