@@ -124,9 +124,9 @@
             </el-dropdown>
         </div>
         <!-- 移动端查看总览位置 -->
-        <div class="u-overview_mobile" :class="{ isScroll }" v-show="mobile" @click="onSeeOverview">
+        <!-- <div class="u-overview_mobile" :class="{ isScroll }" v-show="mobile" @click="onSeeOverview">
             <i class="el-icon-back"></i>{{ showList ? "返回" : "返回总览" }}
-        </div>
+        </div> -->
         <div
             ref="overviewList"
             class="m-overview-main"
@@ -319,7 +319,7 @@ export default {
     computed: {
         mobile() {
             const userAgent = navigator.userAgent.toLowerCase();
-            const mobileKeywords = ["android", "iphone", "ipad", "ipod", "windows phone"];
+            const mobileKeywords = ["android", "iphone", "ipad", "ipod", "windows phone", "miniprogram"];
             return mobileKeywords.some((keyword) => userAgent.includes(keyword));
         },
         avatar_frame() {
@@ -374,7 +374,6 @@ export default {
         // },
         "$store.state.achievements": {
             deep: true,
-            immediate: true,
             handler(val) {
                 this.getRenderList();
             },
@@ -404,7 +403,7 @@ export default {
     },
 
     mounted() {
-        console.log("mounted", this.$store.state.achievements);
+        console.log("Agent:", navigator.userAgent.toLowerCase());
         this.getUserInfo();
     },
     methods: {
@@ -427,7 +426,6 @@ export default {
             }
         },
         getUserInfo() {
-            console.log("登录，", User.isLogin());
             if (!User.isLogin()) {
                 this.$confirm("请先登录").then((_) => {
                     User.toLogin(window.location.href);
@@ -855,6 +853,7 @@ export default {
         .bold(900);
         color: #fff;
         text-decoration: underline;
+        z-index: 9;
         &.isScroll {
             bottom: 92px;
         }
@@ -972,6 +971,7 @@ export default {
             height: calc(100vh - 60px);
             .db;
             .pr(0);
+            .pb(100px);
             &::-webkit-scrollbar {
                 /* 设置滚动条的宽度 */
                 width: 0;
@@ -1147,6 +1147,7 @@ export default {
     padding: 12px 12px 12px 12px;
     box-sizing: border-box;
     background: rgba(247, 247, 247, 1);
+    z-index: 9;
     .m-box_bottom {
         .flex;
         justify-content: space-between;
