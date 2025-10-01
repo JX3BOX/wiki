@@ -50,7 +50,7 @@
 
 <script>
 import { getMapScales } from "@jx3box/jx3box-map/src/service/data.js";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 
 export default {
     name: "QuestMap",

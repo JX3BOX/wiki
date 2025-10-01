@@ -212,7 +212,7 @@ import WikiItem from "@/components/common/wiki-item.vue";
 
 import { iconLink, showAvatar } from "@jx3box/jx3box-common/js/utils";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
-import { __iconPath, feedback } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __iconPath, feedback } from "@/utils/config";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { get_newest_items, get_items_by_node } from "@/service/item.js";
 import { date_format, star } from "@/filters";

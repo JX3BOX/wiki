@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __OriginRoot } from "@/utils/config";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";

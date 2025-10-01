@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { __Links, __ossRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Links, __ossRoot } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user.js";
 import MyPlans from "@/components/item/my-plans.vue";
 import MyItems from "@/components/item/my-items.vue";

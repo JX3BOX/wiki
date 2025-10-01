@@ -57,7 +57,7 @@
 
 <script>
 import { getMyPlans, addMyPlan } from "@/service/item-plan.js";
-import { __Links } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Links } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { date_format } from "@/filters";
 import bus from "@/store/bus";

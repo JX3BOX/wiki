@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import { feedback } from "@jx3box/jx3box-common/data/jx3box.json";
+import { feedback } from "@/utils/config";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { iconLink, showAvatar, getLink } from "@jx3box/jx3box-common/js/utils";

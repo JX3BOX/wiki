@@ -99,7 +99,7 @@ import ItemIcon from "@/components/common/item-icon.vue";
 import Equip from "@/components/item/equip.vue";
 import WikiPanel from "@/components/wiki-panel.vue";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
-import { __Links, default_avatar } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Links, default_avatar } from "@/utils/config";
 import { showAvatar, authorLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import bus from "@/store/bus.js";

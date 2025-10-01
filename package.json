@@ -3,10 +3,9 @@
     "private": true,
     "scripts": {
         "dev": "cross-env DEV_SERVER=true vue-cli-service serve --mode development",
-        "serve": "vue-cli-service serve --mode serve",
-        "debug": "env DEV_SERVER=true vue-cli-service serve --mode staging",
-        "build": "vue-cli-service build",
-        "preview": "cross-env BUILD_MODE=preview vue-cli-service build",
+        "serve": "cross-env NODE_ENV=development vue-cli-service serve --mode production",
+        "build": "cross-env NODE_ENV=production vue-cli-service build --mode production",
+        "preview": "cross-env BUILD_MODE=preview NODE_ENV=production vue-cli-service build --mode preview",
         "lint": "vue-cli-service lint",
         "inspect": "vue inspect > output.js",
         "update": "npm --registry https://registry.npmjs.org install @jx3box/jx3box-common-ui@latest @jx3box/jx3box-data@latest @jx3box/jx3box-comment-ui@latest @jx3box/jx3box-editor@latest @jx3box/jx3box-map@latest"

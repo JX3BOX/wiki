@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-import { feedback } from "@jx3box/jx3box-common/data/jx3box.json";
+import { feedback } from "@/utils/config";
 export default {
     name: "Entry",
     data: function () {

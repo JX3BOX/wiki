@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {__Links} from "@jx3box/jx3box-common/data/jx3box.json";
+import {__Links} from "@/utils/config";
 
 export default {
     name: "PlanSearch",

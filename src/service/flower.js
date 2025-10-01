@@ -1,4 +1,4 @@
-import { __spider } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __spider } from "@/utils/config";
 import axios from "axios";
 import { $next } from "@jx3box/jx3box-common/js/https";
 

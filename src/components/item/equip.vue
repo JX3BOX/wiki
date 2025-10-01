@@ -35,7 +35,7 @@ import QRcode from "@jx3box/jx3box-common-ui/src/interact/QRcode.vue";
 import ItemIcon from "@/components/common/item-icon.vue";
 import { authorLink } from "@jx3box/jx3box-common/js/utils";
 import { showTime } from "@jx3box/jx3box-common/js/moment.js";
-import { __Root, default_avatar } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, default_avatar } from "@/utils/config";
 
 export default {
 	name: "equip",

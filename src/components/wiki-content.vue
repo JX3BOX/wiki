@@ -105,7 +105,7 @@ import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import WikiPanel from "@/components/wiki-panel.vue";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
 import { getTypeLabel, iconLink, publishLink } from "@jx3box/jx3box-common/js/utils";
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __OriginRoot } from "@/utils/config";
 export default {
     name: "WikiContent",
     props: ["wikiPost", "compatible"],

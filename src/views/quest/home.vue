@@ -92,7 +92,7 @@ import NewestPost from "@/components/quest/home/newest-post.vue";
 import QuestCarousel from "@/components/quest/home/quest-carousel.vue";
 
 import { getQuests, getNewestQuests } from "@/service/quest";
-import { feedback } from "@jx3box/jx3box-common/data/jx3box.json";
+import { feedback } from "@/utils/config";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 

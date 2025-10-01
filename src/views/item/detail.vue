@@ -486,7 +486,7 @@ import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
-import { __Links } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Links } from "@/utils/config";
 import std_servers from "@jx3box/jx3box-data/data/server/server_std.json";
 import origin_servers from "@jx3box/jx3box-data/data/server/server_origin.json";
 import { item_color, item_quality, item_price, item_bind } from "@/filters";
@@ -908,7 +908,7 @@ export default {
                     const [customAucGenre, customAucSubType] = getItemAuc(item) || [];
                     const targetAucGenre = customAucGenre || item.AucGenre;
                     const targetAucSubType = customAucSubType || item.AucSubType;
-                    
+
                     this.$store.state.sidebar.AucGenre = Number(targetAucGenre);
                     this.$store.state.sidebar.AucSubTypeID = Number(targetAucSubType);
                 }

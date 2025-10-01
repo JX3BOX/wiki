@@ -30,7 +30,7 @@
 	</div>
 </template>
 <script>
-import { __iconPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __iconPath } from "@/utils/config";
 import { getItemPlans } from "@/service/item-plan.js";
 import { showAvatar, authorLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 export default {

@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 import bus from "@/store/bus.js";

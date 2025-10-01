@@ -25,7 +25,7 @@
 	</div>
 </template>
 <script>
-import { __iconPath } from "@jx3box/jx3box-common/data/jx3box";
+import { __iconPath } from "@/utils/config";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { getKnowledgeSearch } from "@/service/knowledge.js";
 export default {

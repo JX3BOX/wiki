@@ -1,5 +1,5 @@
 import jquery from "jquery";
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __OriginRoot } from "@/utils/config";
 const qs = require("qs");
 
 const query = qs.parse(location.search, { ignoreQueryPrefix: true });

@@ -55,7 +55,7 @@
 import WikiPanel from "@/components/wiki-panel.vue";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { getLink, authorLink, ts2str } from "@jx3box/jx3box-common/js/utils";
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __OriginRoot } from "@/utils/config";
 import WikiDiff from "./wiki-diff.vue";
 
 export default {

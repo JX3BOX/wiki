@@ -285,7 +285,7 @@ import {
 import { getUserRoles } from "@/service/team";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import { getUserInfo } from "@/service/wiki";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 import Item from "@jx3box/jx3box-editor/src/Item";
 import { cloneDeep } from "lodash";
 export default {

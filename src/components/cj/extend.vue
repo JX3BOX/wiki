@@ -45,7 +45,7 @@
 
 <script>
 import { getMenuGroup } from "@/service/group";
-import { __ossRoot, __ossMirror } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __ossRoot, __ossMirror } from "@/utils/config";
 import SideMsg from "@/components/common/side-msg.vue";
 import Rank from "@/components/common/rank.vue";
 import { v4 as uuid } from "uuid";
