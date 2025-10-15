@@ -16,7 +16,7 @@
                                 source_id: post.source_id,
                             },
                         }"
-                        target="_blank"
+                        :target="isPhone ? '_self' : '_blank'"
                         >{{ post.title }}</router-link
                     >
                 </div>
@@ -60,6 +60,11 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    data() {
+        return {
+            isPhone: window.innerWidth <= 768,
+        }
     },
     methods: {
         icon_url: function (id) {
