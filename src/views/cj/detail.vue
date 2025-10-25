@@ -9,6 +9,10 @@
                 <template slot="head-title">
                     <img class="u-icon" svg-inline src="@/assets/img/cj/achievement.svg" />
                     <span class="u-txt">成就攻略</span>
+                    <!-- 带post_id时对应的是具体的某个版本 -->
+                    <span v-if="post_id" class="u-version"
+                        >注意: 您当前查看的是历史版本，<a :href="`/cj/view/${id}`"> 查看 </a>最新攻略</span
+                    >
                 </template>
                 <template v-if="!isRobot" slot="head-actions">
                     <a class="el-button el-button--primary" :href="publish_url(`achievement/${id}`)">
@@ -367,19 +371,6 @@ export default {
                 this.loadRevision();
             },
         },
-    },
-    beforeRouteEnter(to, from, next) {
-        console.log(to, from);
-        if (from.post_id) {
-            next((vm) => {
-                vm.$router.replace({
-                    name: "view",
-                    params: { source_id: to.params.source_id },
-                });
-            });
-        } else {
-            next();
-        }
     },
     mounted: function () {
         if (this.post_id) {
