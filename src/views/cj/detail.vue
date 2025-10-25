@@ -368,6 +368,19 @@ export default {
             },
         },
     },
+    beforeRouteEnter(to, from, next) {
+        console.log(to, from);
+        if (from.post_id) {
+            next((vm) => {
+                vm.$router.replace({
+                    name: "view",
+                    params: { source_id: to.params.source_id },
+                });
+            });
+        } else {
+            next();
+        }
+    },
     mounted: function () {
         if (this.post_id) {
             this.loadRevision();
