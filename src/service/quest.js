@@ -29,8 +29,8 @@ export function getWaiting(params) {
     return $cms().get(`/api/cms/wiki/post/waiting`, { params });
 }
 
-export function getQuestMaps() {
-    return $.get(`/quest/maps`);
+export function getQuestMaps(params) {
+    return $.get(`/quest/maps`, { params });
 }
 
 // 获取任务公告

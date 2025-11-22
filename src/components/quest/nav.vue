@@ -128,7 +128,7 @@ export default {
             });
         },
         loadMaps() {
-            getQuestMaps().then((res) => {
+            getQuestMaps({client: this.client}).then((res) => {
                 const mapObj = res.data?.data || {};
                 const maps = [];
                 for (let key in mapObj) {
