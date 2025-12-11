@@ -80,6 +80,16 @@ module.exports = {
                 onProxyReq: function (request) {
                     request.setHeader("origin", "");
                 },
+            },
+            '/api/summary': {
+                target: 'https://dev.next2.jx3box.com',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api/next2': '/api/next2'
+                },
+                onProxyReq: function (request) {
+                    request.setHeader("origin", "");
+                },
             }
         },
         port: process.env.DEV_PORT || 12028, // 默认端口

@@ -9,36 +9,44 @@
             custom-class="other-filter-drawer"
             size="400"
             @close="onClose"
-            style="width:100%;"
+            style="width: 100%"
         >
             <template #default>
                 <div class="c-var m-other-filter">
-<!--                    <div class="m-other-filter__title">-->
-<!--                        其他筛选-->
-<!--                    </div>-->
-                    <div
-                        class="m-other-filter-list"
-                        ref="filterList"
-                        :class="{ 'not-on-bottom': !isAtBottom }"
-                    >
-                        <div v-for="item in filterGroup"  class="m-filter-group"  :key="item.key">
+                    <!--                    <div class="m-other-filter__title">-->
+                    <!--                        其他筛选-->
+                    <!--                    </div>-->
+                    <div class="m-other-filter-list" ref="filterList" :class="{ 'not-on-bottom': !isAtBottom }">
+                        <div v-for="item in filterGroup" class="m-filter-group" :key="item.key">
                             <div class="u-title">
-                                {{item.title}}
+                                {{ item.title }}
                             </div>
-                            <div class="m-filter-radio-list" :class="[item?.class || '',item?.onlyOneFill &&  item.list?.length===1? 'only-one-fill' : '']">
-                                <div class="u-radio" :class="{'active': radio.default ? tmpVal[item.key]?.value == null : tmpVal[item.key]?.value === radio.value}" @click="()=>setVal(item,radio)" v-for="radio in item.list" :key="radio.value">
-                                    {{radio.name.slice(0,8)}}
+                            <div
+                                class="m-filter-radio-list"
+                                :class="[
+                                    item?.class || '',
+                                    item?.onlyOneFill && item.list?.length === 1 ? 'only-one-fill' : '',
+                                ]"
+                            >
+                                <div
+                                    class="u-radio"
+                                    :class="{
+                                        active: radio.default
+                                            ? tmpVal[item.key]?.value == null
+                                            : tmpVal[item.key]?.value === radio.value,
+                                    }"
+                                    @click="() => setVal(item, radio)"
+                                    v-for="radio in item.list"
+                                    :key="radio.value"
+                                >
+                                    {{ radio.name.slice(0, 8) }}
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="m-op">
-                        <button class="u-reset" :class="{active: !isEmptyVal}"  @click="resetSearch">
-                            重置
-                        </button>
-                        <button class="u-confirm" :class="{active: changeTmp}" @click="changeValue">
-                            确定
-                        </button>
+                        <button class="u-reset" :class="{ active: !isEmptyVal }" @click="resetSearch">重置</button>
+                        <button class="u-confirm" :class="{ active: changeTmp }" @click="changeValue">确定</button>
                     </div>
                 </div>
             </template>
@@ -47,7 +55,6 @@
 </template>
 
 <script>
-
 import { cloneDeep, pick } from "lodash";
 
 export default {
@@ -55,54 +62,53 @@ export default {
     props: {
         visible: {
             type: Boolean,
-            default: false
+            default: false,
         },
         search: {
             type: Object,
-            default: ()=> {}
+            default: () => {},
         },
-        regions:{
+        regions: {
             type: Array,
-            default: () => ([])
+            default: () => [],
         },
-
     },
-    emits:['update:visible','change'],
-    data(){
+    emits: ["update:visible", "change"],
+    data() {
         return {
             tmpVal: {},
-            isAtBottom:false,
-        }
+            isAtBottom: false,
+        };
     },
-    watch:{
-        search:{
-            handler(val){
-                this.tmpVal ={
-                    ...cloneDeep(val || {})
+    watch: {
+        search: {
+            handler(val) {
+                this.tmpVal = {
+                    ...cloneDeep(val || {}),
                 };
             },
             immediate: true,
-            deep:true
+            deep: true,
         },
-        visible:{
-            handler(val){
+        visible: {
+            handler(val) {
                 if (val) {
                     this.$nextTick(() => {
                         const scrollContainer = this.$refs.filterList;
                         if (scrollContainer) {
-                            scrollContainer.addEventListener('scroll', this.handleScroll);
+                            scrollContainer.addEventListener("scroll", this.handleScroll);
                             this.handleScroll({ target: scrollContainer });
                         }
                     });
                 } else {
                     const scrollContainer = this.$refs.filterList;
                     if (scrollContainer) {
-                        scrollContainer.removeEventListener('scroll', this.handleScroll);
+                        scrollContainer.removeEventListener("scroll", this.handleScroll);
                     }
                 }
             },
-            immediate: true
-        }
+            immediate: true,
+        },
     },
     computed: {
         show: {
@@ -111,99 +117,102 @@ export default {
             },
             set(val) {
                 this.$emit("update:visible", val);
-            }
+            },
         },
-        fbs(){
+        fbs() {
             return {
-                tmpValue: null
-            }
+                tmpValue: null,
+            };
         },
-        changeTmp(){
+        changeTmp() {
             const hasVals = Object.values(this.tmpVal);
             const hasVals2 = Object.values(this.search);
-            const hasVals3 = hasVals.filter(i=>i!=null);
-            const hasVals4 = hasVals2.filter(i=>i!=null);
+            const hasVals3 = hasVals.filter((i) => i != null);
+            const hasVals4 = hasVals2.filter((i) => i != null);
             return hasVals3.length !== hasVals4.length || hasVals3.some((val, index) => val !== hasVals4[index]);
         },
-        isEmptyVal(){
-            return Object.keys(this.tmpVal).filter(i=>this.tmpVal[i]?.value!=null || this.tmpVal[i]?.value!=="").length === 0;
+        isEmptyVal() {
+            return (
+                Object.keys(this.tmpVal).filter((i) => this.tmpVal[i]?.value != null || this.tmpVal[i]?.value !== "")
+                    .length === 0
+            );
         },
-        two(){
-            return (this.tmpVal?.map_1?.children || []);
+        two() {
+            return this.tmpVal?.map_1?.children || [];
         },
-        filterGroup(){
-            return  [
+        filterGroup() {
+            return [
                 {
                     title: "地图I",
                     key: "map_1",
                     list: [
-                        { name: "全部", value: null,default: true },
-                        ...((this.regions || []).map(i=>{
+                        { name: "全部", value: null, default: true },
+                        ...(this.regions || []).map((i) => {
                             return {
                                 name: i.label,
                                 value: i.value,
-                                children: i.children
-                            }
-                        }))
-                    ]
+                                children: i.children,
+                            };
+                        }),
+                    ],
                 },
                 {
                     title: "地图II",
                     key: "map",
-                    class: 'two-line',
+                    class: "two-line",
                     hidden: this.two.length === 0,
                     onlyOneFill: this.two.length === 0,
                     list: [
-                        ...(this.two.map(i=>{
+                        ...this.two.map((i) => {
                             return {
                                 name: i.label,
                                 value: i.value,
-                            }
-                        }))
-                    ]
+                            };
+                        }),
+                    ],
                 },
-            ].filter(i=>!i.hidden);
-        }
+            ].filter((i) => !i.hidden);
+        },
     },
     methods: {
         onClose() {
             this.show = false;
         },
-        resetSearch(){
-            this.tmpVal = pick(this.tmpVal, ['client']);
+        resetSearch() {
+            this.tmpVal = pick(this.tmpVal, ["client"]);
         },
-        changeValue(){
-            this.$emit('change',this.tmpVal)
+        changeValue() {
+            this.$emit("change", this.tmpVal);
         },
-        setVal(item,val){
-            if (val.value == null){
+        setVal(item, val) {
+            if (val.value == null) {
                 this.$set(this.tmpVal, item.key, null);
-            }else{
+            } else {
                 this.$set(this.tmpVal, item.key, val);
             }
 
-            if( item.key === 'map_1' && val.children){
-                this.$set(this.tmpVal, 'map',this.two?.[0]);
+            if (item.key === "map_1" && val.children) {
+                this.$set(this.tmpVal, "map", this.two?.[0]);
+                this.isAtBottom = this.filterGroup[1].list.length <= 2;
             }
         },
-        setSearch(val){
+        setSearch(val) {
             this.tmpVal = {
                 ...this.tmpVal,
-                ...val
+                ...val,
             };
         },
         handleScroll(event) {
             const element = event.target;
             const threshold = 5; // 容错值，避免精度问题
             this.isAtBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - threshold;
-        }
+        },
     },
 };
 </script>
 
 <style lang="less">
-
-.other-filter-drawer{
+.other-filter-drawer {
     border-radius: 20px 20px 0px 0px;
     overflow: hidden;
     background: transparent;
@@ -212,14 +221,13 @@ export default {
 .m-other-filter {
     display: flex;
     flex-direction: column;
-    background-color: #24292E;
+    background-color: #24292e;
     padding: 20px;
     min-height: 300px;
     position: relative;
 
-
-    .m-other-filter__title{
-        color: rgba(255, 255, 255, 0.80);
+    .m-other-filter__title {
+        color: rgba(255, 255, 255, 0.8);
         text-align: center;
 
         /* 12 Bold */
@@ -240,11 +248,8 @@ export default {
         padding-bottom: 20px;
 
         .m-filter-group {
-
             .u-title {
-                color: rgba(255, 255, 255, 0.40);
-
-
+                color: rgba(255, 255, 255, 0.4);
 
                 /* 12 Regular */
                 font-size: 12px;
@@ -271,8 +276,7 @@ export default {
 
                     border-radius: var(--8, 8px);
                     background: rgba(255, 255, 255, 0.05);
-                    color: #FFF;
-
+                    color: #fff;
 
                     /* 14 Regular */
                     font-size: 14px;
@@ -282,22 +286,34 @@ export default {
 
                     &.active {
                         color: #000;
-                        background: #FEDAA3;
+                        background: #fedaa3;
                     }
                 }
 
-                &.two-line{
+                &.two-line {
                     .u-radio {
                         width: calc(100% / 2 - 10px);
                     }
                 }
 
-                &.only-one-fill{
+                &.only-one-fill {
                     .u-radio {
                         width: 100%;
                     }
                 }
+            }
+        }
 
+        &.not-on-bottom {
+            position: relative;
+            &:after {
+                width: 100%;
+                height: 76px;
+                content: "";
+                position: fixed;
+                box-sizing: border-box;
+                bottom: 90px;
+                background: linear-gradient(180deg, rgba(36, 41, 46, 0) 0%, #24292e 73.94%);
             }
         }
     }
@@ -310,10 +326,10 @@ export default {
         display: flex;
         padding: 20px 12px 30px;
         gap: 20px;
-        background-color: #24292E;
+        background-color: #24292e;
 
         button {
-            color:  rgba(28, 28, 28, 0.40);
+            color: rgba(28, 28, 28, 0.4);
 
             /* 16 Bold */
             font-size: 16px;
@@ -329,16 +345,16 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                color: rgba(255, 255, 255, 0.40);
+                color: rgba(255, 255, 255, 0.4);
                 background: rgba(255, 255, 255, 0.05);
 
-                &.active{
+                &.active {
                     color: rgba(255, 255, 255, 1);
                 }
             }
 
             &.u-confirm {
-                color: rgba(255, 255, 255, 0.40);
+                color: rgba(255, 255, 255, 0.4);
 
                 /* 16 Bold */
                 font-size: 16px;
@@ -350,9 +366,9 @@ export default {
                 border-radius: var(--12, 12px);
                 background: rgba(255, 255, 255, 0.05);
 
-                &.active{
+                &.active {
                     color: #000;
-                    background: #FEDAA3;
+                    background: #fedaa3;
                 }
             }
         }

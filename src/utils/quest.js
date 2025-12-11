@@ -147,7 +147,7 @@ export const schoolIcon = (school) => {
     return `${__imgPath}/image/school/${school}.png`;
 };
 
-export const questDescFormat = (desc) => {
+export const questDescFormat = (desc, ignoreColor = false) => {
     const { playerName, playerBody } = getPlayerName();
     if (desc) {
         let result = desc
@@ -168,7 +168,8 @@ export const questDescFormat = (desc) => {
             let match = /\<F(\d+) (.+?)\>/.exec(result);
             if (match) {
                 let font = questFont[match[1]];
-                result = result.replace(match[0], `<span style="color: ${font.color}99">${match[2]}</span>`);
+                const style = `style="color: ${font.color}99"`;
+                result = result.replace(match[0], `<span ${ignoreColor ? "" : style}>${match[2]}</span>`);
             } else {
                 break;
             }

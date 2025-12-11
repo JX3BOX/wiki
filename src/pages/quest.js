@@ -18,7 +18,7 @@ import store from "@/store/quest.js";
 import reporter from "@jx3box/jx3box-common/js/reporter";
 reporter.install(Vue);
 
-import App from "@/views/quest/quest.vue";
+import App from "@/views/base.vue";
 new Vue({
     router,
     store,

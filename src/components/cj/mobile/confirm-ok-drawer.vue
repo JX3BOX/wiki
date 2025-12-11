@@ -17,7 +17,7 @@
                         <div class="u-icon">
                             <img src="@/assets/img/cj/mobile/warn.svg" svg-inline />
                         </div>
-                        确定要将其设为已完成吗
+                        确定要将其设为{{ current ? "未" : "已" }}完成吗
                     </div>
                     <div class="m-op">
                         <button class="u-confirm" @click="confirmResult">
@@ -41,6 +41,10 @@ export default {
             type: Boolean,
             default: false
         },
+        current: {
+            type: Boolean,
+            default: false
+        }
     },
     data(){
         return {

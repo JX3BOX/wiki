@@ -6,7 +6,7 @@
             :show-close="false"
             :with-header="false"
             append-to-body
-            custom-class="user-select-drawer"
+            :custom-class="`user-select-drawer ${customClass}`"
             size="400"
             @close="onClose"
             style="width:100%;"
@@ -66,7 +66,11 @@ export default {
         },
         currentRole:{
             default: () => ({})
-        }
+        },
+        customClass: {
+            type: String,
+            default: ""
+        },
     },
     data(){
         return {

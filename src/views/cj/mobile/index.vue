@@ -22,7 +22,7 @@
                     <div class="u-action" @click="() => (menuShow = true)">
                         <img src="@/assets/img/cj/mobile/menu.svg" svg-inline />
                     </div>
-                    <div class="u-action">
+                    <div class="u-action" @click="() => onSearch()">
                         <img src="@/assets/img/cj/mobile/search.svg" svg-inline />
                     </div>
                     <div class="u-action" @click="() => (mapDrawerShow = true)">
