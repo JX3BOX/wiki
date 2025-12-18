@@ -679,7 +679,7 @@ export default {
                 margin: 0;
             }
 
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--black-80, rgba(28, 28, 28, 0.8));
 
             font-size: 14px;
             font-weight: 400;
@@ -701,7 +701,7 @@ export default {
         .u-pos-item {
             display: flex;
             align-items: center;
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--black-80, rgba(28, 28, 28, 0.8));
 
             font-size: 12px;
             font-weight: 400;
@@ -712,7 +712,7 @@ export default {
                 justify-content: flex-end;
                 flex-grow: 1;
 
-                color: rgba(255, 255, 255, 0.4);
+                color: var(--black-40, rgba(28, 28, 28, 0.8));
 
                 /* 12 Regular */
                 font-size: 12px;
@@ -723,7 +723,7 @@ export default {
         .u-desc {
             margin: 0;
 
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--black-80, rgba(28, 28, 28, 0.8));
 
             /* 14 Regular */
             font-size: 14px;
