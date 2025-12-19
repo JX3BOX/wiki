@@ -54,7 +54,7 @@
                             <Thx
                                 class="m-thx"
                                 :postId="~~id"
-                                postType="achievement"
+                                postType="wiki"
                                 :postTitle="favTitle"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"
@@ -64,6 +64,7 @@
                                 :key="'achievement-thx-' + id"
                                 :client="client"
                                 showRss
+                                category="cj"
                             />
                         </template>
                     </WikiPanel>

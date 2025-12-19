@@ -41,7 +41,7 @@
                             <Thx
                                 class="m-thx"
                                 :postId="~~id"
-                                postType="knowledge"
+                                postType="wiki"
                                 :postTitle="title"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"
@@ -50,6 +50,7 @@
                                 :authors="authors"
                                 :key="'item-thx-' + id"
                                 showRss
+                                category="knowledge"
                             />
                         </template>
                     </WikiPanel>

@@ -434,7 +434,7 @@
                             <Thx
                                 class="m-thx"
                                 :postId="id"
-                                postType="item"
+                                postType="wiki"
                                 :postTitle="source.Name"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"
@@ -444,6 +444,7 @@
                                 :key="'item-thx-' + id"
                                 :client="client"
                                 showRss
+                                category="item"
                             />
                         </template>
                     </WikiPanel>

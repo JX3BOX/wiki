@@ -300,7 +300,7 @@
                             <Thx
                                 class="m-thx"
                                 :postId="id"
-                                postType="quest"
+                                postType="wiki"
                                 :postTitle="wiki_post.source.QuestName"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"
@@ -310,6 +310,7 @@
                                 :key="'quest-thx-' + id"
                                 :client="client"
                                 showRss
+                                category="quest"
                             />
                         </template>
                     </WikiPanel>
