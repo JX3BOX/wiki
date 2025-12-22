@@ -41,7 +41,7 @@
                             <Thx
                                 class="m-thx"
                                 :postId="~~id"
-                                postType="wiki"
+                                postType="knowledge"
                                 :postTitle="title"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"

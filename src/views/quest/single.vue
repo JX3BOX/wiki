@@ -300,7 +300,7 @@
                             <Thx
                                 class="m-thx"
                                 :postId="id"
-                                postType="wiki"
+                                postType="quest"
                                 :postTitle="wiki_post.source.QuestName"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"

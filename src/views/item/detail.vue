@@ -434,7 +434,7 @@
                             <Thx
                                 class="m-thx"
                                 :postId="id"
-                                postType="wiki"
+                                postType="item"
                                 :postTitle="source.Name"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"

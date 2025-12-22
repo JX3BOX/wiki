@@ -54,7 +54,7 @@
                             <Thx
                                 class="m-thx"
                                 :postId="~~id"
-                                postType="wiki"
+                                postType="achievement"
                                 :postTitle="favTitle"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"
