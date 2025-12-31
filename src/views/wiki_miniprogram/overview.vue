@@ -110,7 +110,6 @@
  */
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon, iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
-// import xf from "@jx3box/jx3box-data/data/xf/xf.json"
 
 import {
     getAchievementPoints,
@@ -264,7 +263,6 @@ export default {
                 this.$confirm("请先登录再使用")
                 return;
             }
-            alert(JSON.stringify(User.getInfo()))
             const uid = User.getInfo().uid;
             uid &&
                 getUserInfo(uid).then((res) => {
