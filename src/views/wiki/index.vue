@@ -1,16 +1,23 @@
 <template>
     <div>
-        <Header></Header>
-        <div class="m-achievement-main" :class="{ is_mobile: mobile }">
-            <SideBar v-if="!is_fold" />
-            <div class="m-achievement-content" :class="{ is_mobile: mobile }">
-                <router-view></router-view>
+        <div v-if="isMiniProgram()">
+            <router-view></router-view>
+        </div>
+        <div v-else>
+            <Header></Header>
+            <div class="m-achievement-main" :class="{ is_mobile: mobile }">
+                <SideBar v-if="!is_fold" />
+                <div class="m-achievement-content" :class="{ is_mobile: mobile }">
+                    <router-view></router-view>
+                </div>
             </div>
+
         </div>
     </div>
 </template>
 
 <script>
+import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 import SideBar from "@/components/wiki/sidebar.vue";
 export default {
     name: "WikiAchievementIndex",
@@ -36,8 +43,10 @@ export default {
             },
         },
     },
-    methods: {},
-    mounted() {},
+    methods: {
+        isMiniProgram,
+    },
+    mounted() { },
 };
 </script>
 
