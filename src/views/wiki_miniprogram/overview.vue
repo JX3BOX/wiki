@@ -265,9 +265,12 @@ export default {
                 return;
             }
             const uid = User.getInfo().uid;
+            // this.getList();
+            alert(uid)
             uid &&
                 getUserInfo(uid).then((res) => {
                     if (res.data.code == 0) {
+                        alert(JSON.stringify(res.data.data))
                         this.userInfo = res.data.data;
                         this.getList();
                     }
