@@ -264,13 +264,12 @@ export default {
                 this.$confirm("请先登录再使用")
                 return;
             }
+            alert(JSON.stringify(User.getInfo()))
             const uid = User.getInfo().uid;
-            // this.getList();
-            alert(uid)
             uid &&
                 getUserInfo(uid).then((res) => {
                     if (res.data.code == 0) {
-                        alert(JSON.stringify(res.data.data))
+
                         this.userInfo = res.data.data;
                         this.getList();
                     }
