@@ -4,6 +4,7 @@ const { JX3BOX, SEO } = require("@jx3box/jx3box-common");
 const VueProxyPlugin = require("@jx3box/jx3box-fe-proxy");
 
 module.exports = {
+    productionSourceMap: false, //关闭 source map 生成
     //❤️ Multiple pages ~
     pages: {
         index: {
