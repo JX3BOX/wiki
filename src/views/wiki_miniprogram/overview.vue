@@ -117,7 +117,7 @@ import {
     getMenus,
 } from "@/service/achievement";
 import { getUserRoles } from "@/service/team";
-import { getUserInfo } from "@/service/wiki";
+import { getMyInfo } from "@/service/user";
 import { __imgPath } from "@/utils/config";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import RoleListVue from "@/views/wiki_miniprogram/components/roleList.vue";
@@ -263,15 +263,10 @@ export default {
                 this.$confirm("请先登录再使用")
                 return;
             }
-            const uid = User.getInfo().uid;
-            uid &&
-                getUserInfo(uid).then((res) => {
-                    if (res.data.code == 0) {
-
-                        this.userInfo = res.data.data;
-                        this.getList();
-                    }
-                });
+            getMyInfo().then((res) => {
+                this.userInfo = res;
+                this.getList();
+            });
         },
 
         /**************************角色相关*****************************/

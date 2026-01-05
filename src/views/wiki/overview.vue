@@ -433,7 +433,7 @@ export default {
                 return;
             }
             getMyInfo().then((res) => {
-                this.userInfo = res.data.data;
+                this.userInfo = res
             });
         },
         onChangeRole(role) {
