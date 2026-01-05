@@ -284,7 +284,7 @@ import {
 } from "@/service/achievement";
 import { getUserRoles } from "@/service/team";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
-import { getUserInfo } from "@/service/wiki";
+import {getMyInfo} from "@/service/user";
 import { __imgPath } from "@/utils/config";
 import Item from "@jx3box/jx3box-editor/src/Item";
 import { cloneDeep } from "lodash";
@@ -432,14 +432,9 @@ export default {
 
                 return;
             }
-            const uid = User.getInfo().uid;
-            uid &&
-                getUserInfo(uid).then((res) => {
-                    if (res.data.code == 0) {
-                        this.userInfo = res.data.data;
-                        // this.loadData();
-                    }
-                });
+            getMyInfo().then((res) => {
+                this.userInfo = res.data.data;
+            });
         },
         onChangeRole(role) {
             this.currentRole = role;
