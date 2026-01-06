@@ -34,8 +34,8 @@ const routes = [
         component: () => import("../views/wiki_miniprogram/catalogue.vue"),
     },
     {
-        name: "achievementList",
-        path: "/achievementList",
+        name: "list",
+        path: "/list",
         meta: {
             title: "成就列表",
         },

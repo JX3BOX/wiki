@@ -151,7 +151,7 @@ export default {
             // this.$router.push({ name: "achievementList", query: { name: this.info.name } });
             // 小程序打开界面
             mobileOpen(this.$router.resolve({
-                name: "achievementList",
+                name: "list",
                 query: { name: this.info.name }
             }).href);
         },
