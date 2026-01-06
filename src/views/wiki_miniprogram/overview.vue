@@ -205,6 +205,7 @@ export default {
         },
     },
     created() {
+        document.title = "资历宝典";
         this.getUserInfo();
     },
     methods: {
@@ -214,6 +215,7 @@ export default {
          * @param {object} category - 分类项
          */
         handleClick(category) {
+
             localStorage.setItem("category_data", JSON.stringify(category || {}));
             // this.$router.push({ name: "catalogue", query: {} });
             // 小程序打开界面

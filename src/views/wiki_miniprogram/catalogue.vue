@@ -127,6 +127,7 @@ export default {
             this.achievementData = JSON.parse(localStorage.getItem("achievements") || "[]");
             let list = JSON.parse(localStorage.getItem("category_data") || "[]");
             if (list) {
+                document.title = list.name;
                 this.info = list;
                 this.allPointsCount = list.allPoints;
                 this.ownPointsCount = list.ownPoints;
@@ -147,12 +148,13 @@ export default {
          * @param {object} category - 分类项
          */
         handleClick(category) {
+            category.parentName = this.info.name;
             localStorage.setItem("category_item_data", JSON.stringify(category || {}));
             // this.$router.push({ name: "achievementList", query: { name: this.info.name } });
             // 小程序打开界面
             mobileOpen(this.$router.resolve({
                 name: "list",
-                query: { name: this.info.name }
+                query: {}
             }).href);
         },
         /**

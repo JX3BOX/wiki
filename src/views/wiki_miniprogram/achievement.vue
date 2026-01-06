@@ -220,7 +220,9 @@ export default {
             this.achievementData = JSON.parse(localStorage.getItem("achievements") || "[]");
             let list = JSON.parse(localStorage.getItem("category_item_data") || "[]");
             if (list) {
-                document.title = this.$route.query.name + ' - ' + list.name;
+                console.log(list)
+                console.log(this.$route.query.name)
+                document.title = list.parentName + ' - ' + list.name;
                 this.info = list;
                 this.allPointsCount = list.allPoints;
                 this.ownPointsCount = list.ownPoints;
