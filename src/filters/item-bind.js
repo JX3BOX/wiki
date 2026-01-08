@@ -12,7 +12,7 @@ export default (BindType) => {
         case 3 :
             return '不可交易';
         default:
-            return '未知'
+            return '未知绑定类型'
     }
 }
 

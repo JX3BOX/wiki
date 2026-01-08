@@ -20,7 +20,6 @@ let store = {
         },
     },
     getters: {},
-    actions: {},
     modules: {},
 };
 

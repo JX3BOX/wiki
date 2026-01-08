@@ -13,7 +13,7 @@ Vue.use(JX3BOX_UI);
 
 import router from "@/router/item";
 import store from "@/store/item";
-import App from "@/views/item/index.vue";
+import App from "@/views/base.vue";
 
 import reporter from "@jx3box/jx3box-common/js/reporter";
 reporter.install(Vue);

@@ -151,6 +151,7 @@ import questType from "@/assets/data/quest-type.json";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import LzString from "lz-string";
+import wx from "weixin-js-sdk";
 
 export default {
     name: "MobileQuestIndex",

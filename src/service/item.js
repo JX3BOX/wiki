@@ -134,3 +134,9 @@ export function getItemDetail(params) {
         params,
     });
 }
+
+// 获取物品
+export function getItemByResource(item_id, client = "std") {
+    if (!item_id) return;
+    return $.get(`/resource/${client}/item_merged.${item_id}`);
+}
