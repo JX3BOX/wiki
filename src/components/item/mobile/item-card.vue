@@ -7,7 +7,8 @@
         <div class="m-content-section">
             <div class="u-primary">
                 <span class="u-name">{{ item.Name }}</span>
-                <span class="u-id">{{ item.id }}</span>
+                <span class="u-id" v-if="!count">{{ item.id }}</span>
+                <span class="u-count" v-if="count">x {{ count }}</span>
             </div>
             <div class="u-secondary">
                 <span class="u-desc">
@@ -15,8 +16,18 @@
                 </span>
             </div>
         </div>
-        <div class="m-actions-section" @click.stop="onActionClick" :class="{ 'is-delete': showDelete }">
-            <i class="el-icon-close" v-if="showDelete"></i>
+        <div
+            class="m-actions-section"
+            @click.stop="onActionClick"
+            :class="{ 'is-delete': showDelete, 'is-edit-count': showEditCount }"
+        >
+            <template v-if="showDelete">
+                <i class="u-icon el-icon-close"></i>
+            </template>
+            <template v-else-if="showEditCount">
+                <i class="u-icon el-icon-edit"></i>
+                <span class="u-count">x{{ count }}</span>
+            </template>
         </div>
     </div>
 </template>
@@ -43,6 +54,14 @@ export default {
             default: () => {},
         },
         showDelete: {
+            type: Boolean,
+            default: false,
+        },
+        count: {
+            type: Number,
+            default: 0,
+        },
+        showEditCount: {
             type: Boolean,
             default: false,
         },
@@ -80,6 +99,8 @@ export default {
         onActionClick() {
             if (this.showDelete) {
                 this.$emit("delete");
+            } else if (this.showEditCount) {
+                this.$emit("edit");
             }
         },
         loadData() {
@@ -183,6 +204,17 @@ export default {
             line-height: 18px;
         }
 
+        .u-count {
+            color: var(--black-100, #1c1c1c);
+
+            /* 12 Bold */
+            font-family: "Microsoft YaHei UI";
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 18px; /* 150% */
+        }
+
         .u-secondary {
             color: var(--black-80, rgba(28, 28, 28, 0.8));
 
@@ -204,11 +236,26 @@ export default {
         padding: 20px 14px;
         color: white;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
 
+        .u-icon {
+            .fz(18px);
+        }
+
         &.is-delete {
-            background: var(--Secondary-Red, #ff3b30);
+            background: var(--secondary-red, #ff3b30);
+        }
+
+        &.is-edit-count {
+            background: var(--secondary-green, #34c759);
+
+            font-family: "Microsoft YaHei UI";
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 18px; /* 150% */
         }
     }
 }

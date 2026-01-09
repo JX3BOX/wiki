@@ -6,7 +6,7 @@
             direction="btt"
             :show-close="false"
             :with-header="false"
-            custom-class="select-drawer"
+            custom-class="create-plan-drawer"
             append-to-body
             size="400"
             @close="onClose"
@@ -14,66 +14,107 @@
             v-bind="$attrs"
         >
             <template #default>
-                <div class="c-var m-select-drawer">
-                    <div class="m-user-select__title">{{ title }}</div>
-                    <div class="m-options-list">
-                        <div
-                            class="m-options-item"
-                            v-for="(item, index) in options"
-                            :key="index"
-                            :class="{ 'is-active': item.value === value }"
-                            @click="value = item.value"
-                        >
-                            {{ item.label }}
-                            <div class="w-mp-checkbox__icon">
-                                <div class="w-mp-checkbox__checkmark"></div>
+                <div class="c-var m-create-plan-drawer">
+                    <div class="m-drawer-content">
+                        <div class="m-user-select__title">清单名称</div>
+                        <el-input class="u-input" v-model="form.title"></el-input>
+                        <div class="m-options-list">
+                            <div
+                                class="m-options-item"
+                                :class="{ 'is-active': form.public == 1 }"
+                                @click="form.public = 1"
+                            >
+                                所有人可见
+                                <div class="w-mp-checkbox__icon">
+                                    <div class="w-mp-checkbox__checkmark"></div>
+                                </div>
+                            </div>
+                            <div
+                                class="m-options-item"
+                                :class="{ 'is-active': form.public == 0 }"
+                                @click="form.public = 0"
+                            >
+                                仅自己可见
+                                <div class="w-mp-checkbox__icon">
+                                    <div class="w-mp-checkbox__checkmark"></div>
+                                </div>
                             </div>
                         </div>
+                        <div class="m-user-select__title">描述</div>
+                        <el-input
+                            class="u-input"
+                            v-model="form.description"
+                            placeholder="简单描述一下你的物品清单"
+                            type="textarea"
+                            :rows="4"
+                            :autosize="false"
+                            resize="none"
+                        ></el-input>
                     </div>
-
                     <div class="m-op">
                         <button class="u-confirm" @click="onConfirm">确定</button>
                     </div>
                 </div>
             </template>
         </el-drawer>
-
-
     </div>
 </template>
 
 <script>
+import {  addMyPlan } from "@/service/item-plan.js";
+
+const defaultForm = {
+    title: "",
+    public: 1,
+    description: "",
+    type: 1,
+};
+
 export default {
-    name: "SelectDrawer",
+    name: "CreatePlanDrawer",
     components: {},
     props: ["menus"],
     data() {
         return {
             visible: false,
-            title: "请选择",
-            options: [],
-            value: null,
+
+            form: { ...defaultForm },
 
             callback: {},
         };
     },
-    computed: {},
     methods: {
-        open({ options, title }) {
+        open() {
             this.visible = true;
-            this.options = options || [];
-            this.title = title || "请选择";
             return new Promise((resolve, reject) => {
                 this.callback = { resolve, reject };
             });
         },
         onClose() {
             this.visible = false;
-            this.callback.reject();
+            this.callback.reject && this.callback.reject();
         },
         onConfirm() {
-            this.visible = false;
-            this.callback.resolve(this.value);
+            this.loading = true;
+            const payload = {
+                title: this.form.title,
+                relation: [
+                    {
+                        title: "默认分组",
+                        data: [],
+                    },
+                ],
+                public: this.form.public,
+                type: 1,
+                description: this.form.description,
+            };
+            addMyPlan(payload)
+                .then((res) => {
+                    this.callback.resolve && this.callback.resolve(res);
+                })
+                .finally(() => {
+                    this.visible = false;
+                });
         },
     },
 };
@@ -98,21 +139,33 @@ export default {
     transition: all 0.2s ease-in-out;
 }
 
-.select-drawer {
+.create-plan-drawer {
     border-radius: 20px 20px 0px 0px;
     overflow: hidden;
     background: transparent;
-    max-height: 500px;
 }
 
-.m-select-drawer {
+.m-create-plan-drawer {
     display: flex;
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
-    max-height: 500px;
     position: relative;
     gap: 12px;
+
+    .m-drawer-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow: auto;
+        flex-grow: 1;
+        margin-bottom: 78px;
+    }
+
+    .w-mobile-item-card {
+        background-color: transparent;
+        flex-shrink: 0;
+    }
     .m-user-select__title {
         color: rgba(255, 255, 255, 0.6);
 
@@ -124,15 +177,17 @@ export default {
 
     .m-options-list {
         display: flex;
-        flex-direction: column;
         gap: 12px;
+        max-height: 400px;
         overflow: auto;
-        margin-bottom: 79px;
-        max-height: 340px;
+    }
+
+    .m-options-item {
+        flex-grow: 1;
     }
 
     .u-input .el-input__inner,
-    .u-menu,
+    .u-input .el-textarea__inner,
     .m-options-item {
         display: flex;
         padding: var(--16, 16px) var(--20, 20px);

@@ -13,7 +13,7 @@
                     <span class="u-tip">点击开始搜索内容</span>
                 </div>
             </div>
-            <router-link to="/item/plan" class="m-to-plan">
+            <router-link :to="{name: 'plan_list'}" class="m-to-plan">
                 <span>查看物品清单</span>
                 <i class="el-icon-arrow-right"></i>
             </router-link>

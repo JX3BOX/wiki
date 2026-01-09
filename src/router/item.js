@@ -68,6 +68,12 @@ if (isMiniProgram()) {
                 if (child.name === "view") {
                     child.component = () => import("@/views/item/mobile/detail.vue");
                 }
+                if (child.name === "plan_list") {
+                    child.component = () => import("@/views/item/mobile/plan-list.vue");
+                }
+                if (child.name === "plan_view") {
+                    child.component = () => import("@/views/item/mobile/plan-detail.vue");
+                }
             });
         }
     });

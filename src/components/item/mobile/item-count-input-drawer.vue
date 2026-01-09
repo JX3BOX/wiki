@@ -6,7 +6,7 @@
             direction="btt"
             :show-close="false"
             :with-header="false"
-            custom-class="add-item-plan-drawer"
+            custom-class="item-count-input-drawer"
             append-to-body
             size="400"
             @close="onClose"
@@ -14,25 +14,18 @@
             v-bind="$attrs"
         >
             <template #default>
-                <div class="c-var m-add-item-plan-drawer" v-loading="loading">
+                <div class="c-var m-item-count-input-drawer">
                     <div class="m-drawer-content">
-                        <div class="m-user-select__title">加入物品</div>
+                        <div class="m-user-select__title">修改数量</div>
                         <ItemCardVue :item-id="item_id" :data="item"></ItemCardVue>
                         <div class="m-count-edit">
                             <i class="el-icon-minus" @click="current_count--"></i>
                             <el-input v-model.number="current_count"></el-input>
                             <i class="el-icon-plus" @click="current_count++"></i>
                         </div>
-                        <div class="m-user-select__title" v-if="!fixed_plan">选择清单</div>
-                        <div class="u-menu" @click="onSelectPlan" v-if="!fixed_plan">
-                            {{ current_plan?.title || "请选择" }}
-                        </div>
-                        <template v-if="current_plan">
-                            <div class="m-user-select__title">选择分组</div>
-                            <div class="u-menu" @click="onSelectGroup">{{ current_group_title || "请选择" }}</div>
-                        </template>
                     </div>
                     <div class="m-op">
+                        <button class="u-delete" @click="onDelete">删除物品</button>
                         <button class="u-confirm" @click="onConfirm">确定</button>
                     </div>
                 </div>
@@ -55,153 +48,64 @@ export default {
             visible: false,
             item_id: null,
             item: undefined,
-            plan_list: [],
-            loading: false,
-            current_plan_id: null,
-            current_plan: null,
-            current_group_index: null,
             current_count: 1,
-
-            fixed_plan: false,
 
             callback: {},
         };
+    },
+    watch: {
+        count(new_count) {
+            if (new_count < 1 || isNaN(new_count)) this.current_count = 1;
+        },
     },
     computed: {
         client() {
             return this.$store.state.client;
         },
-        current_group_title() {
-            if (this.current_group_index === null) return;
-            let title = this.current_plan?.relation[this.current_group_index]?.title;
-            return `(${this.current_group_index + 1}) ${title}`;
-        },
-    },
-    watch: {
-        current_plan_id(new_id) {
-            if (new_id) this.loadPlan();
-        },
-        current_count(new_count) {
-            if (new_count < 1 || isNaN(new_count)) this.current_count = 1;
-        }
     },
     methods: {
-        loadPlan() {
-            this.loading = true;
-            getItemPlanID(this.current_plan_id)
-                .then((res) => {
-                    this.current_plan = res || {};
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
-        },
-        loadPlans() {
-            this.loading = true;
-            getMyPlans({
-                no_page: 1,
-                _no_cache: 1,
-            })
-                .then((res) => {
-                    this.plan_list = res || [];
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
-        },
-        onSelectPlan() {
-            this.$refs["plan-select"]
-                .open({
-                    options: this.plan_list.map((p) => ({
-                        value: p.id,
-                        label: p.title,
-                    })),
-                    title: "请选择清单",
-                })
-                .then((res) => {
-                    this.current_plan_id = res;
-                })
-                .catch(() => {});
-        },
-        onSelectGroup() {
-            this.$refs["plan-select"]
-                .open({
-                    options: this.current_plan.relation.map((p, k) => ({
-                        value: k,
-                        label: `(${k + 1}) ${p.title}`,
-                    })),
-                    title: "请选择分组",
-                })
-                .then((res) => {
-                    this.current_group_index = res;
-                })
-                .catch(() => {});
-        },
-        open({ item_id, item, plan }) {
+        open({ item_id, item, count }) {
             this.visible = true;
             this.item_id = item_id;
             if (item) this.item = item;
-            if (plan) {
-                this.current_plan_id = plan.id;
-                this.current_plan = plan;
-                this.fixed_plan = true;
-            } else {
-                this.loadPlans();
-            }
+            if (count) this.current_count = count;
             return new Promise((resolve, reject) => {
                 this.callback = { resolve, reject };
             });
         },
         onClose() {
             this.visible = false;
-            this.current_plan_id = null;
-            this.current_plan = null;
-            this.current_group_index = null;
-            this.current_count = 1;
+            this.callback.reject();
+        },
+        onDelete() {
+            this.visible = false;
+            this.callback.resolve({
+                type: "delete",
+            });
         },
         onConfirm() {
-            this.loading = true;
-            updatePlan(this.current_plan_id, {
-                relation: this.current_plan.relation.map((p, index) => {
-                    if (index != this.current_group_index) return p;
-                    return {
-                        ...p,
-                        data: [
-                            ...p.data,
-                            {
-                                id: this.item_id,
-                                count: this.current_count,
-                            },
-                        ],
-                    };
-                }),
-            })
-                .then(() => {
-                    this.callback.resolve();
-                    this.onClose();
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
+            this.visible = false;
+            this.callback.resolve({
+                type: "change",
+                count: this.current_count,
+            });
         },
     },
 };
 </script>
 
 <style lang="less">
-.add-item-plan-drawer {
+.item-count-input-drawer {
     border-radius: 20px 20px 0px 0px;
     overflow: hidden;
     background: transparent;
-    max-height: 500px;
 }
 
-.m-add-item-plan-drawer {
+.m-item-count-input-drawer {
     display: flex;
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
-    max-height: 500px;
     position: relative;
     gap: 12px;
 
@@ -294,6 +198,25 @@ export default {
             border-radius: var(--12, 12px);
             padding: var(--12, 12px) var(--16, 16px);
             border: none;
+
+            &.u-delete {
+                border-radius: var(--12, 12px);
+                background: var(--secondary-red, #ff3b30);
+
+                display: flex;
+                padding: var(--12, 12px) var(--16, 16px);
+                justify-content: center;
+                align-items: center;
+                gap: var(--8, 8px);
+                color: #fff;
+
+                /* 16 Bold */
+                font-family: "Microsoft YaHei UI";
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 24px; /* 150% */
+            }
 
             &.u-confirm {
                 color: rgba(255, 255, 255, 0.4);

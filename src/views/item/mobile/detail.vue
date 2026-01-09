@@ -1,5 +1,5 @@
 <template>
-    <div class="c-var p-mobile-item-detail">
+    <div class="c-var p-mobile-item-detail" :class="{ 'is-drawer-mode': drawerMode }">
         <div class="m-page-container">
             <div class="m-item-info" v-if="source">
                 <div class="m-head">
@@ -60,8 +60,8 @@
                     </div>
                 </div>
             </div>
-            <Item v-if="showInfo" :item="source" :item_id="id" :client="client"></Item>
-            <div class="u-show-info" @click="showInfo = !showInfo">
+            <Item v-if="drawerMode || showInfo" :item="source" :item_id="id" :client="client"></Item>
+            <div class="u-show-info" @click="showInfo = !showInfo" v-if="!drawerMode">
                 <span>{{ showInfo ? "收起" : "查看" }}物品信息</span>
                 <i class="el-icon-arrow-down" v-if="!showInfo"></i>
                 <i class="el-icon-arrow-up" v-else></i>
@@ -123,12 +123,12 @@
             </fold-card>
 
             <!-- 评论区 -->
-            <div class="m-comments">
+            <div class="m-comments" v-if="!drawerMode">
                 <miniprogram-comment-list :source-id="id" type="item" />
             </div>
         </div>
         <suspend-common
-            v-if="!isFromTarget"
+            v-if="!isFromTarget && !drawerMode"
             class="u-suspend-common"
             :btn-options="{
                 showHome: true,
@@ -178,7 +178,7 @@ import { meanBy, maxBy, minBy } from "lodash";
 import PriceChart from "@/components/item/mobile/price-chart.vue";
 import { getMyFav, delMyFav } from "@/service/item.js";
 import { addFav } from "@jx3box/jx3box-common-ui/service/fav";
-import AddItemPlanDrawer from '@/components/item/mobile/add-item-plan-drawer.vue';
+import AddItemPlanDrawer from "@/components/item/mobile/add-item-plan-drawer.vue";
 
 export default {
     name: "MobileItemDetail",
@@ -191,7 +191,7 @@ export default {
         Item,
         ServerSelectDrawer,
         PriceChart,
-        AddItemPlanDrawer
+        AddItemPlanDrawer,
     },
     data() {
         return {
@@ -217,6 +217,9 @@ export default {
         ...mapState({
             client: (state) => state.client,
         }),
+        drawerMode() {
+            return this.$route.query?.drawer;
+        },
 
         id() {
             return this.$route.params.item_id;
@@ -429,7 +432,7 @@ export default {
                 });
         },
         onAddItemPlan() {
-            this.$refs["add-item-plan-drawer"].open(this.id);
+            this.$refs["add-item-plan-drawer"].open({ item_id: this.id, item: this.source });
         },
     },
     watch: {
@@ -469,6 +472,12 @@ export default {
     flex-direction: column;
     .size(100vw, 100vh);
 
+    &.is-drawer-mode {
+        .m-item-info {
+            background-color: transparent;
+        }
+    }
+
     #macro-comment {
         margin-top: 0;
     }
@@ -502,6 +511,10 @@ export default {
 
         .c-item {
             margin: 0 20px;
+            width: 331px;
+        }
+        .c-item-wrapper {
+            width: 331px;
         }
     }
 
