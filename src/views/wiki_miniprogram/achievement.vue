@@ -161,6 +161,7 @@ export default {
     },
     computed: {
         isDark() {
+
             // // 使用 window.matchMedia 检查系统是否启用了暗色模式
             const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
             return mediaQueryList.matches;
@@ -220,8 +221,6 @@ export default {
             this.achievementData = JSON.parse(localStorage.getItem("achievements") || "[]");
             let list = JSON.parse(localStorage.getItem("category_item_data") || "[]");
             if (list) {
-                console.log(list)
-                console.log(this.$route.query.name)
                 document.title = list.parentName + ' - ' + list.name;
                 this.info = list;
                 this.allPointsCount = list.allPoints;

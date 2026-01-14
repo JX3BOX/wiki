@@ -11,7 +11,10 @@
             </div>
             <div class="user-name" @click="openRoleDrawer">{{ currentRole.name }}</div>
             <div class="user-detail">
-                <img width="30" height="30" :src="showSchoolIcon(currentRole.mount)" class="hb-icon">
+                <img width="30" height="30" :src="mpAvatar" class="hb-icon">
+                <span>
+                    {{ xfName }}
+                </span>
                 <span>
                     {{ currentRole.server }}
                 </span>
@@ -35,50 +38,49 @@
         <div class="progress-overview">
             <div class="section-header">
                 <div class="section-title">进度概览</div>
-                <div class="toggle-mode" @click="drawerModeVisible = true; isSimpleModeSelect = isSimpleMode">
+                <!-- <div class="toggle-mode" @click="drawerModeVisible = true; isSimpleModeSelect = isSimpleMode">
                     {{ isSimpleMode ? '简略模式' : '详细模式' }}
                     <i class="el-icon-sort u-switch"></i>
-                </div>
+                </div> -->
             </div>
 
             <!-- 分类进度卡片 -->
             <div class="category-progress">
                 <div class="progress-card" v-for="(category, index) in list" :key="index"
                     @click="handleClick(category)">
-                    <div class="u-top" v-if="isSimpleMode">
-                        <div class="card-icon">
-                            <img :src="getIconPath(category.sub)" alt="" class="hb-icon" svg-inline>
-                        </div>
-                        <div class="u-info">
-                            <div class="card-title">{{ category.name }}</div>
-                            <div class="progress-percentage-small">
-                                {{ getCurrentProgress(category.ownPoints, category.allPoints) }}%
-                            </div>
-                        </div>
-                    </div>
                     <!-- 详细模式top -->
-                    <div class="u-top-detailed" v-else>
+                    <div class="u-top-detailed">
                         <div class="u-name">{{ category.name }}</div>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill"
+                                :style="{ width: getCurrentProgress(category.ownPoints, category.allPoints) + '%' }">
+                            </div>
+
+                        </div>
+                        <div class="progress-percentage-small">
+                            {{ getCurrentProgress(category.ownPoints, category.allPoints) }}%
+                        </div>
                         <div class="u-info">
                             <div class="u-num">
-                                {{ category.ownAchievements.length }}/{{ category.allAchievements.length }}
                                 <img width="14" height="14"
                                     :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/count.svg`)"
                                     alt="成就logo" />
+                                {{ category.ownAchievements.length }}/{{ category.allAchievements.length }}
+
                             </div>
                             <div class="u-num">
-                                {{ category.ownPoints }}/{{ category.allPoints }}
                                 <img width="14" height="14"
                                     :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/sum.svg`)"
                                     alt="资历logo" />
+                                {{ category.ownPoints }}/{{ category.allPoints }}
+
                             </div>
                         </div>
                     </div>
-                    <div class="progress-bar-small">
-                        <div class="progress-fill"
-                            :style="{ width: getCurrentProgress(category.ownPoints, category.allPoints) + '%' }"></div>
-                    </div>
 
+                    <div class="u-icon">
+                        <img :src="getIconPath(category.sub)" alt="" class="hb-icon" svg-inline>
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,6 +112,7 @@
  */
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon, iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
+import schoolid from "@jx3box/jx3box-data/data/xf/schoolid.json";
 
 import {
     getAchievementPoints,
@@ -119,6 +122,7 @@ import {
 import { getUserRoles } from "@/service/team";
 import { getMyInfo } from "@/service/user";
 import { __imgPath } from "@/utils/config";
+import { __cdn } from '@jx3box/jx3box-common/data/jx3box.json'
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import RoleListVue from "@/views/wiki_miniprogram/components/roleList.vue";
 import { mobileOpen } from "@/utils/minprogram";
@@ -137,7 +141,7 @@ export default {
             currentRole: {},
             drawerVisible: false,
             //是否精简模式
-            isSimpleMode: true,
+            isSimpleMode: false,
             isSimpleModeSelect: true,
             drawerModeVisible: false,
             modeType: [
@@ -187,6 +191,18 @@ export default {
             if (!this.ownPointsCount && !this.allPointsCount) return 0;
             return ((this.ownPointsCount / this.allPointsCount) * 100).toFixed(2);
         },
+        xfName() {
+            if (this.currentRole.mount) {
+                return schoolid[this.currentRole.mount] || '';
+            }
+            return "";
+        },
+        mpAvatar() {
+            if (this.currentRole.mount) {
+                return __cdn + `design/vector/school/${this.currentRole.mount}.svg`;
+            }
+            return null;
+        },
     },
     watch: {
 
@@ -195,7 +211,7 @@ export default {
             immediate: true,
             handler(val) {
                 if (!val) return;
-
+                console.log("juse", val)
                 const { jx3id } = val;
                 if (jx3id) {
                     this.$store.commit("SET_STATE", { key: "achievementsVirtual", value: [] });
@@ -524,7 +540,7 @@ export default {
             .avatar-bg {
                 width: 100%;
                 height: 100%;
-                background-color: #AEA6A6;
+                // background-color: #AEA6A6;
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -567,11 +583,12 @@ export default {
             color: rgba(28, 28, 28, 0.40);
             display: flex;
             align-items: center;
+            gap: 4px;
 
             .hb-icon {
                 width: 20px;
                 height: 20px;
-                margin-right: 4px;
+
             }
         }
     }
@@ -670,51 +687,33 @@ export default {
             gap: 10px;
 
             .progress-card {
+                border-radius: 8px;
                 padding: 12px;
                 background-color: #ffffff;
-                width: calc(50% - 5px);
-                flex-shrink: 0;
+                width: 100%;
                 box-sizing: border-box;
+                display: flex;
+                justify-content: space-between;
+                gap: 40px;
 
-                //简略模式
-                .u-top {
-                    display: flex;
-                    align-items: flex-end;
-                    justify-content: space-between;
+                .u-icon {
+                    width: 100px;
+                    height: 100px;
+                    flex-shrink: 0;
 
-                    .card-icon {
-                        width: 44px;
-                        height: 44px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-
-                    }
-
-                    .u-info {
-                        color: rgba(28, 28, 28, 0.80);
-                        font-style: normal;
-                        font-weight: 700;
-                        text-align: right;
-
-                        .card-title {
-                            font-size: 14px;
-                            line-height: 20px;
-
-                        }
-
-                        .progress-percentage-small {
-                            font-size: 12px;
-                            line-height: 18px;
-                        }
+                    .hb-icon {
+                        width: 100%;
+                        height: 100%;
                     }
                 }
 
                 //详细模式
                 .u-top-detailed {
+                    flex: 1;
                     display: flex;
+                    flex-direction: column;
                     align-items: flex-start;
-                    justify-content: space-between;
+                    gap: 8px;
                     color: rgba(28, 28, 28, 0.80);
                     font-style: normal;
 
@@ -728,12 +727,12 @@ export default {
                         font-size: 12px;
                         font-weight: 400;
                         line-height: 18px;
-                        text-align: right;
+                        text-align: left;
 
                         .u-num {
                             width: 100%;
                             display: flex;
-                            justify-content: flex-end;
+                            justify-content: flex-start;
                             align-items: center;
                             gap: 4px;
                         }
@@ -747,12 +746,21 @@ export default {
                     background-color: rgba(28, 28, 28, 0.1);
                     border-radius: 4px;
                     overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
 
                     .progress-fill {
                         height: 100%;
                         background-color: rgba(28, 28, 28, 0.8);
                         border-radius: 4px;
                     }
+
+                }
+
+                .progress-percentage-small {
+                    font-size: 14px;
+                    font-weight: 700;
+                    line-height: 20px;
                 }
             }
         }
@@ -779,10 +787,6 @@ export default {
             }
 
             .avatar-container {
-                .avatar-bg {
-                    background-color: #333333;
-                }
-
                 .avatar {
                     background-color: #555555;
                 }
