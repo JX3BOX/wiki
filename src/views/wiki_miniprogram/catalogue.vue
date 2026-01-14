@@ -174,7 +174,6 @@ export default {
         ) {
             // 我完成的成就
             const ownAllAchievements = this.achievementData;
-            // console.log("成就循环", data);
             data.achievements.forEach((aItem) => {
                 // 判断aItem是否是数组
                 if (Array.isArray(aItem)) {
