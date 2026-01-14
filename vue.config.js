@@ -60,38 +60,38 @@ module.exports = {
     // ❤️ Porxy ~
     devServer: {
         proxy: {
-             ...VueProxyPlugin.generateBuiltinProxy(),
+            ...VueProxyPlugin.generateBuiltinProxy(),
             // 专门为直接的 /api/next2/ 路径配置代理到 dev.next2.jx3box.com
-            '/api/next2': {
-                target: 'https://dev.next2.jx3box.com',
+            "/api/next2": {
+                target: "https://dev.next2.jx3box.com",
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/api/next2': '/api/next2'
+                    "^/api/next2": "/api/next2",
                 },
                 onProxyReq: function (request) {
                     request.setHeader("origin", "");
                 },
             },
-            '/api/summary-any': {
-                target: 'https://dev.next2.jx3box.com',
+            "/api/summary-any": {
+                target: "https://dev.next2.jx3box.com",
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/api/next2': '/api/next2'
+                    "^/api/next2": "/api/next2",
                 },
                 onProxyReq: function (request) {
                     request.setHeader("origin", "");
                 },
             },
-            '/api/summary': {
-                target: 'https://dev.next2.jx3box.com',
+            "/api/summary": {
+                target: "https://dev.next2.jx3box.com",
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/api/next2': '/api/next2'
+                    "^/api/next2": "/api/next2",
                 },
                 onProxyReq: function (request) {
                     request.setHeader("origin", "");
                 },
-            }
+            },
         },
         port: process.env.DEV_PORT || 12028, // 默认端口
     },
@@ -117,6 +117,18 @@ module.exports = {
         (process.env.STATIC_PATH == "root" && "/") ||
         //for lost
         "/",
+
+    transpileDependencies: [
+        "htmlparser2",
+        "cheerio",
+        "dom-serializer",
+        "domelementtype",
+        "domhandler",
+        "domutils",
+        "entities",
+        "parse5",
+        "parse5-htmlparser2-tree-adapter",
+    ],
 
     chainWebpack: (config) => {
         //💘 html-webpack-plugin ~
