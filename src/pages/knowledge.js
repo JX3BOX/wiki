@@ -6,7 +6,7 @@ import ElementUI from "element-ui";
 Vue.use(ElementUI);
 
 // 通用UI模块
-import JX3BOX_UI from '@jx3box/jx3box-common-ui'
+import JX3BOX_UI from "@jx3box/jx3box-common-ui";
 import "@jx3box/jx3box-common/css/element.css";
 import "@jx3box/jx3box-common/css/normalize.css";
 Vue.use(JX3BOX_UI);
@@ -18,10 +18,9 @@ reporter.install(Vue);
 import router from "@/router/knowledge.js";
 import store from "@/store";
 
-import App from "@/views/knowledge/knowledge.vue";
+import App from "@/views/base.vue";
 new Vue({
     router,
     store,
-    render: h => h(App),
+    render: (h) => h(App),
 }).$mount("#app");
-

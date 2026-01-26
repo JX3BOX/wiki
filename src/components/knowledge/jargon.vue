@@ -6,8 +6,10 @@
         </div>
         <div class="m-panel m-jargon">
             <div v-for="(item, index) in list" :key="index" class="u-jargon">
-                <i class="el-icon-collection-tag"></i
-                ><router-link class="u-name" :to="'/view/' + item.id">{{ item.name }}</router-link>
+                <i class="el-icon-collection-tag"></i>
+                <router-link class="u-name" :to="{ name: 'view', params: { source_id: item.id } }">{{
+                    item.name
+                }}</router-link>
             </div>
         </div>
     </div>
@@ -54,7 +56,7 @@ export default {
     overflow: hidden;
     .u-jargon {
         .flex;
-        padding:5px;
+        padding: 5px;
         // .mb(10px);
         flex-shrink: 0;
         align-items: center;
