@@ -28,9 +28,7 @@
                     <div class="m-section" v-for="(section, i) in homeSections" :key="`${section.key}${i}`">
                         <div class="m-section-header">
                             <span class="u-title">{{ section.label }}</span>
-                            <span class="u-more" @click="enterCategory(section.key)"
-                                >更多 <i class="el-icon-arrow-right"></i
-                            ></span>
+                            <span class="u-more" @click="enterCategory(section.key)"> 更多 </span>
                         </div>
 
                         <!-- Multi-Block Section (Mixed Layout) -->
@@ -387,7 +385,7 @@ export default {
         gap: 12px;
         border-radius: 8px;
         background: var(--black-5, rgba(28, 28, 28, 0.05));
-        color: var(--Primary-Brand-2, #fedaa3);
+        color: var(--primary-brand-2, #fedaa3);
 
         .u-search-icon {
             .size(120px);
@@ -425,18 +423,6 @@ export default {
             font-weight: 700;
             color: var(--black-100);
             position: relative;
-            padding-left: 10px;
-
-            &:before {
-                content: "";
-                position: absolute;
-                left: 0;
-                top: 4px;
-                bottom: 4px;
-                width: 4px;
-                border-radius: 4px;
-                background: var(--primary-brand-3);
-            }
         }
 
         .u-more,

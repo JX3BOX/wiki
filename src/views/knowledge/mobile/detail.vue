@@ -5,7 +5,7 @@
             <div class="u-main-title" v-if="title">{{ title }}</div>
 
             <!-- Content Card -->
-            <fold-card title="通识攻略" fixed v-if="post">
+            <fold-card title="通识攻略" class="m-content-card" fixed v-if="post">
                 <div class="m-wiki-header">
                     <div class="m-wiki">
                         <div class="m-wiki-header">
@@ -249,6 +249,20 @@ export default {
         gap: 16px;
     }
 
+    .m-content-card {
+        gap: 4px;
+        display: flex;
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--16, 16px);
+        align-self: stretch;
+
+        border-radius: 12px;
+        border: 1px solid rgba(40, 40, 40, 0.05);
+        background: var(--primary-brand-4, #fff);
+    }
+
     .u-main-title {
         color: var(--black-100, #1c1c1c);
         font-family: "Microsoft YaHei UI";
@@ -266,8 +280,7 @@ export default {
         width: 100%;
         border-radius: 12px;
         box-sizing: border-box;
-        border: 1px solid rgba(40, 40, 40, 0.05);
-        background: var(--primary-brand-4, #282828);
+
         .m-wiki-header {
             display: flex;
             flex-direction: column;
