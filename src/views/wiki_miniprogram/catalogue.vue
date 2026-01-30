@@ -123,9 +123,9 @@ export default {
     methods: {
         showSchoolIcon,
         getListInit() {
-            this.pointsData = JSON.parse(localStorage.getItem("points_data") || "{}");
-            this.achievementData = JSON.parse(localStorage.getItem("achievements") || "[]");
-            let list = JSON.parse(localStorage.getItem("category_data") || "[]");
+            this.pointsData = JSON.parse(sessionStorage.getItem("points_data") || "{}");
+            this.achievementData = JSON.parse(sessionStorage.getItem("achievements") || "[]");
+            let list = JSON.parse(sessionStorage.getItem("category_data") || "[]");
             if (list) {
                 document.title = list.name;
                 this.info = list;
@@ -149,7 +149,7 @@ export default {
          */
         handleClick(category) {
             category.parentName = this.info.name;
-            localStorage.setItem("category_item_data", JSON.stringify(category || {}));
+            sessionStorage.setItem("category_item_data", JSON.stringify(category || {}));
             // this.$router.push({ name: "achievementList", query: { name: this.info.name } });
             // 小程序打开界面
             mobileOpen(this.$router.resolve({

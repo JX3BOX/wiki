@@ -107,7 +107,8 @@
         </el-drawer>
         <!-- 详细信息弹窗 -->
         <achievement_detail ref="achievementDetail" v-if="achievementDetailVisible"
-            :visible.sync="achievementDetailVisible" :current.sync="current"></achievement_detail>
+            :visible.sync="achievementDetailVisible" :current.sync="current">
+        </achievement_detail>
     </div>
 </template>
 <script>
@@ -217,9 +218,9 @@ export default {
             this.handleModeClose()
         },
         getListInit() {
-            this.pointsData = JSON.parse(localStorage.getItem("points_data") || "{}");
-            this.achievementData = JSON.parse(localStorage.getItem("achievements") || "[]");
-            let list = JSON.parse(localStorage.getItem("category_item_data") || "[]");
+            this.pointsData = JSON.parse(sessionStorage.getItem("points_data") || "{}");
+            this.achievementData = JSON.parse(sessionStorage.getItem("achievements") || "[]");
+            let list = JSON.parse(sessionStorage.getItem("category_item_data") || "[]");
             if (list) {
                 document.title = list.parentName + ' - ' + list.name;
                 this.info = list;
@@ -686,6 +687,12 @@ export default {
                 }
             }
         }
+    }
+}
+
+.not-on-bottom {
+    &::after {
+        bottom: 60px !important;
     }
 }
 </style>

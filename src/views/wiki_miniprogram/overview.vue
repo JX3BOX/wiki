@@ -33,7 +33,29 @@
                 <div class="progress-fill" :style="{ width: totalProgress + '%' }"></div>
             </div>
         </div>
-
+        <!-- 亲友对比/渡劫方案 -->
+        <div class="friend-comparison">
+            <div class="section-title">
+                <div class="title-content" @click="handleClickBtn('friendComparison')">
+                    <img height="24"
+                        :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/comparison.svg`)"
+                        class="u-icon-left">
+                    亲友对比
+                </div>
+                <img height="14" :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/right.svg`)"
+                    class="u-icon-right">
+            </div>
+            <div class="section-title disabled">
+                <div class="title-content">
+                    <img height="24"
+                        :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/improvement.svg`)"
+                        class="u-icon-left">
+                    渡劫方案
+                </div>
+                <img height="14" :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/right.svg`)"
+                    class="u-icon-right">
+            </div>
+        </div>
         <!-- 进度概览 -->
         <div class="progress-overview">
             <div class="section-header">
@@ -227,12 +249,20 @@ export default {
     methods: {
         showSchoolIcon,
         /**
+         * 处理按钮点击
+         * @param {string} btn - 按钮名称
+         */
+        handleClickBtn(btn) {
+            if (btn === 'friendComparison') {
+                this.$router.push({ name: "compare", query: {} });
+            }
+        },
+        /**
          * 处理分类点击
          * @param {object} category - 分类项
          */
         handleClick(category) {
-
-            localStorage.setItem("category_data", JSON.stringify(category || {}));
+            sessionStorage.setItem("category_data", JSON.stringify(category || {}));
             // this.$router.push({ name: "catalogue", query: {} });
             // 小程序打开界面
             mobileOpen(this.$router.resolve({
@@ -292,13 +322,16 @@ export default {
         loadUserRoles() {
             getUserRoles().then((res) => {
                 this.roleList = res.data?.data?.list || [];
-                const wiki_last_sync_jx3id = localStorage.getItem("wiki_last_sync");
+                sessionStorage.setItem("wiki_my_roles", JSON.stringify(this.roleList || []));
+                const wiki_last_sync_jx3id = sessionStorage.getItem("wiki_last_sync");
                 if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
                     this.currentRole = this.roleList.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
+                    sessionStorage.setItem("wiki_last_sync", this.currentRole.jx3id || 0);
+                    this.$store.commit("SET_STATE", { key: "role", value: this.currentRole });
                 } else {
                     if (this.roleList.length) {
                         this.currentRole = this.roleList[0];
-                        localStorage.setItem("wiki_last_sync", this.currentRole.jx3id || 0);
+                        sessionStorage.setItem("wiki_last_sync", this.currentRole.jx3id || 0);
                         this.$store.commit("SET_STATE", { key: "role", value: this.currentRole });
                     }
                 }
@@ -312,7 +345,7 @@ export default {
                 this.isSync = !!jx3id; // 是否在游戏中同步
                 const list = achievements.split(",");
                 this.$store.commit("SET_STATE", { key: "achievements", value: list, isSession: true });
-                localStorage.setItem("achievements", JSON.stringify(list || []));
+                sessionStorage.setItem("achievements", JSON.stringify(list || []));
                 this.getRenderList();
             });
         },
@@ -347,7 +380,7 @@ export default {
             getAchievementPoints().then((res) => {
                 const data = res.data.data.points;
                 this.pointsData = data;
-                localStorage.setItem("points_data", JSON.stringify(data || {}));
+                sessionStorage.setItem("points_data", JSON.stringify(data || {}));
                 this.loadUserRoles(); // 获取用户角色列表
             });
         },
@@ -535,7 +568,7 @@ export default {
             position: relative;
             width: 160px;
             height: 160px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
 
             .avatar-bg {
                 width: 100%;
@@ -590,6 +623,42 @@ export default {
                 height: 20px;
 
             }
+        }
+    }
+
+    // 亲友对比/渡劫方案区域
+    .friend-comparison {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+
+        .section-title {
+            border-radius: 8px;
+            background: #24292e;
+            padding: 12px;
+            width: calc(50% - 6px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .title-content {
+                color: #FEDAA3;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 24px;
+                display: flex;
+                align-items: center;
+                gap: 8px
+            }
+
+            &.disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+
         }
     }
 

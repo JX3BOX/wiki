@@ -4,6 +4,9 @@ import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 Vue.use(VueRouter);
 let overview = () => import("../views/wiki/overview.vue");
 const overviewMiniProgram = () => import("../views/wiki_miniprogram/overview.vue");
+const leap = () => import("../views/wiki/leap.vue");
+const compare = () => import("../views/wiki/compare.vue");
+const compareMiniProgram = () => import("../views/wiki_miniprogram/compare.vue");
 const routes = [
     {
         name: "index",
@@ -18,12 +21,12 @@ const routes = [
     {
         name: "compare",
         path: "/compare",
-        component: () => import("../views/wiki/compare.vue"),
+        component: isMiniProgram() ? compareMiniProgram : compare,
     },
     {
         name: "leap",
         path: "/leap",
-        component: () => import("../views/wiki/leap.vue"),
+        component: leap,
     },
     {
         name: "catalogue",
@@ -40,6 +43,22 @@ const routes = [
             title: "成就列表",
         },
         component: () => import("../views/wiki_miniprogram/achievement.vue"),
+    },
+    {
+        name: "compare/catalogue",
+        path: "/compare/catalogue",
+        meta: {
+            title: "对比目录列表",
+        },
+        component: () => import("../views/wiki_miniprogram/compare/compare_catalogue.vue"),
+    },
+    {
+        name: "compare/achievement",
+        path: "/compare/achievement",
+        meta: {
+            title: "对比成就列表",
+        },
+        component: () => import("../views/wiki_miniprogram/compare/compare_achievement.vue"),
     },
 ];
 
