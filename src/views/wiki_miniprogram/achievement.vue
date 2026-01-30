@@ -41,7 +41,7 @@
             <div class="u-filter-item" @click="handleModeClick">
                 <span>筛选</span>
                 <img width="15" height="15"
-                    :src="require(`@/assets/img/wiki_miniprogram/${!isDark ? 'Dark' : 'Light'}/shaixuan.svg`)"
+                    :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/shaixuan.svg`)"
                     alt="筛选logo" />
             </div>
         </div>
