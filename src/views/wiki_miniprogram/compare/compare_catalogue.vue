@@ -133,8 +133,8 @@ export default {
         async init() {
             //设置加载中
             this.loading = true;
-            //获取对比角色列表
-            let roles = this.$route.query.roles.split(','), menuId = this.$route.query.menuId;
+            //获取对比角色列表this.$route.query.roles使用url解码
+            let roles = decodeURIComponent(this.$route.query.roles).split(','), menuId = this.$route.query.menuId;
             const compareRoles = await Promise.all(roles.map(async (role) => {
                 const roleInfo = role.split('|');
                 const achievements = await getRoleGameAchievementsList(roleInfo[0]);
