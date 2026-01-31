@@ -179,7 +179,7 @@ export default {
             //设置加载中
             this.loading = true;
             //获取对比角色列表this.$route.query.roles使用url解码
-            let roles = decodeURIComponent(this.$route.query.roles).split(','), sub = this.$route.query.sub, detail = this.$route.query.detail;
+            let roles = decodeURIComponent(decodeURIComponent(decodeURIComponent(this.$route.query.roles))).split(','), sub = this.$route.query.sub, detail = this.$route.query.detail;
             //初始化菜单及成就点列表
             let menuAndPoints = await getMenuAndPoints(this.$store.state.client);
             let menuList = menuAndPoints.menuList || [];
