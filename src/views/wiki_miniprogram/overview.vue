@@ -60,10 +60,6 @@
         <div class="progress-overview">
             <div class="section-header">
                 <div class="section-title">进度概览</div>
-                <!-- <div class="toggle-mode" @click="drawerModeVisible = true; isSimpleModeSelect = isSimpleMode">
-                    {{ isSimpleMode ? '简略模式' : '详细模式' }}
-                    <i class="el-icon-sort u-switch"></i>
-                </div> -->
             </div>
 
             <!-- 分类进度卡片 -->
@@ -106,21 +102,6 @@
                 </div>
             </div>
         </div>
-        <!-- 模式切换 -->
-        <el-drawer title="显示模式" :visible="drawerModeVisible" direction="btt" size="280px" @close="handleModeClose"
-            class="c-mode-list-drawer">
-            <div class="mode-list-container">
-                <div v-for="(item, index) in modeType" :key="index" class="mode-item" @click="toggleMode(item.value)"
-                    :class="{ 'selected': isSimpleModeSelect == item.value }">
-                    <div class="mode-name">{{ item.name }}</div>
-                    <div class="mode-detail">{{ item.detail }}</div>
-                </div>
-            </div>
-            <div class="mode-button-group">
-                <el-button @click="resetMode" class="u-reset">重置</el-button>
-                <el-button @click="confirmMode" class="u-submit">确定</el-button>
-            </div>
-        </el-drawer>
         <!-- 角色列表 -->
         <RoleListVue :visible.sync="drawerVisible" :roles="roleList" :currentRole="currentRole"
             @confirmSelection="handleConfirmSelection">
@@ -136,18 +117,13 @@ import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon, iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import schoolid from "@jx3box/jx3box-data/data/xf/schoolid.json";
 
-import {
-    getAchievementPoints,
-    getRoleGameAchievements,
-    getMenus,
-} from "@/service/achievement";
-import { getUserRoles } from "@/service/team";
 import { getMyInfo } from "@/service/user";
 import { __imgPath } from "@/utils/config";
 import { __cdn } from '@jx3box/jx3box-common/data/jx3box.json'
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import RoleListVue from "@/views/wiki_miniprogram/components/roleList.vue";
 import { mobileOpen } from "@/utils/minprogram";
+import { getUserRolesList, getRoleGameAchievementsList, getMenuAndPoints, getAchievementsFinishStatus } from "@/utils/wiki_miniprogram";
 export default {
     name: "OverviewMiniProgram",
     components: {
@@ -162,24 +138,8 @@ export default {
             roleList: [],
             currentRole: {},
             drawerVisible: false,
-            //是否精简模式
-            isSimpleMode: false,
-            isSimpleModeSelect: true,
-            drawerModeVisible: false,
-            modeType: [
-                {
-                    name: '简略模式',
-                    detail: '<只显示百分比进度>',
-                    value: true
-                },
-                {
-                    name: '详细模式',
-                    detail: '<显示成就数和资历数>',
-                    value: false
-                }
-            ],
             //分类数据
-            achievementData: [],
+            menuList: [],
             //成就点数
             pointsData: {},
             //整合列表
@@ -230,13 +190,10 @@ export default {
 
         currentRole: {
             deep: true,
-            immediate: true,
             handler(val) {
                 if (!val) return;
-                console.log("juse", val)
                 const { jx3id } = val;
                 if (jx3id) {
-                    this.$store.commit("SET_STATE", { key: "achievementsVirtual", value: [] });
                     this.loadRoleAchievements(jx3id);
                 }
             },
@@ -259,15 +216,14 @@ export default {
         },
         /**
          * 处理分类点击
-         * @param {object} category - 分类项
+         * @param {object} menu - 分类项
          */
-        handleClick(category) {
-            sessionStorage.setItem("category_data", JSON.stringify(category || {}));
-            // this.$router.push({ name: "catalogue", query: {} });
+        handleClick(menu) {
+            console.log(menu)
             // 小程序打开界面
             mobileOpen(this.$router.resolve({
                 name: "catalogue",
-                query: {}
+                query: { menuId: menu.sub, jx3id: this.currentRole.jx3id }
             }).href);
         },
         /**
@@ -278,34 +234,10 @@ export default {
         getIconPath(sub) {
             return require(`@/assets/img/wiki_miniprogram/${this.isDark ? 'Dark' : 'Light'}/tog_${sub}.svg`);
         },
-        /**************************模式切换***********************/
-        /**
-         * 切换显示模式
-       * @param {boolean} isSimple - 是否为简略模式
-         */
-        toggleMode(isSimple) {
-            this.isSimpleModeSelect = isSimple;
-        },
-        /**
-         * 处理抽屉关闭
-         */
-        handleModeClose() {
-            this.drawerModeVisible = false;
-        },
-        /**
-         * 重置显示模式为默认值（简略模式）
-         */
-        resetMode() {
-            this.isSimpleModeSelect = true;
-        },
-        /**
-         * 确认选择并关闭抽屉
-         */
-        confirmMode() {
-            this.isSimpleMode = this.isSimpleModeSelect
-            this.drawerModeVisible = false;
-        },
 
+        getCurrentProgress(own, all) {
+            return ((own / all) * 100).toFixed(2);
+        },
         getUserInfo() {
             if (!User.isLogin()) {
                 this.$confirm("请先登录再使用")
@@ -313,42 +245,34 @@ export default {
             }
             getMyInfo().then((res) => {
                 this.userInfo = res;
-                this.getList();
+                this.init();
             });
         },
-
+        /**
+         * 初始化数据
+         */
+        async init() {
+            //初始化菜单及成就点列表
+            let menuAndPoints = await getMenuAndPoints(this.$store.state.client);
+            this.menuList = menuAndPoints.menuList || [];
+            this.pointsData = menuAndPoints.pointsList || [];
+            //初始化用户角色列表
+            this.roleList = await getUserRolesList();
+            if (this.roleList.length) {
+                this.currentRole = this.roleList[0];
+            }
+        },
+        /**
+         * 加载角色成就列表
+         * @param {string} jx3id - 角色JX3ID
+         */
+        async loadRoleAchievements(jx3id) {
+            let achievements = await getRoleGameAchievementsList(jx3id);
+            this.isSync = achievements.isSync
+            this.currentRole.achievements = achievements.list || [];
+            this.getRenderList();
+        },
         /**************************角色相关*****************************/
-        // 获取用户角色列表
-        loadUserRoles() {
-            getUserRoles().then((res) => {
-                this.roleList = res.data?.data?.list || [];
-                sessionStorage.setItem("wiki_my_roles", JSON.stringify(this.roleList || []));
-                const wiki_last_sync_jx3id = sessionStorage.getItem("wiki_last_sync");
-                if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
-                    this.currentRole = this.roleList.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
-                    sessionStorage.setItem("wiki_last_sync", this.currentRole.jx3id || 0);
-                    this.$store.commit("SET_STATE", { key: "role", value: this.currentRole });
-                } else {
-                    if (this.roleList.length) {
-                        this.currentRole = this.roleList[0];
-                        sessionStorage.setItem("wiki_last_sync", this.currentRole.jx3id || 0);
-                        this.$store.commit("SET_STATE", { key: "role", value: this.currentRole });
-                    }
-                }
-            });
-        },
-        // 获取角色成就状态
-        loadRoleAchievements(jx3id) {
-            getRoleGameAchievements(jx3id).then((res) => {
-                const achievements = res.data?.data?.achievements || "";
-                const jx3id = res.data?.data?.jx3id;
-                this.isSync = !!jx3id; // 是否在游戏中同步
-                const list = achievements.split(",");
-                this.$store.commit("SET_STATE", { key: "achievements", value: list, isSession: true });
-                sessionStorage.setItem("achievements", JSON.stringify(list || []));
-                this.getRenderList();
-            });
-        },
         /**
          * 打开角色选择抽屉
          */
@@ -360,85 +284,17 @@ export default {
          * @param {Object} role - 选中的角色
          */
         handleConfirmSelection(role) {
-            console.log(role);
             this.currentRole = role;
             this.drawerVisible = false;
         },
         /*****************************获取成就列表********************************/
-        getList() {
-            getMenus({
-                general: 1,
-                client: this.$store.state.client,
-            }).then((res) => {
-                const data = res.data.data.menus;
-                this.achievementData = data;
-                this.getPoints();
-            });
-        },
-        // 获取成就对应点数
-        getPoints() {
-            getAchievementPoints().then((res) => {
-                const data = res.data.data.points;
-                this.pointsData = data;
-                sessionStorage.setItem("points_data", JSON.stringify(data || {}));
-                this.loadUserRoles(); // 获取用户角色列表
-            });
-        },
 
-        // 回调获取所有成就
-        getAllAchievementsData(
-            data,
-            allAchievements = [],
-            ownAchievements = [],
-            countData = { allPoints: 0, ownPoints: 0 }
-        ) {
-            // 我完成的成就
-            const ownAllAchievements = this.$store.state.achievements;
-            // console.log("成就循环", data);
-            data.achievements.forEach((aItem) => {
-                // 判断aItem是否是数组
-                if (Array.isArray(aItem)) {
-                    aItem.forEach((item) => {
-                        if (this.pointsData[item]) {
-                            countData.allPoints += this.pointsData[item];
-                            allAchievements.push(item);
-                            if (ownAllAchievements.includes(String(item))) {
-                                countData.ownPoints += this.pointsData[item];
-                                ownAchievements.push(item);
-                            }
-                        }
-                    });
-                } else {
-                    if (this.pointsData[aItem]) {
-                        countData.allPoints += this.pointsData[aItem];
-                        allAchievements.push(aItem);
-                        if (ownAllAchievements.includes(String(aItem))) {
-                            countData.ownPoints += this.pointsData[aItem];
-                            ownAchievements.push(aItem);
-                        }
-                    }
-                }
-            });
-
-            if (data.children) {
-                data.children.forEach((item) => {
-                    this.getAllAchievementsData(item, allAchievements, ownAchievements, countData);
-                });
-            }
-
-            // 去重
-            return {
-                allAchievements: allAchievements,
-                allPoints: countData.allPoints,
-                ownAchievements: ownAchievements,
-                ownPoints: countData.ownPoints,
-            };
-        },
-        getRenderList(data) {
-            data = data ? data : this.achievementData;
-            const list = Object.keys(data).map((key) => {
-                const item = data[key];
-                const allData = this.getAllAchievementsData(item);
+        getRenderList() {
+            let menuList = this.menuList || []
+            const my_achievements = this.currentRole.achievements || [];
+            const list = Object.keys(menuList).map((key) => {
+                const item = menuList[key];
+                const allData = getAchievementsFinishStatus(item, my_achievements);
                 return {
                     sub: item.sub,
                     detail: item.detail,
@@ -452,7 +308,6 @@ export default {
             });
             this.list = list;
             this.allPointsCount = list.reduce((acc, item) => acc + item.allPoints, 0);
-            const my_achievements = this.$store.state.achievements;
             this.ownPointsCount = my_achievements.reduce((acc, item) => acc + (this.pointsData[item] || 0), 0);
             // 如果我的成就点数长度大于4，则截取后4位写在ownPointsCountOther，其余写在ownPointsCountW
             const pointsStr = this.ownPointsCount.toString();
@@ -464,9 +319,7 @@ export default {
                 this.ownPointsCountOther = pointsStr;
             }
         },
-        getCurrentProgress(own, all) {
-            return ((own / all) * 100).toFixed(2);
-        },
+
     }
 }
 </script>

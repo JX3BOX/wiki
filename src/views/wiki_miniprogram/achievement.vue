@@ -13,13 +13,13 @@
                                 <img width="12" height="12"
                                     :src="require(`@/assets/img/wiki_miniprogram/${!isDark ? 'Dark' : 'Light'}/count.svg`)"
                                     alt="成就logo" />
-                                {{ info.ownAchievements.length }}/{{ info.allAchievements.length }}
+                                {{ finishedCategoryCount || 0 }}/{{ categoryCount || 0 }}
                             </div>
                             <div class="u-num">
                                 <img width="12" height="12"
                                     :src="require(`@/assets/img/wiki_miniprogram/${!isDark ? 'Dark' : 'Light'}/sum.svg`)"
                                     alt="资历logo" />
-                                {{ info.ownPoints }}/{{ info.allPoints }}
+                                {{ ownPointsCount || 0 }}/{{ allPointsCount || 0 }}
                             </div>
                         </div>
                     </div>
@@ -116,10 +116,9 @@
  * 成就列表组件
  * 展示用户成就列表、总进度和分类进度概览
  */
-import {
-    getMenuAchievements,
-} from "@/service/achievement";
-import { showSchoolIcon, iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
+import { getMenuAchievements } from "@/service/achievement";
+import { getRoleGameAchievementsList, getMenuAndPoints, getAchievementsFinishStatus } from "@/utils/wiki_miniprogram";
+import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import { __imgPath } from "@/utils/config";
 import { cloneDeep } from "lodash";
 import achievement_detail from "@/views/wiki_miniprogram/components/achievement_detail.vue"
@@ -146,8 +145,14 @@ export default {
             pointsData: {},
             //整合列表
             list: [],
+            // 所有分类的总成就点数
             allPointsCount: 0,
+            // 我拥有的所有资历点数
             ownPointsCount: 0,
+            // 分类总数
+            categoryCount: 0,
+            // 我完成的分类树
+            finishedCategoryCount: 0,
             // 我拥有的所有资历点数万字位以上
             ownPointsCountW: null,
             // 我拥有的所有资历点数其他位
@@ -162,7 +167,6 @@ export default {
     },
     computed: {
         isDark() {
-
             // // 使用 window.matchMedia 检查系统是否启用了暗色模式
             const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
             return mediaQueryList.matches;
@@ -172,9 +176,6 @@ export default {
             if (!this.ownPointsCount && !this.allPointsCount) return 0;
             return ((this.ownPointsCount / this.allPointsCount) * 100).toFixed(2);
         },
-    },
-    watch: {
-
     },
     created() {
         this.getListInit();
@@ -217,42 +218,45 @@ export default {
             }
             this.handleModeClose()
         },
-        getListInit() {
-            this.pointsData = JSON.parse(sessionStorage.getItem("points_data") || "{}");
-            this.achievementData = JSON.parse(sessionStorage.getItem("achievements") || "[]");
-            let list = JSON.parse(sessionStorage.getItem("category_item_data") || "[]");
-            if (list) {
-                document.title = list.parentName + ' - ' + list.name;
-                this.info = list;
-                this.allPointsCount = list.allPoints;
-                this.ownPointsCount = list.ownPoints;
-                // 如果我的成就点数长度大于4，则截取后4位写在ownPointsCountOther，其余写在ownPointsCountW
-                const pointsStr = this.ownPointsCount.toString();
-                if (pointsStr.length > 4) {
-                    this.ownPointsCountW = pointsStr.slice(0, -4);
-                    this.ownPointsCountOther = pointsStr.slice(-4);
-                } else {
-                    this.ownPointsCountW = '';
-                    this.ownPointsCountOther = pointsStr;
+        async getListInit() {
+            //获取分类sub，根据sub获取分类数据
+            let menuId = this.$route.query.menuId, detail = this.$route.query.detail, jx3id = this.$route.query.jx3id;
+            //初始化菜单及成就点列表
+            let menuAndPoints = await getMenuAndPoints(this.$store.state.client);
+            let menuList = menuAndPoints.menuList || [];
+            this.pointsData = menuAndPoints.pointsList || [];
+            //从menuList中根据sub获取分类数据，menuInfo为对象
+            Object.keys(menuList).forEach((key) => {
+                let item = menuList[key];
+                if (item.sub == menuId) {
+                    //循环children根据detail比对
+                    let info = item.children.find(child => child.detail == detail) || {};
+                    if (info) {
+                        this.info = info;
+                        document.title = item.name + ' - ' + info.name;
+                        console.log(info);
+                    }
                 }
-                // this.getRenderList(list.children);
-                this.getMenuAchievements(list)
-            }
+            })
+
+            let achievements = await getRoleGameAchievementsList(jx3id);
+            this.finishedAchievements = achievements.list || [];
+            this.getRenderList();
         },
         // 获取成就列表
-        getMenuAchievements(menu) {
-            this.loading = true;
+        getMenuAchievements() {
+            let menu = this.info, finishedAchievements = this.finishedAchievements;
             getMenuAchievements(menu.sub, menu.detail)
                 .then((data) => {
                     let list = data.data.data.achievements || [];
                     let arr = [];
                     list.forEach((item) => {
-                        item.isCompleted = menu.ownAchievements.includes(item.ID);
+                        item.isCompleted = finishedAchievements.includes(String(item.ID));
                         arr.push(item);
                         if (item.SeriesAchievementList) {
                             item.SeriesAchievementList.forEach((sub, index) => {
                                 if (index > 0) {
-                                    sub.isCompleted = menu.ownAchievements.includes(sub.ID);
+                                    sub.isCompleted = finishedAchievements.includes(String(sub.ID));
                                     arr.push(sub);
                                 }
                             });
@@ -261,9 +265,7 @@ export default {
                     this.achievements_list_all = arr;
                     this.achievements_list = arr;
                 })
-                .finally(() => {
-                    this.loading = false;
-                });
+
         },
         /**
          * 处理成就点击
@@ -281,71 +283,41 @@ export default {
         getIconPath(sub) {
             return require(`@/assets/img/wiki_miniprogram/tog_${sub}.svg`);
         },
-        // 回调获取所有成就
-        getAllAchievementsData(
-            data,
-            allAchievements = [],
-            ownAchievements = [],
-            countData = { allPoints: 0, ownPoints: 0 }
-        ) {
-            // 我完成的成就
-            const ownAllAchievements = this.achievementData;
-            // console.log("成就循环", data);
-            data.achievements.forEach((aItem) => {
-                // 判断aItem是否是数组
-                if (Array.isArray(aItem)) {
-                    aItem.forEach((item) => {
-                        if (this.pointsData[item]) {
-                            countData.allPoints += this.pointsData[item];
-                            allAchievements.push(item);
-                            if (ownAllAchievements.includes(String(item))) {
-                                countData.ownPoints += this.pointsData[item];
-                                ownAchievements.push(item);
-                            }
-                        }
-                    });
-                } else {
-                    if (this.pointsData[aItem]) {
-                        countData.allPoints += this.pointsData[aItem];
-                        allAchievements.push(aItem);
-                        if (ownAllAchievements.includes(String(aItem))) {
-                            countData.ownPoints += this.pointsData[aItem];
-                            ownAchievements.push(aItem);
-                        }
-                    }
+
+        getRenderList() {
+            //获取   achievements，二维数组转成一维数组
+            const achievements = this.info.achievements?.flat(Infinity) || [];
+            this.categoryCount = achievements.length;
+
+            const finishedAchievements = achievements.filter(item =>
+                this.finishedAchievements?.includes(String(item))
+            );
+            this.finishedCategoryCount = finishedAchievements.length;
+
+            const statistics = achievements.reduce((acc, achievementId) => {
+                const points = this.pointsData?.[achievementId] || 0;
+                acc.allPointsCount += points;
+
+                if (this.finishedAchievements?.includes(String(achievementId))) {
+                    acc.ownPointsCount += points;
                 }
-            });
 
-            if (data.children) {
-                data.children.forEach((item) => {
-                    this.getAllAchievementsData(item, allAchievements, ownAchievements, countData);
-                });
+                return acc;
+            }, { allPointsCount: 0, ownPointsCount: 0 });
+
+            this.allPointsCount = statistics.allPointsCount;
+            this.ownPointsCount = statistics.ownPointsCount;
+            // 如果我的成就点数长度大于4，则截取后4位写在ownPointsCountOther，其余写在ownPointsCountW
+            const pointsStr = this.ownPointsCount.toString();
+            if (pointsStr.length > 4) {
+                this.ownPointsCountW = pointsStr.slice(0, -4);
+                this.ownPointsCountOther = pointsStr.slice(-4);
+            } else {
+                this.ownPointsCountW = '';
+                this.ownPointsCountOther = pointsStr;
             }
+            this.getMenuAchievements()
 
-            // 去重
-            return {
-                allAchievements: allAchievements,
-                allPoints: countData.allPoints,
-                ownAchievements: ownAchievements,
-                ownPoints: countData.ownPoints,
-            };
-        },
-        getRenderList(data) {
-            const list = Object.keys(data).map((key) => {
-                const item = data[key];
-                const allData = this.getAllAchievementsData(item);
-                return {
-                    sub: item.sub,
-                    detail: item.detail,
-                    name: item.name,
-                    allAchievements: allData.allAchievements,
-                    ownAchievements: allData.ownAchievements,
-                    children: item.children,
-                    allPoints: allData.allPoints,
-                    ownPoints: allData.ownPoints,
-                };
-            });
-            this.list = list;
         },
         getCurrentProgress(own, all) {
             return ((own / all) * 100).toFixed(2);
