@@ -1,5 +1,5 @@
 <template>
-    <div class="p-mini-leap">
+    <div class="p-mini-leap" v-loading="loading">
         <div class="m-info-top" ref="infoTop">
             <!-- 头像列表 -->
             <div class="m-avatar-list">
@@ -67,7 +67,7 @@
             <div class="m-category-card" v-for="(item, index) in list" :key="index" @click="handleCategoryClick(item)">
                 <div class="m-category-box">
                     <div class="u-category-icon">
-                        <img :src="getIconPath(item.sub)" class="u-category-icon-img" />
+                        <img :src="getIconPath(item.sub)" class="u-category-icon-img" v-if="item.sub" />
                     </div>
                     <div class="u-category-title">{{ item.name }}</div>
                 </div>
@@ -94,14 +94,9 @@ import DeleteRole from '@/views/wiki_miniprogram/compare/deleteRole.vue'
 import CataloguePop from '@/views/wiki_miniprogram/compare/catalogue_pop.vue'
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import Search from "@/views/wiki_miniprogram/compare/search.vue";
-import { getUserRoles } from "@/service/team";
+import { getUserRolesList, getRoleGameAchievementsList, getMenuAndPoints, getAchievementsFinishStatus } from "@/utils/wiki_miniprogram";
 import { cloneDeep } from "lodash";
 import { mobileOpen } from "@/utils/minprogram";
-import {
-    getRoleGameAchievements,
-    getMenus,
-    getAchievementPoints,
-} from "@/service/achievement";
 export default {
     name: "Compare",
     components: {
@@ -113,6 +108,8 @@ export default {
     },
     data() {
         return {
+            // 加载中
+            loading: false,
             // 容器高度
             categoryHeight: 0,
             // 抽屉是否可见
@@ -160,12 +157,31 @@ export default {
     methods: {
         //初始化操作
         async init() {
-            await this.getPoints()
-            await this.getMenuList()
-            //初始化获取选中的角色
-            await this.getSelfRoles()
+            //设置加载中
+            this.loading = true;
+            //初始化菜单及成就点列表
+            let menuAndPoints = await getMenuAndPoints(this.$store.state.client);
+            this.menuList = menuAndPoints.menuList || [];
+            this.pointsData = menuAndPoints.pointsList || [];
+            //初始化我的角色列表
+            this.roles = await getUserRolesList();
+            //获取jx3id
+            let jx3id = this.$route.query.jx3id;
+            if (jx3id) {
+                let role = this.roles.find(role => role.jx3id == jx3id);
+                if (role) {
+                    this.compareRoles.push(role);
+                }
+            } else {
+                //如果没有jx3id，默认对比第一个角色
+                if (this.roles.length > 0) {
+                    this.compareRoles.push(this.roles[0]);
+                }
+            }
             //初始化我的角色成就信息
             await this.loadRoleAchievements(this.compareRoles[0].jx3id)
+            //设置加载完成
+            this.loading = false;
         },
         /**
          * 获取图标路径
@@ -188,44 +204,10 @@ export default {
         },
 
         /**
-       * 获取自己的角色
-       */
-        getSelfRoles() {
-            // 从sessionStorage获取自己的角色列表，使用try catch处理异常
-            try {
-                // 从sessionStorage获取自己的角色列表
-                this.roles = JSON.parse(sessionStorage.getItem("wiki_my_roles")) || [];
-                //如果获取本地角色列表为空，从服务器尝试二次获取
-                if (this.roles.length == 0) {
-                    this.getUserRoles();
-                } else {
-                    let lastSync = sessionStorage.getItem("wiki_last_sync");
-                    if (this.roles.length > 0 && lastSync) {
-                        let role = this.roles.find(role => role.jx3id == lastSync);
-                        if (role) {
-                            this.compareRoles.push(role);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error("获取自己的角色列表失败:", error);
-                this.roles = [];
-                this.getUserRoles();
-            }
-        },
-        getUserRoles() {
-            getUserRoles().then((res) => {
-                this.roles = res.data?.data?.list || [];
-                this.compareRoles.push(this.roles[0]);
-                sessionStorage.setItem("wiki_my_roles", JSON.stringify(this.roles || []));
-            });
-        },
-        /**
        * 添加对比角色
        */
         addFriendRole(index) {
             // 处理添加对比角色的逻辑
-            console.log('添加对比角色:', index);
             // 打开抽屉
             this.drawerVisible = true;
         },
@@ -254,7 +236,6 @@ export default {
                 });
                 return;
             }
-            console.log(this.list)
             this.deleteRoleInfo = item;
             this.delDrawerVisible = true;
         },
@@ -278,62 +259,55 @@ export default {
         // 分类抽屉查看详情点击事件
         handleDetailClick() {
             this.drawerCatalogueVisible = false;
-            //准备进行路由跳转，进入compare_catalogue界面，需缓存当前界面部分数据以便于在下个界面使用
-            sessionStorage.setItem("compare_roles", JSON.stringify(this.compareRoles || []));
-            sessionStorage.setItem("compare_category", JSON.stringify(this.currentCategory || {}));
+            let query_role = []
+            this.compareRoles.forEach((role, index) => {
+                query_role.push(`${role.jx3id}|${role.server}|${role.mount}|${role.body_type}|${role.name}`)
+            })
             mobileOpen(this.$router.resolve({
                 name: "compare/catalogue",
-                query: {}
+                query: {
+                    roles: query_role.join(','),
+                    menuId: this.currentCategory.sub,
+                }
             }).href);
         },
         //搜索点击事件
-        handleSearchClick() {
+        handleSearchClick(res) {
+            let query_role = []
+            this.compareRoles.forEach((role, index) => {
+                query_role.push(`${role.jx3id}|${role.server}|${role.mount}|${role.body_type}|${role.name}`)
+            })
+            let params = res.params || {}
             //跳转到compare/achievement
             mobileOpen(this.$router.resolve({
                 name: "compare/achievement",
                 query: {
                     //来源
                     source: 1, //1 非achievement当前页面，需要执行另一套list检索
+                    roles: query_role.join(','),
+                    keyword: params.keyword || '',
+                    scene: params.scene || '',
                 }
             }).href);
         },
 
         /*******************************成就点数及计算相关函数*****************************/
-        // 获取成就对应点数
-        getPoints() {
-            return getAchievementPoints().then((res) => {
-                const data = res.data.data.points;
-                sessionStorage.setItem("points_data", JSON.stringify(data || {}));
-                this.pointsData = data;
-            });
-        },
-        // 获取成就菜单列表
-        getMenuList() {
-            getMenus({
-                general: 1,
-                client: this.$store.state.client,
-            }).then((res) => {
-                const data = res.data.data.menus;
-                this.menuList = data;
-            });
-        },
+
         // 获取指定角色成就状态
-        loadRoleAchievements(jx3id) {
-            getRoleGameAchievements(jx3id).then((res) => {
-                const achievements = res.data?.data?.achievements || "";
-                const list = achievements.split(",");
-                this.compareAchievements = list;
-                this.getRenderList(this.menuList, jx3id);
-            });
+        async loadRoleAchievements(jx3id) {
+            let achievements = await getRoleGameAchievementsList(jx3id);
+            this.compareAchievements = achievements.list;
+            this.getRenderList(jx3id);
         },
-        getRenderList(data, jx3id) {
+        getRenderList(jx3id) {
+            let menuList = cloneDeep(this.menuList);
             //根据jx3获取到对比角色的index填充至roleAchievements保持下标不变
             let index = this.compareRoles.findIndex(role => role.jx3id == jx3id);
-            this.compareRoles[index].finishAchievements = this.compareAchievements;
-            const list = Object.keys(data).map((key) => {
-                const item = data[key];
+            let finishAchievements = this.compareAchievements;
+            const list = Object.keys(menuList).map((key) => {
+                const item = menuList[key];
                 //获取到所有成就数据
-                const allData = this.getAllAchievementsData(item);
+                const allData = getAchievementsFinishStatus(item, finishAchievements);
                 //重组菜单数据合并成就数据
                 let roleAchievements = []
                 roleAchievements.push({

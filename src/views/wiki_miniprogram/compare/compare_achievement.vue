@@ -1,5 +1,5 @@
 <template>
-    <div class="p-mini-leap_achievement">
+    <div class="p-mini-leap_achievement" v-loading="loading">
         <div class="m-info-top" ref="infoTop">
             <!-- 头像列表 -->
             <div class="m-avatar-list">
@@ -26,7 +26,7 @@
             </div>
 
             <!-- 搜索框 -->
-            <Search :showFilter="true" :roles="compareRoles" @filterSubmit="handleFilterSubmit"
+            <Search ref="searchRef" :showFilter="true" :roles="compareRoles" @filterSubmit="handleFilterSubmit"
                 @submit="handleSearchClick" />
         </div>
         <!-- 分类卡片 -->
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { getRoleGameAchievementsList, getMenuAndPoints, getAchievementsFinishStatus } from "@/utils/wiki_miniprogram";
 import CataloguePop from '@/views/wiki_miniprogram/compare/catalogue_pop.vue'
 import achievement_detail from "@/views/wiki_miniprogram/components/achievement_detail.vue"
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
@@ -81,14 +82,14 @@ export default {
     },
     data() {
         return {
+            // 加载中
+            loading: false,
             // 容器高度
             categoryHeight: 0,
             // 自己的角色列表
             roles: [],
             //对比角色列表
             compareRoles: [],
-            //对比角色的成就数据
-            roleAchievements: [],
             //成就点数据
             pointsData: {},
             //列表
@@ -137,10 +138,7 @@ export default {
         document.title = '亲友对比'
         this.init()
     },
-    mounted() {
-        // 计算分类卡片的高度,通过获取整个body高度减去m-info-top即info-top的高度
-        this.categoryHeight = document.querySelector('body').offsetHeight - document.querySelector('.m-info-top').offsetHeight
-    },
+
     methods: {
         iconLink,
         //点击了成就执行弹出详细信息弹窗
@@ -160,7 +158,7 @@ export default {
             this.isModeName = res.filterLabel
             //filterId格式为id_completed或id_uncompleted
             let filter = res.filterId.split('_')
-            let index = this.compareRoles.findIndex((item) => item.ID == filter[0])
+            let index = this.compareRoles.findIndex((item) => item.jx3id == filter[0])
 
             if (filter[1] == 'completed') {
                 //筛选指定ID已完成的成就 roles下标为true的数据
@@ -172,32 +170,60 @@ export default {
 
         },
         //搜索点击事件
-        handleSearchClick(arr) {
+        handleSearchClick(res) {
             this.isSearchEnabled = true;
-            this.handleRoleAchievements(cloneDeep(arr))
+            this.handleRoleAchievements(res.data)
         },
         //初始化操作
         async init() {
-            try {
-                //获取缓存的成就点数据
-                this.pointsData = JSON.parse(sessionStorage.getItem("points_data")) || {};
-                //获取缓存的对比角色列表
-                this.compareRoles = JSON.parse(sessionStorage.getItem("compare_roles")) || [];
-                if (this.$route.query.source == 1) {
-                    //如果是从搜索页面跳转过来的，则从sessionStorage中获取搜索结果
-                    let list = JSON.parse(sessionStorage.getItem("search_achievements")) || [];
-                    this.isSearchEnabled = true;
-                    this.handleRoleAchievements(cloneDeep(list))
-                } else {
-                    //获取缓存的当前点击的分类
-                    this.category = JSON.parse(sessionStorage.getItem("compare_achievement")) || {};
-                    this.roleAchievements = this.category.roleAchievements || []
-                    this.getMenuAchievements()
-                }
-
-            } catch (error) {
-                console.error("初始化对比角色数据失败:", error);
+            //设置加载中
+            this.loading = true;
+            //获取对比角色列表
+            let roles = this.$route.query.roles.split(','), sub = this.$route.query.sub, detail = this.$route.query.detail;
+            //初始化菜单及成就点列表
+            let menuAndPoints = await getMenuAndPoints(this.$store.state.client);
+            let menuList = menuAndPoints.menuList || [];
+            this.pointsData = menuAndPoints.pointsList || [];
+            const compareRoles = await Promise.all(roles.map(async (role) => {
+                const roleInfo = role.split('|');
+                const achievements = await getRoleGameAchievementsList(roleInfo[0]);
+                return {
+                    jx3id: roleInfo[0],
+                    server: roleInfo[1],
+                    mount: roleInfo[2],
+                    body_type: roleInfo[3],
+                    name: roleInfo[4],
+                    finishedAchievements: achievements.list || []
+                };
+            }));
+            this.compareRoles = compareRoles;
+            if (this.$route.query.source == 1) {
+                //如果是从搜索页面跳转过来的，则通过searchRef直接调用handleOtherSearch
+                this.$refs.searchRef.handleOtherSearch({
+                    keyword: this.$route.query.keyword || '',
+                    scene: this.$route.query.scene || '',
+                })
+            } else {
+                //从menuList中根据sub获取分类数据，menuInfo为对象
+                Object.keys(menuList).forEach((key) => {
+                    let item = menuList[key];
+                    if (item.sub == sub) {
+                        //循环children根据detail比对
+                        let info = item.children.find(child => child.detail == detail) || {};
+                        if (info) {
+                            info.name = item.name + '-' + info.name
+                            this.category = info;
+                        }
+                    }
+                })
+                await this.getMenuAchievements()
             }
+            this.$nextTick(() => {
+                // 计算分类卡片的高度,通过获取整个body高度减去m-info-top即info-top的高度
+                this.categoryHeight = document.querySelector('body').offsetHeight - document.querySelector('.m-info-top').offsetHeight
+            })
+            //设置加载完成
+            this.loading = false;
         },
         // 获取成就列表
         getMenuAchievements() {
@@ -222,32 +248,17 @@ export default {
         },
         //处理对比角色完成数据
         handleRoleAchievements(arr) {
-            let roleAchievements = this.roleAchievements || []
-            let isSearchEnabled = this.isSearchEnabled
             let compareRoles = this.compareRoles
             arr.map((item) => {
                 let roles = []
-                //如果启用了搜索，则判断finishAchievements是否包含item.ID
-                if (isSearchEnabled) {
-                    compareRoles.map((role) => {
-                        //判断item.ID是否在role.finishAchievements中
-                        if (role.finishAchievements.includes(String(item.ID))) {
-                            roles.push(true)
-                        } else {
-                            roles.push(false)
-                        }
-                    })
-                } else {
-                    //循环对比角色，判断完成数据
-                    roleAchievements.map((role) => {
-
-                        //判断item.ID是否在role.ownAchievements中
-                        if (role.ownAchievements.includes(item.ID)) {
-                            roles.push(true)
-                        } else {
-                            roles.push(false)
-                        }
-                    })
+                //循环对比角色，判断完成数据
+                for (let i = 0; i < compareRoles.length; i++) {
+                    const role = compareRoles[i];
+                    if (role.finishedAchievements.includes(String(item.ID))) {
+                        roles.push(true)
+                    } else {
+                        roles.push(false)
+                    }
                 }
                 item.roles = roles
             })
@@ -258,7 +269,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .p-mini-leap_achievement {
     height: 100vh;
     background-color: #F5F5F5;

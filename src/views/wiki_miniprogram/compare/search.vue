@@ -19,10 +19,10 @@
             class="p-search-drawer">
             <template slot="title">
                 <div class="u-search-title">{{ title }}<span v-if="sub_title && step != 1"> &nbsp;-&nbsp;{{ sub_title
-                }}</span>
+                        }}</span>
                 </div>
             </template>
-            <div class="search-list-wrapper">
+            <div class="search-list-wrapper" v-loading="loading">
 
                 <!-- step:1 -->
                 <div class="search-step" v-if="step == 1">
@@ -170,6 +170,11 @@ export default {
                 this.removeScrollListener();
             }
         },
+        roles(newVal, oldVal) {
+            if (newVal.length > 0) {
+                this.handleRoleFilter();
+            }
+        },
     },
     beforeDestroy() {
         // 组件销毁前移除事件监听
@@ -177,6 +182,8 @@ export default {
     },
     data() {
         return {
+            // 加载中
+            loading: false,
             //搜索框占位符
             placeholder: '搜索',
             title: '地图',
@@ -211,7 +218,7 @@ export default {
         this.loadMapList();
     },
     mounted() {
-        this.handleRoleFilter();
+        // this.handleRoleFilter();
     },
     methods: {
         /**
@@ -252,11 +259,7 @@ export default {
          * 角色筛选处理
          */
         handleRoleFilter() {
-            // .要根据角色对比数来进行筛选
-
-            // 3.每有一个角色增加2个
-
-            // 4.分别为【全部】-【角色1的已完成】-【角色1的未完成】-【角色2的已完成】-【角色2的未完成】-【角色3...】
+            // .要根据角色对比数来进行筛选每有一个角色增加2个分别为【全部】-【角色1的已完成】-【角色1的未完成】-【角色2的已完成】-【角色2的未完成】-【角色3...】
             let filterOptions = [{
                 label: '全部',
                 value: null,
@@ -266,14 +269,14 @@ export default {
                     label: role.name,
                     server: role.server,
                     sub: '已完成',
-                    value: role.ID + '_completed',
+                    value: role.jx3id + '_completed',
 
                 });
                 filterOptions.push({
                     label: role.name,
                     server: role.server,
                     sub: '未完成',
-                    value: role.ID + '_uncompleted',
+                    value: role.jx3id + '_uncompleted',
                 });
             });
             this.filterOptions = filterOptions;
@@ -282,7 +285,6 @@ export default {
          * 处理筛选点击事件
          */
         handleFilterClick(item) {
-
             if (!item) {
                 this.drawerFilterVisible = true;
                 return;
@@ -429,8 +431,12 @@ export default {
                 _no_page: 1,
                 limit: 99999,
             };
+            //设置加载中
+            this.loading = true;
             searchAchievements(params)
                 .then((data) => {
+                    //设置加载完成
+                    this.loading = false;
                     let list = data.data.data.achievements || [];
                     let arr = [];
                     list.forEach((item) => {
@@ -444,13 +450,21 @@ export default {
                         }
                     });
                     //处理数据，回传父级，同时将搜索条件置于显示
-                    this.$emit('submit', arr);
-                    //执行将数据缓存到sessionStorage
-                    sessionStorage.setItem('search_achievements', JSON.stringify(arr));
+                    this.$emit('submit', { data: arr, params });
                     this.placeholder = `${this.selectMapName || ''}${this.selectSubName ? '/' + this.selectSubName : ''}${this.searchKeyword ? '/' + this.searchKeyword : ''}`
                     this.drawerSearchVisible = false;
+                }).finally(() => {
+                    //设置加载完成
+                    this.loading = false;
                 })
         },
+        //非achievements界面，通过ref直接调用此函数，将条件赋值后调用getSearchAchievements()
+        handleOtherSearch(params) {
+            this.searchKeyword = params.keyword || '';
+            this.selectSubId = params.scene || '';
+            this.getSearchAchievements();
+        },
+
     },
 };
 </script>

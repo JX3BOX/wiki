@@ -234,7 +234,6 @@ export default {
                     if (info) {
                         this.info = info;
                         document.title = item.name + ' - ' + info.name;
-                        console.log(info);
                     }
                 }
             })

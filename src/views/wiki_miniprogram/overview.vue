@@ -211,7 +211,10 @@ export default {
          */
         handleClickBtn(btn) {
             if (btn === 'friendComparison') {
-                this.$router.push({ name: "compare", query: {} });
+                mobileOpen(this.$router.resolve({
+                    name: "compare",
+                    query: { jx3id: this.currentRole.jx3id }
+                }).href);
             }
         },
         /**
@@ -219,7 +222,6 @@ export default {
          * @param {object} menu - 分类项
          */
         handleClick(menu) {
-            console.log(menu)
             // 小程序打开界面
             mobileOpen(this.$router.resolve({
                 name: "catalogue",
