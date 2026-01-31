@@ -18,8 +18,8 @@
         <el-drawer :visible="drawerSearchVisible" direction="btt" size="420px" @close="handleClose"
             class="p-search-drawer">
             <template slot="title">
-                <div class="u-search-title">{{ title }}<span v-if="sub_title && step != 1"> &nbsp;-&nbsp;{{ sub_title
-                        }}</span>
+                <div class="u-search-title">{{ title }}<span v-if="sub_title && step != 1"> &nbsp;-&nbsp;{{
+                    sub_title }}</span>
                 </div>
             </template>
             <div class="search-list-wrapper" v-loading="loading">
@@ -113,6 +113,7 @@ import {
     searchAchievements,
     getMapList,
 } from "@/service/achievement";
+import { cloneDeep } from "lodash";
 export default {
     name: 'CompareSearch',
     components: {
@@ -158,7 +159,6 @@ export default {
         drawerFilterVisible(newVal, oldVal) {
             if (newVal) {
                 this.$nextTick(() => {
-
                     if (this.$refs.filterListContainer) {
                         this.$refs.filterListContainer.addEventListener('scroll', this.checkScrollPosition);
                         // 初始化时检查一次
@@ -203,10 +203,14 @@ export default {
             //当前选择的二级地图id
             selectSubId: null,
             selectSubName: null,
+            //地图综合筛选条件备份
+            savedFilterOptions: {},
             //筛选的列表
             filterOptions: [],
             //当前选择的筛选项
             selectFilterId: null,
+            //备份筛选id，用于未确定的重置还原
+            savedFilterId: null,
             //是否显示筛选弹窗
             drawerFilterVisible: false,
             //筛选弹窗遮罩层
@@ -290,12 +294,12 @@ export default {
                 return;
             }
             this.selectFilterId = item.value;
-
         },
         /**
          * 处理筛选弹窗关闭事件
          */
         handleCloseFilter() {
+            this.selectFilterId = this.savedFilterId;
             this.drawerFilterVisible = false;
         },
         /**
@@ -310,11 +314,12 @@ export default {
         handleFilterSubmit() {
             //根据selectFilterId查询label
             let filter = this.filterOptions.find((item) => item.value == this.selectFilterId)
-            console.log((filter?.label || '') + (filter?.sub || ''))
             this.$emit('filterSubmit', {
                 filterId: this.selectFilterId,
                 filterLabel: (filter?.label || '') + (filter?.sub || ''),
             });
+            //备份当前筛选id
+            this.savedFilterId = cloneDeep(this.selectFilterId);
             this.handleCloseFilter();
         },
         /**
@@ -343,6 +348,15 @@ export default {
             this.getSearchAchievements();
         },
         handleClose() {
+            //恢复地图综合筛选条件
+            this.searchKeyword = cloneDeep(this.savedFilterOptions.searchKeyword);
+            this.selectMapId = cloneDeep(this.savedFilterOptions.selectMapId);
+            this.selectMapName = cloneDeep(this.savedFilterOptions.selectMapName);
+            this.selectSubId = cloneDeep(this.savedFilterOptions.selectSubId);
+            this.selectSubName = cloneDeep(this.savedFilterOptions.selectSubName);
+            this.sub_title = cloneDeep(this.savedFilterOptions.sub_title);
+            this.childrenList = cloneDeep(this.savedFilterOptions.childrenList);
+            this.placeholder = cloneDeep(this.savedFilterOptions.placeholder);
             this.drawerSearchVisible = false;
         },
         /**
@@ -453,6 +467,17 @@ export default {
                     this.$emit('submit', { data: arr, params });
                     this.placeholder = `${this.selectMapName || ''}${this.selectSubName ? '/' + this.selectSubName : ''}${this.searchKeyword ? '/' + this.searchKeyword : ''}`
                     this.drawerSearchVisible = false;
+                    //备份地图综合筛选条件
+                    this.savedFilterOptions = {
+                        searchKeyword: cloneDeep(this.searchKeyword),
+                        selectMapId: cloneDeep(this.selectMapId),
+                        selectMapName: cloneDeep(this.selectMapName),
+                        selectSubId: cloneDeep(this.selectSubId),
+                        selectSubName: cloneDeep(this.selectSubName),
+                        sub_title: cloneDeep(this.sub_title),
+                        childrenList: cloneDeep(this.childrenList),
+                        placeholder: cloneDeep(this.placeholder),
+                    }
                 }).finally(() => {
                     //设置加载完成
                     this.loading = false;
