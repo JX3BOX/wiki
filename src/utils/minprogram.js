@@ -1,5 +1,5 @@
 import wx from "weixin-js-sdk";
-import { authorLink, isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isApp, isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 
 export function isInMiniprogramWebview() {
     return window && window.__wxjs_environment === "miniprogram";
@@ -19,7 +19,7 @@ export function wxNewPage(target) {
         // 不在小程序中的时候回退操作使用location跳转
         location.href = target;
     }
-    
+
     const [path, queryString] = target.split("?");
 
     const query = queryString ? Object.fromEntries(new URLSearchParams(queryString)) : {};
@@ -35,8 +35,7 @@ export function wxNewPage(target) {
 
 
 export function mobileOpen(target) {
-    if (isMiniProgram()){
-        console.log(target);
+    if (isMiniProgram() || isApp()){
         wxNewPage(target)
     }else{
         location.href = target;

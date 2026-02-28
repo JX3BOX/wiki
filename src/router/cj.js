@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "../store/cj";
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 
 // 组件懒加载
 const Home = () => import("@/views/cj/home.vue");
@@ -109,7 +109,7 @@ const routes = [
     }
 ];
 
-if (isMiniProgram()){
+if (isMiniProgram() || isApp()) {
     routes.forEach(route => {
         if (route.path === "/") {
             route.children.forEach(child => {

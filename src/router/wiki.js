@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 Vue.use(VueRouter);
 let overview = () => import("../views/wiki/overview.vue");
 const overviewMiniProgram = () => import("../views/wiki_miniprogram/overview.vue");
@@ -16,12 +16,12 @@ const routes = [
     {
         name: "overview",
         path: "/overview",
-        component: isMiniProgram() ? overviewMiniProgram : overview,
+        component: isMiniProgram() || isApp() ? overviewMiniProgram : overview,
     },
     {
         name: "compare",
         path: "/compare",
-        component: isMiniProgram() ? compareMiniProgram : compare,
+        component: isMiniProgram() || isApp() ? compareMiniProgram : compare,
     },
     {
         name: "leap",

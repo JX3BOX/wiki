@@ -6,7 +6,7 @@
  */
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 
 Vue.use(VueRouter);
 
@@ -54,7 +54,7 @@ const routes = [
     },
 ];
 
-if (isMiniProgram()) {
+if (isMiniProgram() || isApp()) {
     routes.forEach((route) => {
         if (route.path === "/") {
             route.children.forEach((child) => {

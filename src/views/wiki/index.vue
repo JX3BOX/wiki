@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="isMiniProgram()">
+        <div v-if="isMiniProgram">
             <router-view></router-view>
         </div>
         <div v-else>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 import SideBar from "@/components/wiki/sidebar.vue";
 export default {
     name: "WikiAchievementIndex",
@@ -33,6 +33,9 @@ export default {
             const mobileKeywords = ["android", "iphone", "ipad", "ipod", "windows phone"];
             return mobileKeywords.some((keyword) => userAgent.includes(keyword));
         },
+        isMiniProgram() {
+            return isMiniProgram() || isApp();
+        },
     },
     watch: {
         "$store.state.is_fold": {
@@ -44,7 +47,6 @@ export default {
         },
     },
     methods: {
-        isMiniProgram,
     },
     mounted() { },
 };

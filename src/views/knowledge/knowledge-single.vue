@@ -92,7 +92,6 @@ import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import Comment from "@jx3box/jx3box-comment-ui/src/Comment.vue";
 import notice from "@/components/cj/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 import bus from "@/store/bus";
 import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
@@ -165,9 +164,6 @@ export default {
         },
         isEditor: function () {
             return User.isEditor();
-        },
-        isMiniProgram() {
-            return isMiniProgram();
         },
     },
     methods: {

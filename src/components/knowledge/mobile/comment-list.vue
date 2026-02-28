@@ -36,7 +36,7 @@
 <script>
 import { getOrderMode, setOrderMode } from "@jx3box/jx3box-comment-ui/src/options";
 import { DELETE, GET, POST, PUT } from "@jx3box/jx3box-comment-ui/src/service";
-import { authorLink, isMiniProgram, showAvatar } from "@jx3box/jx3box-common/js/utils";
+import { authorLink, showAvatar } from "@jx3box/jx3box-common/js/utils";
 import dayjs from "dayjs";
 import { mobileOpen, wxNewPage } from "@/utils/minprogram";
 import User from "@jx3box/jx3box-common/js/user.js";

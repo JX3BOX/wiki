@@ -49,7 +49,7 @@
 
 <script>
 import { getAchievementsTotal } from "@/service/achievement";
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isApp, isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 
 export default {
     name: "AchievementCount",
@@ -72,7 +72,7 @@ export default {
         mobile() {
             const userAgent = navigator.userAgent.toLowerCase();
             const mobileKeywords = ["android", "iphone", "ipad", "ipod", "windows phone", "miniprogram"];
-            return mobileKeywords.some((keyword) => userAgent.includes(keyword));
+            return mobileKeywords.some((keyword) => userAgent.includes(keyword)) || isApp();
         },
         viewAchievementsName() {
             return this.$store.state.viewAchievementsName;

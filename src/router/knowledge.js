@@ -23,9 +23,9 @@ const routes = [
     },
 ];
 
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 
-if (isMiniProgram()) {
+if (isMiniProgram() || isApp()) {
     routes.forEach((route) => {
         if (route.path === "/") {
             route.component = () => import("@/views/base.vue");

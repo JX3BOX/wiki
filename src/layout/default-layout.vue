@@ -58,7 +58,7 @@
 <script>
 import { __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 import bus from "@/store/bus.js";
 import { refreshQQBotImage } from "@/service/wiki";
 export default {
@@ -125,7 +125,7 @@ export default {
             return this.$route.name;
         },
         showAdmin() {
-            return !isMiniProgram() && this.$route.name === "view" && User.isEditor();
+            return !isMiniProgram() && !isApp() && this.$route.name === "view" && User.isEditor();
         },
         logo() {
             const key = this.icon || this.slug;
