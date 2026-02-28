@@ -1,5 +1,5 @@
 import wx from "weixin-js-sdk";
-import { isApp, isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 
 export function isInMiniprogramWebview() {
     return window && window.__wxjs_environment === "miniprogram";
@@ -35,7 +35,7 @@ export function wxNewPage(target) {
 
 
 export function mobileOpen(target) {
-    if (isMiniProgram() || isApp()){
+    if (isMiniProgram()){
         wxNewPage(target)
     }else{
         location.href = target;
