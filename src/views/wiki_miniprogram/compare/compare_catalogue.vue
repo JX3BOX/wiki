@@ -44,7 +44,7 @@
                     <span class="u-value-text">{{ getUserProgress(role, item) }}</span>
                     <span class="u-percent-symbol">%</span>
                 </div>
-                <div class="m-category-box" v-for="noItem in 3 - compareRoles.length" :key="noItem"></div>
+                <div class="m-category-box" v-for="noItem in 3 - compareRoles.length" :key="`noItem${noItem}`"></div>
             </div>
         </div>
         <!-- 分类卡片抽屉 -->
@@ -273,7 +273,6 @@ export default {
             this.currentCategory = cloneDeep(item);
             this.currentCategory.name = this.category.name + '-' + this.currentCategory.name
             let roleAchievements = []
-            console.log(item)
             this.compareRoles.forEach(role => {
                 //运算信息
                 let progressInfo = this.getUserProgress(role, item, 2)
@@ -291,10 +290,16 @@ export default {
         // 分类抽屉查看详情点击事件
         handleDetailClick() {
             this.drawerCatalogueVisible = false;
+
+            let query_role = []
+            this.compareRoles.forEach((role, index) => {
+                query_role.push(`${role.jx3id}|${role.server}|${role.mount}|${role.body_type}|${role.name}`)
+            })
             mobileOpen(this.$router.resolve({
                 name: "compare/achievement",
                 query: {
-                    roles: this.$route.query.roles,
+                    // roles: this.$route.query.roles,
+                    roles: query_role.join(','),
                     sub: this.currentCategory.sub,
                     detail: this.currentCategory.detail,
                 }

@@ -181,6 +181,8 @@ export default {
                 let roles = JSON.parse(sessionStorage.getItem("wiki_my_roles")) || [];
                 if (roles.length === 0) {
                     this.roles = await getUserRolesList();
+                } else {
+                    this.roles = roles;
                 }
             } catch (error) {
                 console.error("获取自己的角色列表失败:", error);
