@@ -45,7 +45,7 @@
                 </div>
                 <div class="m-category-box" v-for="(isFinish, roleIndex) in item.roles" :key="roleIndex">
                     <img :src="require(`@/assets/img/wiki_miniprogram/finish.svg`)" class="u-icon" v-if="isFinish" />
-                    <img :src="require(`@/assets/img/wiki_miniprogram/unfinished.svg`)"
+                    <img :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/unfinished.svg`)"
                         class="u-icon u-icon--unfinished" v-else />
                 </div>
                 <div class="m-category-box" v-for="noItem in 3 - item.roles.length" :key="noItem"></div>
