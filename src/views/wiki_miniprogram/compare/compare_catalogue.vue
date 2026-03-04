@@ -21,7 +21,12 @@
                 </div>
 
                 <!-- 添加占位符 -->
-                <div class="m-avatar-item m-avatar-item--add" v-for="index in 3 - compareRoles.length" :key="index">
+                <div class="m-avatar-item m-avatar-item--add" v-for="index in 3 - compareRoles.length"
+                    :key="'add' + index" @click="addFriendRole(index)">
+                    <img :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/quan.svg`)"
+                        class="u-avatar-add-quan" svg-inline />
+                    <img :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/jia.svg`)"
+                        class="u-avatar-add-icon" svg-inline />
                 </div>
             </div>
 
@@ -39,18 +44,24 @@
                     <span class="u-value-text">{{ getUserProgress(role, item) }}</span>
                     <span class="u-percent-symbol">%</span>
                 </div>
-
+                <div class="m-category-box" v-for="noItem in 3 - compareRoles.length" :key="noItem"></div>
             </div>
         </div>
         <!-- 分类卡片抽屉 -->
         <CataloguePop :visible.sync="drawerCatalogueVisible" :category="currentCategory" :compareRoles="compareRoles"
             @handleDetailClick="handleDetailClick" :showDetailBtn="showDetailBtn" />
+        <!-- 添加对比好友 -->
+        <AddFriend :visible.sync="drawerVisible" @confirmSelection="handleConfirmSelection" />
+        <!-- 删除对比角色 -->
+        <DeleteRole :visible.sync="delDrawerVisible" :role="deleteRoleInfo" @deleteRole="handleDeleteRoleConfirm" />
     </div>
 </template>
 
 <script>
 import { getRoleGameAchievementsList, getMenuAndPoints, getAchievementsFinishStatus } from "@/utils/wiki_miniprogram";
 import CataloguePop from '@/views/wiki_miniprogram/compare/catalogue_pop.vue'
+import AddFriend from '@/views/wiki_miniprogram/compare/addFriend.vue'
+import DeleteRole from '@/views/wiki_miniprogram/compare/deleteRole.vue'
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import Search from "@/views/wiki_miniprogram/compare/search.vue";
 import { cloneDeep } from "lodash";
@@ -61,6 +72,8 @@ export default {
         RoleAvatar,
         CataloguePop,
         Search,
+        AddFriend,
+        DeleteRole,
     },
     data() {
         return {
@@ -68,6 +81,8 @@ export default {
             loading: false,
             // 容器高度
             categoryHeight: 0,
+            // 抽屉是否可见
+            drawerVisible: false,
             // 自己的角色列表
             roles: [],
             //对比角色列表
@@ -86,6 +101,10 @@ export default {
             drawerCatalogueVisible: false,
             //是否显示查看详情按钮
             showDetailBtn: true,
+            //点击删除的角色
+            deleteRoleInfo: null,
+            //删除对比角色抽屉是否可见
+            delDrawerVisible: false,
         };
     },
     computed: {
@@ -103,6 +122,65 @@ export default {
         this.init()
     },
     methods: {
+        /**
+         * 添加对比角色
+         */
+        addFriendRole(index) {
+            this.drawerVisible = true;
+        },
+        /**
+         * 角色选择确认
+         */
+        async handleConfirmSelection(role) {
+            // 检查是否已存在
+            if (this.compareRoles.find(item => item.jx3id == role.jx3id)) {
+                this.$message({
+                    message: "已添加该角色",
+                    type: "warning",
+                });
+                return;
+            }
+            // 检查数量限制
+            if (this.compareRoles.length >= 3) {
+                this.$message({
+                    message: "最多对比3个角色",
+                    type: "warning",
+                });
+                return;
+            }
+            // 加载角色成就数据
+            const achievements = await getRoleGameAchievementsList(role.jx3id);
+            const newRole = {
+                ...role,
+                finishedAchievements: achievements.list || []
+            };
+            this.compareRoles.push(newRole);
+            this.drawerVisible = false;
+        },
+        /**
+         * 删除对比角色
+         */
+        handleDeleteRole(item) {
+            if (this.compareRoles.length == 1) {
+                this.$message({
+                    message: "至少保留一个角色",
+                    type: "warning",
+                });
+                return;
+            }
+            this.deleteRoleInfo = item;
+            this.delDrawerVisible = true;
+        },
+        /**
+         * 删除对比角色确认
+         */
+        handleDeleteRoleConfirm() {
+            let index = this.compareRoles.findIndex((role) => role.jx3id == this.deleteRoleInfo.jx3id);
+            if (index != -1) {
+                this.compareRoles.splice(index, 1);
+            }
+            this.delDrawerVisible = false;
+        },
         //点击了分类执行弹出对比抽屉（使用分类抽屉隐藏详情按钮）
         handleClickCategory() {
             this.showDetailBtn = false

@@ -10,7 +10,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="m-avatar-item" v-for="(item, index) in compareRoles" :key="'role_' + index">
+                <div class="m-avatar-item" v-for="(item, index) in compareRoles" :key="'role_' + index"
+                    @click="handleDeleteRole(item)">
                     <RoleAvatar class="u-avatar-img" :mount="item.mount" :body_type="item.body_type" />
                     <div class="m-avatar-info">
                         <div class="u-avatar-name">{{ item.name }}</div>
@@ -20,8 +21,11 @@
 
                 <!-- 添加占位符 -->
                 <div class="m-avatar-item m-avatar-item--add" v-for="index in 3 - compareRoles.length"
-                    :key="'add_' + index">
-
+                    :key="'add_' + index" @click="addFriendRole(index)">
+                    <img :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/quan.svg`)"
+                        class="u-avatar-add-quan" svg-inline />
+                    <img :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/jia.svg`)"
+                        class="u-avatar-add-icon" svg-inline />
                 </div>
             </div>
 
@@ -33,17 +37,20 @@
         <div class="m-category-section"
             :style="{ height: categoryHeight + 'px', 'padding-bottom': isModeEnabled ? '90px' : '0px' }">
             <!-- 卡片 -->
-            <div class="m-category-card" v-for="(item, index) in list" :key="'category_' + index">
-                <div class="m-category-box" @click="handleClickCategory(item)">
+            <div class="m-category-card" v-for="(item, index) in list" :key="'category_' + index"
+                @click="handleClickCategory(item)">
+                <div class="m-category-box">
                     <img class="u-category-icon-img" :src="iconLink(item?.IconID)" />
                     <div class="u-category-title">{{ item.Name }}</div>
                 </div>
                 <div class="m-category-box" v-for="(isFinish, roleIndex) in item.roles" :key="roleIndex">
                     <img :src="require(`@/assets/img/wiki_miniprogram/finish.svg`)" class="u-icon" v-if="isFinish" />
-                    <img :src="require(`@/assets/img/wiki_miniprogram/unfinished.svg`)" class="u-icon" v-else />
+                    <img :src="require(`@/assets/img/wiki_miniprogram/unfinished.svg`)"
+                        class="u-icon u-icon--unfinished" v-else />
                 </div>
-
+                <div class="m-category-box" v-for="noItem in 3 - item.roles.length" :key="noItem"></div>
             </div>
+
         </div>
         <!-- 筛选悬浮框 -->
         <!-- 激活模式常驻显示 -->
@@ -58,12 +65,18 @@
         <!-- 详细信息弹窗 -->
         <achievement_detail ref="achievementDetail" v-if="achievementDetailVisible"
             :visible.sync="achievementDetailVisible" :current.sync="current"></achievement_detail>
+        <!-- 添加对比好友 -->
+        <AddFriend :visible.sync="drawerVisible" @confirmSelection="handleConfirmSelection" />
+        <!-- 删除对比角色 -->
+        <DeleteRole :visible.sync="delDrawerVisible" :role="deleteRoleInfo" @deleteRole="handleDeleteRoleConfirm" />
     </div>
 </template>
 
 <script>
 import { getRoleGameAchievementsList, getMenuAndPoints, getAchievementsFinishStatus } from "@/utils/wiki_miniprogram";
 import CataloguePop from '@/views/wiki_miniprogram/compare/catalogue_pop.vue'
+import AddFriend from '@/views/wiki_miniprogram/compare/addFriend.vue'
+import DeleteRole from '@/views/wiki_miniprogram/compare/deleteRole.vue'
 import achievement_detail from "@/views/wiki_miniprogram/components/achievement_detail.vue"
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import Search from "@/views/wiki_miniprogram/compare/search.vue";
@@ -79,6 +92,8 @@ export default {
         CataloguePop,
         Search,
         achievement_detail,
+        AddFriend,
+        DeleteRole,
     },
     data() {
         return {
@@ -86,6 +101,8 @@ export default {
             loading: false,
             // 容器高度
             categoryHeight: 0,
+            // 抽屉是否可见
+            drawerVisible: false,
             // 自己的角色列表
             roles: [],
             //对比角色列表
@@ -111,6 +128,10 @@ export default {
             isModeEnabled: false,
             //当前常驻提示的名称
             isModeName: '',
+            //点击删除的角色
+            deleteRoleInfo: null,
+            //删除对比角色抽屉是否可见
+            delDrawerVisible: false,
         };
     },
     computed: {
@@ -141,6 +162,69 @@ export default {
 
     methods: {
         iconLink,
+        /**
+         * 添加对比角色
+         */
+        addFriendRole(index) {
+            this.drawerVisible = true;
+        },
+        /**
+         * 角色选择确认
+         */
+        async handleConfirmSelection(role) {
+            // 检查是否已存在
+            if (this.compareRoles.find(item => item.jx3id == role.jx3id)) {
+                this.$message({
+                    message: "已添加该角色",
+                    type: "warning",
+                });
+                return;
+            }
+            // 检查数量限制
+            if (this.compareRoles.length >= 3) {
+                this.$message({
+                    message: "最多对比3个角色",
+                    type: "warning",
+                });
+                return;
+            }
+            // 加载角色成就数据
+            const achievements = await getRoleGameAchievementsList(role.jx3id);
+            const newRole = {
+                ...role,
+                finishedAchievements: achievements.list || []
+            };
+            this.compareRoles.push(newRole);
+            this.drawerVisible = false;
+            // 更新列表数据
+            this.handleRoleAchievements(this.list_bak);
+        },
+        /**
+         * 删除对比角色
+         */
+        handleDeleteRole(item) {
+            if (this.compareRoles.length == 1) {
+                this.$message({
+                    message: "至少保留一个角色",
+                    type: "warning",
+                });
+                return;
+            }
+            this.deleteRoleInfo = item;
+            this.delDrawerVisible = true;
+        },
+        /**
+         * 删除对比角色确认
+         */
+        handleDeleteRoleConfirm() {
+            let index = this.compareRoles.findIndex((role) => role.jx3id == this.deleteRoleInfo.jx3id);
+            if (index != -1) {
+                this.compareRoles.splice(index, 1);
+                // 更新列表数据
+                this.handleRoleAchievements(this.list_bak);
+            }
+            this.delDrawerVisible = false;
+        },
         //点击了成就执行弹出详细信息弹窗
         handleClickCategory(item) {
             this.current = cloneDeep(item)
@@ -291,6 +375,22 @@ export default {
             //一行4个
             width: calc(100% / 4);
 
+            &.m-avatar-item--add {
+                position: relative;
+
+                .u-avatar-add-quan,
+                .u-avatar-add-icon {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
+                .u-avatar-add-icon {
+                    z-index: 2;
+                }
+            }
+
             .u-avatar-img {
                 width: 60px;
                 height: 60px;
@@ -358,6 +458,11 @@ export default {
                 &:last-child {
                     border-right: none;
                 }
+
+                // .u-icon--unfinished {
+                //     // 这个红色的未完成 直接改成 black 20%（注意深浅色渐变）
+                //     filter: brightness(0.2);
+                // }
             }
 
             .u-category-icon-img {
