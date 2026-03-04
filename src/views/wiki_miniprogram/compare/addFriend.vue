@@ -52,7 +52,7 @@
 /**
  * 角色选择组件
  */
-
+import { getUserRolesList } from "@/utils/wiki_miniprogram";
 import { getMyKith, getMyKithRoles } from "@/service/wiki";
 import { showSchoolIcon, } from "@jx3box/jx3box-common/js/utils";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
@@ -174,15 +174,17 @@ export default {
         /**
          * 获取自己的角色
          */
-        getSelfRoles() {
+        async getSelfRoles() {
             // 从sessionStorage获取自己的角色列表，使用try catch处理异常
             try {
                 // 从sessionStorage获取自己的角色列表
-                this.roles = JSON.parse(sessionStorage.getItem("wiki_my_roles")) || [];
-
+                let roles = JSON.parse(sessionStorage.getItem("wiki_my_roles")) || [];
+                if (roles.length === 0) {
+                    this.roles = await getUserRolesList();
+                }
             } catch (error) {
                 console.error("获取自己的角色列表失败:", error);
-                this.roles = [];
+                this.roles = await getUserRolesList();
             }
         },
 
