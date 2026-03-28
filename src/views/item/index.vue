@@ -54,15 +54,19 @@
                             <el-input v-model="filter.MaxLevel" placeholder="最高品质"></el-input>
                         </div>
                     </div>
-                    <el-button slot="reference" class="u-search-more" type="primary" plain>
-                        <i class="el-icon-more"></i>
-                    </el-button>
+                    <template #reference>
+                        <el-button class="u-search-more" type="primary" plain>
+                            <i class="el-icon-more"></i>
+                        </el-button>
+                    </template>
                 </el-popover>
             </template>
         </Search>
-        <keep-alive include="PlanList">
-            <router-view />
-        </keep-alive>
+        <router-view v-slot="{ Component }">
+            <keep-alive include="PlanList">
+                <component :is="Component" />
+            </keep-alive>
+        </router-view>
         <template #right>
             <Extend />
         </template>

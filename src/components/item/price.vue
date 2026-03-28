@@ -50,6 +50,9 @@ export default {
         isOrigin: function () {
             return this.client == "origin";
         },
+        routeServer() {
+            return this.$route?.query?.server || "";
+        },
         servers: function () {
             return this.isOrigin ? servers_origin : servers_std;
         },
@@ -61,6 +64,26 @@ export default {
         this.$nextTick(() => {
             this.$refs.item_price_chart.render();
         });
+    },
+    legacyMounted() {
+        this.server = this.routeServer || this.servers[0] || "";
+        this.$nextTick(() => {
+            this.$refs.item_price_chart?.render();
+        });
+    },
+    watch: {
+        routeServer() {
+            this.server = this.routeServer || this.servers[0] || "";
+            this.$nextTick(() => {
+                this.$refs.item_price_chart?.render();
+            });
+        },
+        client() {
+            this.server = this.routeServer || this.servers[0] || "";
+            this.$nextTick(() => {
+                this.$refs.item_price_chart?.render();
+            });
+        },
     },
 };
 </script>

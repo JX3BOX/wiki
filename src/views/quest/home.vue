@@ -10,14 +10,14 @@
         <!-- <img class="u-logo" src="@/assets/img/quest/quest_logo.png" alt="" /> -->
         <!-- <h1 class="u-title">任务百科</h1> -->
         <wiki-panel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-location-information"></i>
                 <span>便捷入口</span>
             </template>
-            <template slot="head-actions">
+            <template #head-actions>
                 <!-- <a class="other" target="_blank" :href="feedback">反馈建议 &raquo;</a> -->
             </template>
-            <template slot="body">
+            <template #body>
                 <ul class="u-qlinks">
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/1428">
@@ -56,32 +56,34 @@
             </template>
         </wiki-panel>
         <wiki-panel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-notebook-1"></i>
                 <span>热门任务</span>
             </template>
-            <template slot="body">
+            <template #body>
                 <quest-carousel :quests="hotQuests" :views="hotViews" :hot="true"></quest-carousel>
             </template>
         </wiki-panel>
         <wiki-panel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-notebook-2"></i>
                 <span>最新任务</span>
             </template>
-            <template slot="head-actions">
+            <template #head-actions>
                 <router-link class="other" :to="{ name: 'newest' }">查看更多 &raquo;</router-link>
             </template>
-            <template slot="body">
+            <template #body>
                 <quest-carousel :quests="newestQuests"></quest-carousel>
             </template>
         </wiki-panel>
         <wiki-panel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-collection"></i>
                 <span>最新攻略</span>
             </template>
-            <newest-post slot="body"></newest-post>
+            <template #body>
+                <newest-post></newest-post>
+            </template>
         </wiki-panel>
     </div>
 </template>

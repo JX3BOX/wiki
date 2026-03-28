@@ -32,21 +32,21 @@
             </template>
         </suspend-common>
 
-        <user-select-drawer :visible.sync="userSelectShow" :current-role="currentRole" @change="setRole" />
+        <user-select-drawer v-model:visible="userSelectShow" :current-role="currentRole" @change="setRole" />
         <map-filter-drawer
-            :visible.sync="mapDrawerShow"
+            v-model:visible="mapDrawerShow"
             :regions="regions"
             :search="mapSearch"
             @change="setMapSearch"
             :auto-select="1"
         />
         <category-filter-drawer
-            :visible.sync="menuShow"
+            v-model:visible="menuShow"
             :search="categorySearch"
             :menus="menus_cache"
             @change="setMenuSearch"
         />
-        <wiki-view-drawer v-if="wikiShow" :visible.sync="wikiShow" :current.sync="current" />
+        <wiki-view-drawer v-if="wikiShow" v-model:visible="wikiShow" v-model:current="current" />
     </div>
 </template>
 

@@ -1,10 +1,10 @@
 <template>
     <WikiPanel :border-none="true">
-        <template slot="head-title">
+        <template #head-title>
             <i class="el-icon-collection"></i>
             <span>最近攻略</span>
         </template>
-        <template slot="body">
+        <template #body>
             <el-row class="m-posts">
                 <PostItem v-for="(post, key) in newestPosts" :post="post" :key="key"></PostItem>
             </el-row>

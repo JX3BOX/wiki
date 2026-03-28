@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-drawer
-            :visible.sync="show"
+            v-model="show"
             direction="btt"
             :show-close="false"
             :with-header="false"

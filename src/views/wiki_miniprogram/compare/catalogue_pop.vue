@@ -1,6 +1,6 @@
 <!-- 二级目录弹窗 -->
 <template>
-    <el-drawer :visible="visible" direction="btt" size="auto" @close="handleClose" class="c-catalogue-pop">
+    <el-drawer :model-value="visible" direction="btt" size="auto" @close="handleClose" class="c-catalogue-pop">
         <template #title>
             <div class="u-category-title" v-if="visible">
                 <img :src="getIconPath(category.sub)" class="u-category-icon-img" />

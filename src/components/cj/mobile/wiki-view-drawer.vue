@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-drawer
-            :visible.sync="show"
+            v-model="show"
             direction="btt"
             :show-close="false"
             :with-header="false"
@@ -77,9 +77,9 @@
             </template>
         </el-drawer>
 
-        <children-list-drawer :visible.sync="childrenShow" :current="source" @change="changeCurrent"  />
+        <children-list-drawer v-model:visible="childrenShow" :current="source" @change="changeCurrent"  />
 
-        <confirm-ok-drawer :visible.sync="confirmShow" @confirm="confirmOk" />
+        <confirm-ok-drawer v-model:visible="confirmShow" @confirm="confirmOk" />
     </div>
 </template>
 

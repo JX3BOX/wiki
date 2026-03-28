@@ -5,10 +5,12 @@
                 ><i class="el-icon-caret-right"></i>全部</router-link
             >
             <el-tree class="filter-tree" :data="menus" node-key="id" ref="tree" @node-click="clickNode">
-                <router-link class="el-tree-node__label" slot-scope="{ node, data }" :to="menu_url(data, node)">
-                    <span class="u-name" v-text="data.label"></span>
-                    <em v-if="data.items_total" class="u-count" v-text="`(${data.items_total})`"></em>
-                </router-link>
+                <template #default="{ node, data }">
+                    <router-link class="el-tree-node__label" :to="menu_url(data, node)">
+                        <span class="u-name" v-text="data.label"></span>
+                        <em v-if="data.items_total" class="u-count" v-text="`(${data.items_total})`"></em>
+                    </router-link>
+                </template>
             </el-tree>
         </div>
     </div>
@@ -17,7 +19,7 @@
 <script>
 import { getMenus } from "@/service/item";
 import { get, isEqual } from "lodash";
-import Bus from "@jx3box/jx3box-common-ui/service/bus";
+import bus from "@/store/bus";
 export default {
     name: "Sidebar",
     props: ["sidebar"],
@@ -93,7 +95,7 @@ export default {
             // 移动端收起边栏
             if (window.innerWidth < 1024) {
                 if (node.isLeaf) {
-                    Bus.$emit("toggleLeftSide", false);
+                    bus.emit("toggleLeftSide", false);
                 }
             }
         },

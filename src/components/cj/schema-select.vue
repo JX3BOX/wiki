@@ -1,26 +1,26 @@
-<!-- 用于将成就添加进渡劫方案的时候可以选择目标方案 -->
+<!-- 鐢ㄤ簬灏嗘垚灏辨坊鍔犺繘娓″姭鏂规鐨勬椂鍊欏彲浠ラ€夋嫨鐩爣鏂规 -->
 <template>
-    <el-dialog :visible="visible" class="m-schema-select" title="添加至方案" append-to-body :before-close="onFinish">
-        <el-table size="mini" :data="schemas" style="width: 100%">
+    <el-dialog :model-value="visible" class="m-schema-select" title="添加至方案" append-to-body :before-close="onFinish">
+        <el-table size="small" :data="schemas" style="width: 100%">
             <el-table-column prop="title" label="方案名称"></el-table-column>
             <el-table-column label="操作">
                 <template #default="{ row }">
                     <el-button
                         v-if="!row.schema.includes(achievement_id)"
                         type="primary"
-                        size="mini"
+                        size="small"
                         @click="addToSchema(row)"
                         :loading="loading"
                         >添加</el-button
                     >
-                    <el-button v-else type="info" size="mini" @click="removeFromSchema(row)" :loading="loading">
+                    <el-button v-else type="info" size="small" @click="removeFromSchema(row)" :loading="loading">
                         移出
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
         <template #footer>
-            <el-button size="mini" type="primary" @click="onFinish">完成</el-button>
+            <el-button size="small" type="primary" @click="onFinish">完成</el-button>
         </template>
     </el-dialog>
 </template>
@@ -107,3 +107,4 @@ export default {
     }
 }
 </style>
+

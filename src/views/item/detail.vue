@@ -369,7 +369,7 @@
                         class="u-server"
                         v-model="server"
                         placeholder="请选择服务器"
-                        size="mini"
+                        size="small"
                     >
                         <el-option v-for="(serve, i) in servers" :key="i" :label="serve" :value="serve"></el-option>
                     </el-select>
@@ -394,17 +394,17 @@
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
             <WikiRobotTip v-if="!isRobot" type-name="物品" :reply="source?.Name"></WikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
-                <template slot="head-title">
+                <template #head-title>
                     <img class="u-icon" svg-inline src="@/assets/img/item.svg" />
                     <span class="u-txt">物品攻略</span>
                 </template>
-                <template slot="head-actions">
+                <template #head-actions>
                     <a class="el-button el-button--primary" :href="publish_url(`item/${id}`)">
                         <i class="el-icon-edit"></i>
                         <span>完善物品攻略</span>
                     </a>
                 </template>
-                <template slot="body">
+                <template #body>
                     <div class="m-wiki-compatible" v-if="compatible">
                         <i class="el-icon-warning-outline"></i> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
                             class="s-link"
@@ -426,11 +426,11 @@
                 <!-- 打赏 -->
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
-                        <template slot="head-title">
+                        <template #head-title>
                             <i class="el-icon-coin"></i>
                             <span class="u-txt">参与打赏</span>
                         </template>
-                        <template slot="body">
+                        <template #body>
                             <Thx
                                 class="m-thx"
                                 :postId="id"
@@ -470,7 +470,7 @@
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 // import Fav from "@jx3box/jx3box-common-ui/src/interact/Fav.vue";
 import Fav from "./item-fav";
-import Item from "@jx3box/jx3box-editor/src/Item.vue";
+import Item from "@/components/common/compat-item.vue";
 import GameText from "@jx3box/jx3box-editor/src/GameText.vue";
 import ItemIcon from "@/components/common/item-icon.vue";
 import Plan from "@/components/item/plan.vue";
@@ -479,7 +479,7 @@ import WikiRevisions from "@/components/wiki-revisions.vue";
 import WikiComments from "@/components/wiki-comments.vue";
 import ItemPrices from "@/components/item/item-prices.vue";
 import ItemPriceChart from "@/components/item/item-price-chart.vue";
-import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
+import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import Notice from "@/components/cj/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";

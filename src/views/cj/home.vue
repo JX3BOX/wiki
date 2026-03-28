@@ -1,14 +1,14 @@
 <template>
     <div class="m-home-view">
         <WikiPanel :border-none="true" class="u-qlinks-box">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-location-information"></i>
                 <span>便捷入口</span>
             </template>
             <!-- <template slot="head-actions">
                 <a class="other" target="_blank" :href="feedback">反馈建议 &raquo;</a>
             </template> -->
-            <template slot="body">
+            <template #body>
                 <ul class="u-qlinks">
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/9126/">
@@ -66,11 +66,11 @@
         </WikiPanel>
 
         <WikiPanel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-notebook-1"></i>
                 <span>热门成就</span>
             </template>
-            <template slot="body">
+            <template #body>
                 <div class="m-achievement-slider">
                     <el-carousel height="66px" direction="vertical" indicator-position="none">
                         <el-carousel-item v-for="(items, key) in hot_achievements" :key="key" class="m-carousel m-hot">
@@ -125,14 +125,14 @@
         </WikiPanel>
 
         <WikiPanel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-notebook-2"></i>
                 <span>最新成就</span>
             </template>
-            <template slot="head-actions">
+            <template #head-actions>
                 <router-link class="other" :to="{ name: 'newest' }">查看更多 &raquo;</router-link>
             </template>
-            <template slot="body">
+            <template #body>
                 <el-carousel height="66px" direction="vertical" :interval="3500" indicator-position="none">
                     <el-carousel-item v-for="(items, key) in newest_achievements" :key="key" class="m-carousel">
                         <el-row :gutter="20">

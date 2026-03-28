@@ -12,17 +12,17 @@
         <div class="m-wiki" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
             <WikiRobotTip v-if="!isRobot" type-name="通识" :reply="title"></WikiRobotTip>
             <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
-                <template slot="head-title">
+                <template #head-title>
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge.svg" />
                     <span>通识攻略</span>
                 </template>
-                <template v-if="!isRobot" slot="head-actions">
+                <template v-if="!isRobot" #head-actions>
                     <a class="el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
                         <i class="el-icon-edit"></i>
                         <span>完善百科通识</span>
                     </a>
                 </template>
-                <template slot="body">
+                <template #body>
                     <Article id="wikiArticle" :content="content" />
                 </template>
             </WikiPanel>
@@ -33,11 +33,11 @@
                 <!-- 打赏 -->
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
-                        <template slot="head-title">
+                        <template #head-title>
                             <i class="el-icon-coin"></i>
                             <span class="u-txt">参与打赏</span>
                         </template>
-                        <template slot="body">
+                        <template #body>
                             <Thx
                                 class="m-thx"
                                 :postId="~~id"
@@ -57,12 +57,12 @@
                 </div>
 
                 <WikiPanel v-if="id" class="m-knowledge-panel">
-                    <template slot="head-title">
+                    <template #head-title>
                         <i class="el-icon-chat-line-round"></i>
                         <span class="u-title">讨论</span>
                     </template>
-                    <template slot="body">
-                        <Comment :id="id" category="knowledge" />
+                    <template #body>
+                        <WikiCommentsContent type="knowledge" :source-id="id" />
                     </template>
                 </WikiPanel>
             </template>
@@ -89,7 +89,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
-import Comment from "@jx3box/jx3box-comment-ui/src/Comment.vue";
+import WikiCommentsContent from "@/components/wiki-comments-content.vue";
 import notice from "@/components/cj/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import bus from "@/store/bus";
@@ -122,7 +122,7 @@ export default {
         Article,
         WikiPanel,
         WikiRevisions,
-        Comment,
+        WikiCommentsContent,
         notice,
         wikiRobotBottom,
         WikiRobotTip,

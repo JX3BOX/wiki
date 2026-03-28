@@ -6,7 +6,8 @@
     box-shadow: 0 1px 0 lighten(@theme-shadow, 40%);
     color: #fff;
     min-height: (@header-height);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     .flex;
     align-items: center;
 }
@@ -23,6 +24,8 @@
         height: 32px;
         float: left;
         padding: 16px 10px;
+        box-sizing: content-box;
+        flex-shrink: 0;
         -webkit-transition: 0.3s ease-in-out;
         transition: 0.3s ease-in-out;
     }

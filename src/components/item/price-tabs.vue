@@ -2,7 +2,7 @@
     <div class="m-item-price-tabs">
         <div class="m-price-server">
             <i class="el-icon-s-shop"></i> 全服价格
-            <el-select class="u-server" v-model="server" placeholder="请选择服务器" size="mini">
+            <el-select class="u-server" v-model="server" placeholder="请选择服务器" size="small">
                 <!-- <el-option key label="前五低价区服" value v-if="!isOrigin"></el-option> -->
                 <el-option v-for="serve in servers" :key="serve" :label="serve" :value="serve"></el-option>
             </el-select>
@@ -38,6 +38,9 @@ export default {
         isOrigin: function () {
             return this.client == "origin";
         },
+        routeServer() {
+            return this.$route?.query?.server || "";
+        },
         servers: function () {
             return this.isOrigin ? servers_origin : servers_std;
         },
@@ -50,11 +53,28 @@ export default {
                 });
             }
         },
+        legacySyncServer() {
+            this.server = this.routeServer || (this.isOrigin ? "缂樿捣绋婚" : "姊︽睙鍗?");
+        },
     },
-    mounted: function () {
+    legacyMounted: function () {
         let params = new URLSearchParams(location.search);
         let server = params.get("server");
         this.server = server || (this.isOrigin ? "缘起稻香" : "梦江南");
+    },
+    mounted() {
+        this.server = this.routeServer || this.servers[0] || "";
+    },
+    watch: {
+        routeServer: {
+            immediate: true,
+            handler() {
+                this.server = this.routeServer || this.servers[0] || "";
+            },
+        },
+        client() {
+            this.server = this.routeServer || this.servers[0] || "";
+        },
     },
     components: {
         "item-prices": ItemPrices,

@@ -1,19 +1,15 @@
-import Vue from "vue";
-import Vuex from "vuex";
-
-Vue.use(Vuex);
+import { createStore } from "vuex";
 
 const store = {
     state: {
         client: location.href.includes("origin") ? "origin" : "std",
-
-        onlyNotCompleted: false, // 是否只显示未完成的任务
+        onlyNotCompleted: false,
         currentRole: "",
         completedQuests: [],
     },
     mutations: {
         SET_STATE(state, payload) {
-            state = Object.assign(state, payload);
+            Object.assign(state, payload);
         },
         SET_ROLE(state, role) {
             state.currentRole = role;
@@ -37,4 +33,4 @@ const store = {
     modules: {},
 };
 
-export default new Vuex.Store(store);
+export default createStore(store);

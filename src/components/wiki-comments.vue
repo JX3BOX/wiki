@@ -1,10 +1,10 @@
 <template>
     <WikiPanel class="c-wiki-comments" scene="detail">
-        <template slot="head-title">
+        <template #head-title>
             <i class="el-icon-chat-line-round"></i>
             <span>百科评论</span>
         </template>
-        <template slot="body">
+        <template #body>
             <div class="m-comments-panel" v-loading="loading">
                 <div class="u-empty" v-if="!comments || !comments.length">
                     <span v-if="comments === null">🎉 数据加载中...</span>
@@ -21,7 +21,7 @@
                     :total="total"
                     :page-size="pageSize"
                     :layout="isWujie ? 'prev, next' : 'prev, pager, next, total'"
-                    :small="isWujie"
+                    :size="isWujie ? 'small' : undefined"
                     :pager-count="isWujie ? 5 : 7"
                     @current-change="handleCurrentChange"
                 ></el-pagination>
@@ -73,12 +73,17 @@ export default {
             return this.$route.name?.indexOf("wujie") > -1;
         },
         client: function () {
-            return location.href.includes("classic") || location.href.includes("origin") ? "origin" : "std";
+            return this.$route?.query?.L === "classic_yq" ? "origin" : "std";
         },
     },
     methods: {
         get_comments() {
-            if (!this.type || !this.sourceId) return;
+            if (!this.type || !this.sourceId) {
+                this.comments = [];
+                this.total = 0;
+                this.loading = false;
+                return;
+            }
             this.loading = true;
             wikiComment
                 .list({ type: this.type, id: this.sourceId }, { client: this.client, page: this.page })
@@ -95,6 +100,12 @@ export default {
                     this.page = res.data.page;
                     this.total = res.data.total;
                     this.comments = filter(comments, 0);
+                })
+                .catch(() => {
+                    this.comments = false;
+                    this.total = 0;
+                })
+                .finally(() => {
                     this.loading = false;
                 });
 
@@ -185,13 +196,19 @@ export default {
         sourceId: {
             immediate: true,
             handler() {
+                this.page = 1;
                 this.get_comments();
             },
+        },
+        type() {
+            if (!this.sourceId) return;
+            this.page = 1;
+            this.get_comments();
         },
     },
 };
 </script>
 
 <style lang="less">
-@import "~@/assets/css/wiki-comments.less";
+@import "~@jx3box/jx3box-ui/assets/css/wiki/wiki-comments.less";
 </style>

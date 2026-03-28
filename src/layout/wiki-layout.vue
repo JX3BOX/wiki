@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header></Header>
+        <CommonHeader :overlay-enable="overlayEnable"></CommonHeader>
 
         <Main :withoutLeft="withoutLeft" :withoutRight="withoutRight">
             <div class="m-main" :class="'p-' + pageName">
@@ -11,8 +11,13 @@
 </template>
 
 <script>
+import CommonHeader from "@jx3box/jx3box-ui/src/CommonHeader.vue";
+
 export default {
     name: "DefaultLayout",
+    components: {
+        CommonHeader,
+    },
     props: {
         name: {
             type: String,

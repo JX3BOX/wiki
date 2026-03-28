@@ -1,9 +1,6 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 
-Vue.use(Vuex);
-
-let store = {
+const store = {
     state: {
         sidebar: {
             AucGenre: null,
@@ -23,4 +20,4 @@ let store = {
     modules: {},
 };
 
-export default new Vuex.Store(store);
+export default createStore(store);

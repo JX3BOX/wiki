@@ -1,4 +1,4 @@
-<template functional>
+<template>
     <div class="m-list-head">
         <div>起始地图</div>
         <div>任务名称</div>

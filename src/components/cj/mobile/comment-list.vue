@@ -71,7 +71,7 @@ export default {
         this._onScroll = this.handleScroll.bind(this);
         window.addEventListener("scroll", this._onScroll);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener("scroll", this._onScroll);
     },
     methods: {

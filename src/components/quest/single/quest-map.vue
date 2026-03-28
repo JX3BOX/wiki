@@ -1,6 +1,6 @@
 <template>
     <div class="m-quest-map">
-        <el-carousel :autoplay="false" :arrow="showArrow" ref="carousel" :height="`${height}px`">
+        <el-carousel ref="carousel" :autoplay="false" :arrow="showArrow" :height="`${height}px`">
             <el-carousel-item v-for="(ps, mapId) in points" :key="mapId">
                 <div class="u-map__container" :style="containerSize">
                     <img class="u-map-img" :src="mapImgUrl(mapId)" draggable="false" alt="任务地图图片" />
@@ -9,8 +9,8 @@
                     </div>
                     <template v-for="point in ps">
                         <el-popover
-                            :key="point.Types + JSON.stringify(point.Coordinates)"
                             v-if="filter[point.Types]"
+                            :key="point.Types + JSON.stringify(point.Coordinates)"
                             class="u-map-point__warpper"
                             :class="{
                                 'u-map-point__bigger': point.Types === 'Start' || point.Types === 'End',
@@ -23,11 +23,11 @@
                             :visible-arrow="false"
                         >
                             <div class="u-popover-content">
-                                <p>{{ point.Types | pointType }}</p>
-                                <p>{{ point.ObjectName }} ({{ point.ObjectType | objectType }} {{ point.ObjectID }})</p>
-                                <p>{{ point.Coordinates | coordinates }}</p>
+                                <p>{{ pointType(point.Types) }}</p>
+                                <p>{{ point.ObjectName }} ({{ objectType(point.ObjectType) }} {{ point.ObjectID }})</p>
+                                <p>{{ coordinates(point.Coordinates) }}</p>
                             </div>
-                            <template slot="reference">
+                            <template #reference>
                                 <img
                                     v-if="point.Types == 'Start'"
                                     :class="pointClass(point)"
@@ -76,7 +76,7 @@ export default {
             immediate: true,
             deep: true,
             handler() {
-                this.$nextTick(function () {
+                this.$nextTick(() => {
                     this.updateSize();
                     window.addEventListener("resize", this.updateSize);
                 });
@@ -84,13 +84,13 @@ export default {
         },
     },
     computed: {
-        containerSize: function () {
+        containerSize() {
             return {
-                width: this.width + "px",
-                height: this.height + "px",
+                width: `${this.width}px`,
+                height: `${this.height}px`,
             };
         },
-        showArrow: function () {
+        showArrow() {
             return Object.keys(this.points).length > 1 ? "always" : "never";
         },
     },
@@ -105,24 +105,21 @@ export default {
         },
         mapName(id) {
             if (this.mapScales[`${id}`]) {
-                return this.mapScales[`${id}`][0]["Name"];
-            } else {
-                return "未知地图";
+                return this.mapScales[`${id}`][0].Name;
             }
+            return "未知地图";
         },
-        pointStyle(Coordinates, MapId) {
-            let mapScales = this.mapScales[`${MapId}`];
+        pointStyle(coordinates, mapId) {
+            let mapScales = this.mapScales[`${mapId}`];
             if (mapScales) {
                 mapScales = mapScales[0];
             } else {
-                console.warn(`未知的地图ID：${MapId}`);
                 return {};
             }
-            let res = {
-                left: `${(Coordinates[0] - mapScales.StartX) * mapScales.Scale * (this.width / 1024)}px`,
-                bottom: `${(Coordinates[1] - mapScales.StartY) * mapScales.Scale * (this.height / 896)}px`,
+            return {
+                left: `${(coordinates[0] - mapScales.StartX) * mapScales.Scale * (this.width / 1024)}px`,
+                bottom: `${(coordinates[1] - mapScales.StartY) * mapScales.Scale * (this.height / 896)}px`,
             };
-            return res;
         },
         pointClass(point) {
             return {
@@ -133,40 +130,36 @@ export default {
             };
         },
         pointIcon(type, questType) {
-            let icon = {
+            const icon = {
                 Start_Act: require("@/assets/img/quest/dialoguelabel-88.png"),
                 Start_Repeat: require("@/assets/img/quest/dialoguelabel-84.png"),
                 Start_Common: require("@/assets/img/quest/dialoguelabel-81.png"),
                 End: require("@/assets/img/quest/dialoguelabel-80.png"),
             };
             if (type == "End") return icon.End;
-            else {
-                if (questType == "act") return icon.Start_Act;
-                else if (questType == "repeat") return icon.Start_Repeat;
-                else return icon.Start_Common;
-            }
+            if (questType == "act") return icon.Start_Act;
+            if (questType == "repeat") return icon.Start_Repeat;
+            return icon.Start_Common;
         },
         updateSize() {
             this.width = this.$refs.carousel.$el.clientWidth;
             this.height = this.width / (1024 / 896);
         },
-    },
-    filters: {
         pointType(type) {
-            let map = {
+            const map = {
                 Start: "任务开始点",
                 End: "任务结束点",
                 KillNpc: "击杀怪物",
                 NeedItem: "需要物品",
             };
             if (map[type]) return map[type];
-            else if (type.startsWith("State")) return type.replace("State", "进度");
-            else if (type.startsWith("KillNpc")) return type.replace("KillNpc", "击杀怪物");
-            else if (type.startsWith("NeedItem")) return type.replace("NeedItem", "需要物品");
-            else return "其它";
+            if (type.startsWith("State")) return type.replace("State", "进度");
+            if (type.startsWith("KillNpc")) return type.replace("KillNpc", "击杀怪物");
+            if (type.startsWith("NeedItem")) return type.replace("NeedItem", "需要物品");
+            return "其他";
         },
         objectType(value) {
-            let map = {
+            const map = {
                 npc: "NPC",
                 point: "坐标",
                 doodad: "交互物品",
@@ -180,7 +173,7 @@ export default {
     mounted() {
         this.fetchMapScales();
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener("resize", this.updateSize);
     },
 };

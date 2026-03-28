@@ -30,7 +30,8 @@
 <script>
 import { Chart } from "@antv/g2";
 import { get_item_prices } from "@/service/item";
-import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
+import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
+import { item_price } from "@/filters";
 import dayjs from "dayjs";
 export default {
     name: "ItemPriceChart",
@@ -98,7 +99,7 @@ export default {
             this.chart.axis("price", {
                 label: {
                     formatter: (val) => {
-                        return this.$options.filters.item_price(val);
+                        return item_price(val);
                     },
                 },
             });
@@ -108,7 +109,7 @@ export default {
                 shared: true,
                 customItems: (items) => {
                     for (let index = 0; index < items.length; index++) {
-                        items[index].value = this.$options.filters.item_price(items[index].value);
+                        items[index].value = item_price(items[index].value);
                     }
                     return items;
                 },

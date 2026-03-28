@@ -21,7 +21,8 @@
                 <el-button type="primary" class="u-dropdown-link">
                     更多百科<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
-                <el-dropdown-menu class="m-header__menu" slot="dropdown">
+                <template #dropdown>
+                    <el-dropdown-menu class="m-header__menu">
                     <el-dropdown-item class="u-dropdown-link">
                         <a :href="`${rootPath}adventure`">奇遇大全</a>
                     </el-dropdown-item>
@@ -34,7 +35,8 @@
                     <el-dropdown-item class="u-dropdown-link">
                         <a :href="`${rootPath}furniture`">家具大全</a>
                     </el-dropdown-item>
-                </el-dropdown-menu>
+                    </el-dropdown-menu>
+                </template>
             </el-dropdown>
         </div>
         <div class="m-content-wrapper">
@@ -77,7 +79,8 @@
                     <div class="m-detail">
                         <div class="m-wiki-post-panel" v-if="wiki_post && wiki_post.post">
                             <WikiPanel :wiki-post="wiki_post">
-                                <div slot="meta" class="m-meta-list">
+                                <template #meta>
+                                    <div class="m-meta-list">
                                     <!-- 参与贡献 -->
                                     <div class="m-user-info">
                                         <div class="u-meta" v-if="wiki_post.users && wiki_post.users.length">
@@ -111,8 +114,9 @@
                                             本次修订由 <b>{{ user_name }}</b> 提交于{{ updated_at }}
                                         </div>
                                     </div>
-                                </div>
-                                <template slot="body">
+                                    </div>
+                                </template>
+                                <template #body>
                                     <div class="m-wiki-compatible" v-if="compatible">
                                         <i class="el-icon-warning-outline"></i>
                                         暂无缘起攻略，以下为重制攻略，仅作参考，<a
@@ -172,7 +176,6 @@ export default {
     },
     data() {
         return {
-            params: new URLSearchParams(location.search),
             generalNum: 137, // 和游戏差异，固定加上
             count: {},
             countDict: {
@@ -192,7 +195,7 @@ export default {
     },
     computed: {
         client: function () {
-            let client = this.params.get("L") == "classic_yq" ? "origin" : "std";
+            let client = this.$route?.query?.L == "classic_yq" ? "origin" : "std";
             return client;
         },
         rootPath: function () {
@@ -204,11 +207,14 @@ export default {
         post_id: function () {
             return this.$route.params.post_id;
         },
+        routeKey() {
+            return `${this.client}:${this.id || ""}:${this.post_id || ""}`;
+        },
         isRevision: function () {
             return !!this.$route.params.post_id;
         },
         author_id: function () {
-            return ~~this.wiki_post.post.user_id;
+            return ~~this.wiki_post?.post?.user_id;
         },
         user_name: function () {
             return this.wiki_post?.post?.user_nickname;
@@ -246,26 +252,15 @@ export default {
         },
     },
     watch: {
-        id: {
+        routeKey: {
+            immediate: true,
             handler() {
-                this.loadData();
-            },
-        },
-        post_id: {
-            handler() {
-                this.loadRevision();
+                this.syncRoute();
             },
         },
     },
     created() {
         this.getStat();
-    },
-    mounted() {
-        if (this.post_id) {
-            this.loadRevision();
-        } else {
-            this.loadData();
-        }
     },
     methods: {
         icon_url: function (id) {
@@ -284,13 +279,37 @@ export default {
                 postStat("cj", this.id);
             }
         },
-        loadData: function () {
+        syncRoute() {
+            const sourceId = this.id;
+            const postId = this.post_id;
+
+            if (!sourceId) {
+                this.source = "";
+                this.wiki_post = "";
+                this.compatible = false;
+                this.is_empty = true;
+                this.versions = [];
+                return;
+            }
+
+            this.triggerStat();
+            this.loadData(sourceId).then(() => {
+                if (postId && this.id === sourceId && this.post_id === postId) {
+                    this.loadRevision(postId);
+                }
+            });
+        },
+        loadData: function (sourceId = this.id) {
             // 获取最新攻略
-            if (this.id) {
-                get_achievement(this.id, { client: this.client }).then((res) => {
-                    this.source = res?.data?.data?.achievement || "";
-                });
-                wiki.mix({ type: "achievement", id: this.id, client: this.client }).then((res) => {
+            if (!sourceId) return Promise.resolve();
+
+            const client = this.client;
+            const baseDataTask = get_achievement(sourceId, { client }).then((res) => {
+                if (this.id !== sourceId) return;
+                this.source = res?.data?.data?.achievement || "";
+            });
+            const wikiTask = wiki.mix({ type: "achievement", id: sourceId, client }).then((res) => {
+                if (this.id !== sourceId) return;
                     const { post, source, compatible, isEmpty, users } = res;
                     this.wiki_post = {
                         post: post,
@@ -303,40 +322,43 @@ export default {
                     reportNow({
                         caller: "cj_detail",
                         data: {
-                            href: `${this.prefix}:/cj/view/${this.id}`,
+                            href: `${this.prefix}:/cj/view/${sourceId}`,
                         },
                     });
 
                     User.isLogin() &&
                         postHistory({
                             source_type: "wujie",
-                            source_id: ~~this.id,
+                            source_id: ~~sourceId,
                             link: location.href,
                             title: post.title,
                         });
                 });
 
-                wiki.versions({ type: "achievement", id: this.id }, { client: this.client }).then(
-                    (res) => {
-                        res = res.data;
-                        this.versions = res.data || [];
-                    },
-                    () => {
-                        this.versions = [];
-                    }
-                );
-            }
-            this.triggerStat();
+            const versionsTask = wiki.versions({ type: "achievement", id: sourceId }, { client }).then(
+                (res) => {
+                    if (this.id !== sourceId) return;
+                    res = res.data;
+                    this.versions = res.data || [];
+                },
+                () => {
+                    if (this.id !== sourceId) return;
+                    this.versions = [];
+                }
+            );
+
+            return Promise.allSettled([baseDataTask, wikiTask, versionsTask]);
         },
-        loadRevision: function () {
+        loadRevision: function (postId = this.post_id) {
             // 获取指定攻略
-            wiki.getById(this.post_id).then((res) => {
+            if (!postId) return Promise.resolve();
+            return wiki.getById(postId).then((res) => {
+                if (this.post_id !== postId) return;
                 this.wiki_post = {
                     ...this.wiki_post,
                     post: res.data.data?.post,
                 };
             });
-            this.triggerStat();
         },
         getStat() {
             // 获取成就统计信息

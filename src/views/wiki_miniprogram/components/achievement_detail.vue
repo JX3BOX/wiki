@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-drawer :visible.sync="show" direction="btt" :show-close="false" :with-header="false" append-to-body
+        <el-drawer v-model="show" direction="btt" :show-close="false" :with-header="false" append-to-body
             custom-class="topic-view-drawer" size="400" @close="onClose" style="width: 100%">
             <template #default>
                 <div v-loading="loading" class="c-var m-topic-view">

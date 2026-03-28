@@ -60,15 +60,15 @@
             </div>
         </div>
         <!-- 分类卡片抽屉 -->
-        <CataloguePop :visible.sync="drawerCatalogueVisible" :category="currentCategory" :compareRoles="compareRoles"
-            :showDetailBtn="false" />
+        <CataloguePop v-model:visible="drawerCatalogueVisible" :category="currentCategory" :compareRoles="compareRoles"
+             :showDetailBtn="false" />
         <!-- 详细信息弹窗 -->
         <achievement_detail ref="achievementDetail" v-if="achievementDetailVisible"
-            :visible.sync="achievementDetailVisible" :current.sync="current"></achievement_detail>
+            v-model:visible="achievementDetailVisible" v-model:current="current"></achievement_detail>
         <!-- 添加对比好友 -->
-        <AddFriend :visible.sync="drawerVisible" @confirmSelection="handleConfirmSelection" />
+        <AddFriend v-model:visible="drawerVisible" @confirmSelection="handleConfirmSelection" />
         <!-- 删除对比角色 -->
-        <DeleteRole :visible.sync="delDrawerVisible" :role="deleteRoleInfo" @deleteRole="handleDeleteRoleConfirm" />
+        <DeleteRole v-model:visible="delDrawerVisible" :role="deleteRoleInfo" @deleteRole="handleDeleteRoleConfirm" />
     </div>
 </template>
 

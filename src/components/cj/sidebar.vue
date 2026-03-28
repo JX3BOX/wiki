@@ -27,7 +27,7 @@
             <el-option v-for="type in menu_types" :key="type.value" :label="type.label" :value="type.value"></el-option>
         </el-select>
         <div v-if="currentRole" class="m-filters">
-            <el-checkbox v-model="uncompleted" label="只看未完成" border size="mini"></el-checkbox>
+            <el-checkbox v-model="uncompleted" label="只看未完成" border size="small"></el-checkbox>
             <div class="u-total" v-if="[1, 2].includes(sidebar.general)">
                 <!-- numTotal -->
                 <b class="u-completed-num">{{ uncompleted ? achievementTotal - completedNum : completedNum }}</b>
@@ -45,20 +45,24 @@
                 :filter-node-method="filterNode"
                 ref="tree"
             >
-                <router-link class="el-tree-node__label" slot-scope="{ data }" :to="menu_url(data)">
-                    <span class="u-name" v-text="data.name"></span>
-                    <em v-if="data.achievements_count" class="u-count">
-                        (<span v-if="currentRole">{{
-                            `${
-                                uncompleted
-                                    ? data.achievements_count + ~~data.own_achievements_count - getMenuCompleted(data)
-                                    : getMenuCompleted(data)
-                            }/`
-                        }}</span>
-                        <span>{{ `${data.achievements_count + ~~data.own_achievements_count}` }}</span
-                        >)
-                    </em>
-                </router-link>
+                <template #default="{ data }">
+                    <router-link class="el-tree-node__label" :to="menu_url(data)">
+                        <span class="u-name" v-text="data.name"></span>
+                        <em v-if="data.achievements_count" class="u-count">
+                            (<span v-if="currentRole">{{
+                                `${
+                                    uncompleted
+                                        ? data.achievements_count +
+                                          ~~data.own_achievements_count -
+                                          getMenuCompleted(data)
+                                        : getMenuCompleted(data)
+                                }/`
+                            }}</span>
+                            <span>{{ `${data.achievements_count + ~~data.own_achievements_count}` }}</span
+                            >)
+                        </em>
+                    </router-link>
+                </template>
             </el-tree>
         </div>
     </div>
@@ -67,7 +71,7 @@
 <script>
 import { getMenus, getRoleGameAchievements, getVirtualRoleAchievements } from "@/service/achievement";
 import RoleSelect from "@/components/common/role-select.vue";
-import Bus from "@jx3box/jx3box-common-ui/service/bus";
+import bus from "@/store/bus";
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
 import { flattenDeep, cloneDeep, omit } from "lodash";
@@ -124,7 +128,7 @@ export default {
             return this.$store.state.achievementsVirtual;
         },
         isVirtual() {
-            // 是否是虚拟角色 - 魔盒账号
+            // 鏄惁鏄櫄鎷熻鑹?- 榄旂洅璐﹀彿
             return !this.currentRole?.jx3id;
         },
         completedNum({ menus, achievementsVirtual, achievements }) {
@@ -145,7 +149,7 @@ export default {
         },
     },
     watch: {
-        // 监听$route 当不处于normal路由的时候 取消展开 tree
+        // 鐩戝惉$route 褰撲笉澶勪簬normal璺敱鐨勬椂鍊?鍙栨秷灞曞紑 tree
         $route(to) {
             if (to.name !== "normal") {
                 let all = this.$refs.tree.store._getAllNodes();
@@ -158,10 +162,10 @@ export default {
             handler(new_val, old_val) {
                 let that = this;
 
-                // 展开菜单
+                // 灞曞紑鑿滃崟
                 that.expand_menu();
 
-                // 异步加载侧边栏数据
+                // 寮傛鍔犺浇渚ц竟鏍忔暟鎹?
                 if (that.sidebar.general) that.get_menus(this.sidebar.general);
             },
         },
@@ -184,7 +188,7 @@ export default {
                     this.loadRoleAchievements(jx3id);
                 } else {
                     if (jx3id === 0) {
-                        // 虚拟角色
+                        // 铏氭嫙瑙掕壊
                         this.loadVirtualAchievements();
                     }
                     this.$store.commit("SET_STATE", { key: "achievements", value: [], isSession: true });
@@ -210,11 +214,11 @@ export default {
     },
     methods: {
         getLastAchievement(achievements = []) {
-            // 游戏角色
-            // 比如传功，只取最后一个传功100次的ID作为是否完成的依据
+            // 娓告垙瑙掕壊
+            // 姣斿浼犲姛锛屽彧鍙栨渶鍚庝竴涓紶鍔?00娆＄殑ID浣滀负鏄惁瀹屾垚鐨勪緷鎹?
             return achievements.map((achievement) => {
                 if (Array.isArray(achievement)) {
-                    // 比如传功，只取最后一个传功100次的ID作为是否完成的依据
+                    // 姣斿浼犲姛锛屽彧鍙栨渶鍚庝竴涓紶鍔?00娆＄殑ID浣滀负鏄惁瀹屾垚鐨勪緷鎹?
                     const lastOne = achievement?.[achievement.length - 1];
                     return lastOne;
                 } else {
@@ -253,7 +257,7 @@ export default {
         },
         clickNode(data, node) {
             let that = this;
-            // Sub菜单下无成就时，默认打开第一个Detail菜单
+            // Sub鑿滃崟涓嬫棤鎴愬氨鏃讹紝榛樿鎵撳紑绗竴涓狣etail鑿滃崟
             let first_node = null;
             if (data.own_achievements_count === 0) {
                 first_node = node.childNodes[0];
@@ -272,7 +276,7 @@ export default {
                 }
             }
 
-            // 展开/收起
+            // 灞曞紑/鏀惰捣
             let _node = first_node ? first_node : node;
             if (node.expanded !== true) {
                 node.expanded = true;
@@ -280,13 +284,13 @@ export default {
                 node.expanded = false;
             }
 
-            // 记录上一个节点
+            // 璁板綍涓婁竴涓妭鐐?
             this.old_node = _node;
 
-            // 移动端收起边栏
+            // 绉诲姩绔敹璧疯竟鏍?
             if (window.innerWidth < 1024) {
                 if (node.isLeaf) {
-                    Bus.$emit("toggleLeftSide", false);
+                    bus.emit("toggleLeftSide", false);
                 }
             }
         },
@@ -302,21 +306,21 @@ export default {
                 that.menus = [
                     { name: "最新成就", id: "newest", router: "newest" },
                     { name: "待攻略成就", id: "waiting", router: "waiting" },
-                    // { name: "绝版成就", id: "out_print", router: "out_print" },
+                    // { name: "缁濈増鎴愬氨", id: "out_print", router: "out_print" },
                     { name: "奇遇成就", id: "adventure", router: "adventure" },
-                    { name: "珍奇成就", id: "rare", router: "rare" },
+                    { name: "珍宠成就", id: "rare", router: "rare" },
                 ];
                 return;
             }
 
             // if (general === 4) {
-            //     that.menus = [{ name: "宠物成就", id: "rare", router: "rare" }];
+            //     that.menus = [{ name: "瀹犵墿鎴愬氨", id: "rare", router: "rare" }];
             //     that.$router.push({ name: 'rare' })
             //     that.$refs.tree.setCurrentKey('rare')
             //     return;
             // }
             // if (general === 5) {
-            //     that.menus = [{ name: "奇遇成就", id: "adventure", router: "adventure" }];
+            //     that.menus = [{ name: "濂囬亣鎴愬氨", id: "adventure", router: "adventure" }];
             //     that.$router.push({ name: 'adventure' })
             //     // that.$refs.tree.setCurrentKey('adventure')
             //     return;
@@ -330,10 +334,10 @@ export default {
                         for (let i in data.data.menus) menus.push(data.data.menus[i]);
                         that.menus = menus;
 
-                        // 缓存菜单数据
+                        // 缂撳瓨鑿滃崟鏁版嵁
                         that.menus_cache[general] = menus;
 
-                        // 展开菜单
+                        // 灞曞紑鑿滃崟
                         that.expand_menu();
                     }
                 },
@@ -345,7 +349,7 @@ export default {
         expand_menu() {
             let that = this;
             that.$nextTick(function () {
-                // 默认展开当前菜单
+                // 榛樿灞曞紑褰撳墠鑿滃崟
                 let key = "";
                 if (that.sidebar.general != 3) {
                     let sub = that.sidebar.sub;
@@ -399,18 +403,18 @@ export default {
                 this.loadVirtualAchievements();
             }
         },
-        // 获取角色成就状态
+        // 鑾峰彇瑙掕壊鎴愬氨鐘舵€?
         loadRoleAchievements(jx3id) {
             getRoleGameAchievements(jx3id).then((res) => {
                 const achievements = res.data?.data?.achievements || "";
                 const jx3id = res.data?.data?.jx3id;
-                this.isSync = !!jx3id; // 是否在游戏中同步
+                this.isSync = !!jx3id; // 鏄惁鍦ㄦ父鎴忎腑鍚屾
                 const list = achievements.split(",");
                 this.$store.commit("SET_STATE", { key: "achievements", value: list, isSession: true });
             });
         },
         showSchoolIcon,
-        // 获取虚拟角色成就列表
+        // 鑾峰彇铏氭嫙瑙掕壊鎴愬氨鍒楄〃
         loadVirtualAchievements() {
             if (!this.currentRole || this.currentRole.jx3id) return;
             getVirtualRoleAchievements().then((res) => {
@@ -426,3 +430,4 @@ export default {
 <style lang="less">
 @import "~@/assets/css/cj/left-side.less";
 </style>
+

@@ -1,6 +1,7 @@
 <template>
     <div>
         <el-drawer
+            v-bind="$attrs"
             :visible="visible"
             class="c-var"
             direction="btt"
@@ -11,7 +12,6 @@
             size="400"
             @close="onClose"
             style="width: 100%"
-            v-bind="$attrs"
         >
             <template #default>
                 <div class="c-var m-add-item-plan-drawer" v-loading="loading">

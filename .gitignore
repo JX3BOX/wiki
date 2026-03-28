@@ -23,3 +23,5 @@ yarn-error.log*
 
 .user.ini
 .nuxt
+/tmp
+/.tools

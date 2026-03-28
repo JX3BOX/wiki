@@ -120,12 +120,12 @@
 
         <user-select-drawer
             custom-class="in-quest"
-            :visible.sync="userSelectShow"
+            v-model:visible="userSelectShow"
             :current-role="currentRole"
             @change="setRole"
         />
         <map-filter-drawer
-            :visible.sync="mapDrawerShow"
+            v-model:visible="mapDrawerShow"
             :regions="maps"
             :search="mapSearch"
             @change="setMapSearch"

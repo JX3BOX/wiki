@@ -1,0 +1,64 @@
+import { createApp, configureCompat } from "vue";
+import ElementPlus from "element-plus";
+import zhCn from "element-plus/es/locale/lang/zh-cn";
+import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import { createJx3boxUiI18n, install as JX3BOX_UI } from "@jx3box/jx3box-ui";
+import reporter from "@jx3box/jx3box-common/js/reporter";
+import * as filters from "@/filters";
+
+import "@jx3box/jx3box-common/css/normalize.css";
+import "@jx3box/jx3box-common/css/font.css";
+import "@jx3box/jx3box-common/css/element-plus-theme.scss";
+import "@jx3box/jx3box-common/css/element-fonticon.css";
+import "@/assets/css/tailwind.css";
+
+configureCompat({
+    MODE: 2,
+    COMPONENT_ASYNC: false,
+    COMPONENT_V_MODEL: false,
+    ATTR_FALSE_VALUE: false,
+    RENDER_FUNCTION: false,
+    WATCH_ARRAY: false,
+    // Keep Element Plus' legacy enumerated-attr behavior without flooding the console.
+    ATTR_ENUMERATED_COERCION: "suppress-warning",
+});
+
+const installLegacyRuntime = (app) => {
+    app.config.globalProperties.$filters = filters;
+    app.config.globalProperties.$set = (target, key, value) => {
+        target[key] = value;
+        return value;
+    };
+    app.config.globalProperties.$delete = (target, key) => {
+        delete target[key];
+    };
+};
+
+export const bootstrapApp = (RootComponent, { router, store } = {}) => {
+    const app = createApp(RootComponent);
+
+    if (router) app.use(router);
+    if (store) app.use(store);
+
+    const i18n = createJx3boxUiI18n({ locale: "zh-CN" });
+    i18n.global.missingWarn = false;
+    i18n.global.fallbackWarn = false;
+    app.use(i18n);
+
+    app.use(JX3BOX_UI);
+    app.use(ElementPlus, { locale: zhCn });
+
+    Object.entries(ElementPlusIconsVue).forEach(([name, component]) => {
+        if (!app.component(name)) {
+            app.component(name, component);
+        }
+    });
+
+    installLegacyRuntime(app);
+
+    if (typeof reporter.installVue3 === "function") {
+        reporter.installVue3(app);
+    }
+
+    return app;
+};

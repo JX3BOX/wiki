@@ -10,7 +10,7 @@
         :close-delay="0"
         @show="show"
     >
-        <template slot="reference">
+        <template #reference>
             <div class="m-item-icon">
                 <div class="u-item-icon" :style="`height:${size}px; width:${size}px`">
                     <a
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Item from "@jx3box/jx3box-editor/src/Item";
+import Item from "@/components/common/compat-item.vue";
 import { get_item } from "@/service/item";
 import { __imgPath } from "@/utils/config";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";

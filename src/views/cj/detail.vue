@@ -6,7 +6,7 @@
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
             <WikiRobotTip v-if="!isRobot" type-name="成就" :reply="source?.Name"></WikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
-                <template slot="head-title">
+                <template #head-title>
                     <img class="u-icon" svg-inline src="@/assets/img/cj/achievement.svg" />
                     <span class="u-txt">成就攻略</span>
                     <!-- 带post_id时对应的是具体的某个版本 -->
@@ -14,13 +14,13 @@
                         >注意: 您当前查看的是历史版本，<a :href="`/cj/view/${id}`"> 查看 </a>最新攻略</span
                     >
                 </template>
-                <template v-if="!isRobot" slot="head-actions">
+                <template v-if="!isRobot" #head-actions>
                     <a class="el-button el-button--primary" :href="publish_url(`achievement/${id}`)">
                         <i class="el-icon-edit"></i>
                         <span>完善成就攻略</span>
                     </a>
                 </template>
-                <template slot="body">
+                <template #body>
                     <!-- <Notice></Notice> -->
                     <div class="m-wiki-compatible" v-if="compatible">
                         <i class="el-icon-warning-outline"></i> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
@@ -46,11 +46,11 @@
                 <!-- 打赏 -->
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
-                        <template slot="head-title">
+                        <template #head-title>
                             <i class="el-icon-coin"></i>
                             <span class="u-txt">参与打赏</span>
                         </template>
-                        <template slot="body">
+                        <template #body>
                             <Thx
                                 class="m-thx"
                                 :postId="~~id"

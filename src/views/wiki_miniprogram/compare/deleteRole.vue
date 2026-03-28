@@ -1,6 +1,6 @@
 <!-- 删除对比角色 -->
 <template>
-    <el-drawer :visible="visible" direction="btt" size="auto" @close="handleClose" class="c-role-delete-drawer">
+    <el-drawer :model-value="visible" direction="btt" size="auto" @close="handleClose" class="c-role-delete-drawer">
         <!-- 第一步删除提示 -->
         <div class="m-delete-role_first" v-if="role && step == 1">
             <RoleAvatar class="u-avatar-img" :mount="role.mount" :body_type="role.body_type" />
@@ -30,7 +30,7 @@
 
 <script>
 import schoolid from "@jx3box/jx3box-data/data/xf/schoolid.json";
-import { __cdn } from '@jx3box/jx3box-common/data/jx3box.json'
+import { __cdn } from "@/utils/config";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 export default {
     components: {

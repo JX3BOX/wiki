@@ -39,11 +39,11 @@
                         background
                         layout="prev, pager, next"
                         :pager-count="5"
-                        small
+                        size="small"
                         :hide-on-single-page="true"
                         :page-size="per"
                         :total="total"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                     ></el-pagination>
                 </template>
                 <div v-else class="u-tip"><i class="el-icon-warning-outline"></i> 暂无物品清单记录</div>

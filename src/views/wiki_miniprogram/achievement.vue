@@ -91,7 +91,7 @@
             </div>
         </div>
         <!-- 模式切换 -->
-        <el-drawer title="显示模式" :visible="drawerModeVisible" direction="btt" size="360px" @close="handleModeClose"
+        <el-drawer title="显示模式" :model-value="drawerModeVisible" direction="btt" size="360px" @close="handleModeClose"
             class="c-mode-list-drawer">
             <div class="mode-list-container">
                 <div v-for="(item, index) in modeType" :key="index" class="mode-item" @click="toggleMode(item.value)"
@@ -107,7 +107,7 @@
         </el-drawer>
         <!-- 详细信息弹窗 -->
         <achievement_detail ref="achievementDetail" v-if="achievementDetailVisible"
-            :visible.sync="achievementDetailVisible" :current.sync="current">
+            v-model:visible="achievementDetailVisible" v-model:current="current">
         </achievement_detail>
     </div>
 </template>

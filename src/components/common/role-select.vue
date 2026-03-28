@@ -2,19 +2,21 @@
     <div class="m-related-roles">
         <el-select
             v-if="isLogin"
-            :value="role"
+            v-bind="$attrs"
+            :model-value="currentRole"
             value-key="ID"
             placeholder="请选择当前角色"
             :disabled="!isLogin"
             popper-class="m-related-roles-options"
             size="small"
-            @change="$emit('change', $event)"
-            v-bind="$attrs"
+            @change="handleChange"
         >
-            <span slot="prefix" class="u-prefix">
+            <template #prefix>
+                <span class="u-prefix">
                 角色
                 <slot name="tip"></slot>
-            </span>
+                </span>
+            </template>
             <el-option v-if="isLogin" :value="virtualRole" :label="virtualRole.name + '<虚拟角色>'">
                 <span class="u-role">
                     <span class="u-role-name"
@@ -42,11 +44,17 @@ import { getUserRoles } from "@/service/team";
 
 export default {
     name: "RoleSelect",
-    model: {
-        prop: "role",
-        event: "change",
+    emits: ["update:modelValue", "change", "list-loaded"],
+    props: {
+        modelValue: {
+            type: Object,
+            default: null,
+        },
+        role: {
+            type: Object,
+            default: null,
+        },
     },
-    props: ["role"],
     data: () => ({
         roleList: [],
 
@@ -57,8 +65,17 @@ export default {
             ID: ~~User.getInfo().uid,
         },
     }),
+    computed: {
+        currentRole() {
+            return this.modelValue ?? this.role;
+        },
+    },
     methods: {
         showSchoolIcon,
+        handleChange(role) {
+            this.$emit("update:modelValue", role);
+            this.$emit("change", role);
+        },
         loadRoles() {
             if (!this.isLogin) return;
             getUserRoles().then((res) => {

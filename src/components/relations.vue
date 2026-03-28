@@ -4,12 +4,12 @@
         scene="detail"
         v-if="(relations && relations.length) || npc"
     >
-        <template slot="head-title">
+        <template #head-title>
             <i class="el-icon-link"></i>
             <span>关联成就</span>
             <em class="u-remark">同BOSS下的其它成就</em>
         </template>
-        <template slot="head-actions">
+        <template #head-actions>
             <el-button
                 type="primary"
                 class="u-boss"
@@ -18,7 +18,7 @@
                 >BOSS属性参考
             </el-button>
         </template>
-        <template slot="body">
+        <template #body>
             <div class="m-section">
                 <div class="u-empty" v-if="!relations || !relations.length">
                     <span v-if="relations === null">🎉 数据加载中...</span>

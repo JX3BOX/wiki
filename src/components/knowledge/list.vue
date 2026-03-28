@@ -15,7 +15,7 @@
             :hide-on-single-page="true"
             :page-size="pagination.per"
             :total="pagination.total"
-            :current-page.sync="pagination.page"
+            v-model:current-page="pagination.page"
             @current-change="changePage"
         ></el-pagination>
     </div>

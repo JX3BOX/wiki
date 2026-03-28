@@ -103,7 +103,7 @@
                                 <el-button
                                     type="danger"
                                     icon="el-icon-delete"
-                                    size="mini"
+                                    size="small"
                                     round
                                     @click="deleteItem(scope.row)"
                                     >删除</el-button

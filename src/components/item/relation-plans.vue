@@ -3,7 +3,7 @@
 		<template v-if="relation_plans.length">
 			<el-table :data="relation_plans" @cell-click="openLink">
 				<el-table-column prop="title" label="清单名称">
-					<template slot-scope="scope">
+					<template #default="scope">
 						<div class="u-title">
                             <i class="el-icon-tickets"></i>
                             {{ scope.row.title }}
@@ -12,7 +12,7 @@
 				</el-table-column>
 				<el-table-column prop="description" label="描述"> </el-table-column>
 				<el-table-column prop="user_nickname" label="作者">
-					<template slot-scope="scope">
+					<template #default="scope">
 						<a :href="author_url(scope.row.user_id)" class="u-name" target="_blank" @click.stop>
 							<img :src="scope.row.user_avatar" :alt="scope.row.user_nickname" />
 							<span>{{ scope.row.user_nickname }}</span>
@@ -20,7 +20,7 @@
 					</template>
 				</el-table-column>
 				<el-table-column prop="updated" label="更新日期">
-					<template slot-scope="scope">
+					<template #default="scope">
 						<span>{{ date_format(scope.row.updated) }}</span>
 					</template>
 				</el-table-column>

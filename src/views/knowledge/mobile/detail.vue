@@ -51,7 +51,7 @@
         >
             <template #default>
                 <div class="m-more-action">
-                    <span type="text" v-loading="favLoading" class="u-action" @click="toggleFav">
+                    <span v-loading="favLoading" class="u-action" @click="toggleFav">
                         <i :class="isFav ? 'el-icon-star-on' : 'el-icon-star-off'"></i>
                         {{ isFav ? "取消收藏" : "收藏页面" }}
                     </span>

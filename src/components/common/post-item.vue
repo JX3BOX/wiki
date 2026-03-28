@@ -61,10 +61,15 @@ export default {
             required: true,
         },
     },
+    computed: {
+        client() {
+            return this.$store.state.client;
+        },
+    },
     data() {
         return {
             isPhone: window.innerWidth <= 768,
-        }
+        };
     },
     methods: {
         icon_url: function (id) {

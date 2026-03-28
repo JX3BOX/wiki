@@ -1,15 +1,18 @@
 <template>
     <div class="m-item-prices">
         <table v-if="prices.length" v-loading="priceLoading">
-            <tr>
+            <thead>
+                <tr>
                 <th>物品</th>
                 <th>等级</th>
                 <th>上传时间</th>
                 <th>服务器</th>
                 <th style="text-align: right">一口价 (总价)</th>
                 <th style="text-align: right">一口价 (单价)</th>
-            </tr>
-            <tr v-for="(price, key) in prices" :key="key">
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(price, key) in prices" :key="key">
                 <td>
                     <div class="m-item-icon">
                         <img class="u-icon" :src="icon_url(item.IconID)" />
@@ -39,7 +42,8 @@
                     style="text-align: right"
                     v-text="item_price(price.unit_price)"
                 ></td>
-            </tr>
+                </tr>
+            </tbody>
         </table>
         <div v-else style="text-align: center">🐖 暂无记录</div>
     </div>

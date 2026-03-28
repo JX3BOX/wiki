@@ -1,129 +1,73 @@
 <template>
-    <WikiPanel border-none="true" class="m-search-hottest m-price-header">
-        <template slot="head-title">
+    <WikiPanel :border-none="true" class="m-search-hottest m-price-header">
+        <template #head-title>
             <div class="u-title">
                 <i class="el-icon-shopping-bag-1"></i>
-                <span>交易趋势</span>
+                <span>交易走势</span>
             </div>
-            <el-select class="u-server" v-model="server" placeholder="请选择服务器" size="mini">
+            <el-select v-model="server" class="u-server" placeholder="请选择服务器" size="small">
                 <el-option v-for="serve in servers" :key="serve" :label="serve" :value="serve"></el-option>
             </el-select>
         </template>
-        <template slot="head-actions">
+        <template #head-actions>
             <el-input
+                v-model="search"
                 class="u-search"
                 placeholder="搜索.."
-                v-model="search"
-                size="mini"
-                @keyup.enter.native="goItemPage"
+                size="small"
+                @keyup.enter="goItemPage"
             >
-                <el-button slot="append" icon="el-icon-search" @click="goItemPage"></el-button>
+                <template #append>
+                    <el-button icon="el-icon-search" @click="goItemPage"></el-button>
+                </template>
             </el-input>
         </template>
-        <div slot="body" class="m-index-price">
-            <div class="m-price-list" v-if="groups && groups.length && isEmpty">
-                <!-- <div v-for="i in 2" :key="'wrapper' + i"> -->
-                <el-row :gutter="20" v-for="(group, key) in groups" :key="key">
-                    <div :span="24" class="u-group-title" v-text="group.label"></div>
-                    <el-col :span="6" v-for="(item, k) in group.items" :key="k">
-                        <router-link
-                            v-if="item"
-                            class="u-item"
-                            :class="`u-item-${key}`"
-                            :to="{name:'view',params: {item_id: item.item_id}}"
-                        >
-                            <div class="u-icon">
-                                <img :src="icon_url(item.icon)" />
-                            </div>
-                            <div class="u-content">
-                                <span class="u-name">
-                                    <span v-text="item.label"></span>
-                                </span>
-                                <span class="u-price">
-                                    <span
-                                        class="u-trending"
-                                        :class="item | showItemTrendingClass"
-                                    >{{item | showItemTrending}}</span>
-                                    <template v-if="item.sub_days_0_price">
-                                        <span>今日：</span>
-                                        <GamePrice :price="item.sub_days_0_price" />
-                                    </template>
-                                    <template
-                                        v-else-if="!item.sub_days_0_price && item.sub_days_1_price"
-                                    >
-                                        <span>昨日：</span>
-                                        <GamePrice :price="item.sub_days_1_price" />
-                                    </template>
-                                    <template
-                                        v-else-if="!item.sub_days_0_price && !item.sub_days_1_price && item.sub_days_2_price"
-                                    >
-                                        <span>前日：</span>
-                                        <GamePrice :price="item.sub_days_2_price" />
-                                    </template>
-                                    <span v-else>暂无价目</span>
-                                </span>
-                            </div>
-                        </router-link>
-                    </el-col>
-                </el-row>
-                <!-- </div> -->
-            </div>
-            <!-- <div v-else style="text-align:center">😂 暂无数据</div> -->
-            <!-- <div class="m-transaction-box" v-loading="loading">
-                <div class="m-price-list" v-if="groups && groups.length">
-                    <el-carousel
-                        indicator-position="none"
-                        :autoplay="true"
-                        :interval="3000"
-                        height="200px"
-                        direction="vertical"
-                    >
-                        <el-carousel-item v-for="(group, key) in groups" :key="key">
-                            <el-row :gutter="20">
-                                <el-col :span="6" v-for="(item, k) in group.items" :key="k">
-                                    <a
-                                        v-if="item"
-                                        class="u-item"
-                                        :class="`u-item-${key}`"
-                                        :href="item.item_id | showItemLink"
-                                        target="_blank"
-                                    >
-                                        <div class="u-icon">
-                                            <img :src="item.icon | iconLink" />
-                                        </div>
-                                        <div class="u-content">
-                                            <span class="u-name">
-                                                <span v-text="item.label"></span>
-                                            </span>
-                                            <span class="u-price">
-                                                <span
-                                                    class="u-trending"
-                                                    :class="item | showItemTrendingClass"
-                                                >{{item | showItemTrending}}</span>
-                                                <template v-if="item.sub_days_0_price">
-                                                    <GamePrice :price="item.sub_days_0_price" />
-                                                </template>
-                                                <template
-                                                    v-else-if="!item.sub_days_0_price && item.sub_days_1_price"
-                                                >
-                                                    <GamePrice :price="item.sub_days_1_price" />
-                                                </template>
-                                                <template
-                                                    v-else-if="!item.sub_days_0_price && !item.sub_days_1_price && item.sub_days_2_price"
-                                                >
-                                                    <GamePrice :price="item.sub_days_2_price" />
-                                                </template>
-                                                <span v-else>暂无价目</span>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </el-col>
-                            </el-row>
-                        </el-carousel-item>
-                    </el-carousel>
+        <template #body>
+            <div class="m-index-price">
+                <div v-if="groups && groups.length && isEmpty" class="m-price-list">
+                    <el-row v-for="(group, key) in groups" :key="key" :gutter="20">
+                        <div :span="24" class="u-group-title" v-text="group.label"></div>
+                        <el-col v-for="(item, k) in group.items" :key="k" :span="6">
+                            <router-link
+                                v-if="item"
+                                class="u-item"
+                                :class="`u-item-${key}`"
+                                :to="{ name: 'view', params: { item_id: item.item_id } }"
+                            >
+                                <div class="u-icon">
+                                    <img :src="icon_url(item.icon)" />
+                                </div>
+                                <div class="u-content">
+                                    <span class="u-name">
+                                        <span v-text="item.label"></span>
+                                    </span>
+                                    <span class="u-price">
+                                        <span class="u-trending" :class="showItemTrendingClass(item)">
+                                            {{ showItemTrending(item) }}
+                                        </span>
+                                        <template v-if="item.sub_days_0_price">
+                                            <span>今日：</span>
+                                            <GamePrice :price="item.sub_days_0_price" />
+                                        </template>
+                                        <template v-else-if="!item.sub_days_0_price && item.sub_days_1_price">
+                                            <span>昨日：</span>
+                                            <GamePrice :price="item.sub_days_1_price" />
+                                        </template>
+                                        <template
+                                            v-else-if="!item.sub_days_0_price && !item.sub_days_1_price && item.sub_days_2_price"
+                                        >
+                                            <span>前日：</span>
+                                            <GamePrice :price="item.sub_days_2_price" />
+                                        </template>
+                                        <span v-else>暂无价目</span>
+                                    </span>
+                                </div>
+                            </router-link>
+                        </el-col>
+                    </el-row>
                 </div>
-            </div>-->
-        </div>
+            </div>
+        </template>
     </WikiPanel>
 </template>
 
@@ -132,12 +76,17 @@ import WikiPanel from "@/components/wiki-panel.vue";
 import { get_item_groups_with_price } from "@/service/item-group";
 import servers_origin from "@jx3box/jx3box-data/data/server/server_origin.json";
 import servers_std from "@jx3box/jx3box-data/data/server/server_std.json";
-import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
+import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
 import { getProfile } from "@/service/user";
 import User from "@jx3box/jx3box-common/js/user";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
+
 export default {
     name: "StarMarkItems",
+    components: {
+        WikiPanel,
+        GamePrice,
+    },
     data() {
         return {
             groups: [],
@@ -147,29 +96,22 @@ export default {
         };
     },
     computed: {
-        item_ids: function () {
+        item_ids() {
             return this.$store.state.client == "origin"
                 ? ["origin1", "origin2", "origin3"]
                 : ["index1", "index2", "teshucailiao"];
         },
-        servers: function () {
-            return this.$store.state.client == "origin"
-                ? servers_origin
-                : servers_std;
+        servers() {
+            return this.$store.state.client == "origin" ? servers_origin : servers_std;
         },
-        client: function() {
+        client() {
             return this.$store.state.client;
         },
-        isEmpty: function() {
-            return this.groups.some(item => item);
-        }
-    },
-    components: {
-        WikiPanel,
-        GamePrice,
+        isEmpty() {
+            return this.groups.some((item) => item);
+        },
     },
     methods: {
-        // 获取星标物品
         get_data() {
             if (!this.server) return;
 
@@ -186,15 +128,26 @@ export default {
                     this.loading = false;
                 });
         },
-        goItemPage: function () {
-            let host = location.origin;
-            window.open(
-                `${host}/item/#/search/${this.search}?page=1`,
-                "_blank"
-            );
+        goItemPage() {
+            window.open(`${location.origin}/item/#/search/${this.search}?page=1`, "_blank");
         },
-        icon_url: function(id) {
+        icon_url(id) {
             return iconLink(id, this.client);
+        },
+        showItemTrending(item) {
+            if (item.sub_days_0_price && item.sub_days_1_price) {
+                if (item.sub_days_0_price - item.sub_days_1_price > 0) return "▲";
+                if (item.sub_days_0_price - item.sub_days_1_price < 0) return "▼";
+            }
+            return "";
+        },
+        showItemTrendingClass(item) {
+            if (item.sub_days_0_price && item.sub_days_1_price) {
+                if (item.sub_days_0_price - item.sub_days_1_price > 0) return "up";
+                if (item.sub_days_0_price - item.sub_days_1_price < 0) return "down";
+                return "keep";
+            }
+            return "";
         },
     },
     watch: {
@@ -205,7 +158,7 @@ export default {
             },
         },
     },
-    mounted: function () {
+    mounted() {
         if (User.isLogin() && this.$store.state.client == "std") {
             getProfile().then((data) => {
                 if (data) {
@@ -213,37 +166,8 @@ export default {
                 }
             });
         } else {
-            this.server =
-                this.$store.state.client == "origin" ? "缘起稻香" : "斗转星移";
+            this.server = this.$store.state.client == "origin" ? "缘起稻香" : "斗转星移";
         }
-    },
-    filters: {
-        showItemTrending: function (item) {
-            if (item.sub_days_0_price && item.sub_days_1_price) {
-                if (item.sub_days_0_price - item.sub_days_1_price > 0) {
-                    return "▲";
-                } else if (item.sub_days_0_price - item.sub_days_1_price < 0) {
-                    return "▼";
-                } else {
-                    return "";
-                }
-            }
-        },
-        showItemTrendingClass: function (item) {
-            if (item.sub_days_0_price && item.sub_days_1_price) {
-                if (item.sub_days_0_price - item.sub_days_1_price > 0) {
-                    return "up";
-                } else if (item.sub_days_0_price - item.sub_days_1_price < 0) {
-                    return "down";
-                } else {
-                    return "keep";
-                }
-            }
-        },
-        iconLink,
-        showItemLink: function (val) {
-            return `/item/#/view/${val}`;
-        },
     },
 };
 </script>

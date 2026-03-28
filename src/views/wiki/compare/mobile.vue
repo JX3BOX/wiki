@@ -98,7 +98,7 @@
             </div>
         </div>
         <!-- 添加角色弹窗 -->
-        <el-dialog title="添加角色" :visible.sync="showAddRole" width="400px" draggable :close-on-click-modal="false">
+        <el-dialog v-model="showAddRole" title="添加角色" width="400px" draggable :close-on-click-modal="false">
             <el-form :model="kithForm" :rules="rules" ref="roleRef">
                 <el-form-item label="角色类型" prop="roleType">
                     <el-radio-group

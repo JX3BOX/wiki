@@ -1,6 +1,6 @@
 <template>
     <WikiPanel v-if="wiki_post" :wiki-post="wiki_post" class="m-wiki-content">
-        <template slot="head-title">
+        <template #head-title>
             <div class="u-label" v-if="wikiPost.source">
                 <img
                     class="u-icon"
@@ -21,7 +21,7 @@
                 <span>]</span>
             </div>
         </template>
-        <template slot="head-actions">
+        <template #head-actions>
             <el-button v-if="!isEditMode" type="primary" class="u-edit" @click="editHandler">
                 <i class="el-icon-edit"></i>
                 <span>编辑修订</span>
@@ -31,7 +31,7 @@
                 <span>取消修订</span>
             </el-button>
         </template>
-        <template slot="body">
+        <template #body>
 
             <div class="m-wiki-compatible" v-if="compatible && !isEditMode">
                 <i class="el-icon-warning-outline"></i> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
@@ -87,8 +87,8 @@
                     </div>
                 </div>
                 <div class="u-btn">
-                    <el-button size="mini" type="primary" @click="submitHanlder">提交</el-button>
-                    <el-button size="mini" @click="cancelHandler">取消</el-button>
+                    <el-button size="small" type="primary" @click="submitHanlder">提交</el-button>
+                    <el-button size="small" @click="cancelHandler">取消</el-button>
                 </div>
             </div>
         </template>
@@ -120,8 +120,6 @@ export default {
                 author: player_name(),
                 remark: "",
             },
-
-            params: new URLSearchParams(location.search),
         };
     },
     computed: {
@@ -137,11 +135,11 @@ export default {
             return content ? content.trim() : "";
         },
         client: function () {
-            let client = this.params.get("L") == "classic_yq" ? "origin" : "std";
+            let client = this.$route?.query?.L == "classic_yq" ? "origin" : "std";
             return client;
         },
         clientID: function () {
-            let clientID = this.params.get("L") == "classic_yq" ? "2" : "1";
+            let clientID = this.$route?.query?.L == "classic_yq" ? "2" : "1";
             return clientID;
         },
         rootPath: function () {

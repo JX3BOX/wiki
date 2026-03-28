@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="m-wiki-diff-dialog" :visible.sync="show" :title="title" :before-close="close" width="80%">
+    <el-dialog v-model="show" class="m-wiki-diff-dialog" :title="title" :before-close="close" width="80%">
         <div class="m-contents">
             <div class="m-versions">
                 <el-select v-model="version" placeholder="版本选择" style="width: 100%" clearable>

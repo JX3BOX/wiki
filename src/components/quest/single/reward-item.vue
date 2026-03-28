@@ -1,10 +1,9 @@
 <template>
-    <div class="reward-item" :class="classes" v-if="display">
-        <!-- 金钱 -->
+    <div v-if="display" class="reward-item" :class="classes">
         <template v-if="reward.type == 'money'"> 获得金钱：<game-price :price="reward.count"></game-price> </template>
         <template v-else-if="reward.type == 'exp'"> 获得阅历：{{ reward.count }} </template>
         <template v-else-if="reward.type == 'affect'">
-            获得声望：{{ reward.force }}（{{ reward.count | affectNumber }}）
+            获得声望：{{ reward.force }}（{{ affectNumber(reward.count) }}）
         </template>
         <point-reward v-else-if="reward.type == 'titlePoint'" :type="'titlePoint'" :value="`x ${reward.count}`">
         </point-reward>
@@ -16,8 +15,8 @@
         </point-reward>
         <point-reward v-else-if="reward.type == 'justice'" :type="'justice'" :value="`x ${reward.count}`">
         </point-reward>
-        <point-reward v-else-if="reward.type == 'train'" :type="'train'" :value="`x ${reward.count}`"> </point-reward>
-        <point-reward v-else-if="reward.type == 'vigor'" :type="'vigor'" :value="`x ${reward.count}`"> </point-reward>
+        <point-reward v-else-if="reward.type == 'train'" :type="'train'" :value="`x ${reward.count}`"></point-reward>
+        <point-reward v-else-if="reward.type == 'vigor'" :type="'vigor'" :value="`x ${reward.count}`"></point-reward>
         <point-reward
             v-else-if="reward.type == 'achievement'"
             :type="'achievement'"
@@ -35,7 +34,7 @@
         >
         </point-reward>
         <template v-else-if="reward.type == 'item_group'">
-            <p class="group-type">{{ reward | item_group_tips }}</p>
+            <p class="group-type">{{ itemGroupTips(reward) }}</p>
             <div class="item-list">
                 <item-icon
                     v-for="(item, index) in reward.items"
@@ -51,7 +50,7 @@
 </template>
 
 <script>
-import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
+import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
 import ItemIcon from "@/components/common/item-icon.vue";
 import PointReward from "./point-reward.vue";
 
@@ -72,7 +71,6 @@ export default {
             display: true,
         };
     },
-    methods: {},
     computed: {
         classes() {
             return {
@@ -83,30 +81,21 @@ export default {
             };
         },
     },
-    filters: {
-        affectNumber: (count) => {
-            if (count > 0) {
-                return "+" + count;
-            } else {
-                return count;
-            }
+    methods: {
+        affectNumber(count) {
+            return count > 0 ? `+${count}` : count;
         },
-        item_group_tips: (award) => {
+        itemGroupTips(award) {
             if (award.all) {
-                if (award.bySchool) {
-                    return "你将获得以下全部道具（根据门派）：";
-                } else {
-                    return "你将获得以下全部道具：";
-                }
-            } else {
-                return "你可以在以下道具中选择一种：";
+                return award.bySchool ? "你将获得以下全部道具（根据门派）：" : "你将获得以下全部道具：";
             }
+            return "你可以在以下道具中选择一种：";
         },
     },
 };
 </script>
 
 <style lang="less">
-@import "~@/assets/css/quest/single/reward-item.less";
-@import "~@jx3box/jx3box-editor/assets/css/module/item.less";
+@import "@/assets/css/quest/single/reward-item.less";
+@import "@jx3box/jx3box-editor/src/assets/css/module/item.less";
 </style>

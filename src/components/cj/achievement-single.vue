@@ -41,7 +41,7 @@
                         v-if="!completedVirtual"
                         class="u-attr u-fav u-check"
                         plain
-                        size="mini"
+                        size="small"
                         icon="el-icon-check"
                         @click.stop="finishVirtual()"
                     >
@@ -51,7 +51,7 @@
                         v-else
                         class="u-attr u-fav u-check"
                         type="success"
-                        size="mini"
+                        size="small"
                         icon="el-icon-check"
                         @click.stop="cancelVirtual()"
                     >
@@ -62,7 +62,7 @@
                     <el-button
                         class="u-attr u-fav"
                         plain
-                        size="mini"
+                        size="small"
                         icon="el-icon-plus"
                         @click.stop="onAppendToLeapSchema"
                     >

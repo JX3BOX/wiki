@@ -7,16 +7,18 @@
             <el-input
                 class="u-search-input"
                 v-model="keyword"
-                @keydown.enter.native="searchHandle"
+                @keydown.enter="searchHandle"
                 :placeholder="placeholder"
                 clearable
             >
                 <template #prepend>
                     <slot><i class="el-icon-search"></i> <span class="u-text">关键词</span></slot>
                 </template>
-                <el-button slot="append" class="u-search-btn" type="primary" plain @click="searchHandle"
+                <template #append>
+                    <el-button class="u-search-btn" type="primary" plain @click="searchHandle"
                     ><i class="el-icon-position"></i> <span class="u-text">搜索</span></el-button
-                >
+                    >
+                </template>
             </el-input>
             <slot name="filter"></slot>
         </div>

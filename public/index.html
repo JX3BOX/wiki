@@ -7,11 +7,6 @@
         <meta name="renderer" content="webkit" />
         <title><%= htmlWebpackPlugin.options.title %></title>
         <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
-        <meta
-            name="Keywords"
-            content="剑三百科,成就百科,物品百科,任务百科,通识百科,剑网三百科"
-        />
-        <meta name="Description" content="剑三百科，最全最新百科大全，成就百科，物品百科，任务百科，通识百科" />
     </head>
     <body>
         <div id="app"></div>
@@ -29,11 +24,9 @@
             "
         >
             <p>
-                你的浏览器版本太低，可能无法正常使用本站，建议下载<a
-                    href="https://www.google.cn/intl/zh-CN/chrome/"
-                    target="_blank"
-                    >Chrome</a
-                >或其它极速浏览器
+                您的浏览器版本过低，可能无法正常使用本站，建议下载
+                <a href="https://www.google.cn/intl/zh-CN/chrome/" target="_blank">Chrome</a>
+                或其他极速浏览器
             </p>
             <p>www.jx3box.com</p>
         </div>
@@ -41,6 +34,20 @@
             let ua = window.navigator.userAgent.toLocaleLowerCase();
             let isIE = ua.indexOf("trident") > 0 || ua.indexOf("msie") > 0;
             if (isIE) document.getElementById("c-ie-tips").style.display = "block";
+        </script>
+        <script type="text/javascript">
+            (function (c, l, a, r, i, t, y) {
+                c[a] =
+                    c[a] ||
+                    function () {
+                        (c[a].q = c[a].q || []).push(arguments);
+                    };
+                t = l.createElement(r);
+                t.async = 1;
+                t.src = "https://www.clarity.ms/tag/" + i;
+                y = l.getElementsByTagName(r)[0];
+                y.parentNode.insertBefore(t, y);
+            })(window, document, "clarity", "script", "vv9j3vf2wi");
         </script>
         <div style="display: none">
             <script>
@@ -55,5 +62,3 @@
         </div>
     </body>
 </html>
-
-

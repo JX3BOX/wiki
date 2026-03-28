@@ -53,7 +53,7 @@ export default {
         this.calcItemWidth();
         window.addEventListener("resize", this.calcItemWidth);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener("resize", this.calcItemWidth);
     },
     computed: {

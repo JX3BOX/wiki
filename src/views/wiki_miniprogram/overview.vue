@@ -103,7 +103,7 @@
             </div>
         </div>
         <!-- 角色列表 -->
-        <RoleListVue :visible.sync="drawerVisible" :roles="roleList" :currentRole="currentRole"
+        <RoleListVue v-model:visible="drawerVisible" :roles="roleList" :currentRole="currentRole"
             @confirmSelection="handleConfirmSelection">
         </RoleListVue>
     </div>
@@ -118,8 +118,7 @@ import { showSchoolIcon, iconLink, getLink } from "@jx3box/jx3box-common/js/util
 import schoolid from "@jx3box/jx3box-data/data/xf/schoolid.json";
 
 import { getMyInfo } from "@/service/user";
-import { __imgPath } from "@/utils/config";
-import { __cdn } from '@jx3box/jx3box-common/data/jx3box.json'
+import { __imgPath, __cdn } from "@/utils/config";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import RoleListVue from "@/views/wiki_miniprogram/components/roleList.vue";
 import { mobileOpen } from "@/utils/minprogram";

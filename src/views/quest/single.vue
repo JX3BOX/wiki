@@ -57,7 +57,7 @@
                     ></item-icon>
                     <span v-else>{{ quest.start.name || "未知" }}</span>
                     <span class="u-endpoint-id"
-                        >({{ quest.start.type | pointType }}ID: {{ quest.start.id | idFilter }})</span
+                        >({{ pointType(quest.start.type) }}ID: {{ idFilter(quest.start.id) }})</span
                     >
                     <point-filter
                         v-if="showPointFilter('Start')"
@@ -78,7 +78,7 @@
                     ></item-icon>
                     <span v-else>{{ quest.end.name || "未知" }}</span>
                     <span class="u-endpoint-id"
-                        >({{ quest.end.type | pointType }}ID: {{ quest.end.id | idFilter }})</span
+                        >({{ pointType(quest.end.type) }}ID: {{ idFilter(quest.end.id) }})</span
                     >
                     <point-filter
                         v-if="showPointFilter('End')"
@@ -177,7 +177,7 @@
                             ></item-icon>
                             <span class="u-endpoint-name" v-else>{{ quest.start.name || "未知" }}</span>
                             <span class="u-endpoint-id"
-                                >({{ quest.start.type | pointType }}ID: {{ quest.start.id | idFilter }})</span
+                                >({{ pointType(quest.start.type) }}ID: {{ idFilter(quest.start.id) }})</span
                             >
                         </p>
                         <!-- <img class="u-quest-to" src="@/assets/img/quest-to.svg" /> -->
@@ -193,7 +193,7 @@
                             ></item-icon>
                             <span v-else class="u-endpoint-name">{{ quest.end.name || "未知" }}</span>
                             <span class="u-endpoint-id"
-                                >({{ quest.end.type | pointType }}ID: {{ quest.end.id | idFilter }})</span
+                                >({{ pointType(quest.end.type) }}ID: {{ idFilter(quest.end.id) }})</span
                             >
                         </p>
                     </div>
@@ -260,17 +260,17 @@
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
             <wikiRobotTip v-if="!isRobot" type-name="任务" :reply="quest.name"></wikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
-                <template slot="head-title">
+                <template #head-title>
                     <img class="u-icon" svg-inline :src="icon" />
                     <span class="u-txt">任务攻略</span>
                 </template>
-                <template v-if="!isRobot" slot="head-actions">
+                <template v-if="!isRobot" #head-actions>
                     <a class="el-button el-button--primary" :href="publish_url(`quest/${id}`)">
                         <i class="el-icon-edit"></i>
                         <span>完善任务攻略</span>
                     </a>
                 </template>
-                <template slot="body">
+                <template #body>
                     <div class="m-wiki-compatible" v-if="compatible">
                         <i class="el-icon-warning-outline"></i> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
                             class="s-link"
@@ -292,11 +292,11 @@
                 <!-- 打赏 -->
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
-                        <template slot="head-title">
+                        <template #head-title>
                             <i class="el-icon-coin"></i>
                             <span>参与打赏</span>
                         </template>
-                        <template slot="body">
+                        <template #body>
                             <Thx
                                 class="m-thx"
                                 :postId="id"
@@ -485,7 +485,7 @@ export default {
         buildPoints,
         schoolIcon,
         changePointFilter(type, enable) {
-            this.$set(this.point_filter, type, enable);
+            this.point_filter[type] = enable;
         },
         showPointFilter(type) {
             return Object.values(this.points).some((points) => {
@@ -643,6 +643,18 @@ export default {
             } else {
                 postStat("quest", this.id);
             }
+        },
+        pointType(value) {
+            if (value === "npc") return "NPC";
+            if (value === "doodad") return "交互物品";
+            if (value === "item") return "物品";
+            return "";
+        },
+        idFilter(id) {
+            if (isArray(id)) {
+                return `${id[0]}_${id[1]}`;
+            }
+            return id;
         },
     },
     mounted() {

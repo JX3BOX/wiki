@@ -7,24 +7,24 @@
         <!-- 内容展示 -->
         <WikiPanel class="m-plan-content" :wiki-post="plan" :showQR="false">
             <!-- 头部标题 -->
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-tickets"></i>
                 <span class="u-plan-title"> {{ plan.title }} </span>
             </template>
             <!-- 编辑 & 删除 & 收藏 -->
-            <template slot="head-actions">
+            <template #head-actions>
                 <template v-if="isAuthor || isEditor">
-                    <el-button type="primary" icon="el-icon-edit" size="mini" plain @click="editPlan(plan.id)"
+                    <el-button type="primary" icon="el-icon-edit" size="small" plain @click="editPlan(plan.id)"
                         >编辑</el-button
                     >
-                    <el-button type="info" icon="el-icon-delete" size="mini" plain @click="deletePlan(plan.id)"
+                    <el-button type="info" icon="el-icon-delete" size="small" plain @click="deletePlan(plan.id)"
                         >删除</el-button
                     >
                 </template>
                 <!-- <Fav post-type="item_plan" :post-id="plan.id" :post-title="plan && plan.title" /> -->
             </template>
             <!-- 详细内容 -->
-            <template slot="body">
+            <template #body>
                 <!-- 内容备注 -->
                 <div class="m-description m-border">
                     <div class="u-title">

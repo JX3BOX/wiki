@@ -9,7 +9,7 @@ body {
     min-height: 100vh;
     padding: 12px 0;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow-x: hidden;
     .m-wujie-cj-qqbot-tip {
         background: linear-gradient(180deg, rgba(10, 13, 15, 1) 0%, rgba(25, 33, 38, 1) 100%);
         border: 0.5px solid rgba(70, 79, 84, 1);
@@ -105,7 +105,7 @@ body {
     color: #fff;
     padding: 4px 8px;
     border-radius: 0;
-    height: 26.5px;
+    min-height: 26.5px;
     box-sizing: border-box;
     a {
         color: #fff;
@@ -135,29 +135,42 @@ body {
     align-items: flex-start;
     gap: 10px;
     width: 100%;
-    height: calc(100vh - 52px);
+    height: calc(100vh - 60px);
+    min-height: calc(100vh - 60px);
     padding: 5px 24px 12px 24px;
     box-sizing: border-box;
     overflow: hidden;
     .m-strategy-content {
         position: relative;
         flex: 1;
+        display: flex;
+        flex-direction: column;
         width: calc(100% - 210px);
         height: 100%;
+        min-height: 0;
     }
     .m-strategy {
         position: relative;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
         height: 100%;
+        min-height: 0;
     }
     .m-comment-detail {
+        flex: 1;
         overflow-y: auto;
-        height: 100%;
+        height: auto;
+        min-height: 0;
         padding-bottom: 40px;
         box-sizing: border-box;
     }
     .m-comment {
+        display: flex;
+        flex-direction: column;
         width: 200px;
         height: 100%;
+        min-height: 0;
         .u-pagination-box {
             .x(right);
             padding-right: 0;
@@ -299,7 +312,9 @@ body {
     }
     .m-detail {
         width: 100%;
-        height: 100%;
+        flex: 1;
+        height: auto;
+        min-height: 0;
         padding-bottom: 40px;
         overflow-y: auto;
         box-sizing: border-box;
@@ -466,11 +481,14 @@ body {
     .m-content-wrapper {
         flex-direction: column;
         height: auto;
+        min-height: auto;
         .m-strategy-content {
             width: 100%;
+            min-height: auto;
         }
         .m-comment {
             width: 100%;
+            min-height: auto;
         }
     }
 }

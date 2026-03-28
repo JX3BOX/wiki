@@ -166,9 +166,9 @@
             </template>
         </suspend-common>
 
-        <user-select-drawer :visible.sync="userSelectShow" :current-role="currentRole" @change="setRole" />
+        <user-select-drawer v-model:visible="userSelectShow" :current-role="currentRole" @change="setRole" />
 
-        <confirm-ok-drawer :visible.sync="conformShow" :current="isCompleted" @confirm="toggleCompleted" />
+        <confirm-ok-drawer v-model:visible="conformShow" :current="isCompleted" @confirm="toggleCompleted" />
     </div>
 </template>
 

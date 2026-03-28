@@ -22,7 +22,7 @@
                     :page-size="pageSize"
                     :total="total"
                     background
-                    small
+                    size="small"
                     hide-on-single-page
                     @current-change="pageChange"
                 >

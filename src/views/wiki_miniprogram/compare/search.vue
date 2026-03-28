@@ -15,7 +15,7 @@
 
         </div>
         <!-- 地图、关键字搜索区域 -->
-        <el-drawer :visible="drawerSearchVisible" direction="btt" size="420px" @close="handleClose"
+        <el-drawer :model-value="drawerSearchVisible" direction="btt" size="420px" @close="handleClose"
             class="p-search-drawer">
             <template slot="title">
                 <div class="u-search-title">{{ title }}<span v-if="sub_title && step != 1"> &nbsp;-&nbsp;{{
@@ -72,7 +72,7 @@
             </div>
         </el-drawer>
         <!-- 筛选弹窗 -->
-        <el-drawer :visible="drawerFilterVisible" direction="btt" size="420px" @close="handleCloseFilter"
+        <el-drawer :model-value="drawerFilterVisible" direction="btt" size="420px" @close="handleCloseFilter"
             class="p-search-drawer">
             <template slot="title">
                 <div class="u-search-title">筛选</div>

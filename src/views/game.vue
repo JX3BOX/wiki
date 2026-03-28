@@ -36,7 +36,6 @@
 </template>
 
 <script>
-const URI = require("urijs");
 import UA from "@/utils/ua";
 import star from "@/utils/star";
 import WikiContent from "@/components/wiki-content";
@@ -68,9 +67,9 @@ export default {
     data() {
         return {
             ua: UA(),
-            query: URI(location.href).query(true),
             wikiPost: null,
             compatible: false,
+            routeReady: false,
 
             source_id: "",
             source_type: "",
@@ -83,15 +82,16 @@ export default {
     },
     computed: {
         client: function () {
-            let params = new URLSearchParams(location.search);
-            let client = params.get("L") == "classic_yq" ? "origin" : "std";
-            return client;
+            return this.$route.query.L == "classic_yq" ? "origin" : "std";
         },
         id() {
-            return this.query.id;
+            return this.$route.query.id;
         },
         type() {
-            return this.query.type;
+            return this.$route.query.type;
+        },
+        routeKey() {
+            return `${this.type || ""}:${this.id || ""}`;
         },
         warning() {
             return this.ua.browser === "ie" && this.ua.version < 9;
@@ -100,6 +100,12 @@ export default {
     methods: {
         icon_url: iconLink,
         star,
+        trackStat() {
+            if (!this.type || !this.id) return;
+            let type = this.type;
+            if (type === "achievement") type = "cj";
+            postStat(type, this.id);
+        },
         loadWiki: function (source_type, source_id) {
             wiki.mix({ type: source_type, id: source_id, client: this.client })
                 .then((res) => {
@@ -120,9 +126,9 @@ export default {
         },
     },
     watch: {
-        id: {
+        routeKey: {
             immediate: true,
-            handler(id) {
+            handler() {
                 let source_type = "";
                 // fix source_type
                 if (this.type == "cj") {
@@ -135,13 +141,21 @@ export default {
                 }
 
                 // 获取最新攻略
-                if (id) {
+                if (this.id) {
+                    if (this.routeReady) {
+                        this.trackStat();
+                    } else {
+                        this.routeReady = true;
+                    }
                     this.loadWiki(source_type, this.id);
+                } else {
+                    this.routeReady = false;
+                    this.wikiPost = null;
+                    this.source_id = "";
                 }
             },
         },
         "$route.query.post_id": {
-            immediate: true,
             handler() {
                 // 获取攻略
                 if (this.$route.query.post_id) {
@@ -149,6 +163,8 @@ export default {
                         res = res.data;
                         this.wikiPost = res.data;
                     });
+                } else if (this.id) {
+                    this.loadWiki(this.source_type || this.type || "achievement", this.id);
                 }
             },
         },

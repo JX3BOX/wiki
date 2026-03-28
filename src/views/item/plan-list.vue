@@ -26,7 +26,7 @@
 			</template>
 			<el-alert v-else center title="📋 没有对应的物品清单" type="info" :closable="false"></el-alert>
 		</div>
-		<el-pagination class="m-archive-pages" background layout="total, prev, pager, next, jumper" :hide-on-single-page="true" :page-size="per" :total="total" :current-page.sync="page"></el-pagination>
+		<el-pagination v-model:current-page="page" class="m-archive-pages" background layout="total, prev, pager, next, jumper" :hide-on-single-page="true" :page-size="per" :total="total"></el-pagination>
 	</div>
 </template>
 <script>

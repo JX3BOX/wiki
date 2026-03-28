@@ -9,7 +9,7 @@
         </role-select>
         <el-input class="u-keyword" size="small" v-model="keyword" placeholder="输入关键字"> </el-input>
         <div v-if="role" class="m-filters">
-            <el-checkbox v-model="uncompleted" label="只看未完成" border size="mini"></el-checkbox>
+            <el-checkbox v-model="uncompleted" label="只看未完成" border size="small"></el-checkbox>
             <div class="u-total">
                 <!-- numTotal -->
                 <b class="u-completed-num">{{ uncompleted ? total - completedNum : completedNum }}</b>
@@ -26,7 +26,7 @@
                 ref="tree"
                 :indent="42"
             >
-                <template slot-scope="{ node, data }">
+                <template #default="{ node, data }">
                     <span v-if="!node.isLeaf" class="el-tree-node__label">
                         <span class="u-name" v-text="data.name"></span>
                         <em
@@ -53,7 +53,7 @@
 import RoleSelect from "@/components/common/role-select.vue";
 import { getQuestMaps, listUserQuest } from "@/service/quest";
 import questType from "@/assets/data/quest-type.json";
-import Bus from "@jx3box/jx3box-common-ui/service/bus";
+import bus from "@/store/bus";
 import { mapState } from "vuex";
 
 export default {
@@ -154,7 +154,7 @@ export default {
             // 移动端收起边栏
             if (window.innerWidth < 1024) {
                 if (node.isLeaf) {
-                    Bus.$emit("toggleLeftSide", false);
+                    bus.emit("toggleLeftSide", false);
                 }
             }
         },

@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="c-var p-mobile-item-detail" :class="{ 'is-drawer-mode': drawerMode }">
         <div class="m-page-container">
             <div class="m-item-info" v-if="source">
@@ -14,55 +14,55 @@
                 <div class="m-meta">
                     <div class="u-meta-item">{{ item_bind(source.BindType) }}</div>
                     <div class="u-meta-item" v-if="source.MaxExistAmount">
-                        <span class="u-meta-label">最大拥有数</span>
+                        <span class="u-meta-label">鏈€澶ф嫢鏈夋暟</span>
                         <span>{{ source.MaxExistAmount }}</span>
                     </div>
                     <div class="u-meta-item" v-if="source.Price">
-                        <span class="u-meta-label">回收价格</span>
+                        <span class="u-meta-label">鍥炴敹浠锋牸</span>
                         <GamePrice class="u-value" :price="source.Price" />
                     </div>
                     <div class="u-meta-item u-misc">
                         <div class="u-meta-misc">
                             <i class="el-icon-check" v-if="[1, 2].includes(source.BindType)"></i>
                             <i class="el-icon-close" v-else></i>
-                            {{ [1, 2].includes(source.BindType) ? "可以" : "不可" }}交易
+                            {{ [1, 2].includes(source.BindType) ? "鍙互" : "涓嶅彲" }}浜ゆ槗
                         </div>
                         <div class="u-meta-misc">
                             <i class="el-icon-check" v-if="source.CanStack"></i>
                             <i class="el-icon-close" v-else></i>
-                            {{ source.CanStack ? "可以" : "不可" }}堆叠
+                            {{ source.CanStack ? "鍙互" : "涓嶅彲" }}鍫嗗彔
                         </div>
                         <div class="u-meta-misc">
                             <i class="el-icon-check" v-if="source.CanChangeMagic"></i>
                             <i class="el-icon-close" v-else></i>
-                            {{ source.CanChangeMagic ? "可以" : "不可" }}附魔
+                            {{ source.CanChangeMagic ? "鍙互" : "涓嶅彲" }}闄勯瓟
                         </div>
                         <div class="u-meta-misc">
                             <i class="el-icon-check" v-if="source.CanExterior"></i>
                             <i class="el-icon-close" v-else></i>
-                            {{ source.CanExterior ? "可以" : "不可" }}收集
+                            {{ source.CanExterior ? "鍙互" : "涓嶅彲" }}鏀堕泦
                         </div>
                         <div class="u-meta-misc">
                             <i class="el-icon-check" v-if="source.CanSetColor"></i>
                             <i class="el-icon-close" v-else></i>
-                            {{ source.CanSetColor ? "可以" : "不可" }}染色
+                            {{ source.CanSetColor ? "鍙互" : "涓嶅彲" }}鏌撹壊
                         </div>
                         <div class="u-meta-misc">
                             <i class="el-icon-check" v-if="source.CanApart"></i>
                             <i class="el-icon-close" v-else></i>
-                            {{ source.CanApart ? "可以" : "不可" }}分解
+                            {{ source.CanApart ? "鍙互" : "涓嶅彲" }}鍒嗚В
                         </div>
                         <div class="u-meta-misc">
                             <i class="el-icon-check" v-if="source.CanDestroy || source.CanDestroy === null"></i>
                             <i class="el-icon-close" v-else></i>
-                            {{ source.CanDestroy || source.CanDestroy === null ? "可以" : "不可" }}摧毁
+                            {{ source.CanDestroy || source.CanDestroy === null ? "鍙互" : "涓嶅彲" }}鎽ф瘉
                         </div>
                     </div>
                 </div>
             </div>
             <Item v-if="drawerMode || showInfo" :item="source" :item_id="id" :client="client"></Item>
             <div class="u-show-info" @click="showInfo = !showInfo" v-if="!drawerMode">
-                <span>{{ showInfo ? "收起" : "查看" }}物品信息</span>
+                <span>{{ showInfo ? "鏀惰捣" : "鏌ョ湅" }}鐗╁搧淇℃伅</span>
                 <i class="el-icon-arrow-down" v-if="!showInfo"></i>
                 <i class="el-icon-arrow-up" v-else></i>
             </div>
@@ -70,7 +70,7 @@
             <fold-card class="m-price" :fixed="true" v-loading="priceLoading">
                 <template #title>
                     <div class="m-price-head">
-                        <span>区服价格</span>
+                        <span>鍖烘湇浠锋牸</span>
                         <span class="u-server-select" @click="onServerSelect">
                             {{ server }} <i class="el-icon-refresh"></i>
                         </span>
@@ -80,7 +80,7 @@
                     <span class="m-price-30day">近30日</span>
                     <span class="m-price-list">
                         <span class="m-price-item">
-                            <span>均价</span>
+                            <span>鍧囦环</span>
                             <GamePrice class="u-value" v-if="priceCounter.avg" :price="priceCounter.avg" />
                             <span v-else>-</span>
                         </span>
@@ -99,12 +99,12 @@
                     <span class="u-swipe-tip">左右滑动以查看</span>
                     <span class="u-today-price">
                         <GamePrice class="u-price" :price="priceCounter.today"></GamePrice>
-                        <span class="u-date">{{ dayjs().format("YYYY年MM月DD日") }}</span>
+                        <span class="u-date">{{ dayjs().format("YYYY年M月D日") }}</span>
                     </span>
                 </template>
                 <div class="m-price-empty" v-else>暂无数据或该物品无法上架交易行</div>
             </fold-card>
-            <fold-card title="物品攻略" v-if="post_id">
+            <fold-card title="鐗╁搧鏀荤暐" v-if="post_id">
                 <div class="m-wiki">
                     <div class="m-wiki-header">
                         <div class="u-avatar-list">
@@ -122,7 +122,7 @@
                 </div>
             </fold-card>
 
-            <!-- 评论区 -->
+            <!-- 璇勮鍖?-->
             <div class="m-comments" v-if="!drawerMode">
                 <miniprogram-comment-list :source-id="id" type="item" />
             </div>
@@ -143,9 +143,9 @@
         >
             <template #default>
                 <div class="m-more-action">
-                    <span type="text" class="u-action" @click="onAddItemPlan">加入清单</span>
-                    <span type="text" v-loading="favLoading" class="u-action with-lb" @click="toggleFav">
-                        {{ isFav ? "取消收藏" : "收藏物品" }}
+                    <span class="u-action" @click="onAddItemPlan">鍔犲叆娓呭崟</span>
+                    <span v-loading="favLoading" class="u-action with-lb" @click="toggleFav">
+                        {{ isFav ? "鍙栨秷鏀惰棌" : "鏀惰棌鐗╁搧" }}
                     </span>
                 </div>
             </template>
@@ -169,8 +169,8 @@ import { get_item } from "@/service/item";
 import { publishLink, showAvatar, showSchoolIcon, ts2str } from "@jx3box/jx3box-common/js/utils";
 import FoldCard from "@/components/quest/mobile/fold-card.vue";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
-import GamePrice from "@jx3box/jx3box-common-ui/src/wiki/GamePrice.vue";
-import Item from "@jx3box/jx3box-editor/src/Item.vue";
+import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
+import Item from "@/components/common/compat-item.vue";
 import ServerSelectDrawer from "@/components/item/mobile/server-select-drawer.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { get_item_prices } from "@/service/item";
@@ -260,21 +260,21 @@ export default {
         },
         drawerOptions() {
             return {
-                hideType: ["report"], //需要隐藏的type,如['search','pin']
-                direction: "btt", //弹出框方向，btt、ttb、rtl、ltr
-                drawerTitle: this.sourceName, //弹出框标题
+                hideType: ["report"], //闇€瑕侀殣钘忕殑type,濡俒'search','pin']
+                direction: "btt", //寮瑰嚭妗嗘柟鍚戯紝btt銆乼tb銆乺tl銆乴tr
+                drawerTitle: this.sourceName, //寮瑰嚭妗嗘爣棰?
                 author: {
-                    name: this.user_name, //作者名称
-                    avatar: this.user_avatar, //作者头像
-                    author_id: this.author_id, //作者id
+                    name: this.user_name, //浣滆€呭悕绉?
+                    avatar: this.user_avatar, //浣滆€呭ご鍍?
+                    author_id: this.author_id, //浣滆€卛d
                 },
                 subscribeType: "wiki",
                 postType: "item",
                 id: this.post_id,
-                title: this.sourceName || document.title || "", //默认固定标题,默认取页面标题
-                url: window.location.href, //默认取浏览器地址
+                title: this.sourceName || document.title || "", //榛樿鍥哄畾鏍囬,榛樿鍙栭〉闈㈡爣棰?
+                url: window.location.href, //榛樿鍙栨祻瑙堝櫒鍦板潃
                 laterOn: {
-                    author_id: this.author_id || 0, //作者id
+                    author_id: this.author_id || 0, //浣滆€卛d
                     content_meta_id: this.post_id,
                 },
             };
@@ -354,7 +354,7 @@ export default {
         onSearch() {
             if (isInMiniprogramWebview()) {
                 wx.miniProgram.navigateTo({
-                    url: `/pages/search/search-detail/search-detail?app=wiki&filter_category=物品`,
+                    url: `/pages/search/search-detail/search-detail?app=wiki&filter_category=鐗╁搧`,
                 });
             } else {
                 this.$message({
@@ -405,7 +405,7 @@ export default {
         },
         initServer() {
             if (this.$store.state.client == "origin") {
-                this.server = "缘起稻香";
+                this.server = "缂樿捣绋婚";
             } else {
                 if (!this.server) {
                     this.server = "梦江南";
@@ -976,3 +976,4 @@ export default {
     }
 }
 </style>
+

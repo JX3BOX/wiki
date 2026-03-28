@@ -1,5 +1,5 @@
 <template>
-    <el-drawer title="选择角色" :visible="drawerVisible" direction="btt" size="420px" @close="handleClose"
+    <el-drawer title="选择角色" :model-value="drawerVisible" direction="btt" size="420px" @close="handleClose"
         class="c-role-list-drawer">
         <div class="role-list-wrapper">
             <div class="role-list-container" ref="roleListContainer">

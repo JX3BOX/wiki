@@ -26,9 +26,8 @@
                         :key="group.uuid"
                     >
                         <div class="u-zones" v-for="zone in group.children" :key="zone.uuid">
-                            <el-tag class="u-zone" size="mini">{{ zone.label }}</el-tag>
+                            <el-tag class="u-zone" size="small">{{ zone.label }}</el-tag>
                             <span
-                                size="mini"
                                 class="u-qq"
                                 v-for="qq in zone.children"
                                 :key="qq.uuid"

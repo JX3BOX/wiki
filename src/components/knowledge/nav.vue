@@ -10,7 +10,7 @@
                 lazy
                 :load="loadNode"
             >
-                <template slot-scope="{ node, data }">
+                <template #default="{ node, data }">
                     <span v-if="!node.isLeaf" class="el-tree-node__label">
                         <span class="u-name" v-text="data.name"></span>
                         <em v-if="data.count" class="u-count" v-text="`(${data.count})`"></em>

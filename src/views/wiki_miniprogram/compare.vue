@@ -79,12 +79,12 @@
             </div>
         </div>
         <!-- 角色列表 -->
-        <AddFriend :visible.sync="drawerVisible" @confirmSelection="handleConfirmSelection" />
+        <AddFriend v-model:visible="drawerVisible" @confirmSelection="handleConfirmSelection" />
         <!-- 删除对比角色 -->
-        <DeleteRole :visible.sync="delDrawerVisible" :role="deleteRoleInfo" @deleteRole="handleDeleteRoleConfirm" />
+        <DeleteRole v-model:visible="delDrawerVisible" :role="deleteRoleInfo" @deleteRole="handleDeleteRoleConfirm" />
         <!-- 分类卡片抽屉 -->
-        <CataloguePop :visible.sync="drawerCatalogueVisible" :category="currentCategory" :compareRoles="compareRoles"
-            @handleDetailClick="handleDetailClick" />
+        <CataloguePop v-model:visible="drawerCatalogueVisible" :category="currentCategory" :compareRoles="compareRoles"
+             @handleDetailClick="handleDetailClick" />
     </div>
 </template>
 

@@ -20,31 +20,35 @@
                         <el-checkbox v-model="chain">查看任务链</el-checkbox>
                     </el-tooltip>
                     <el-tooltip class="u-tips" effect="dark" placement="bottom">
-                        <div slot="content">
+                        <template #content>
+                            <div>
                             <span>※ 支持任务名称精确或模糊搜索</span> <br />
                             <span>※ 支持任务相关物品名称精确搜索</span> <br />
                             <span>※ 支持成就名称精确搜索</span> <br />
-                        </div>
-                        <el-button type="text" icon="el-icon-question"></el-button>
+                            </div>
+                        </template>
+                        <el-button link icon="el-icon-question"></el-button>
                     </el-tooltip>
                 </div>
             </Search>
             <el-popover popper-class="u-player-setting-popover" placement="top" width="160" v-model="settingVisible">
-                <el-input v-model="playerName" placeholder="称呼" @input="handlePlayerInfoChange" size="mini"
+                <el-input v-model="playerName" placeholder="称呼" @input="handlePlayerInfoChange" size="small"
                     ><template #prepend>称呼</template></el-input
                 >
-                <el-input v-model="playerBody" placeholder="体型" @input="handlePlayerInfoChange" size="mini"
+                <el-input v-model="playerBody" placeholder="体型" @input="handlePlayerInfoChange" size="small"
                     ><template #prepend>体型</template></el-input
                 >
                 <div style="text-align: right; margin: 0">
-                    <el-button type="primary" size="mini" @click="settingVisible = false">确定</el-button>
+                    <el-button type="primary" size="small" @click="settingVisible = false">确定</el-button>
                 </div>
-                <div class="u-player" slot="reference">
-                    <span class="u-player-name">{{ playerName }}</span
-                    >|
-                    <span class="u-player-body">{{ playerBody }}</span>
-                    <el-button type="text" icon="el-icon-setting"></el-button>
-                </div>
+                <template #reference>
+                    <div class="u-player">
+                        <span class="u-player-name">{{ playerName }}</span
+                        >|
+                        <span class="u-player-body">{{ playerBody }}</span>
+                        <el-button link icon="el-icon-setting"></el-button>
+                    </div>
+                </template>
             </el-popover>
         </div>
         <router-view></router-view>

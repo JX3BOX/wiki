@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header></Header>
+        <CommonHeader :overlay-enable="overlayEnable"></CommonHeader>
         <Breadcrumb
             :name="name"
             :slug="slug"
@@ -14,15 +14,18 @@
             :withoutLeft="withoutLeft"
             :adminMarks="adminMarks"
         >
-            <img svg-inline slot="logo" :src="logo" />
+            <template #logo>
+                <img svg-inline :src="logo" />
+            </template>
             <slot name="breadcrumb"></slot>
             <template #op-append>
                 <div class="m-wiki-admin-drop" v-if="showAdmin">
                     <el-dropdown trigger="click" @command="handleCommand">
-                        <el-button type="primary" class="c-admin-button c-admin-drop__button" size="medium"
+                        <el-button type="primary" class="c-admin-button c-admin-drop__button"
                             ><i class="el-icon-setting"></i> 管理<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
-                        <el-dropdown-menu slot="dropdown">
+                        <template #dropdown>
+                            <el-dropdown-menu>
                             <el-dropdown-item
                                 icon="el-icon-upload"
                                 command="designTask"
@@ -33,7 +36,8 @@
                             <el-dropdown-item icon="el-icon-refresh" command="pictureTask">
                                 <span>刷图</span>
                             </el-dropdown-item>
-                        </el-dropdown-menu>
+                            </el-dropdown-menu>
+                        </template>
                     </el-dropdown>
                 </div>
             </template>
@@ -56,6 +60,7 @@
 </template>
 
 <script>
+import CommonHeader from "@jx3box/jx3box-ui/src/CommonHeader.vue";
 import { __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
@@ -63,6 +68,9 @@ import bus from "@/store/bus.js";
 import { refreshQQBotImage } from "@/service/wiki";
 export default {
     name: "DefaultLayout",
+    components: {
+        CommonHeader,
+    },
     props: {
         name: {
             type: String,

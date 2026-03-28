@@ -3,7 +3,7 @@
         <!-- 定制方案弹出层 -->
         <el-dialog
             title="创建方案"
-            :visible.sync="dialogTableVisible"
+            v-model="dialogTableVisible"
             lock-scroll
             width="888px"
             :close-on-click-modal="false"
@@ -64,11 +64,11 @@
                                                 : '输入地图名称「回车」进行搜索'
                                         "
                                         v-model="searchInput"
-                                        @keydown.enter.native="searchHandle"
+                                        @keydown.enter="searchHandle"
                                         :fetch-suggestions="querySearch"
                                         :trigger-on-focus="false"
                                         value-key="label"
-                                        size="mini"
+                                        size="small"
                                         popper-class="m-select-input_popper"
                                         @select="handleSelect"
                                     >
@@ -83,14 +83,15 @@
                                                     <el-option label="地图" value="2"></el-option> </el-select
                                             ></slot>
                                         </template>
-                                        <div
-                                            slot="append"
-                                            @click="searchHandle"
-                                            class="u-select-input_btn"
-                                            v-if="isSelectSearchType == 1"
-                                        >
-                                            搜索成就
-                                        </div>
+                                        <template #append>
+                                            <div
+                                                @click="searchHandle"
+                                                class="u-select-input_btn"
+                                                v-if="isSelectSearchType == 1"
+                                            >
+                                                搜索成就
+                                            </div>
+                                        </template>
                                     </el-autocomplete>
                                 </div>
                             </div>

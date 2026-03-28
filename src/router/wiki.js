@@ -1,12 +1,12 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
-Vue.use(VueRouter);
-let overview = () => import("../views/wiki/overview.vue");
+
+const overview = () => import("../views/wiki/overview.vue");
 const overviewMiniProgram = () => import("../views/wiki_miniprogram/overview.vue");
 const leap = () => import("../views/wiki/leap.vue");
 const compare = () => import("../views/wiki/compare.vue");
 const compareMiniProgram = () => import("../views/wiki_miniprogram/compare.vue");
+
 const routes = [
     {
         name: "index",
@@ -62,17 +62,16 @@ const routes = [
     },
 ];
 
-const router = new VueRouter({
-    mode: "history",
-    base: "/achievement",
+const router = createRouter({
+    history: createWebHistory("/achievement"),
     routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
     if (to.fullPath.includes("/#")) {
-        next(to.fullPath.replace("/#", ""));
+        return to.fullPath.replace("/#", "");
     }
-    next();
+    return true;
 });
 
 export default router;

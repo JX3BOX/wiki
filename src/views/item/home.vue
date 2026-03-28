@@ -1,14 +1,14 @@
 <template>
     <div class="m-home-view">
         <WikiPanel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-location-information"></i>
                 <span>便捷入口</span>
             </template>
-            <template slot="head-actions">
+            <template #head-actions>
                 <!-- <a class="u-more" target="_blank" :href="feedback">反馈建议 &raquo;</a> -->
             </template>
-            <template slot="body">
+            <template #body>
                 <ul class="m-qlinks">
                     <li class="qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/18151/">
@@ -55,14 +55,14 @@
         </WikiPanel>
 
         <WikiPanel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-notebook-1"></i>
                 <span>最新物品</span>
             </template>
             <!-- <template slot="head-actions">
                 <a href="pvg/item_price" target="_blank" class="u-more">查看更多 &raquo;</a>
             </template> -->
-            <template slot="body">
+            <template #body>
                 <el-carousel
                     height="66px"
                     direction="vertical"
@@ -99,14 +99,14 @@
         </WikiPanel>
 
         <WikiPanel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-notebook-1"></i>
                 <span>最热物品</span>
             </template>
             <!-- <template slot="head-actions">
                 <router-link :to="{ name: 'plan_list' }" class="u-more">查看更多 &raquo;</router-link>
             </template> -->
-            <template slot="body">
+            <template #body>
                 <el-carousel
                     height="66px"
                     direction="vertical"
@@ -143,11 +143,11 @@
         </WikiPanel>
 
         <WikiPanel :border-none="true">
-            <template slot="head-title">
+            <template #head-title>
                 <i class="el-icon-collection"></i>
                 <span>最新攻略</span>
             </template>
-            <template slot="body">
+            <template #body>
                 <div class="wiki-post-list" v-if="newest_posts.length">
                     <div class="wiki-post" v-for="(post, key) in newest_posts" :key="key">
                         <div class="m-about-post">
@@ -176,7 +176,7 @@
                                 <div class="u-author">
                                     <img class="u-icon" :src="showAvatar(post.user)" :alt="post.user_nickname" />
                                     <a
-                                        :href="post.user_id | author_url"
+                                        :href="author_url(post.user_id)"
                                         class="u-name"
                                         v-text="post.user_nickname"
                                         v-if="post.user_id"
@@ -215,7 +215,7 @@ import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { __iconPath, feedback } from "@/utils/config";
 import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
 import { get_newest_items, get_items_by_node } from "@/service/item.js";
-import { date_format, star } from "@/filters";
+import { author_url, date_format, star } from "@/filters";
 import { ellipsis } from "@/utils/common";
 import { chunk } from "lodash";
 
@@ -248,6 +248,7 @@ export default {
             return iconLink(id, this.client);
         },
         ellipsis,
+        author_url,
         date_format,
         star,
         showAvatar: function (user) {

@@ -9,7 +9,7 @@
             <slot></slot>
         </div>
         <div class="w-fold-card-footer" v-if="!fixed && showFold">
-            <el-button @click="toggleFold" type="text">
+            <el-button @click="toggleFold" link>
                 {{ isFold ? "展示全部" : "收起全部" }}
             </el-button>
         </div>
@@ -72,7 +72,7 @@ export default {
         });
         this.observer.observe(targetEl);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.observer.disconnect();
         this.observer = null;
     },
