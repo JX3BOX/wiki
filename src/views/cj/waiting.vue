@@ -10,10 +10,11 @@
             layout="prev, pager, next"
             :current-page="page"
             :page-size="length"
-            prev-html="&laquo;"
-            next-html="&raquo;"
             @current-change="page_change_handle"
-        ></el-pagination>
+        >
+            <template #prev-icon>&laquo;</template>
+            <template #next-icon>&raquo;</template>
+        </el-pagination>
     </div>
 </template>
 
@@ -70,7 +71,7 @@ export default {
         $route: {
             immediate: true,
             handler() {
-                this.page = parseInt(this.$route.query.page);
+                this.page = parseInt(this.$route.query.page) || 1;
                 // 获取成就列表
                 this.get_achievements(this.page || 1);
             },

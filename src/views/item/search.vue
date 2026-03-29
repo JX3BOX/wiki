@@ -18,10 +18,11 @@
             layout="prev, pager, next"
             :current-page="page"
             :page-size="length"
-            prev-html="&laquo;"
-            next-html="&raquo;"
             @current-change="page_change_handle"
-        ></el-pagination>
+        >
+            <template #prev-icon>&laquo;</template>
+            <template #next-icon>&raquo;</template>
+        </el-pagination>
     </div>
 </template>
 
@@ -72,7 +73,7 @@ export default {
             immediate: true,
             handler() {
                 this.items = null; // 加载中状态
-                this.page = parseInt(this.$route.query.page);
+                this.page = parseInt(this.$route.query.page) || 1;
                 let params = {
                     ids: this.$route.query.ids || "",
                     keyword: this.$route.params.keyword,

@@ -209,7 +209,7 @@
 
 <script>
 import { ts2str, iconLink } from "@jx3box/jx3box-common/js/utils";
-// import Fav from "@jx3box/jx3box-common-ui/src/interact/Fav.vue";
+import Fav from "@/views/item/item-fav.vue";
 import ItemSimple from "@jx3box/jx3box-editor/src/ItemSimple.vue";
 import star from "@/utils/star";
 import { setVirtualRoleAchievements, cancelVirtualRoleAchievements } from "@/service/achievement";
@@ -220,7 +220,7 @@ export default {
     name: "AchievementSingle",
     components: {
         "item-simple": ItemSimple,
-        // Fav,
+        Fav,
     },
     props: ["achievement", "initFold", "target", "jump", "showFavorite", "isRobot"],
     data() {

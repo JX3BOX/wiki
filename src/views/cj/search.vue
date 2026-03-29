@@ -20,10 +20,11 @@
             layout="prev, pager, next"
             :current-page="page"
             :page-size="length"
-            prev-html="&laquo;"
-            next-html="&raquo;"
             @current-change="page_change_handle"
-        ></el-pagination>
+        >
+            <template #prev-icon>&laquo;</template>
+            <template #next-icon>&raquo;</template>
+        </el-pagination>
     </div>
 </template>
 
@@ -77,7 +78,7 @@ export default {
                 this.isAll = false;
                 const scene = this.$route.query?.scene || "";
                 const keyword = this.$route.params?.keyword || "";
-                if ((scene && this.scene != scene) || (keyword && this.keyword != keyword)) {
+                if (scene !== this.scene || keyword !== this.keyword) {
                     this.page_change_handle(1);
                 } else {
                     this.page = parseInt(this.$route.query.page) || 1;
@@ -98,6 +99,13 @@ export default {
         },
     },
     methods: {
+        buildSearchRoute(keyword = this.$route.params.keyword, query = this.$route.query) {
+            const normalizedKeyword = keyword || "";
+            return {
+                path: normalizedKeyword ? `/search/${encodeURIComponent(normalizedKeyword)}` : "/search",
+                query,
+            };
+        },
         switchAll(bol) {
             this.achievements = this.achievements.map((item) => {
                 return {
@@ -124,11 +132,7 @@ export default {
             });
         },
         page_change_handle(page) {
-            this.$router.push({
-                name: "search",
-                params: { keyword: this.$route.params.keyword },
-                query: { ...this.$route.query, page: page },
-            });
+            this.$router.push(this.buildSearchRoute(this.$route.params.keyword, { ...this.$route.query, page: page }));
         },
         finishVirtual() {
             const ids = this.selectedAchievements?.map((item) => item.ID + "");

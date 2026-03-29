@@ -16,16 +16,17 @@
             </CommonNav>
         </template>
         <Search :placeholder="placeholder" @search="search($event)">
-            <el-cascader
-                v-model="regionId"
-                @change="onChangeMap"
-                :props="{ emitPath: false }"
-                :show-all-levels="false"
-                :options="regions"
-                filterable
-                clearable
-                placeholder="地图"
-            ></el-cascader>
+            <div class="cascader-wrapper">
+                <el-cascader
+                    v-model="regionId"
+                    :props="{ emitPath: false }"
+                    :show-all-levels="false"
+                    :options="regions"
+                    filterable
+                    placeholder="地图"
+                ></el-cascader>
+                <span v-if="regionId" class="cascader-clear" @click.stop="onChangeMap(null)">×</span>
+            </div>
         </Search>
         <router-view />
         <template #right>
@@ -53,9 +54,9 @@ export default {
     data() {
         return {
             placeholder: "输入成就名称/成就描述/称号/奖励物品「回车」进行搜索",
-            regionId: null,
-
             regions: [],
+            regionId: null,
+            syncingFromRoute: false,
         };
     },
     components: {
@@ -65,7 +66,7 @@ export default {
         Info,
         DefaultLayout,
         CommonNav,
-        SchemaSelect
+        SchemaSelect,
     },
     computed: {
         isSingle() {
@@ -73,12 +74,20 @@ export default {
         },
     },
     watch: {
+        regionId(val, oldVal) {
+            if (this.syncingFromRoute) return;
+            this.onChangeMap(val);
+        },
         $route: {
             immediate: true,
             handler() {
-                if (this.$route.query.scene) {
-                    this.regionId = Number(this.$route.query.scene);
-                }
+                this.syncingFromRoute = true;
+                const rawScene = this.$route.query.scene;
+                const sceneVal = Array.isArray(rawScene) ? rawScene[rawScene.length - 1] : rawScene;
+                this.regionId = sceneVal ? Number(sceneVal) : null;
+                this.$nextTick(() => {
+                    this.syncingFromRoute = false;
+                });
 
                 if (!this.$route.params.sub && !this.$route.params.detail && !this.$route.params.source_id) {
                     this.$store.state.sidebar.sub = null;
@@ -96,30 +105,26 @@ export default {
     },
     methods: {
         onChangeMap(scene) {
-            if (!scene) {
-                const query = {
-                    ...this.$route.query,
-                };
-                delete query.scene;
-                this.$router.replace({ name: "search", query });
-                return;
-            }
-            const query = {
-                ...this.$route.query,
-                scene,
+            const currentScene = this.$route.query.scene ? Number([].concat(this.$route.query.scene).pop()) : null;
+            if (scene === currentScene) return;
+            // 构建干净的 query，先剔除所有 scene（防止数组累积），再按需加回
+            const { scene: _drop, ...restQuery } = this.$route.query;
+            const query = { ...restQuery };
+            if (scene) query.scene = scene;
+            delete query.page;
+            this.$router.replace({ name: "search", query });
+        },
+        buildSearchRoute(keyword = this.$route.params.keyword, query = this.$route.query) {
+            const normalizedKeyword = (keyword || "").trim().replace(/(?:^\[)|(?:\]$)/gi, "");
+            return {
+                path: normalizedKeyword ? `/search/${encodeURIComponent(normalizedKeyword)}` : "/search",
+                query,
             };
-            if (query.scene != this.$route.query.scene) {
-                this.$router.replace({ name: "search", query });
-            }
         },
         getAppIcon,
         search(keyword) {
             delete this.$store.state.scroll_tops["search"];
-            const target = {
-                name: "search",
-                params: { keyword: keyword.trim().replace(/(?:^\[)|(?:\]$)/gi, "") },
-                query: this.$route.query,
-            };
+            const target = this.buildSearchRoute(keyword, this.$route.query);
             this.$router.push(target);
         },
         loadMapList() {
@@ -166,6 +171,27 @@ export default {
 @import "~@/assets/css/cj/index.less";
 
 .m-cj-search {
+    .cascader-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        .cascader-clear {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            line-height: 12px;
+            text-align: center;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 1;
+            color: #ccc;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+        }
+    }
     .m-search .el-input-group__prepend {
         border: none;
         box-shadow: none;
@@ -178,6 +204,7 @@ export default {
                 background-color: #f5f7fa;
                 height: 38px;
                 line-height: 38px;
+                padding-right: 28px;
             }
         }
         .el-cascader .el-input__inner {

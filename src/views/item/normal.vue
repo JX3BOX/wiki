@@ -10,10 +10,11 @@
             layout="prev, pager, next"
             :current-page="page"
             :page-size="length"
-            prev-html="&laquo;"
-            next-html="&raquo;"
             @current-change="page_change_handle"
-        ></el-pagination>
+        >
+            <template #prev-icon>&laquo;</template>
+            <template #next-icon>&raquo;</template>
+        </el-pagination>
     </div>
 </template>
 
@@ -54,7 +55,7 @@ export default {
             immediate: true,
             handler() {
                 this.items = null; // 加载中状态
-                this.page = Number(this.$route.query.page);
+                this.page = Number(this.$route.query.page) || 1;
                 // 获取菜单物品列表
                 get_menu_items({
                     auc_genre: this.$store.state.sidebar.AucGenre,

@@ -6,7 +6,8 @@
         <div class="m-search">
             <el-input
                 class="u-search-input"
-                v-model="keyword"
+                :model-value="keyword"
+                @update:modelValue="updateKeyword"
                 @keydown.enter="searchHandle"
                 :placeholder="placeholder"
                 clearable
@@ -41,7 +42,20 @@ export default {
     data() {
         return {
             keyword: "",
+            syncingFromRoute: false,
         };
+    },
+    watch: {
+        "$route.fullPath": {
+            immediate: true,
+            handler() {
+                this.syncingFromRoute = true;
+                this.keyword = this.$route.params?.keyword || "";
+                this.$nextTick(() => {
+                    this.syncingFromRoute = false;
+                });
+            },
+        },
     },
     methods: {
         returnHandle() {
@@ -56,6 +70,14 @@ export default {
         searchHandle() {
             const keyword = this.keyword;
             this.$emit("search", keyword);
+        },
+        updateKeyword(val) {
+            const oldVal = this.keyword;
+            this.keyword = val || "";
+            if (this.syncingFromRoute) return;
+            if (oldVal && !this.keyword) {
+                this.$emit("search", "");
+            }
         },
     },
 };

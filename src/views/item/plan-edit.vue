@@ -65,7 +65,7 @@
                             :hide-on-single-page="true"
                             :page-size="per"
                             :total="total"
-                            :page-count="5"
+                            :pager-count="5"
                         ></el-pagination>
                     </div>
                     <el-row v-if="data.type == 1" class="u-list-box" :gutter="20">
