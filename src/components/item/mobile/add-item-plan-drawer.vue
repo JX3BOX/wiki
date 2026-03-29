@@ -19,9 +19,9 @@
                         <div class="m-user-select__title">加入物品</div>
                         <ItemCardVue :item-id="item_id" :data="item"></ItemCardVue>
                         <div class="m-count-edit">
-                            <i class="el-icon-minus" @click="current_count--"></i>
+                            <LegacyIcon class="el-icon-minus" @click="current_count--" />
                             <el-input v-model.number="current_count"></el-input>
-                            <i class="el-icon-plus" @click="current_count++"></i>
+                            <LegacyIcon class="el-icon-plus" @click="current_count++" />
                         </div>
                         <div class="m-user-select__title" v-if="!fixed_plan">选择清单</div>
                         <div class="u-menu" @click="onSelectPlan" v-if="!fixed_plan">

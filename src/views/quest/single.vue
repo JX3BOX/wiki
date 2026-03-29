@@ -3,7 +3,7 @@
         <div v-if="!isRobot" class="w-quest">
             <div class="u-actions" @click.stop>
                 <el-tooltip content="在左侧选择角色后可以标记任务完成情况" placement="top" v-if="!role">
-                    <i class="el-icon-info"></i>
+                    <LegacyIcon class="el-icon-info" />
                 </el-tooltip>
                 <el-button
                     size="small"
@@ -12,7 +12,7 @@
                     @click.stop="onQuestComplete"
                     :loading="loading"
                     :disabled="!role"
-                    icon="el-icon-check"
+                    icon="Check"
                 >
                     标记为已完成
                 </el-button>
@@ -24,7 +24,7 @@
                     @click.stop="onQuestCancel"
                     :loading="loading"
                     :disabled="!role"
-                    icon="el-icon-close"
+                    icon="Close"
                 >
                     标记为未完成
                 </el-button>
@@ -46,7 +46,7 @@
             </div>
             <div class="u-endpoint__wrapper">
                 <p class="u-endpoint" v-show="quest.start">
-                    <span class="u-endpoint-label"><i class="el-icon-video-play"></i> 任务起点: </span>
+                    <span class="u-endpoint-label"><LegacyIcon class="el-icon-video-play" /> 任务起点: </span>
                     <span>{{ quest.start.mapName }}</span>
                     <span class="u-endpoint-separate"> - </span>
                     <item-icon
@@ -67,7 +67,7 @@
                     ></point-filter>
                 </p>
                 <p class="u-endpoint">
-                    <span class="u-endpoint-label"><i class="el-icon-remove-outline"></i> 任务终点: </span>
+                    <span class="u-endpoint-label"><LegacyIcon class="el-icon-remove-outline" /> 任务终点: </span>
                     <span>{{ quest.end.mapName }}</span>
                     <span class="u-endpoint-separate"> - </span>
                     <item-icon
@@ -266,13 +266,13 @@
                 </template>
                 <template v-if="!isRobot" #head-actions>
                     <a class="el-button el-button--primary" :href="publish_url(`quest/${id}`)">
-                        <i class="el-icon-edit"></i>
+                        <LegacyIcon class="el-icon-edit" />
                         <span>完善任务攻略</span>
                     </a>
                 </template>
                 <template #body>
                     <div class="m-wiki-compatible" v-if="compatible">
-                        <i class="el-icon-warning-outline"></i> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
+                        <LegacyIcon class="el-icon-warning-outline" /> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
                             class="s-link"
                             :href="publish_url(`quest/${id}`)"
                             >参与修订</a
@@ -280,7 +280,7 @@
                     </div>
                     <Article id="wikiArticle" :content="wiki_post.post.content" />
                     <div class="m-wiki-signature">
-                        <i class="el-icon-edit"></i>
+                        <LegacyIcon class="el-icon-edit" />
                         本次修订由 <b>{{ user_name }}</b> 提交于{{ updated_at }}
                     </div>
                 </template>
@@ -293,7 +293,7 @@
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
                         <template #head-title>
-                            <i class="el-icon-coin"></i>
+                            <LegacyIcon class="el-icon-coin" />
                             <span>参与打赏</span>
                         </template>
                         <template #body>
@@ -322,7 +322,7 @@
         </div>
         <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-quest-empty' : ''" v-else>
             <template v-if="!isRobot">
-                <i class="el-icon-s-opportunity"></i>
+                <LegacyIcon class="el-icon-s-opportunity" />
                 <span>暂无攻略，我要</span>
                 <a class="s-link" :href="publish_url(`quest/${id}`)">完善攻略</a>
             </template>

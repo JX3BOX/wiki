@@ -13,7 +13,7 @@
                         :class="completed ? 'el-tag--success' : 'el-tag--warning'"
                         v-if="!isVirtual"
                     >
-                        <i :class="completed ? 'el-icon-check' : 'el-icon-warning-outline'"></i>
+                        <LegacyIcon :class="completed ? 'el-icon-check' : 'el-icon-warning-outline'" />
                         {{ completedText }}
                     </i>
                     <i
@@ -21,7 +21,7 @@
                         :class="completedVirtual ? 'el-tag--success' : 'el-tag--warning'"
                         v-else
                     >
-                        <i :class="completedVirtual ? 'el-icon-check' : 'el-icon-warning-outline'"></i>
+                        <LegacyIcon :class="completedVirtual ? 'el-icon-check' : 'el-icon-warning-outline'" />
                         {{ completedVirtualText }}
                     </i>
                 </template>
@@ -42,7 +42,7 @@
                         class="u-attr u-fav u-check"
                         plain
                         size="small"
-                        icon="el-icon-check"
+                        icon="Check"
                         @click.stop="finishVirtual()"
                     >
                         设为完成
@@ -52,7 +52,7 @@
                         class="u-attr u-fav u-check"
                         type="success"
                         size="small"
-                        icon="el-icon-check"
+                        icon="Check"
                         @click.stop="cancelVirtual()"
                     >
                         取消完成
@@ -63,7 +63,7 @@
                         class="u-attr u-fav"
                         plain
                         size="small"
-                        icon="el-icon-plus"
+                        icon="Plus"
                         @click.stop="onAppendToLeapSchema"
                     >
                         加入渡劫方案
@@ -163,14 +163,14 @@
                             content="设为完成"
                             placement="bottom"
                         >
-                            <i
+                            <LegacyIcon
                                 title="设为完成"
                                 class="u-icon el-icon-check"
                                 @click.stop="finishVirtual(series_achievement.ID)"
-                            ></i>
+                             />
                         </el-tooltip>
                         <el-tooltip v-else class="item" effect="dark" content="取消完成" placement="bottom">
-                            <i class="u-icon el-icon-close" @click.stop="cancelVirtual(series_achievement.ID)"></i>
+                            <LegacyIcon class="u-icon el-icon-close" @click.stop="cancelVirtual(series_achievement.ID)" />
                         </el-tooltip>
                     </div>
                 </div>
@@ -178,8 +178,8 @@
         </div>
         <div class="u-expand" v-if="!empty" :class="{ disable: empty }" @click="fold = !fold">
             <hr />
-            <i class="u-icon el-icon-caret-top"></i>
-            <i class="u-icon el-icon-caret-bottom"></i>
+            <LegacyIcon class="u-icon el-icon-caret-top" />
+            <LegacyIcon class="u-icon el-icon-caret-bottom" />
         </div>
     </div>
     <div class="m-achievement-single__robot" v-else>

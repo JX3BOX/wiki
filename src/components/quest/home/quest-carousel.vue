@@ -23,19 +23,19 @@
                         >
                             <div class="m-carousel-content">
                                 <span class="u-title">
-                                    <i class="el-icon-aim"></i>
+                                    <LegacyIcon class="el-icon-aim" />
                                     <span v-text="` ${item.name}`"></span>
                                 </span>
                                 <span class="u-desc">
-                                    <i class="el-icon-mic"></i>
+                                    <LegacyIcon class="el-icon-mic" />
                                     <span v-html="` ${item.target}`"></span>
                                 </span>
                                 <span class="u-rank" v-if="views && views[item.id]">
-                                    <i class="el-icon-watermelon"></i>
+                                    <LegacyIcon class="el-icon-watermelon" />
                                     <span v-text="`昨日 - ${views[item.id]['yesterday']}`"></span>
-                                    <i class="el-icon-grape"></i>
+                                    <LegacyIcon class="el-icon-grape" />
                                     <span v-text="`七天 - ${views[item.id]['7days']}`"></span>
-                                    <i class="el-icon-pear"></i>
+                                    <LegacyIcon class="el-icon-pear" />
                                     <span v-text="`三十天 - ${views[item.id]['30days']}`"></span>
                                 </span>
                             </div>

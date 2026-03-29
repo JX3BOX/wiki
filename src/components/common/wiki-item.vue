@@ -11,11 +11,11 @@
         </div>
         <div class="m-carousel-content">
             <div class="u-title">
-                <i class="el-icon-medal"></i>
+                <LegacyIcon class="el-icon-medal" />
                 <span v-text="`${type === 'quest' ? item.name : item.Name}`"></span>
             </div>
             <div class="u-desc">
-                <i class="el-icon-mic"></i>
+                <LegacyIcon class="el-icon-mic" />
                 <span v-html="`${type === 'quest' ? item.target : parseDesc(item.Desc)}`"></span>
             </div>
         </div>

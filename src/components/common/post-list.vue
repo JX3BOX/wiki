@@ -1,7 +1,7 @@
 <template>
     <WikiPanel :border-none="true">
         <template #head-title>
-            <i class="el-icon-collection"></i>
+            <LegacyIcon class="el-icon-collection" />
             <span>最近攻略</span>
         </template>
         <template #body>

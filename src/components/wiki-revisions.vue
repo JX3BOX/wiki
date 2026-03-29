@@ -1,12 +1,12 @@
 <template>
     <WikiPanel class="c-wiki-revisions" scene="detail">
         <template #head-title>
-            <i class="el-icon-time"></i>
+            <LegacyIcon class="el-icon-time" />
             <span>历史版本</span>
         </template>
         <template #head-actions>
             <span class="el-button el-button--primary" @click="visible = true">
-                <i class="el-icon-crop"></i>
+                <LegacyIcon class="el-icon-crop" />
                 <span>版本对比</span>
             </span>
         </template>
@@ -45,7 +45,7 @@
                 </table>
                 <div class="u-op" v-if="remainVersions.length" @click="onToggle">
                     <div class="u-btn">
-                        <i :class="isExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+                        <LegacyIcon :class="isExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" />
                         {{ isExpand ? "折叠" : "展开" }}
                     </div>
                 </div>

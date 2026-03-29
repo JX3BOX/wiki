@@ -14,7 +14,7 @@
                 <span class="u-text" v-text="wikiPost.source.Name"></span>
             </div>
             <div class="u-zhtr" @click="isTW = !isTW">
-                <i class="el-icon-guide"></i>
+                <LegacyIcon class="el-icon-guide" />
                 <span>[</span>
                 <span v-if="isTW" class="u-tr">繁體</span>
                 <span v-else class="u-cn">简体</span>
@@ -23,18 +23,18 @@
         </template>
         <template #head-actions>
             <el-button v-if="!isEditMode" type="primary" class="u-edit" @click="editHandler">
-                <i class="el-icon-edit"></i>
+                <LegacyIcon class="el-icon-edit" />
                 <span>编辑修订</span>
             </el-button>
             <el-button v-else class="u-edit" @click="isEditMode = false">
-                <i class="el-icon-back"></i>
+                <LegacyIcon class="el-icon-back" />
                 <span>取消修订</span>
             </el-button>
         </template>
         <template #body>
 
             <div class="m-wiki-compatible" v-if="compatible && !isEditMode">
-                <i class="el-icon-warning-outline"></i> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
+                <LegacyIcon class="el-icon-warning-outline" /> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
                     :href="publish_url(`${wiki_post.type}/${wikiPost.source_id}`)"
                     >参与修订</a
                 >。
@@ -62,7 +62,7 @@
                     <Article id="content-tw" v-else :content="cn2tw(content)" :pageable="false" />
                 </div>
                 <div v-else class="u-empty">
-                    <i class="el-icon-s-opportunity"></i>
+                    <LegacyIcon class="el-icon-s-opportunity" />
                     <span>
                         暂无百科攻略，我来
                         <span class="u-edit" @click="editHandler">完善攻略</span>

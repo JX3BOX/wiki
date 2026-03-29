@@ -19,7 +19,7 @@
             </div>
             <el-dropdown class="m-header__links">
                 <el-button type="primary" class="u-dropdown-link">
-                    更多百科<i class="el-icon-arrow-down el-icon--right"></i>
+                    更多百科<LegacyIcon class="el-icon-arrow-down el-icon--right" />
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu class="m-header__menu">
@@ -118,7 +118,7 @@
                                 </template>
                                 <template #body>
                                     <div class="m-wiki-compatible" v-if="compatible">
-                                        <i class="el-icon-warning-outline"></i>
+                                        <LegacyIcon class="el-icon-warning-outline" />
                                         暂无缘起攻略，以下为重制攻略，仅作参考，<a
                                             class="s-link"
                                             :href="publish_url(`achievement/${id}`)"
@@ -131,7 +131,7 @@
                         </div>
 
                         <div class="m-wiki-post-empty" v-if="is_empty">
-                            <i class="el-icon-s-opportunity"></i>
+                            <LegacyIcon class="el-icon-s-opportunity" />
                             <span>暂无攻略，我要</span>
                             <a class="s-link" :href="publish_url(`achievement/${id}`)">完善攻略</a>
                         </div>

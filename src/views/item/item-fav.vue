@@ -1,6 +1,6 @@
 <template>
     <el-button class="w-fav" size="small" type="primary" @click="doFav">
-        <i :class="favorite ? 'el-icon-star-on' : 'el-icon-star-off'"></i>
+        <LegacyIcon :class="favorite ? 'el-icon-star-on' : 'el-icon-star-off'" />
         <span>{{ favorite ? "取消收藏" : "收藏" }}</span>
     </el-button>
 </template>

@@ -3,11 +3,11 @@
         <list-head></list-head>
         <template v-if="resultIsObject">
             <template v-if="result.prev && result.prev.length > 0">
-                <el-divider><i class="el-icon-star-off"></i> 前置分支</el-divider>
+                <el-divider><LegacyIcon class="el-icon-star-off" /> 前置分支</el-divider>
                 <quest-card v-for="quest in result.prev" :key="quest.id" :quest="quest"></quest-card>
             </template>
             <template v-if="result.current && result.current.length > 0">
-                <el-divider v-if="result.current.length > 0"><i class="el-icon-star-off"></i> 任务链条</el-divider>
+                <el-divider v-if="result.current.length > 0"><LegacyIcon class="el-icon-star-off" /> 任务链条</el-divider>
                 <quest-card
                     v-for="quest in result.current"
                     :class="{ current: quest.name == keyword }"
@@ -16,7 +16,7 @@
                 ></quest-card>
             </template>
             <template v-if="result.branch && result.branch.length > 0">
-                <el-divider><i class="el-icon-star-off"></i> 任务分支</el-divider>
+                <el-divider><LegacyIcon class="el-icon-star-off" /> 任务分支</el-divider>
                 <quest-card v-for="quest in result.branch" :key="quest.id" :quest="quest"></quest-card>
             </template>
             <template v-if="result.byKeyword && result.byKeyword.length > 0">

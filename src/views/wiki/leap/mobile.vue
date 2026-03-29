@@ -4,7 +4,7 @@
         <div class="m-overview-header_mobile">
             <div class="u-name">
                 <!-- 折叠侧栏按钮 -->
-                <i :class="!isFold ? 'el-icon-s-fold ' : 'el-icon-s-unfold'" @click="changeFold" />&nbsp;
+                <LegacyIcon :class="!isFold ? 'el-icon-s-fold ' : 'el-icon-s-unfold'" @click="changeFold"  />&nbsp;
             </div>
 
             <div class="u-select">

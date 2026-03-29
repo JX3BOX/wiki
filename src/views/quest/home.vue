@@ -11,7 +11,7 @@
         <!-- <h1 class="u-title">任务百科</h1> -->
         <wiki-panel :border-none="true">
             <template #head-title>
-                <i class="el-icon-location-information"></i>
+                <LegacyIcon class="el-icon-location-information" />
                 <span>便捷入口</span>
             </template>
             <template #head-actions>
@@ -21,7 +21,7 @@
                 <ul class="u-qlinks">
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/1428">
-                            <i class="el-icon-trophy"></i>
+                            <LegacyIcon class="el-icon-trophy" />
                             <span>游戏内看百科</span>
                         </a>
                     </li>
@@ -30,25 +30,25 @@
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/exam" style="background-color: #f7b044;">
-                            <i class="el-icon-goblet-square-full"></i>
+                            <LegacyIcon class="el-icon-goblet-square-full" />
                             <span>科举题库</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/reputation">
-                            <i class="el-icon-grape"></i>
+                            <LegacyIcon class="el-icon-grape" />
                             <span>声望大全</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/book">
-                            <i class="el-icon-watermelon"></i>
+                            <LegacyIcon class="el-icon-watermelon" />
                             <span>书籍大全</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="pvg/gonggao/daily">
-                            <i class="el-icon-cherry"></i>
+                            <LegacyIcon class="el-icon-cherry" />
                             <span>日常活动</span>
                         </a>
                     </li>
@@ -57,7 +57,7 @@
         </wiki-panel>
         <wiki-panel :border-none="true">
             <template #head-title>
-                <i class="el-icon-notebook-1"></i>
+                <LegacyIcon class="el-icon-notebook-1" />
                 <span>热门任务</span>
             </template>
             <template #body>
@@ -66,7 +66,7 @@
         </wiki-panel>
         <wiki-panel :border-none="true">
             <template #head-title>
-                <i class="el-icon-notebook-2"></i>
+                <LegacyIcon class="el-icon-notebook-2" />
                 <span>最新任务</span>
             </template>
             <template #head-actions>
@@ -78,7 +78,7 @@
         </wiki-panel>
         <wiki-panel :border-none="true">
             <template #head-title>
-                <i class="el-icon-collection"></i>
+                <LegacyIcon class="el-icon-collection" />
                 <span>最新攻略</span>
             </template>
             <template #body>

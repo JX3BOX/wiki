@@ -5,7 +5,7 @@
         v-if="(relations && relations.length) || npc"
     >
         <template #head-title>
-            <i class="el-icon-link"></i>
+            <LegacyIcon class="el-icon-link" />
             <span>关联成就</span>
             <em class="u-remark">同BOSS下的其它成就</em>
         </template>

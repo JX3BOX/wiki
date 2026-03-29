@@ -1,15 +1,15 @@
 ﻿<template>
     <el-popover popper-class="w-plans" placement="bottom" trigger="click" v-model="visible" width="300">
-        <el-input class="m-input" v-model.lazy="search" placeholder="璇疯緭鍏ユ竻鍗曞叧閿瓧" size="large" prefix-icon="el-icon-search"></el-input>
+        <el-input class="m-input" v-model.lazy="search" placeholder="璇疯緭鍏ユ竻鍗曞叧閿瓧" size="large" prefix-icon="Search"></el-input>
         <div class="m-list" v-if="list && list.length">
             <div class="u-list" v-for="(item, index) in list" :key="index">
                 <div class="u-title" @click="showRelation(item, index)">
-                    <i :class="relation_index == index ? 'el-icon-caret-bottom' : 'el-icon-caret-right'"></i>
+                    <LegacyIcon :class="relation_index == index ? 'el-icon-caret-bottom' : 'el-icon-caret-right'" />
                     <span class="u-value" :class="hasInPlan(item) ? 'u-has' : ''">{{ item.title }} </span>
                 </div>
                 <template v-if="relation_index == index && item.relation">
                     <div class="u-child" v-for="(plan, k) in item.relation" :key="k" @click="addToPlan(item, k)">
-                        <i class="el-icon-arrow-right"></i>
+                        <LegacyIcon class="el-icon-arrow-right" />
                         <span>{{ plan.title || `子清单${k + 1}` }}</span>
                     </div>
                 </template>
@@ -38,15 +38,15 @@
             </div>
             <template #reference>
                 <div class="m-create">
-                    <!-- <a href="/publish/#/item_plan" target="_blank" class="el-button"><i class="el-icon-document-add"></i> 鍒涘缓鏂版竻鍗?/a> -->
-                    <span class="el-button"><i class="el-icon-document-add"></i> 创建新清单</span>
+                    <!-- <a href="/publish/#/item_plan" target="_blank" class="el-button"><LegacyIcon class="el-icon-document-add" /> 鍒涘缓鏂版竻鍗?/a> -->
+                    <span class="el-button"><LegacyIcon class="el-icon-document-add" /> 创建新清单</span>
                 </div>
             </template>
         </el-popover>
 
         <template #reference>
             <el-button size="small" type="success" @click="openPlans"
-                ><i class="u-el-icon el-icon-shopping-cart-full"></i> 鍔犲叆娓呭崟</el-button
+                ><LegacyIcon class="u-el-icon el-icon-shopping-cart-full" /> 鍔犲叆娓呭崟</el-button
             >
         </template>
     </el-popover>

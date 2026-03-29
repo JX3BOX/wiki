@@ -5,7 +5,7 @@
 		<div class="m-plan-search">
 			<el-input placeholder="请输入搜索内容" v-model="search">
 				<span slot="prepend">关键词</span>
-				<el-button slot="append" icon="el-icon-search"></el-button>
+				<el-button slot="append" icon="Search"></el-button>
 			</el-input>
 		</div>
 		<!-- 列表 -->
@@ -19,7 +19,7 @@
 						<span class="u-user">
 							<img class="u-avatar" :src="showAvatar(getUserInfo(plan, 'user_avatar'))" :alt="getUserInfo(plan, 'user_avatar')" />
 							<a class="u-name" :href="authorLink(plan.user_id)">{{ getUserInfo(plan, "display_name") || "匿名" }}</a>
-							<span class="u-time"><i class="el-icon-time"></i>{{ date_format(plan.updated) }}</span>
+							<span class="u-time"><LegacyIcon class="el-icon-time" />{{ date_format(plan.updated) }}</span>
 						</span>
 					</div>
 				</router-link>

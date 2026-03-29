@@ -46,7 +46,7 @@
                                     @click="handleItemClick(item)"
                                 >
                                     <div class="m-knowledge-title" v-html="item.name"></div>
-                                    <i class="el-icon-arrow-right"></i>
+                                    <LegacyIcon class="el-icon-arrow-right" />
                                 </div>
                             </div>
                         </template>
@@ -60,7 +60,7 @@
                                 @click="handleItemClick(item)"
                             >
                                 <div class="m-knowledge-title" v-html="item.name"></div>
-                                <i class="el-icon-arrow-right"></i>
+                                <LegacyIcon class="el-icon-arrow-right" />
                             </div>
                         </div>
                     </div>
@@ -74,12 +74,12 @@
                         <div class="m-knowledge-title">
                             {{ item.name }}
                         </div>
-                        <i class="el-icon-arrow-right"></i>
+                        <LegacyIcon class="el-icon-arrow-right" />
                     </div>
                 </div>
 
                 <div class="m-status">
-                    <div class="u-loading" v-if="loading"><i class="el-icon-loading"></i> 加载中...</div>
+                    <div class="u-loading" v-if="loading"><LegacyIcon class="el-icon-loading" /> 加载中...</div>
                     <div class="u-no-more" v-if="finished && list.length">End</div>
                     <div class="u-empty" v-if="finished && !list.length">暂无相关数据</div>
                 </div>

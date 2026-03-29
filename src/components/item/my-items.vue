@@ -28,10 +28,10 @@
                 >
                 </el-pagination>
                 <!-- <a class="u-more" href="/dashboard/#/fav/item" target="_blank"
-                    ><i class="el-icon-arrow-left"></i> <i class="el-icon-more"></i> <i class="el-icon-arrow-right"></i
+                    ><LegacyIcon class="el-icon-arrow-left" /> <LegacyIcon class="el-icon-more" /> <i class="el-icon-arrow-right"></i
                 ></a> -->
             </div>
-            <div v-if="isLogin && !data.length" class="u-tip"><i class="el-icon-warning-outline"></i> 暂无收藏物品</div>
+            <div v-if="isLogin && !data.length" class="u-tip"><LegacyIcon class="el-icon-warning-outline" /> 暂无收藏物品</div>
         </div>
     </div>
 </template>

@@ -23,38 +23,38 @@
                     </div>
                     <div class="u-meta-item u-misc">
                         <div class="u-meta-misc">
-                            <i class="el-icon-check" v-if="[1, 2].includes(source.BindType)"></i>
-                            <i class="el-icon-close" v-else></i>
+                            <LegacyIcon class="el-icon-check" v-if="[1, 2].includes(source.BindType)" />
+                            <LegacyIcon class="el-icon-close" v-else />
                             {{ [1, 2].includes(source.BindType) ? "鍙互" : "涓嶅彲" }}浜ゆ槗
                         </div>
                         <div class="u-meta-misc">
-                            <i class="el-icon-check" v-if="source.CanStack"></i>
-                            <i class="el-icon-close" v-else></i>
+                            <LegacyIcon class="el-icon-check" v-if="source.CanStack" />
+                            <LegacyIcon class="el-icon-close" v-else />
                             {{ source.CanStack ? "鍙互" : "涓嶅彲" }}鍫嗗彔
                         </div>
                         <div class="u-meta-misc">
-                            <i class="el-icon-check" v-if="source.CanChangeMagic"></i>
-                            <i class="el-icon-close" v-else></i>
+                            <LegacyIcon class="el-icon-check" v-if="source.CanChangeMagic" />
+                            <LegacyIcon class="el-icon-close" v-else />
                             {{ source.CanChangeMagic ? "鍙互" : "涓嶅彲" }}闄勯瓟
                         </div>
                         <div class="u-meta-misc">
-                            <i class="el-icon-check" v-if="source.CanExterior"></i>
-                            <i class="el-icon-close" v-else></i>
+                            <LegacyIcon class="el-icon-check" v-if="source.CanExterior" />
+                            <LegacyIcon class="el-icon-close" v-else />
                             {{ source.CanExterior ? "鍙互" : "涓嶅彲" }}鏀堕泦
                         </div>
                         <div class="u-meta-misc">
-                            <i class="el-icon-check" v-if="source.CanSetColor"></i>
-                            <i class="el-icon-close" v-else></i>
+                            <LegacyIcon class="el-icon-check" v-if="source.CanSetColor" />
+                            <LegacyIcon class="el-icon-close" v-else />
                             {{ source.CanSetColor ? "鍙互" : "涓嶅彲" }}鏌撹壊
                         </div>
                         <div class="u-meta-misc">
-                            <i class="el-icon-check" v-if="source.CanApart"></i>
-                            <i class="el-icon-close" v-else></i>
+                            <LegacyIcon class="el-icon-check" v-if="source.CanApart" />
+                            <LegacyIcon class="el-icon-close" v-else />
                             {{ source.CanApart ? "鍙互" : "涓嶅彲" }}鍒嗚В
                         </div>
                         <div class="u-meta-misc">
-                            <i class="el-icon-check" v-if="source.CanDestroy || source.CanDestroy === null"></i>
-                            <i class="el-icon-close" v-else></i>
+                            <LegacyIcon class="el-icon-check" v-if="source.CanDestroy || source.CanDestroy === null" />
+                            <LegacyIcon class="el-icon-close" v-else />
                             {{ source.CanDestroy || source.CanDestroy === null ? "鍙互" : "涓嶅彲" }}鎽ф瘉
                         </div>
                     </div>
@@ -63,8 +63,8 @@
             <Item v-if="drawerMode || showInfo" :item="source" :item_id="id" :client="client"></Item>
             <div class="u-show-info" @click="showInfo = !showInfo" v-if="!drawerMode">
                 <span>{{ showInfo ? "鏀惰捣" : "鏌ョ湅" }}鐗╁搧淇℃伅</span>
-                <i class="el-icon-arrow-down" v-if="!showInfo"></i>
-                <i class="el-icon-arrow-up" v-else></i>
+                <LegacyIcon class="el-icon-arrow-down" v-if="!showInfo" />
+                <LegacyIcon class="el-icon-arrow-up" v-else />
             </div>
 
             <fold-card class="m-price" :fixed="true" v-loading="priceLoading">
@@ -72,7 +72,7 @@
                     <div class="m-price-head">
                         <span>鍖烘湇浠锋牸</span>
                         <span class="u-server-select" @click="onServerSelect">
-                            {{ server }} <i class="el-icon-refresh"></i>
+                            {{ server }} <LegacyIcon class="el-icon-refresh" />
                         </span>
                     </div>
                 </template>

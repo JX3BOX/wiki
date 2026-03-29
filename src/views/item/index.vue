@@ -56,7 +56,7 @@
                     </div>
                     <template #reference>
                         <el-button class="u-search-more" type="primary" plain>
-                            <i class="el-icon-more"></i>
+                            <LegacyIcon class="el-icon-more" />
                         </el-button>
                     </template>
                 </el-popover>

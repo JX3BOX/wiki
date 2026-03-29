@@ -18,7 +18,7 @@
                 </template>
                 <template v-if="!isRobot" #head-actions>
                     <a class="el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
-                        <i class="el-icon-edit"></i>
+                        <LegacyIcon class="el-icon-edit" />
                         <span>完善百科通识</span>
                     </a>
                 </template>
@@ -34,7 +34,7 @@
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
                         <template #head-title>
-                            <i class="el-icon-coin"></i>
+                            <LegacyIcon class="el-icon-coin" />
                             <span class="u-txt">参与打赏</span>
                         </template>
                         <template #body>
@@ -58,7 +58,7 @@
 
                 <WikiPanel v-if="id" class="m-knowledge-panel">
                     <template #head-title>
-                        <i class="el-icon-chat-line-round"></i>
+                        <LegacyIcon class="el-icon-chat-line-round" />
                         <span class="u-title">讨论</span>
                     </template>
                     <template #body>
@@ -70,7 +70,7 @@
 
         <div v-else class="m-wiki-null" :class="isRobot ? 'is-robot-empty' : ''">
             <template v-if="!isRobot">
-                <i class="el-icon-s-opportunity"></i>
+                <LegacyIcon class="el-icon-s-opportunity" />
                 <span>暂无内容，我要</span>
                 <a class="s-link" :href="publishLink(`knowledge/${id}`)">完善百科通识</a>
             </template>
@@ -434,7 +434,7 @@ export default {
         .flex;
         align-items: center;
     }
-    .el-icon-chat-line-round {
+    [data-legacy-icon="el-icon-chat-line-round"] {
         width: 28px;
         height: 28px;
         line-height: 28px;

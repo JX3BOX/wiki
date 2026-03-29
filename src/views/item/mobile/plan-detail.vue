@@ -4,7 +4,7 @@
             <div class="m-section" v-for="(group, index) in plan.relation" :key="index">
                 <div class="m-section-title">
                     {{ group.title || `分组${index + 1}` }}
-                    <i class="u-edit-title el-icon-edit" v-if="group.editing" @click="onEditGroupTitle(group)"></i>
+                    <LegacyIcon class="u-edit-title el-icon-edit" v-if="group.editing" @click="onEditGroupTitle(group)" />
                     <div
                         class="u-edit"
                         @click="$set(group, 'editing', !group.editing)"
@@ -27,7 +27,7 @@
             </div>
             <div class="m-add-group" @click="onAddGroup">
                 新增分组
-                <i class="el-icon-plus"></i>
+                <LegacyIcon class="el-icon-plus" />
             </div>
         </div>
 

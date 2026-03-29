@@ -1,6 +1,6 @@
 <template>
     <router-link :to="{ name: 'waiting' }">
-        <i class="el-icon-edit-outline"></i>
+        <LegacyIcon class="el-icon-edit-outline" />
         <span>待攻略{{ name }}</span>
         <span v-if="showCounter" class="u-waiting" :style="waitingColorStyle()">（{{ solveRate.toFixed(2) }}%）</span>
     </router-link>

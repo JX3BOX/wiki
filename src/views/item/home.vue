@@ -2,7 +2,7 @@
     <div class="m-home-view">
         <WikiPanel :border-none="true">
             <template #head-title>
-                <i class="el-icon-location-information"></i>
+                <LegacyIcon class="el-icon-location-information" />
                 <span>便捷入口</span>
             </template>
             <template #head-actions>
@@ -12,7 +12,7 @@
                 <ul class="m-qlinks">
                     <li class="qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/18151/">
-                            <i class="el-icon-trophy"></i>
+                            <LegacyIcon class="el-icon-trophy" />
                             <span>游戏内看百科</span>
                         </a>
                     </li>
@@ -28,25 +28,25 @@
                                 },
                             }"
                         >
-                            <i class="el-icon-sugar"></i>
+                            <LegacyIcon class="el-icon-sugar" />
                             <span>五行石合成</span>
                         </router-link>
                     </li>
                     <li class="qlink">
                         <a target="_blank" href="/pvg/manufacture">
-                            <i class="el-icon-grape"></i>
+                            <LegacyIcon class="el-icon-grape" />
                             <span>技艺助手</span>
                         </a>
                     </li>
                     <li class="qlink">
                         <a target="_blank" href="/pvg/price">
-                            <i class="el-icon-watermelon"></i>
+                            <LegacyIcon class="el-icon-watermelon" />
                             <span>价格走势</span>
                         </a>
                     </li>
                     <li class="qlink">
                         <a href="/item/plan_list">
-                            <i class="el-icon-cherry"></i>
+                            <LegacyIcon class="el-icon-cherry" />
                             <span>物品清单</span>
                         </a>
                     </li>
@@ -56,7 +56,7 @@
 
         <WikiPanel :border-none="true">
             <template #head-title>
-                <i class="el-icon-notebook-1"></i>
+                <LegacyIcon class="el-icon-notebook-1" />
                 <span>最新物品</span>
             </template>
             <!-- <template slot="head-actions">
@@ -100,7 +100,7 @@
 
         <WikiPanel :border-none="true">
             <template #head-title>
-                <i class="el-icon-notebook-1"></i>
+                <LegacyIcon class="el-icon-notebook-1" />
                 <span>最热物品</span>
             </template>
             <!-- <template slot="head-actions">
@@ -144,7 +144,7 @@
 
         <WikiPanel :border-none="true">
             <template #head-title>
-                <i class="el-icon-collection"></i>
+                <LegacyIcon class="el-icon-collection" />
                 <span>最新攻略</span>
             </template>
             <template #body>

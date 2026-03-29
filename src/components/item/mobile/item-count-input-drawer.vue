@@ -19,9 +19,9 @@
                         <div class="m-user-select__title">修改数量</div>
                         <ItemCardVue :item-id="item_id" :data="item"></ItemCardVue>
                         <div class="m-count-edit">
-                            <i class="el-icon-minus" @click="current_count--"></i>
+                            <LegacyIcon class="el-icon-minus" @click="current_count--" />
                             <el-input v-model.number="current_count"></el-input>
-                            <i class="el-icon-plus" @click="current_count++"></i>
+                            <LegacyIcon class="el-icon-plus" @click="current_count++" />
                         </div>
                     </div>
                     <div class="m-op">

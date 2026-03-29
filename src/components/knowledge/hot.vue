@@ -2,7 +2,7 @@
 	<div class="m-knowledge-panel">
 		<div class="m-title">
 			<span class="u-title-left">
-				<i :class="icon"></i><span> {{ title }}</span>
+				<LegacyIcon :name="icon" /><span> {{ title }}</span>
 			</span>
 			<router-link v-if="link" class="u-title-right" to="link">查看更多 &raquo;</router-link>
 		</div>

@@ -167,13 +167,19 @@ export default {
 
 .m-cj-search {
     .m-search .el-input-group__prepend {
-        // border: none;
+        border: none;
+        box-shadow: none;
         padding: 0;
         .el-cascader {
             width: 140px;
             line-height: 38px;
+            .el-input__wrapper {
+                box-shadow: none;
+                background-color: #f5f7fa;
+                height: 38px;
+                line-height: 38px;
+            }
         }
-
         .el-cascader .el-input__inner {
             border: none;
             height: 38px;

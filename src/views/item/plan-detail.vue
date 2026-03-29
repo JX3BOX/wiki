@@ -2,22 +2,22 @@
     <div class="v-plan-view" v-loading="loading">
         <!-- 返回 & 收藏 -->
         <!-- <div class="m-plan-navigation">
-			<el-button class="u-goback" size="medium" icon="el-icon-arrow-left" @click="goBack" plain>返回列表</el-button>
+			<el-button class="u-goback" size="medium" icon="ArrowLeft" @click="goBack" plain>返回列表</el-button>
 		</div> -->
         <!-- 内容展示 -->
         <WikiPanel class="m-plan-content" :wiki-post="plan" :showQR="false">
             <!-- 头部标题 -->
             <template #head-title>
-                <i class="el-icon-tickets"></i>
+                <LegacyIcon class="el-icon-tickets" />
                 <span class="u-plan-title"> {{ plan.title }} </span>
             </template>
             <!-- 编辑 & 删除 & 收藏 -->
             <template #head-actions>
                 <template v-if="isAuthor || isEditor">
-                    <el-button type="primary" icon="el-icon-edit" size="small" plain @click="editPlan(plan.id)"
+                    <el-button type="primary" icon="Edit" size="small" plain @click="editPlan(plan.id)"
                         >编辑</el-button
                     >
-                    <el-button type="info" icon="el-icon-delete" size="small" plain @click="deletePlan(plan.id)"
+                    <el-button type="info" icon="Delete" size="small" plain @click="deletePlan(plan.id)"
                         >删除</el-button
                     >
                 </template>
@@ -41,7 +41,7 @@
                             getUserInfo(plan, "display_name") || "匿名"
                         }}</a>
                         <span class="u-time"
-                            >最后更新于 <i class="el-icon-time"></i>{{ date_format(plan.updated) }}</span
+                            >最后更新于 <LegacyIcon class="el-icon-time" />{{ date_format(plan.updated) }}</span
                         >
                     </span>
                 </div>

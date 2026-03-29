@@ -3,19 +3,19 @@
         <!--近30日价格-->
         <el-row class="m-today" v-if="currentPrice">
             <el-col :span="8">
-                <div class="u-label"><i class="el-icon-right u-avg"></i> 近30日均价</div>
+                <div class="u-label"><LegacyIcon class="el-icon-right u-avg" /> 近30日均价</div>
                 <div class="u-value u-avg">
                     <GamePrice :price="currentPrice.avg" />
                 </div>
             </el-col>
             <el-col :span="8">
-                <div class="u-label"><i class="el-icon-bottom u-min"></i> 近30日最低价</div>
+                <div class="u-label"><LegacyIcon class="el-icon-bottom u-min" /> 近30日最低价</div>
                 <div class="u-value u-min">
                     <GamePrice :price="currentPrice.lower" />
                 </div>
             </el-col>
             <el-col :span="8">
-                <div class="u-label"><i class="el-icon-top u-max"></i> 近30日最高价</div>
+                <div class="u-label"><LegacyIcon class="el-icon-top u-max" /> 近30日最高价</div>
                 <div class="u-value u-max">
                     <GamePrice :price="currentPrice.higher" />
                 </div>

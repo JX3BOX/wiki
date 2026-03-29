@@ -42,7 +42,7 @@
 
         <div class="u-actions" @click.stop>
             <el-tooltip content="在左侧选择角色后可以标记任务完成情况" placement="top" v-if="!role">
-                <i class="el-icon-info"></i>
+                <LegacyIcon class="el-icon-info" />
             </el-tooltip>
             <el-button
                 size="small"
@@ -51,7 +51,7 @@
                 @click.stop="onQuestComplete"
                 :loading="loading"
                 :disabled="!role"
-                icon="el-icon-check"
+                icon="Check"
             >
                 标记为已完成
             </el-button>
@@ -63,7 +63,7 @@
                 @click.stop="onQuestCancel"
                 :loading="loading"
                 :disabled="!role"
-                icon="el-icon-close"
+                icon="Close"
             >
                 标记为未完成
             </el-button>

@@ -1,16 +1,16 @@
 <template>
 	<router-link v-if="data" class="m-knowledge-item" :to="{ name: 'view', params: { source_id: data.id } }">
 		<div class="u-name">
-			<span class="u-type"><i class="u-icon" :class="icons[data.type]"></i> {{ data.label }}</span>
+			<span class="u-type"><LegacyIcon class="u-icon" :name="icons[data.type]" /> {{ data.label }}</span>
 			<span class="u-title">{{ data.name }}</span>
 		</div>
 		<div class="u-tags" v-if="hasTag(data.post)">
-			<i class="el-icon-price-tag"></i>
+			<LegacyIcon class="el-icon-price-tag" />
 			<span v-for="item in formatTags(data.post.tags)" :key="item">{{ item }}</span>
 		</div>
-		<span class="u-remark" v-if="data.post"> <i class="el-icon-edit"></i>最后修订：{{ data.post.remark }}@{{ data.post.user_nickname }} </span>
+		<span class="u-remark" v-if="data.post"> <LegacyIcon class="el-icon-edit" />最后修订：{{ data.post.remark }}@{{ data.post.user_nickname }} </span>
 		<div class="u-updated" v-if="data.updated">
-			<i class="el-icon-refresh"></i>
+			<LegacyIcon class="el-icon-refresh" />
 			<span> 最后更新于{{ date_format(data.updated) }}</span>
 		</div>
 	</router-link>

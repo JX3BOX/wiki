@@ -5,7 +5,7 @@
             <div class="u-name">
                 <!-- 折叠侧栏按钮 -->
                 <!-- el-icon-s-fold -->
-                <i :class="!isFold ? 'el-icon-s-fold ' : 'el-icon-s-unfold'" @click="changeFold" />&nbsp;
+                <LegacyIcon :class="!isFold ? 'el-icon-s-fold ' : 'el-icon-s-unfold'" @click="changeFold"  />&nbsp;
             </div>
 
             <div class="u-select">
@@ -38,10 +38,10 @@
                 @click="setActiveIndex(item.sub)"
             >
                 <div class="u-zl-item_title">
-                    {{ item.name }}&nbsp;<i
+                    {{ item.name }}&nbsp;<LegacyIcon
                         :class="item.sub == activeIndex && activeShow ? 'el-icon-caret-top' : 'el-icon-caret-bottom'"
                         @click.stop="setActiveShow(item.sub)"
-                    ></i>
+                     />
                 </div>
                 <li
                     class="u-zl-item_children"
@@ -75,7 +75,7 @@
                         </el-dropdown>
                     </div>
                     <div class="u-table_label add" @click="addRole">
-                        <i class="el-icon-circle-plus-outline u-add-icon"></i>
+                        <LegacyIcon class="el-icon-circle-plus-outline u-add-icon" />
                     </div>
                 </div>
                 <div class="u-zl_cell" :style="'max-width:' + (contrastKith.length + 1) * 60 + 120 + 'px'">
@@ -87,7 +87,7 @@
                     <div class="u-zl-list" v-for="(item, index) in contrastKith" :key="index">
                         <div class="u-zl-list_item kith" v-for="(item2, index2) in item.achievements" :key="index2">
                             <div class="u-self-checked" :class="{ finish: item2.value != '-1' }">
-                                <i class="el-icon-check" />
+                                <LegacyIcon class="el-icon-check"  />
                             </div>
                         </div>
                     </div>

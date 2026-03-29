@@ -22,10 +22,10 @@
             :class="{ 'is-delete': showDelete, 'is-edit-count': showEditCount }"
         >
             <template v-if="showDelete">
-                <i class="u-icon el-icon-close"></i>
+                <LegacyIcon class="u-icon el-icon-close" />
             </template>
             <template v-else-if="showEditCount">
-                <i class="u-icon el-icon-edit"></i>
+                <LegacyIcon class="u-icon el-icon-edit" />
                 <span class="u-count">x{{ count }}</span>
             </template>
         </div>

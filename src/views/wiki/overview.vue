@@ -46,7 +46,7 @@
                     </el-dropdown>
 
                     <div v-if="viewAchievementsName" class="u-overview" @click="onSeeOverview">
-                        <i class="el-icon-back"></i>{{ showList ? "返回" : "返回总览" }}
+                        <LegacyIcon class="el-icon-back" />{{ showList ? "返回" : "返回总览" }}
                     </div>
                 </div>
 
@@ -125,7 +125,7 @@
         </div>
         <!-- 移动端查看总览位置 -->
         <!-- <div class="u-overview_mobile" :class="{ isScroll }" v-show="mobile" @click="onSeeOverview">
-            <i class="el-icon-back"></i>{{ showList ? "返回" : "返回总览" }}
+            <LegacyIcon class="el-icon-back" />{{ showList ? "返回" : "返回总览" }}
         </div> -->
         <div
             ref="overviewList"

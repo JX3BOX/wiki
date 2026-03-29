@@ -1,7 +1,7 @@
 <template>
     <WikiPanel class="c-wiki-comments" scene="detail">
         <template #head-title>
-            <i class="el-icon-chat-line-round"></i>
+            <LegacyIcon class="el-icon-chat-line-round" />
             <span>百科评论</span>
         </template>
         <template #body>
@@ -28,7 +28,7 @@
                 <!-- 回复表单 -->
                 <div id="m-reply-form" class="m-reply-form">
                     <h4 class="u-title">
-                        <i class="el-icon-chat-dot-round"></i>
+                        <LegacyIcon class="el-icon-chat-dot-round" />
                         <span>回复</span>
                     </h4>
                     <textarea class="u-reply-content" v-model="reply_form.content"></textarea>
@@ -37,7 +37,7 @@
                         <input v-model="reply_form.user_nickname" type="text" />
                     </div>
                     <el-button type="primary" class="u-submit" @click="create_comment(reply_form)">
-                        <i class="el-icon-check"></i>
+                        <LegacyIcon class="el-icon-check" />
                         <span>提交</span>
                     </el-button>
                 </div>

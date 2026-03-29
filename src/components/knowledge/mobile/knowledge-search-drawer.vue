@@ -22,13 +22,13 @@
                         <div class="m-title">分类</div>
                         <div class="u-menu" @click="openMenu('type')">
                             {{ currentMenuLabel || "全部" }}
-                            <i class="el-icon-arrow-right"></i>
+                            <LegacyIcon class="el-icon-arrow-right" />
                         </div>
                     </template>
 
                     <template v-if="showMode == 'type'">
                         <div class="m-header">
-                            <i class="el-icon-arrow-left" @click="showMode = ''"></i>
+                            <LegacyIcon class="el-icon-arrow-left" @click="showMode = ''" />
                             <span class="m-title-center">选择分类</span>
                         </div>
                         <div class="m-options-list">
@@ -163,7 +163,7 @@ export default {
         align-items: center;
         margin-bottom: 10px;
         color: rgba(255, 255, 255, 0.8);
-        .el-icon-arrow-left {
+        [data-legacy-icon="el-icon-arrow-left"] {
             font-size: 20px;
             padding: 10px;
             margin-left: -10px;

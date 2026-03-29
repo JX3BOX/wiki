@@ -3,7 +3,7 @@
         <div class="m-price-title">
             <div class="u-title">📈 价格波动</div>
             <div class="m-server">
-                <i class="el-icon-s-shop"></i> 服务器
+                <LegacyIcon class="el-icon-s-shop" /> 服务器
                 <el-select
                     class="u-server"
                     style="width: 120px"

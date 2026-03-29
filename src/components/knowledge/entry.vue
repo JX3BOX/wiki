@@ -1,12 +1,12 @@
 <template>
     <div class="m-knowledge-panel">
         <div class="m-title">
-            <span class="u-title-left"><i class="el-icon-location-information"></i><span> 便捷入口</span></span>
+            <span class="u-title-left"><LegacyIcon class="el-icon-location-information" /><span> 便捷入口</span></span>
             <!-- <a class="u-title-right" target="_blank" :href="feedback">反馈建议 &raquo;</a> -->
         </div>
         <div class="m-entry m-panel">
             <a class="u-entry" v-for="(item, index) in list" :key="index" :href="item.link" target="_blank">
-                <i :class="item.icon"></i>
+                <LegacyIcon :name="item.icon" />
                 <span>{{ item.name }}</span>
             </a>
         </div>

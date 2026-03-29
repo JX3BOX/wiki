@@ -6,8 +6,10 @@
 
         <div class="m-group">
             <h2 class="m-title">
-                <img class="u-icon" svg-inline src="@/assets/img/cj/puzzle.svg" />
-                <span class="u-text">各区服成就群</span>
+                <div class="u-title">
+                    <img class="u-icon" svg-inline src="@/assets/img/cj/puzzle.svg" />
+                    <span class="u-text">各区服成就群</span>
+                </div>
                 <a class="u-show-message" target="_blank" href="https://www.jx3box.com/tool/13659/">申请展示 »</a>
             </h2>
             <div class="m-group-content">
@@ -27,13 +29,9 @@
                     >
                         <div class="u-zones" v-for="zone in group.children" :key="zone.uuid">
                             <el-tag class="u-zone" size="small">{{ zone.label }}</el-tag>
-                            <span
-                                class="u-qq"
-                                v-for="qq in zone.children"
-                                :key="qq.uuid"
-                                @click="copy(qq.label)"
-                                >{{ qq.label }}</span
-                            >
+                            <span class="u-qq" v-for="qq in zone.children" :key="qq.uuid" @click="copy(qq.label)">{{
+                                qq.label
+                            }}</span>
                         </div>
                     </el-collapse-item>
                 </el-collapse>

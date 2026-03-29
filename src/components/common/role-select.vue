@@ -13,8 +13,8 @@
         >
             <template #prefix>
                 <span class="u-prefix">
-                角色
-                <slot name="tip"></slot>
+                    角色
+                    <slot name="tip"></slot>
                 </span>
             </template>
             <el-option v-if="isLogin" :value="virtualRole" :label="virtualRole.name + '<虚拟角色>'">
@@ -150,6 +150,11 @@ export default {
     .u-role-server {
         color: #999;
         .fz(12px);
+    }
+}
+.m-related-roles {
+    .el-select--small .el-select__wrapper {
+        padding: 2px 12px 2px 1px;
     }
 }
 </style>

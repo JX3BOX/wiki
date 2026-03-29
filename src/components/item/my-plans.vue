@@ -2,10 +2,12 @@
     <div class="m-plans-my">
         <div class="m-my-item-plans">
             <h3 class="c-sidebar-right-title">
-                <i class="u-icon u-icon-mycollection"><img svg-inline src="@/assets/img/plan.svg" /></i>
-                <span>我的清单</span>
-                <a class="fr el-button el-button--success el-button--mini" @click="onAddPlan" v-if="isLogin">
-                    <i class="el-icon-document-add"></i>
+                <span class="u-title">
+                    <i class="u-icon u-icon-mycollection"><img svg-inline src="@/assets/img/plan.svg" /></i>
+                    <span>我的清单</span>
+                </span>
+                <a class="fr el-button el-button--success el-button--small" @click="onAddPlan" v-if="isLogin">
+                    <LegacyIcon class="el-icon-document-add" />
                     <span>创建</span>
                 </a>
             </h3>
@@ -21,15 +23,15 @@
                         }"
                     >
                         <h5 class="u-title">
-                            <i class="el-icon-lock" v-if="!plan.public"></i>
+                            <LegacyIcon class="el-icon-lock" v-if="!plan.public" />
                             <span>{{ plan.title }}</span>
                         </h5>
                         <!-- <div class="u-misc">
                             <div class="u-delete" @click.stop="delete_plan($event, plan.id)">
-                                <i class="el-icon-delete " title="删除"></i>
+                                <LegacyIcon class="el-icon-delete " title="删除" />
                             </div>
                             <div class="u-edit" @click.stop="edit_plan($event, plan.id)">
-                                <i class="el-icon-edit " title="编辑"></i>
+                                <LegacyIcon class="el-icon-edit " title="编辑" />
                             </div>
                             <span class="u-updated">编辑于{{ date_format(plan.updated) }}</span>
                         </div> -->
@@ -46,10 +48,10 @@
                         v-model:current-page="page"
                     ></el-pagination>
                 </template>
-                <div v-else class="u-tip"><i class="el-icon-warning-outline"></i> 暂无物品清单记录</div>
+                <div v-else class="u-tip"><LegacyIcon class="el-icon-warning-outline" /> 暂无物品清单记录</div>
             </template>
             <template v-else
-                ><div class="u-tip"><i class="el-icon-warning-outline"></i> 请先进行登录</div></template
+                ><div class="u-tip"><LegacyIcon class="el-icon-warning-outline" /> 请先进行登录</div></template
             >
         </div>
     </div>
@@ -92,9 +94,9 @@ export default {
         },
     },
     mounted() {
-        bus.on('plan_list_refresh', () => {
+        bus.on("plan_list_refresh", () => {
             this.loadData();
-        })
+        });
     },
     methods: {
         date_format,
@@ -125,7 +127,7 @@ export default {
                             public: 1,
                             relation: [],
                             description: "",
-                        }
+                        };
                         addMyPlan(data).then((res) => {
                             this.$message({
                                 message: "创建成功",
@@ -139,8 +141,8 @@ export default {
                         });
                     }
                 },
-            })
-        }
+            });
+        },
     },
 };
 </script>

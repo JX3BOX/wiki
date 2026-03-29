@@ -27,7 +27,7 @@
 
             <!-- Empty State -->
             <div class="m-empty" v-if="!loading && !post">
-                <i class="el-icon-warning-outline"></i>
+                <LegacyIcon class="el-icon-warning-outline" />
                 <span>暂无相关内容</span>
             </div>
 
@@ -52,7 +52,7 @@
             <template #default>
                 <div class="m-more-action">
                     <span v-loading="favLoading" class="u-action" @click="toggleFav">
-                        <i :class="isFav ? 'el-icon-star-on' : 'el-icon-star-off'"></i>
+                        <LegacyIcon :class="isFav ? 'el-icon-star-on' : 'el-icon-star-off'" />
                         {{ isFav ? "取消收藏" : "收藏页面" }}
                     </span>
                 </div>

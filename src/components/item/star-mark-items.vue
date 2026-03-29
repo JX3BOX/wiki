@@ -2,7 +2,7 @@
     <WikiPanel :border-none="true" class="m-search-hottest m-price-header">
         <template #head-title>
             <div class="u-title">
-                <i class="el-icon-shopping-bag-1"></i>
+                <LegacyIcon class="el-icon-shopping-bag-1" />
                 <span>交易走势</span>
             </div>
             <el-select v-model="server" class="u-server" placeholder="请选择服务器" size="small">
@@ -18,7 +18,7 @@
                 @keyup.enter="goItemPage"
             >
                 <template #append>
-                    <el-button icon="el-icon-search" @click="goItemPage"></el-button>
+                    <el-button icon="Search" @click="goItemPage"></el-button>
                 </template>
             </el-input>
         </template>

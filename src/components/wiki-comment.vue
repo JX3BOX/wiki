@@ -20,11 +20,11 @@
                         ></a>
                     </template>
                     <span class="u-mark u-top" v-if="comment.is_top">
-                        <i class="el-icon-download"></i>
+                        <LegacyIcon class="el-icon-download" />
                         置顶
                     </span>
                     <span class="u-mark u-star" v-if="comment.is_star">
-                        <i class="el-icon-star-on"></i>
+                        <LegacyIcon class="el-icon-star-on" />
                         精华
                     </span>
                 </div>
@@ -57,7 +57,7 @@
                         class="u-reply"
                         @click="comment.reply_form.show = !comment.reply_form.show"
                     >
-                        <i class="el-icon-arrow-up"></i>
+                        <LegacyIcon class="el-icon-arrow-up" />
                         <span>收起</span>
                     </el-button>
                     <el-button
@@ -67,12 +67,12 @@
                         class="u-reply"
                         @click="comment.reply_form.show = !comment.reply_form.show"
                     >
-                        <i v-if="!isWujie" class="el-icon-chat-dot-round"></i>
+                        <LegacyIcon v-if="!isWujie" class="el-icon-chat-dot-round" />
                         <span>回复</span>
                     </el-button>
                     <template v-if="isEditor && !comment.parent_id">
-                        <el-button type="primary" class="u-reply" @click="onStar(comment)" plain :icon="comment.is_star ? 'el-icon-star-on' : 'el-icon-star-off'">{{ comment.is_star ? '取消加精' : '加精' }}</el-button>
-                        <el-button type="primary" class="u-reply" @click="onTop(comment)" plain icon="el-icon-top">{{ comment.is_top ? '取消置顶' : '置顶' }}</el-button>
+                        <el-button type="primary" class="u-reply" @click="onStar(comment)" plain :icon="comment.is_star ? 'StarFilled' : 'Star'">{{ comment.is_star ? '取消加精' : '加精' }}</el-button>
+                        <el-button type="primary" class="u-reply" @click="onTop(comment)" plain icon="Top">{{ comment.is_top ? '取消置顶' : '置顶' }}</el-button>
                     </template>
                     <!-- 更新时间 -->
                     <span v-if="!isWujie" class="u-time" v-text="ts2str(comment.updated)"></span>
@@ -85,7 +85,7 @@
                         <input v-model="comment.reply_form.user_nickname" type="text" />
                     </div>
                     <el-button type="primary" class="u-submit" @click="create_comment(comment.reply_form, comment.id)">
-                        <i class="el-icon-check"></i>
+                        <LegacyIcon class="el-icon-check" />
                         <span>提交</span>
                     </el-button>
                 </div>

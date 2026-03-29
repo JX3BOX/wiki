@@ -5,7 +5,7 @@
 				<el-table-column prop="title" label="清单名称">
 					<template #default="scope">
 						<div class="u-title">
-                            <i class="el-icon-tickets"></i>
+                            <LegacyIcon class="el-icon-tickets" />
                             {{ scope.row.title }}
                             </div>
 					</template>

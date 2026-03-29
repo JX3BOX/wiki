@@ -14,7 +14,7 @@
             </CommonNav>
         </template>
         <div class="m-search-wrap">
-            <Search :placeholder="placeholder" @search="search">
+            <Search class="m-quest-search" :placeholder="placeholder" @search="search">
                 <div>
                     <el-tooltip content="查看任务链需要键入完整任务名或任务ID哦" placement="top">
                         <el-checkbox v-model="chain">查看任务链</el-checkbox>
@@ -22,12 +22,12 @@
                     <el-tooltip class="u-tips" effect="dark" placement="bottom">
                         <template #content>
                             <div>
-                            <span>※ 支持任务名称精确或模糊搜索</span> <br />
-                            <span>※ 支持任务相关物品名称精确搜索</span> <br />
-                            <span>※ 支持成就名称精确搜索</span> <br />
+                                <span>※ 支持任务名称精确或模糊搜索</span> <br />
+                                <span>※ 支持任务相关物品名称精确搜索</span> <br />
+                                <span>※ 支持成就名称精确搜索</span> <br />
                             </div>
                         </template>
-                        <el-button link icon="el-icon-question"></el-button>
+                        <el-icon><QuestionFilled /></el-icon>
                     </el-tooltip>
                 </div>
             </Search>
@@ -46,7 +46,7 @@
                         <span class="u-player-name">{{ playerName }}</span
                         >|
                         <span class="u-player-body">{{ playerBody }}</span>
-                        <el-button link icon="el-icon-setting"></el-button>
+                        <el-icon><Setting></Setting></el-icon>
                     </div>
                 </template>
             </el-popover>
@@ -100,6 +100,25 @@ export default {
     width: 100%;
     align-items: center;
 
+    .m-search .el-input-group__prepend {
+        background-color: #f5f7fa;
+        padding: 0 12px;
+        border-right: 1px solid #dcdfe6;
+        .el-checkbox {
+            font-size: 13px;
+            white-space: nowrap;
+        }
+    }
+    .m-quest-search {
+        .el-input-group__prepend {
+            padding: 4px 20px 0;
+            box-sizing: border-box;
+            .el-icon {
+                margin-left: 4px;
+            }
+        }
+    }
+
     @media screen and (min-width: 768px) {
         .el-input-group__append {
             .u-input-button__small {
@@ -124,7 +143,7 @@ export default {
         padding: 0 12px 10px 12px;
         align-items: center;
         .fz(14px, 1.5);
-        .el-button {
+        .el-icon {
             .ml(2px);
         }
     }

@@ -1,7 +1,7 @@
 <template>
     <div class="m-knowledge-panel">
         <div class="m-title m-recent-title">
-            <span class="u-title-left"><i class="el-icon-time"></i><span> 最新更新</span></span>
+            <span class="u-title-left"><LegacyIcon class="el-icon-time" /><span> 最新更新</span></span>
         </div>
         <div class="m-recent m-panel">
             <div class="m-post" v-for="(post, key) in list" :key="key">

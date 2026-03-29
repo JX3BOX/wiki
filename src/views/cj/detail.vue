@@ -16,14 +16,14 @@
                 </template>
                 <template v-if="!isRobot" #head-actions>
                     <a class="el-button el-button--primary" :href="publish_url(`achievement/${id}`)">
-                        <i class="el-icon-edit"></i>
+                        <LegacyIcon class="el-icon-edit" />
                         <span>完善成就攻略</span>
                     </a>
                 </template>
                 <template #body>
                     <!-- <Notice></Notice> -->
                     <div class="m-wiki-compatible" v-if="compatible">
-                        <i class="el-icon-warning-outline"></i> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
+                        <LegacyIcon class="el-icon-warning-outline" /> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
                             class="s-link"
                             :href="publish_url(`achievement/${id}`)"
                             >参与修订</a
@@ -31,7 +31,7 @@
                     </div>
                     <Article id="wikiArticle" :content="wiki_post.post.content" />
                     <div class="m-wiki-signature">
-                        <i class="el-icon-edit"></i>
+                        <LegacyIcon class="el-icon-edit" />
                         本次修订由 <b>{{ user_name }}</b> 提交于{{ updated_at }}
                     </div>
                 </template>
@@ -47,7 +47,7 @@
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
                         <template #head-title>
-                            <i class="el-icon-coin"></i>
+                            <LegacyIcon class="el-icon-coin" />
                             <span class="u-txt">参与打赏</span>
                         </template>
                         <template #body>
@@ -76,7 +76,7 @@
         </div>
         <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-empty' : ''" v-if="is_empty">
             <template v-if="!isRobot">
-                <i class="el-icon-s-opportunity"></i>
+                <LegacyIcon class="el-icon-s-opportunity" />
                 <span>暂无攻略，我要</span>
                 <a class="s-link" :href="publish_url(`achievement/${id}`)">完善攻略</a>
             </template>

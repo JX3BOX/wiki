@@ -4,7 +4,7 @@
             <div class="u-label-box">
                 <div class="u-label">渡劫方案</div>
                 <div class="u-btn-created" v-show="list.length > 0" @click="showForm = true">
-                    <i class="el-icon-circle-plus-outline u-add-icon"></i>定制方案
+                    <LegacyIcon class="el-icon-circle-plus-outline u-add-icon" />定制方案
                 </div>
             </div>
 
@@ -102,7 +102,7 @@
                             <div style="text-align: right">
                                 <el-button
                                     type="danger"
-                                    icon="el-icon-delete"
+                                    icon="Delete"
                                     size="small"
                                     round
                                     @click="deleteItem(scope.row)"
@@ -126,7 +126,7 @@
             </div>
             <!-- 定制按钮 -->
             <div class="u-btn" @click="showForm = true" v-show="list.length == 0">
-                <i class="el-icon-circle-plus-outline u-add-icon"></i>
+                <LegacyIcon class="el-icon-circle-plus-outline u-add-icon" />
                 <div>定制方案</div>
             </div>
         </div>

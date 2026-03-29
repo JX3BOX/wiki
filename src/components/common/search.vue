@@ -1,7 +1,7 @@
 <template>
     <div class="m-search-bar m-cj-search" :class="$route.name == 'view' ? 'can-return' : ''">
         <div class="m-return">
-            <el-button class="u-return-btn" @click="returnHandle"><i class="el-icon-arrow-left"></i>返回</el-button>
+            <el-button class="u-return-btn" @click="returnHandle"><LegacyIcon class="el-icon-arrow-left" />返回</el-button>
         </div>
         <div class="m-search">
             <el-input
@@ -10,13 +10,14 @@
                 @keydown.enter="searchHandle"
                 :placeholder="placeholder"
                 clearable
+                size="large"
             >
                 <template #prepend>
-                    <slot><i class="el-icon-search"></i> <span class="u-text">关键词</span></slot>
+                    <slot><LegacyIcon class="el-icon-search" /> <span class="u-text">关键词</span></slot>
                 </template>
                 <template #append>
                     <el-button class="u-search-btn" type="primary" plain @click="searchHandle"
-                    ><i class="el-icon-position"></i> <span class="u-text">搜索</span></el-button
+                        ><LegacyIcon class="el-icon-position" /> <span class="u-text">搜索</span></el-button
                     >
                 </template>
             </el-input>

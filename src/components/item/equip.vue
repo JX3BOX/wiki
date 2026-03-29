@@ -13,7 +13,7 @@
 				<span class="u-author-name">{{ username }}</span>
 			</a>
 			<div class="u-time">
-				<i class="el-icon-date"></i>
+				<LegacyIcon class="el-icon-date" />
 				{{ showTime(plan.updated * 1000) }}
 			</div>
 			<div class="u-qrcodebox">

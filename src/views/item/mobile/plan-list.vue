@@ -16,7 +16,7 @@
             <div class="m-plan-list" v-if="planList.length">
                 <div class="m-plan-item" v-for="item in planList" :key="item.id" @click="toViewPlan(item.id)">
                     <span class="u-title">{{ item.title }}</span>
-                    <i class="el-icon-arrow-right"></i>
+                    <LegacyIcon class="el-icon-arrow-right" />
                 </div>
             </div>
         </div>

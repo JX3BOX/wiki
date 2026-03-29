@@ -99,6 +99,8 @@ export default {
         margin: 0;
         padding: 0 0 5px 0;
         border-bottom: 1px solid #ebeef5;
+        .flex;
+        align-items: center;
     }
 
     .u-icon {
@@ -118,11 +120,11 @@ export default {
         padding-right: 5px;
         .scrollbar();
 
-        li{
+        li {
             border-bottom: 1px dotted #eee;
         }
-        a:hover .u-name{
-            color:@color-link;
+        a:hover .u-name {
+            color: @color-link;
         }
     }
 

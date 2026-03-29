@@ -23,7 +23,7 @@
                             ></el-cascader
                         ></slot>
                     </template>
-                    <el-button slot="append" icon="el-icon-search" class="u-btn" @click="searchHandle"></el-button>
+                    <el-button slot="append" icon="Search" class="u-btn" @click="searchHandle"></el-button>
                 </el-input>
             </div>
             <div class="u-radio">
@@ -61,12 +61,12 @@
                     @click="setActiveIndex(item.sub)"
                 >
                     <div class="u-zl-item_title">
-                        {{ item.name }}&nbsp;<i
+                        {{ item.name }}&nbsp;<LegacyIcon
                             :class="
                                 item.sub == activeIndex && activeShow ? 'el-icon-caret-top' : 'el-icon-caret-bottom'
                             "
                             @click.stop="setActiveShow(item.sub)"
-                        ></i>
+                         />
                     </div>
                     <li
                         class="u-zl-item_children"
@@ -89,7 +89,7 @@
                             <div class="u-name" :title="item.name + '·' + item.server">
                                 {{ item.name }}·{{ item.server }}
                             </div>
-                            <i class="el-icon-circle-close" @click="delRole(item, index)"></i>
+                            <LegacyIcon class="el-icon-circle-close" @click="delRole(item, index)" />
                         </div>
                     </div>
                     <!-- 总资历模块 -->
@@ -122,14 +122,14 @@
                         <div class="u-zl-list" v-for="(item, index) in contrastKith" :key="index">
                             <div class="u-zl-list_item kith" v-for="(item2, index2) in item.achievements" :key="index2">
                                 <div class="u-self-checked" :class="{ finish: item2.value != '-1' }">
-                                    <i class="el-icon-check" />
+                                    <LegacyIcon class="el-icon-check"  />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="u-zl-add_item" @click="addRole">
-                    <i class="el-icon-circle-plus-outline u-add-icon"></i>
+                    <LegacyIcon class="el-icon-circle-plus-outline u-add-icon" />
                     <div>添加角色</div>
                 </div>
             </div>
@@ -171,7 +171,7 @@
                 </el-form-item>
             </el-form>
             <div class="u-tips">
-                <div><i class="el-icon-info"></i>&nbsp;提示</div>
+                <div><LegacyIcon class="el-icon-info" />&nbsp;提示</div>
                 1. 添加亲友角色后，可对比亲友角色与自身角色的成就进度。<br />
                 2. 去<a href="https://www.jx3box.com/dashboard/privacy?tab=whitelist" target="_blank">添加亲友</a>
             </div>

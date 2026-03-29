@@ -2,7 +2,7 @@
     <div class="m-home-view">
         <WikiPanel :border-none="true" class="u-qlinks-box">
             <template #head-title>
-                <i class="el-icon-location-information"></i>
+                <LegacyIcon class="el-icon-location-information" />
                 <span>便捷入口</span>
             </template>
             <!-- <template slot="head-actions">
@@ -12,7 +12,7 @@
                 <ul class="u-qlinks">
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/9126/">
-                            <i class="el-icon-trophy"></i>
+                            <LegacyIcon class="el-icon-trophy" />
                             <span>游戏内看百科</span>
                         </a>
                     </li>
@@ -21,43 +21,43 @@
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/achievement/overview" style="background-color: #f7b044">
-                            <i class="el-icon-notebook-1"></i>
+                            <LegacyIcon class="el-icon-notebook-1" />
                             <span>资历宝典</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" :href="hiddenAchievementsPostLink" style="background-color: #f7b044">
-                            <i class="el-icon-medal"></i>
+                            <LegacyIcon class="el-icon-medal" />
                             <span>隐藏成就</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/adventure">
-                            <i class="el-icon-ice-drink"></i>
+                            <LegacyIcon class="el-icon-ice-drink" />
                             <span>奇遇大全</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/pet">
-                            <i class="el-icon-grape"></i>
+                            <LegacyIcon class="el-icon-grape" />
                             <span>宠物大全</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/horse">
-                            <i class="el-icon-watermelon"></i>
+                            <LegacyIcon class="el-icon-watermelon" />
                             <span>坐骑大全</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/furniture">
-                            <i class="el-icon-cherry"></i>
+                            <LegacyIcon class="el-icon-cherry" />
                             <span>家具大全</span>
                         </a>
                     </li>
                     <!-- <li class="u-qlink">
                         <a target="_blank" href="/book">
-                            <i class="el-icon-orange"></i>
+                            <LegacyIcon class="el-icon-orange" />
                             <span>书籍大全</span>
                         </a>
                     </li> -->
@@ -67,7 +67,7 @@
 
         <WikiPanel :border-none="true">
             <template #head-title>
-                <i class="el-icon-notebook-1"></i>
+                <LegacyIcon class="el-icon-notebook-1" />
                 <span>热门成就</span>
             </template>
             <template #body>
@@ -98,19 +98,19 @@
                                             </div>
                                             <div class="m-carousel-content">
                                                 <span class="u-title">
-                                                    <i class="el-icon-medal"></i>
+                                                    <LegacyIcon class="el-icon-medal" />
                                                     <span v-text="` ${item.Name}`"></span>
                                                 </span>
                                                 <span class="u-desc">
-                                                    <i class="el-icon-mic"></i>
+                                                    <LegacyIcon class="el-icon-mic" />
                                                     <span v-html="` ${item.Desc}`"></span>
                                                 </span>
                                                 <span class="u-rank" v-if="views[item.ID]">
-                                                    <i class="el-icon-watermelon"></i>
+                                                    <LegacyIcon class="el-icon-watermelon" />
                                                     <span v-text="`昨日 - ${views[item.ID]['yesterday']}`"></span>
-                                                    <i class="el-icon-grape"></i>
+                                                    <LegacyIcon class="el-icon-grape" />
                                                     <span v-text="`七天 - ${views[item.ID]['7days']}`"></span>
-                                                    <i class="el-icon-pear"></i>
+                                                    <LegacyIcon class="el-icon-pear" />
                                                     <span v-text="`三十天 - ${views[item.ID]['30days']}`"></span>
                                                 </span>
                                             </div>
@@ -126,7 +126,7 @@
 
         <WikiPanel :border-none="true">
             <template #head-title>
-                <i class="el-icon-notebook-2"></i>
+                <LegacyIcon class="el-icon-notebook-2" />
                 <span>最新成就</span>
             </template>
             <template #head-actions>

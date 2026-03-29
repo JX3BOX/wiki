@@ -1,12 +1,12 @@
 <template>
     <div class="m-knowledge-panel">
         <div class="m-title">
-            <span class="u-title-left"> <i class="el-icon-postcard"></i><span> 术语大全</span> </span>
+            <span class="u-title-left"> <LegacyIcon class="el-icon-postcard" /><span> 术语大全</span> </span>
             <router-link class="u-more" to="/type/jargon">查看更多 &raquo;</router-link>
         </div>
         <div class="m-panel m-jargon">
             <div v-for="(item, index) in list" :key="index" class="u-jargon">
-                <i class="el-icon-collection-tag"></i>
+                <LegacyIcon class="el-icon-collection-tag" />
                 <router-link class="u-name" :to="{ name: 'view', params: { source_id: item.id } }">{{
                     item.name
                 }}</router-link>

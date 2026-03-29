@@ -15,7 +15,7 @@
             </div>
             <router-link :to="{name: 'plan_list'}" class="m-to-plan">
                 <span>查看物品清单</span>
-                <i class="el-icon-arrow-right"></i>
+                <LegacyIcon class="el-icon-arrow-right" />
             </router-link>
             <div class="m-section m-fav-section" v-if="!isSearchMode && favItemList.length">
                 <div class="m-section-title">

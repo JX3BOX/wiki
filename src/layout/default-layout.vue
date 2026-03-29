@@ -22,20 +22,20 @@
                 <div class="m-wiki-admin-drop" v-if="showAdmin">
                     <el-dropdown trigger="click" @command="handleCommand">
                         <el-button type="primary" class="c-admin-button c-admin-drop__button"
-                            ><i class="el-icon-setting"></i> 管理<i class="el-icon-arrow-down el-icon--right"></i>
+                            ><LegacyIcon class="el-icon-setting" /> 管理<LegacyIcon class="el-icon-arrow-down el-icon--right" />
                         </el-button>
                         <template #dropdown>
                             <el-dropdown-menu>
-                            <el-dropdown-item
-                                icon="el-icon-upload"
-                                command="designTask"
-                                v-if="hasPermission('push_banner')"
-                            >
-                                <span>推送</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item icon="el-icon-refresh" command="pictureTask">
-                                <span>刷图</span>
-                            </el-dropdown-item>
+                                <el-dropdown-item
+                                    icon="Upload"
+                                    command="designTask"
+                                    v-if="hasPermission('push_banner')"
+                                >
+                                    <span>推送</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item icon="Refresh" command="pictureTask">
+                                    <span>刷图</span>
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
@@ -54,7 +54,7 @@
             <RightSidebar class="m-wiki-right-side" :show-toggle="true">
                 <slot name="right"></slot>
             </RightSidebar>
-            <Footer></Footer>
+            <Footer class="m-wiki-footer"></Footer>
         </Main>
     </div>
 </template>
@@ -179,7 +179,7 @@ export default {
 
 <style lang="less">
 .m-main {
-    padding: 15px;
+    padding: 15px 0;
 }
 .c-sidebar-left {
     padding-left: 0;
@@ -191,6 +191,12 @@ export default {
         top: -2px;
         right: 95px;
         height: 32px;
+    }
+}
+.m-wiki-footer {
+    .c-footer-left {
+        .flex;
+        align-items: center;
     }
 }
 </style>

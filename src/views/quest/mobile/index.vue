@@ -52,7 +52,7 @@
                         >
                             <div class="u-name">{{ post.title }}</div>
                             <div class="u-target">
-                                <i class="el-icon-news"></i>
+                                <LegacyIcon class="el-icon-news" />
                                 {{ post.remark }}
                             </div>
                         </div>

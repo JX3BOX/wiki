@@ -9,7 +9,7 @@
                     content="请先在游戏中同步成就"
                     placement="top"
                 >
-                    <a href="/tool/74559" target="_blank"><i class="el-icon-warning-outline"></i></a>
+                    <a href="/tool/74559" target="_blank"><LegacyIcon class="el-icon-warning-outline" /></a>
                 </el-tooltip>
                 <el-tooltip
                     v-else
@@ -18,12 +18,12 @@
                     content="虚拟角色即为魔盒账号本身，可自定义进度"
                     placement="top"
                 >
-                    <a href="/tool/74559" target="_blank"><i class="el-icon-warning-outline"></i></a>
+                    <a href="/tool/74559" target="_blank"><LegacyIcon class="el-icon-warning-outline" /></a>
                 </el-tooltip>
             </template>
         </role-select>
 
-        <el-select v-model="sidebar.general" size="small">
+        <el-select v-model="selectedGeneral">
             <el-option v-for="type in menu_types" :key="type.value" :label="type.label" :value="type.value"></el-option>
         </el-select>
         <div v-if="currentRole" class="m-filters">
@@ -126,6 +126,17 @@ export default {
         },
         achievementsVirtual() {
             return this.$store.state.achievementsVirtual;
+        },
+        selectedGeneral: {
+            get() {
+                return this.sidebar.general;
+            },
+            set(val) {
+                this.$store.commit("SET_STATE", {
+                    key: "sidebar",
+                    value: { ...this.sidebar, general: val },
+                });
+            },
         },
         isVirtual() {
             // 鏄惁鏄櫄鎷熻鑹?- 榄旂洅璐﹀彿

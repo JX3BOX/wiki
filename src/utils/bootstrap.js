@@ -5,6 +5,7 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import { createJx3boxUiI18n, install as JX3BOX_UI } from "@jx3box/jx3box-ui";
 import reporter from "@jx3box/jx3box-common/js/reporter";
 import * as filters from "@/filters";
+import LegacyIcon from "@/components/common/legacy-icon.vue";
 
 import "@jx3box/jx3box-common/css/normalize.css";
 import "@jx3box/jx3box-common/css/font.css";
@@ -21,6 +22,8 @@ configureCompat({
     WATCH_ARRAY: false,
     // Keep Element Plus' legacy enumerated-attr behavior without flooding the console.
     ATTR_ENUMERATED_COERCION: "suppress-warning",
+    // Suppress Element Plus components' class/style inheritAttrs fallthrough warning.
+    INSTANCE_ATTRS_CLASS_STYLE: "suppress-warning",
 });
 
 const installLegacyRuntime = (app) => {
@@ -53,6 +56,7 @@ export const bootstrapApp = (RootComponent, { router, store } = {}) => {
             app.component(name, component);
         }
     });
+    app.component("LegacyIcon", LegacyIcon);
 
     installLegacyRuntime(app);
 

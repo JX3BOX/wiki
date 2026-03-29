@@ -362,7 +362,7 @@
 
             <div class="m-tabs" v-if="showPrice">
                 <div class="m-price-server">
-                    <i class="el-icon-s-shop"></i> 全服价格
+                    <LegacyIcon class="el-icon-s-shop" /> 全服价格
                     <el-select
                         v-if="activeTab === 'item-price-chart' || activeTab === 'item-prices'"
                         filterable
@@ -400,13 +400,13 @@
                 </template>
                 <template #head-actions>
                     <a class="el-button el-button--primary" :href="publish_url(`item/${id}`)">
-                        <i class="el-icon-edit"></i>
+                        <LegacyIcon class="el-icon-edit" />
                         <span>完善物品攻略</span>
                     </a>
                 </template>
                 <template #body>
                     <div class="m-wiki-compatible" v-if="compatible">
-                        <i class="el-icon-warning-outline"></i> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
+                        <LegacyIcon class="el-icon-warning-outline" /> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
                             class="s-link"
                             :href="publish_url(`item/${id}`)"
                             >参与修订</a
@@ -414,7 +414,7 @@
                     </div>
                     <Article id="wikiArticle" :content="wiki_post.post.content" />
                     <div class="m-wiki-signature">
-                        <i class="el-icon-edit"></i>
+                        <LegacyIcon class="el-icon-edit" />
                         本次修订由 <b>{{ user_name }}</b> 提交于{{ updated_at }}
                     </div>
                 </template>
@@ -427,7 +427,7 @@
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
                         <template #head-title>
-                            <i class="el-icon-coin"></i>
+                            <LegacyIcon class="el-icon-coin" />
                             <span class="u-txt">参与打赏</span>
                         </template>
                         <template #body>
@@ -456,7 +456,7 @@
         </div>
         <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-empty' : ''" v-else>
             <template v-if="!isRobot">
-                <i class="el-icon-s-opportunity"></i>
+                <LegacyIcon class="el-icon-s-opportunity" />
                 <span>暂无攻略，我要</span>
                 <a class="s-link" :href="publish_url(`item/${id}`)">完善攻略</a>
             </template>

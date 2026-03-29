@@ -1,7 +1,7 @@
 <template>
     <div class="m-knowledge-panel">
         <div class="m-title">
-            <span class="u-text"><i class="el-icon-orange"></i><span> 玩法指南</span></span>
+            <span class="u-text"><LegacyIcon class="el-icon-orange" /><span> 玩法指南</span></span>
             <router-link class="u-more" to="/type/game">查看更多 &raquo;</router-link>
         </div>
         <div class="m-guide m-panel">
