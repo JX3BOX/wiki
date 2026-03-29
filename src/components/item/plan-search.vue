@@ -15,15 +15,13 @@
                 @keydown.enter="search_handle"
                 placeholder="输入物品清单名称「回车」进行搜索"
             >
-                <span slot="prepend">关键词</span>
-                <el-button
-                    slot="append"
+                <template #prepend><span>关键词</span></template>
+                <template #append><el-button
                     class="u-search-btn"
                     type="primary"
                     plain
                     @click="search_handle"
-                    >搜索</el-button
-                >
+                    >搜索</el-button></template>
             </el-input>
         </div>
     </div>

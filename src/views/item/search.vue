@@ -1,7 +1,7 @@
 <template>
     <div class="m-cj-index">
         <Items :items="items">
-            <template slot="empty-message">
+            <template #empty-message>
                 <span>👻 暂无记录</span>
                 <template v-if="$route.query.auc_genre || $route.query.auc_sub_type_id">
                     <span>，在</span>

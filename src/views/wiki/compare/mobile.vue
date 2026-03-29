@@ -67,11 +67,13 @@
                         <!-- <div class="u-name" v-if="index == 0">{{ item.name.slice(0, 1) }}</div> -->
                         <el-dropdown trigger="click">
                             <div class="u-name">{{ item.name.slice(0, 1) }}</div>
-                            <el-dropdown-menu slot="dropdown">
+                            <template #dropdown>
+                            <el-dropdown-menu>
                                 <el-dropdown-item>
                                     <div @click="delRole(item, index)">删除</div>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
+                            </template>
                         </el-dropdown>
                     </div>
                     <div class="u-table_label add" @click="addRole">
@@ -133,10 +135,12 @@
                     </el-select>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <template #footer>
+            <div class="dialog-footer">
                 <el-button @click="showAddRole = false">取 消</el-button>
                 <el-button type="primary" @click="addRoleConfirm">确 定</el-button>
             </div>
+            </template>
         </el-dialog>
     </div>
 </template>
@@ -377,7 +381,7 @@ export default {
                     type: `${contrastKith.jx3id},2`,
                 });
                 if (type == 1 && this.contrastKith[0]) {
-                    this.$set(this.contrastKith, 0, contrastKith);
+                    this.contrastKith[0] = contrastKith;
                 } else {
                     this.contrastKith.push(contrastKith);
                 }

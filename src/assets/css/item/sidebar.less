@@ -31,23 +31,25 @@
 
 .m-menus {
     .u-all {
-        display: block;
+        .flex;
+        align-items: center;
+        gap: 4px;
         // padding-left: 24px;
         line-height: 28px;
-        &:hover{
+        &:hover {
             background-color: #f5f7fa;
         }
 
-        i{
-            padding:0 5px;
-            color:#c0c4cc;
+        i {
+            padding: 0 5px;
+            color: #c0c4cc;
         }
 
-        &.router-link-exact-active{
+        &.router-link-exact-active {
             .bold;
-            color:@color-link;
-            i{
-                color:@color-link;
+            color: @color-link;
+            i {
+                color: @color-link;
             }
         }
     }

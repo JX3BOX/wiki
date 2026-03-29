@@ -121,7 +121,6 @@ module.exports = {
     },
     chainWebpack: (config) => {
         config.resolve.alias
-            .set("vue", "@vue/compat")
             .set("@jx3box/jx3box-common-ui/service/bus", "@jx3box/jx3box-ui/utils/bus")
             .set("@jx3box/jx3box-common-ui", "@jx3box/jx3box-ui")
             .set(
@@ -140,19 +139,6 @@ module.exports = {
                 "@jx3box/jx3box-editor/src/assets/js/item/color.js"
             );
 
-        config.module
-            .rule("vue")
-            .use("vue-loader")
-            .tap((options = {}) => ({
-                ...options,
-                compilerOptions: {
-                    ...(options.compilerOptions || {}),
-                    compatConfig: {
-                        MODE: 2,
-                        COMPILER_V_BIND_OBJECT_ORDER: false,
-                    },
-                },
-            }));
 
         config.module.rule("images").set("parser", {
             dataUrlCondition: {

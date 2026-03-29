@@ -71,7 +71,7 @@
                 v-loading="loading"
             >
                 <el-table-column prop="Name" label="成就名称">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <a :href="getLink('achievement', scope.row.ID)" target="_blank">
                             <div class="u-achievement-name">
                                 <img class="u-icon" :src="iconLink(scope.row?.IconID)" />
@@ -81,7 +81,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="资历点数" width="100">
-                    <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
+                    <template #default="scope"> {{ scope.row.Point || 0 }} </template>
                 </el-table-column>
 
                 <!-- <el-table-column label="全服完成度" width="260">
@@ -93,22 +93,22 @@
                     >
                 </el-table-column> -->
                 <el-table-column label="完成情况" width="100">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-tag :type="scope.row.isCompleted ? 'success' : 'danger'">{{
                             scope.row.isCompleted ? "已完成" : "未完成"
                         }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="难度" width="140">
-                    <template slot-scope="scope">
-                        <el-rate :value="scope.row.difficulty" disabled allow-half disabled-void-color="#574938">
+                    <template #default="scope">
+                        <el-rate :model-value="scope.row.difficulty" disabled allow-half disabled-void-color="#574938">
                         </el-rate>
                     </template>
                 </el-table-column>
                 <el-table-column label="奖励" width="100">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-tooltip placement="top" v-if="scope.row.item">
-                            <div slot="content"><jx3-item :item="scope.row.item" /></div>
+                            <template #content><jx3-item :item="scope.row.item" /></template>
                             <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" />
                         </el-tooltip>
                     </template>
@@ -166,7 +166,7 @@ export default {
                 for (let i = 0; i < length; i++) {
                     achievements[i].isCompleted = currentRole_achievements.includes(achievements[i].ID.toString());
                 }
-                this.$set(this.detail, "achievements", achievements);
+                this.detail.achievements = achievements;
                 this.detail.achievementsBak = cloneDeep(this.detail.achievements);
                 return;
             }
@@ -257,7 +257,7 @@ export default {
                             }
                         });
                     });
-                    this.$set(this, "mapList", mapList);
+                    this.mapList = mapList;
                 } else {
                     let menu = cloneDeep(this.menuList);
                     Object.keys(menu).map((key) => {
@@ -273,7 +273,7 @@ export default {
                         });
                     });
 
-                    this.$set(this, "menuList", menu);
+                    this.menuList = menu;
                 }
                 this.loading = false;
                 this.getAchievementProgress(ids, achievements);
@@ -293,13 +293,9 @@ export default {
                         arr.push(Object.assign(findItem, item));
                     }
                 });
-                this.$set(
-                    this.detail,
-                    "achievements",
-                    sortBy(arr, function (o) {
-                        return o.difficulty;
-                    })
-                );
+                this.detail.achievements = sortBy(arr, function (o) {
+                    return o.difficulty;
+                });
                 this.detail.achievementsBak = cloneDeep(this.detail.achievements);
                 this.loading = false;
             });
@@ -315,7 +311,7 @@ export default {
                     (((findInfo.completed_role_count / findInfo.total_role_count) * 100).toFixed(2) || 0) + "%";
                 arr.push(item);
             });
-            this.$set(this.detail, "achievements", arr);
+            this.detail.achievements = arr;
             this.$forceUpdate();
         },
 

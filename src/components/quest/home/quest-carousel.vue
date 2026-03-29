@@ -109,7 +109,11 @@ export default {
             border-left: 5px solid #3a97eb;
         }
     }
-
+    .u-title {
+        .flex;
+        align-items: center;
+        gap: 5px;
+    }
     .u-item-new {
         padding-top: 8px;
 

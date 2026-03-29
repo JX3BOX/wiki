@@ -4,8 +4,8 @@
 		<div class="m-plan-title">物品清单</div>
 		<div class="m-plan-search">
 			<el-input placeholder="请输入搜索内容" v-model="search">
-				<span slot="prepend">关键词</span>
-				<el-button slot="append" icon="Search"></el-button>
+				<template #prepend><span>关键词</span></template>
+				<template #append><el-button icon="Search"></el-button></template>
 			</el-input>
 		</div>
 		<!-- 列表 -->

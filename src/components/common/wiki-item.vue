@@ -75,13 +75,18 @@ export default {
 <style lang="less">
 .m-carousel-content {
     .u-title {
+        .flex;
+        align-items: center;
+        gap: 5px;
         i {
             margin-right: 4px;
         }
     }
     .u-desc {
+        .flex;
+        align-items: center;
+        gap: 5px;
         margin-top: 3px;
-        .db;
         font-size: 12px;
         .lh(1.6em);
         color: #555555;

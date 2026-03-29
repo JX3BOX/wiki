@@ -24,7 +24,8 @@
                     <div class="u-toggle-btn">
                         <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" />
                     </div>
-                    <el-dropdown-menu class="m-role-dropdown" slot="dropdown">
+                    <template #dropdown>
+                    <el-dropdown-menu class="m-role-dropdown">
                         <el-dropdown-item v-for="role in roleList" :key="role.ID">
                             <div
                                 @click="onChangeRole(role)"
@@ -38,6 +39,7 @@
                             </div>
                         </el-dropdown-item>
                     </el-dropdown-menu>
+                    </template>
                 </el-dropdown>
                 <div class="u-user-all_achievement">
                     当前资历：<span>{{ currentRole.total || 0 }}</span>
@@ -64,41 +66,41 @@
                     v-loading="loading"
                 >
                     <el-table-column prop="title">
-                        <template slot="header">
+                        <template #header>
                             <div class="u-table-cell_left">方案名称</div>
                         </template>
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <router-link target="_blank" :to="{ name: 'leap', query: { id: scope.row.id } }">
                                 <div style="text-align: left; height: 24px">{{ scope.row.title }}</div>
                             </router-link>
                         </template>
                     </el-table-column>
                     <el-table-column label="方案资历总点数" width="180">
-                        <template slot-scope="scope"> {{ getSchemePoints(scope.row.schema)?.all || 0 }} </template>
+                        <template #default="scope"> {{ getSchemePoints(scope.row.schema)?.all || 0 }} </template>
                     </el-table-column>
                     <el-table-column width="180">
-                        <template slot="header">
+                        <template #header>
                             <div class="u-table-cell_right">可提升资历点数</div>
                         </template>
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <div style="text-align: right">{{ getSchemePoints(scope.row.schema)?.diffNum || 0 }}</div>
                         </template>
                     </el-table-column>
                     <el-table-column width="180">
-                        <template slot="header">
+                        <template #header>
                             <div class="u-table-cell_right">来源</div>
                         </template>
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <div style="text-align: right">
                                 {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }}
                             </div></template
                         >
                     </el-table-column>
                     <el-table-column width="180">
-                        <template slot="header">
+                        <template #header>
                             <div class="u-table-cell_right">操作</div>
                         </template>
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <div style="text-align: right">
                                 <el-button
                                     type="danger"
@@ -227,7 +229,7 @@ export default {
                 arr.forEach((item) => {
                     total = total + (this.pointsData[item] || 0);
                 });
-                this.$set(this.currentRole, "total", total);
+                this.currentRole.total = total;
             });
         },
         pageChange(page) {

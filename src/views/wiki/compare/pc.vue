@@ -23,7 +23,7 @@
                             ></el-cascader
                         ></slot>
                     </template>
-                    <el-button slot="append" icon="Search" class="u-btn" @click="searchHandle"></el-button>
+                    <template #append><el-button icon="Search" class="u-btn" @click="searchHandle"></el-button></template>
                 </el-input>
             </div>
             <div class="u-radio">
@@ -175,10 +175,12 @@
                 1. 添加亲友角色后，可对比亲友角色与自身角色的成就进度。<br />
                 2. 去<a href="https://www.jx3box.com/dashboard/privacy?tab=whitelist" target="_blank">添加亲友</a>
             </div>
-            <div slot="footer" class="dialog-footer">
+            <template #footer>
+            <div class="dialog-footer">
                 <el-button @click="showAddRole = false">取 消</el-button>
                 <el-button type="primary" @click="addRoleConfirm">确 定</el-button>
             </div>
+            </template>
         </el-dialog>
     </div>
 </template>
@@ -526,7 +528,7 @@ export default {
                     type: `${contrastKith.jx3id},2`,
                 });
                 if (type == 1 && this.contrastKith[0]) {
-                    this.$set(this.contrastKith, 0, contrastKith);
+                    this.contrastKith[0] = contrastKith;
                 } else {
                     this.contrastKith.push(contrastKith);
                 }

@@ -57,7 +57,7 @@ export default {
             getKnowledgeList(this.params)
                 .then((res) => {
                     this.total = res.data.data.total || 0;
-                    this.list = res.data.data.list || []
+                    this.list = res.data.data.list || [];
                 })
                 .finally(() => {
                     this.loading = false;

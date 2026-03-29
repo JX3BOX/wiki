@@ -433,6 +433,7 @@ export default {
     .m-panel-title {
         .flex;
         align-items: center;
+        gap: 5px;
     }
     [data-legacy-icon="el-icon-chat-line-round"] {
         width: 28px;
@@ -451,6 +452,7 @@ export default {
     .m-panel-title {
         .flex;
         align-items: center;
+        gap: 5px;
         svg,
         i {
             width: 28px;

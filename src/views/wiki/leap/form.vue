@@ -446,13 +446,9 @@ export default {
                         arr.push(Object.assign(findItem, item));
                     }
                 });
-                this.$set(
-                    this,
-                    "achievements",
-                    sortBy(arr, function (o) {
-                        return o.difficulty;
-                    })
-                );
+                this.achievements = sortBy(arr, function (o) {
+                    return o.difficulty;
+                });
             });
         },
         //自选方案切换

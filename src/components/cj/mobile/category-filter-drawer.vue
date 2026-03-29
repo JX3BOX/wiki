@@ -218,9 +218,9 @@ export default {
         },
         setVal(item,val){
             if (val.value == null){
-                this.$set(this.tmpVal, item.key, null);
+                this.tmpVal[item.key] = null;
             }else{
-                this.$set(this.tmpVal, item.key, val);
+                this.tmpVal[item.key] = val;
             }
 
             if (item.key === 'general'){

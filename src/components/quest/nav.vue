@@ -70,7 +70,7 @@ export default {
             label: "name",
         },
 
-        role: "",
+        role: null,
         uncompleted: false,
     }),
     computed: {

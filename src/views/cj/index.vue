@@ -23,9 +23,9 @@
                     :show-all-levels="false"
                     :options="regions"
                     filterable
+                    clearable
                     placeholder="地图"
                 ></el-cascader>
-                <span v-if="regionId" class="cascader-clear" @click.stop="onChangeMap(null)">×</span>
             </div>
         </Search>
         <router-view />
@@ -98,7 +98,7 @@ export default {
                 }
 
                 if (this.$store.state.sidebar.general == 3 && this.$route.name) {
-                    this.$set(this.$store.state.sidebar, "other", this.$route.name);
+                    this.$store.state.sidebar.other = this.$route.name;
                 }
             },
         },
@@ -175,22 +175,6 @@ export default {
         position: relative;
         display: inline-flex;
         align-items: center;
-        .cascader-clear {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            line-height: 12px;
-            text-align: center;
-            font-size: 12px;
-            cursor: pointer;
-            z-index: 1;
-            color: #ccc;
-            border: 1px solid #ccc;
-            border-radius: 50%;
-        }
     }
     .m-search .el-input-group__prepend {
         border: none;

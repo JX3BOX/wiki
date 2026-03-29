@@ -112,9 +112,10 @@ export default {
     }
 
     .u-prefix {
-        .db;
-        .h(30px);
-        .lh(30px);
+        .flex;
+        align-items: center;
+        gap: 4px;
+        height: 30px;
 
         background-color: #f5f7fa;
         color: #909399;

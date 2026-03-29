@@ -186,13 +186,13 @@ export default {
         },
         setVal(item, val) {
             if (val.value == null) {
-                this.$set(this.tmpVal, item.key, null);
+                this.tmpVal[item.key] = null;
             } else {
-                this.$set(this.tmpVal, item.key, val);
+                this.tmpVal[item.key] = val;
             }
 
             if (item.key === "map_1" && val.children) {
-                this.$set(this.tmpVal, "map", this.two?.[0]);
+                this.tmpVal.map = this.two?.[0];
                 this.isAtBottom = this.filterGroup[1].list.length <= 2;
             }
         },

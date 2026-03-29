@@ -1,4 +1,4 @@
-import { createApp, configureCompat } from "vue";
+import { createApp } from "vue";
 import ElementPlus from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
@@ -13,28 +13,8 @@ import "@jx3box/jx3box-common/css/element-plus-theme.scss";
 import "@jx3box/jx3box-common/css/element-fonticon.css";
 import "@/assets/css/tailwind.css";
 
-configureCompat({
-    MODE: 2,
-    COMPONENT_ASYNC: false,
-    COMPONENT_V_MODEL: false,
-    ATTR_FALSE_VALUE: false,
-    RENDER_FUNCTION: false,
-    WATCH_ARRAY: false,
-    // Keep Element Plus' legacy enumerated-attr behavior without flooding the console.
-    ATTR_ENUMERATED_COERCION: "suppress-warning",
-    // Suppress Element Plus components' class/style inheritAttrs fallthrough warning.
-    INSTANCE_ATTRS_CLASS_STYLE: "suppress-warning",
-});
-
 const installLegacyRuntime = (app) => {
     app.config.globalProperties.$filters = filters;
-    app.config.globalProperties.$set = (target, key, value) => {
-        target[key] = value;
-        return value;
-    };
-    app.config.globalProperties.$delete = (target, key) => {
-        delete target[key];
-    };
 };
 
 export const bootstrapApp = (RootComponent, { router, store } = {}) => {

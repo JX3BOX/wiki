@@ -17,7 +17,8 @@
                         >
                         <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" width="16px" height="16px" />
                     </div>
-                    <el-dropdown-menu slot="dropdown">
+                    <template #dropdown>
+                    <el-dropdown-menu>
                         <el-dropdown-item v-for="role in roleList" :key="role.ID">
                             <div @click="onChangeRole(role)" class="m-role-item">
                                 <span>{{ role.name }}</span>
@@ -25,6 +26,7 @@
                             </div>
                         </el-dropdown-item>
                     </el-dropdown-menu>
+                    </template>
                 </el-dropdown>
             </div>
         </div>
@@ -88,20 +90,20 @@
                 header-cell-class-name="u-table-header_cell"
             >
                 <el-table-column prop="title" label="方案名称" width="160">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <router-link target="_blank" :to="{ name: 'leap', query: { id: scope.row.id } }">
                             {{ scope.row.title }}
                         </router-link>
                     </template>
                 </el-table-column>
                 <el-table-column label="方案资历总点数" width="120">
-                    <template slot-scope="scope"> {{ getSchemePoints(scope.row.schema)?.all || 0 }} </template>
+                    <template #default="scope"> {{ getSchemePoints(scope.row.schema)?.all || 0 }} </template>
                 </el-table-column>
                 <el-table-column label="可提升资历点数" width="120">
-                    <template slot-scope="scope"> {{ getSchemePoints(scope.row.schema)?.diffNum || 0 }} </template>
+                    <template #default="scope"> {{ getSchemePoints(scope.row.schema)?.diffNum || 0 }} </template>
                 </el-table-column>
                 <el-table-column label="来源" width="80">
-                    <template slot-scope="scope"> {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }} </template>
+                    <template #default="scope"> {{ scope.row.is_official == 1 ? "魔盒" : "玩家" }} </template>
                 </el-table-column>
             </el-table>
             <div class="u-page">
@@ -130,7 +132,7 @@
                 v-loading="loading"
             >
                 <el-table-column prop="Name" label="成就名称">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <a :href="getLink('achievement', scope.row.ID)" target="_blank">
                             <div class="u-achievement-name">
                                 <img class="u-icon" :src="iconLink(scope.row?.IconID)" />
@@ -140,7 +142,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="资历点数" width="100">
-                    <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
+                    <template #default="scope"> {{ scope.row.Point || 0 }} </template>
                 </el-table-column>
 
                 <!-- <el-table-column label="全服完成度" width="260">
@@ -152,23 +154,23 @@
                     >
                 </el-table-column> -->
                 <el-table-column label="完成情况" width="100">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-tag :type="scope.row.isCompleted ? 'success' : 'danger'">{{
                             scope.row.isCompleted ? "已完成" : "未完成"
                         }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="难度" width="140">
-                    <template slot-scope="scope">
-                        <el-rate :value="scope.row.difficulty" disabled allow-half disabled-void-color="#574938">
+                    <template #default="scope">
+                        <el-rate :model-value="scope.row.difficulty" disabled allow-half disabled-void-color="#574938">
                         </el-rate>
                     </template>
                 </el-table-column>
                 <el-table-column label="奖励" width="60">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-popover placement="right" width="400" trigger="click" v-if="scope.row.item">
                             <div><jx3-item :item="scope.row.item" /></div>
-                            <img class="u-icon" :src="iconLink(scope.row.item?.IconID)" slot="reference" />
+                            <template #reference><img class="u-icon" :src="iconLink(scope.row.item?.IconID)" /></template>
                         </el-popover>
                     </template>
                 </el-table-column>
@@ -287,7 +289,7 @@ export default {
                                 achievements[i].ID.toString()
                             );
                         }
-                        this.$set(this.detail, "achievements", achievements);
+                        this.detail.achievements = achievements;
                         this.detail.achievementsBak = cloneDeep(this.detail.achievements);
                         return;
                     }
@@ -300,7 +302,7 @@ export default {
                 arr.forEach((item) => {
                     total = total + (this.pointsData[item] || 0);
                 });
-                this.$set(this.currentRole, "total", total);
+                this.currentRole.total = total;
             });
         },
         pageChange(page) {
@@ -404,7 +406,7 @@ export default {
                             }
                         });
                     });
-                    this.$set(this, "mapList", mapList);
+                    this.mapList = mapList;
                 } else {
                     let menu = cloneDeep(this.menuList);
                     Object.keys(menu).map((key) => {
@@ -420,7 +422,7 @@ export default {
                         });
                     });
 
-                    this.$set(this, "menuList", menu);
+                    this.menuList = menu;
                 }
 
                 this.loading = false;
@@ -439,13 +441,9 @@ export default {
                         arr.push(Object.assign(findItem, item));
                     }
                 });
-                this.$set(
-                    this.detail,
-                    "achievements",
-                    sortBy(arr, function (o) {
-                        return o.difficulty;
-                    })
-                );
+                this.detail.achievements = sortBy(arr, function (o) {
+                    return o.difficulty;
+                });
                 this.detail.achievementsBak = cloneDeep(this.detail.achievements);
             });
         },

@@ -93,7 +93,7 @@ export default {
             ],
 
             roleList: [],
-            currentRole: "",
+            currentRole: null,
             isLogin: User.isLogin(),
             uncompleted: false,
             virtualRole: {

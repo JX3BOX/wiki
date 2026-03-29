@@ -23,7 +23,8 @@
                                 <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" />
                             </div>
                         </div>
-                        <el-dropdown-menu class="m-role-dropdown" slot="dropdown">
+                        <template #dropdown>
+                        <el-dropdown-menu class="m-role-dropdown">
                             <!-- <el-dropdown-item v-if="isLogin">
                                 <div class="m-role-item" @click="onChangeRole(virtualRole)">
                                     <span>{{ virtualRole.name }}</span>
@@ -43,6 +44,7 @@
                                 </div>
                             </el-dropdown-item>
                         </el-dropdown-menu>
+                        </template>
                     </el-dropdown>
 
                     <div v-if="viewAchievementsName" class="u-overview" @click="onSeeOverview">
@@ -101,7 +103,8 @@
                     <span>角色</span>
                     <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" width="16px" height="16px" />
                 </div>
-                <el-dropdown-menu slot="dropdown">
+                <template #dropdown>
+                <el-dropdown-menu>
                     <!-- <el-dropdown-item v-if="isLogin">
                         <div class="m-role-item" @click="onChangeRole(virtualRole)">
                             <span>{{ virtualRole.name }}</span>
@@ -121,6 +124,7 @@
                         </div>
                     </el-dropdown-item>
                 </el-dropdown-menu>
+                </template>
             </el-dropdown>
         </div>
         <!-- 移动端查看总览位置 -->
@@ -217,7 +221,7 @@
                 v-loading="loading"
             >
                 <el-table-column prop="Name" label="成就名称">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <a :href="getLink('achievement', scope.row.ID)" target="_blank">
                             <div class="u-achievement-name">
                                 <img class="u-icon" :src="iconLink(scope.row?.IconID)" />
@@ -227,24 +231,24 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="成就简介" :width="mobile ? '200' : ''">
-                    <template slot-scope="scope"> {{ scope.row.ShortDesc || "-" }} </template>
+                    <template #default="scope"> {{ scope.row.ShortDesc || "-" }} </template>
                 </el-table-column>
                 <el-table-column label="资历点数" :width="mobile ? '80' : '100'">
-                    <template slot-scope="scope"> {{ scope.row.Point || 0 }} </template>
+                    <template #default="scope"> {{ scope.row.Point || 0 }} </template>
                 </el-table-column>
                 <el-table-column label="完成情况" :width="mobile ? '80' : '100'">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-tag :type="scope.row.isCompleted == false ? 'danger' : 'success'">{{
                             scope.row.isCompleted == false ? "未完成" : "已完成"
                         }}</el-tag></template
                     >
                 </el-table-column>
                 <el-table-column label="奖励" width="100">
-                    <template slot-scope="scope">
+                    <template #default="scope">
                         <el-tooltip placement="top" v-if="scope.row.ItemID">
-                            <div slot="content">
+                            <template #content>
                                 <jx3-item :item_id="scope.row.ItemType + '_' + scope.row.ItemID.toString()" />
-                            </div>
+                            </template>
                             <img class="u-icon" :src="getIconRewards(scope.row)" />
                         </el-tooltip>
                     </template>
@@ -300,7 +304,7 @@ export default {
             pointsData: {},
             list: [],
             roleList: [],
-            currentRole: "",
+            currentRole: null,
             isLogin: User.isLogin(),
             virtualRole: {
                 ...User.getInfo(),
