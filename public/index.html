@@ -7,9 +7,14 @@
         <meta name="renderer" content="webkit" />
         <title><%= htmlWebpackPlugin.options.title %></title>
         <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+        <!-- 扩展图标 -->
+        <!-- <link href="https://cdn.jx3box.com/lib/css/font-awesome/7.1.0/css/all.min.css" rel="stylesheet" /> -->
+        <!-- <script src="https://cdn.jx3box.com/lib/lucide/0.577.0/lucide.min.js"></script> -->
+
     </head>
     <body>
         <div id="app"></div>
+
         <div
             id="c-ie-tips"
             style="
@@ -24,9 +29,11 @@
             "
         >
             <p>
-                您的浏览器版本过低，可能无法正常使用本站，建议下载
-                <a href="https://www.google.cn/intl/zh-CN/chrome/" target="_blank">Chrome</a>
-                或其他极速浏览器
+                你的浏览器版本太低，可能无法正常使用本站，建议下载<a
+                    href="https://www.google.cn/intl/zh-CN/chrome/"
+                    target="_blank"
+                    >Chrome</a
+                >或其它极速浏览器
             </p>
             <p>www.jx3box.com</p>
         </div>
@@ -35,6 +42,9 @@
             let isIE = ua.indexOf("trident") > 0 || ua.indexOf("msie") > 0;
             if (isIE) document.getElementById("c-ie-tips").style.display = "block";
         </script>
+
+
+        <!-- Clarity Analytics -->
         <script type="text/javascript">
             (function (c, l, a, r, i, t, y) {
                 c[a] =
@@ -49,6 +59,8 @@
                 y.parentNode.insertBefore(t, y);
             })(window, document, "clarity", "script", "vv9j3vf2wi");
         </script>
+
+        <!-- Baidu Analytics -->
         <div style="display: none">
             <script>
                 var _hmt = _hmt || [];

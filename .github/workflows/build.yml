@@ -1,4 +1,4 @@
-name: Preview Master
+name: Deploy CDN Files
 on:
     push:
         branches:
@@ -37,5 +37,5 @@ jobs:
                   access-key-id: ${{secrets.AccessKey_ID}}
                   access-key-secret: ${{secrets.Access_Key_Secret}}
             - run: ossutil cp -rf dist oss://jx3box/static/wiki
-            #- run: ossutil cp -rf dist oss://jx3box-www/wiki
+            #- run: ossutil cp -rf dist oss://jx3box-www/bbs
 

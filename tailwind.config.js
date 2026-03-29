@@ -10,6 +10,7 @@ module.exports = {
         extend: {},
     },
     plugins: [],
+    // 本项目已引入 normalize.css/组件库样式；关闭 preflight 避免 Tailwind 重置影响现有样式
     corePlugins: {
         preflight: false,
     },
