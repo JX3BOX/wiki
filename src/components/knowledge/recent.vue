@@ -40,7 +40,7 @@
 </template>
 <script>
 import { authorLink, ts2str, showAvatar } from "@jx3box/jx3box-common/js/utils";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { ellipsis } from "@/utils/common";
 export default {
     name: "Recent",

@@ -77,7 +77,7 @@
             </template>
         </el-drawer>
 
-        <children-list-drawer v-model:visible="childrenShow" :current="source" @change="changeCurrent"  />
+        <children-list-drawer v-model:visible="childrenShow" :current="source" @change="changeCurrent" />
 
         <confirm-ok-drawer v-model:visible="confirmShow" @confirm="confirmOk" />
     </div>
@@ -91,10 +91,10 @@ import { icon_url } from "@/filters";
 import { publishLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 import { postHistory, postStat } from "@jx3box/jx3box-common/js/stat";
 import { cancelVirtualRoleAchievements, get_achievement, setVirtualRoleAchievements } from "@/service/achievement";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { reportNow } from "@jx3box/jx3box-common/js/reporter";
 import User from "@jx3box/jx3box-common/js/user";
-import { getConfig } from "@jx3box/jx3box-common/js/api_misc";
+import { getConfig } from "@jx3box/jx3box-common/js/system";
 import { report } from "@/service/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils.js";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
@@ -491,21 +491,23 @@ export default {
             this.$emit("change", this.tmpVal);
         },
         toDetail() {
-            mobileOpen(this.$router.resolve({
-                name: "view",
-                params: {
-                    post_id: this.post_id,
-                    source_id: this.id,
-                },
-            }).href);
+            mobileOpen(
+                this.$router.resolve({
+                    name: "view",
+                    params: {
+                        post_id: this.post_id,
+                        source_id: this.id,
+                    },
+                }).href
+            );
         },
         handleScroll(event) {
             const element = event.target;
             const threshold = 5; // 容错值，避免精度问题
             this.isAtBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - threshold;
         },
-        confirmOk(){
-            this.finishVirtual([this.id])
+        confirmOk() {
+            this.finishVirtual([this.id]);
         },
         finishVirtual(curr) {
             const ids = curr ? curr : this.selectedAchievements.map((item) => item.ID + "");

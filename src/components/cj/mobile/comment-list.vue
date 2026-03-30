@@ -35,7 +35,7 @@
 
 <script>
 import dayjs from "dayjs";
-import { wikiComment } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wikiComment } from "@jx3box/jx3box-common/js/wiki";
 import User from "@jx3box/jx3box-common/js/user";
 
 export default {

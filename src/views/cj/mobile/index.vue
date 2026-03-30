@@ -51,7 +51,7 @@
 </template>
 
 <script lang="js">
-import SuspendCommon from  '@jx3box/jx3box-common-ui/src/SuspendCommon.vue';
+import SuspendCommon from  '@jx3box/jx3box-ui/src/SuspendCommon.vue';
 import {
     cancelVirtualRoleAchievements,
     getMapList,

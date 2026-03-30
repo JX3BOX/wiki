@@ -17,8 +17,5 @@ export default {
             return __cdn + "design/avatar/xisai/" + mount + "-" + body_type + ".png";
         },
     },
-    filters: {},
-    created: function () {},
-    mounted: function () {},
 };
 </script>

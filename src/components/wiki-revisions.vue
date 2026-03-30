@@ -20,26 +20,26 @@
                 <table v-if="versions && versions.length" class="m-histories">
                     <thead>
                         <tr>
-                        <th>版本</th>
-                        <th>更新时间</th>
-                        <th>贡献者</th>
-                        <th>修订说明</th>
+                            <th>版本</th>
+                            <th>更新时间</th>
+                            <th>贡献者</th>
+                            <th>修订说明</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="history" v-for="(ver, key) in versions" :key="key">
-                        <td>
-                            <a
-                                :href="link(type, `${ver.source_id}/${ver.id}`)"
-                                v-text="'v' + ver.v"
-                                @click="redirectRevision(ver, $event)"
-                            ></a>
-                        </td>
-                        <td v-text="ts2str(ver.updated)"></td>
-                        <td>
-                            <a :href="ver.user_id ? author_url(ver.user_id) : null" v-text="ver.user_nickname"></a>
-                        </td>
-                        <td v-text="ver.remark"></td>
+                            <td>
+                                <a
+                                    :href="link(type, `${ver.source_id}/${ver.id}`)"
+                                    v-text="'v' + ver.v"
+                                    @click="redirectRevision(ver, $event)"
+                                ></a>
+                            </td>
+                            <td v-text="ts2str(ver.updated)"></td>
+                            <td>
+                                <a :href="ver.user_id ? author_url(ver.user_id) : null" v-text="ver.user_nickname"></a>
+                            </td>
+                            <td v-text="ver.remark"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -57,7 +57,7 @@
 
 <script>
 import WikiPanel from "@/components/wiki-panel.vue";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { getLink, authorLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 import { __Root, __OriginRoot } from "@/utils/config";
 import WikiDiff from "./wiki-diff.vue";

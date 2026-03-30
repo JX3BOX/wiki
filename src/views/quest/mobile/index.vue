@@ -139,7 +139,7 @@
 import { mapState } from "vuex";
 
 import Carousel from "@/components/cj/mobile/carousel.vue";
-import SuspendCommon from "@jx3box/jx3box-common-ui/src/SuspendCommon.vue";
+import SuspendCommon from "@jx3box/jx3box-ui/src/SuspendCommon.vue";
 import UserSelectDrawer from "@/components/cj/mobile/user-select-drawer.vue";
 import MapFilterDrawer from "@/components/cj/mobile/map-filter-drawer.vue";
 import WikiViewDrawer from "@/components/quest/mobile/wiki-view-drawer.vue";
@@ -149,7 +149,7 @@ import { isInMiniprogramWebview } from "@/utils/minprogram";
 import { chunk } from "lodash";
 import questType from "@/assets/data/quest-type.json";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import LzString from "lz-string";
 import wx from "weixin-js-sdk";
 

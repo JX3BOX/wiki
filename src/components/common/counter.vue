@@ -8,7 +8,7 @@
 
 <script>
 // 待攻略
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { getWaitingRate } from "@/service/quest";
 export default {
     name: "WikiCounter",

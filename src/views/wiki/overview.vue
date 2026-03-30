@@ -1,5 +1,5 @@
 <template>
-    <div class="p-achievement-overview" :class="{ is_mobile: mobile }">
+    <div class="p-achievement-overview" :class="{ is_mobile: mobile }" v-if="currentRole">
         <div class="m-overview-header" v-if="!mobile">
             <!-- 资历、选中用户信息 -->
             <div class="m-header-info">
@@ -11,11 +11,11 @@
                     class="m-info-user"
                 >
                     <span class="u-name"
-                        >{{ currentRole.name }}
-                        {{ currentRole.server && "·" }}
-                        {{ currentRole.server }}</span
+                        >{{ currentRole?.name }}
+                        {{ currentRole?.server && "·" }}
+                        {{ currentRole?.server }}</span
                     >
-                    <img width="30" height="30" :src="showSchoolIcon(currentRole.mount)" alt="jx3logo" />
+                    <img width="30" height="30" :src="showSchoolIcon(currentRole?.mount)" alt="jx3logo" />
                     <el-dropdown trigger="click">
                         <div class="u-toggle-btn">
                             <div>
@@ -24,26 +24,26 @@
                             </div>
                         </div>
                         <template #dropdown>
-                        <el-dropdown-menu class="m-role-dropdown">
-                            <!-- <el-dropdown-item v-if="isLogin">
+                            <el-dropdown-menu class="m-role-dropdown">
+                                <!-- <el-dropdown-item v-if="isLogin">
                                 <div class="m-role-item" @click="onChangeRole(virtualRole)">
                                     <span>{{ virtualRole.name }}</span>
                                     <span>&lt;虚拟角色&gt;</span>
                                 </div>
                             </el-dropdown-item> -->
-                            <el-dropdown-item v-for="role in roleList" :key="role.ID">
-                                <div
-                                    @click="onChangeRole(role)"
-                                    class="m-role-item"
-                                    :class="{
-                                        active: role.jx3id === currentRole.jx3id,
-                                    }"
-                                >
-                                    <span>{{ role.name }}</span>
-                                    <span>{{ role.server }}</span>
-                                </div>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
+                                <el-dropdown-item v-for="role in roleList" :key="role.ID">
+                                    <div
+                                        @click="onChangeRole(role)"
+                                        class="m-role-item"
+                                        :class="{
+                                            active: role.jx3id === currentRole.jx3id,
+                                        }"
+                                    >
+                                        <span>{{ role.name }}</span>
+                                        <span>{{ role.server }}</span>
+                                    </div>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
                         </template>
                     </el-dropdown>
 
@@ -104,26 +104,26 @@
                     <img src="@/assets/img/wiki/overview/toggle-user-icon.svg" alt="" width="16px" height="16px" />
                 </div>
                 <template #dropdown>
-                <el-dropdown-menu>
-                    <!-- <el-dropdown-item v-if="isLogin">
+                    <el-dropdown-menu>
+                        <!-- <el-dropdown-item v-if="isLogin">
                         <div class="m-role-item" @click="onChangeRole(virtualRole)">
                             <span>{{ virtualRole.name }}</span>
                             <span>&lt;虚拟角色&gt;</span>
                         </div>
                     </el-dropdown-item> -->
-                    <el-dropdown-item v-for="role in roleList" :key="role.ID">
-                        <div
-                            @click="onChangeRole(role)"
-                            class="m-role-item"
-                            :class="{
-                                active: role.jx3id === currentRole.jx3id,
-                            }"
-                        >
-                            <span>{{ role.name }}·</span>
-                            <span>{{ role.server }}</span>
-                        </div>
-                    </el-dropdown-item>
-                </el-dropdown-menu>
+                        <el-dropdown-item v-for="role in roleList" :key="role.ID">
+                            <div
+                                @click="onChangeRole(role)"
+                                class="m-role-item"
+                                :class="{
+                                    active: role.jx3id === currentRole.jx3id,
+                                }"
+                            >
+                                <span>{{ role.name }}·</span>
+                                <span>{{ role.server }}</span>
+                            </div>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
                 </template>
             </el-dropdown>
         </div>
@@ -288,7 +288,7 @@ import {
 } from "@/service/achievement";
 import { getUserRoles } from "@/service/team";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
-import {getMyInfo} from "@/service/user";
+import { getMyInfo } from "@/service/user";
 import { __imgPath } from "@/utils/config";
 import Item from "@jx3box/jx3box-editor/src/Item";
 import { cloneDeep } from "lodash";
@@ -437,7 +437,7 @@ export default {
                 return;
             }
             getMyInfo().then((res) => {
-                this.userInfo = res
+                this.userInfo = res;
             });
         },
         onChangeRole(role) {

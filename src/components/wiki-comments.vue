@@ -49,7 +49,7 @@
 <script>
 import WikiPanel from "@/components/wiki-panel.vue";
 import Comment from "@/components/wiki-comment.vue";
-import { wikiComment } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wikiComment } from "@jx3box/jx3box-common/js/wiki";
 import User from "@jx3box/jx3box-common/js/user";
 
 export default {
@@ -172,20 +172,24 @@ export default {
             this.get_comments();
         },
         star_comment(comment, is_star) {
-            wikiComment.star(comment.id, {
-                is_star
-            }).then(() => {
-                this.page = 1; // 重置页码
-                this.get_comments();
-            });
+            wikiComment
+                .star(comment.id, {
+                    is_star,
+                })
+                .then(() => {
+                    this.page = 1; // 重置页码
+                    this.get_comments();
+                });
         },
         top_comment(comment, is_top) {
-            wikiComment.top(comment.id, {
-                is_top
-            }).then(() => {
-                this.page = 1; // 重置页码
-                this.get_comments();
-            });
+            wikiComment
+                .top(comment.id, {
+                    is_top,
+                })
+                .then(() => {
+                    this.page = 1; // 重置页码
+                    this.get_comments();
+                });
         },
     },
     components: {

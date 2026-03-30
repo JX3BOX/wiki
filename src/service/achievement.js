@@ -1,4 +1,4 @@
-import { $helper, $cms, $node, $next } from "@jx3box/jx3box-common/js/https";
+import { $helper, $cms, $node, $next } from "@jx3box/jx3box-common/js/api";
 
 const $ = $node();
 

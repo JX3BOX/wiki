@@ -1,4 +1,4 @@
-import { $next, $node, $cms } from "@jx3box/jx3box-common/js/https";
+import { $next, $node, $cms } from "@jx3box/jx3box-common/js/api";
 const $ = $node({ mute: true });
 // const $ = axios.create({ baseURL: 'http://localhost:7002' });
 

@@ -1,4 +1,4 @@
-import { $team } from "@jx3box/jx3box-common/js/https";
+import { $team } from "@jx3box/jx3box-common/js/api";
 
 // 获取用户角色
 const getUserRoles = () => {

@@ -1,8 +1,7 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 function getKnowledgeList(params) {
-    return $cms()
-        .get(`api/cms/helper/knowledge`, { params })
+    return $cms().get(`api/cms/helper/knowledge`, { params });
 }
 
 // 获取玩法指南
@@ -16,7 +15,7 @@ function getMenuGroups(params) {
 
 // 获取通识子类
 function getKnowledgeMenus() {
-	return $cms().get(`/api/cms/helper/knowledge/types`);
+    return $cms().get(`/api/cms/helper/knowledge/types`);
 }
 
 // 获取通识count

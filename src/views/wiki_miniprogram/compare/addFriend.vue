@@ -1,23 +1,38 @@
 <template>
-    <el-drawer :title="title" :model-value="drawerVisible" direction="btt" size="420px" @close="handleClose"
-        class="c-role-list-drawer">
+    <el-drawer
+        :title="title"
+        :model-value="drawerVisible"
+        direction="btt"
+        size="420px"
+        @close="handleClose"
+        class="c-role-list-drawer"
+    >
         <div class="role-list-wrapper">
             <div class="role-list-container" ref="roleListContainer">
                 <!-- 初始角色类型 -->
                 <div class="role-items" v-if="currentStep == 1">
-                    <div class="role-item" @click="selectRoleType(role)" v-for="(role, index) in step1Options"
-                        :key="index" :class="{ 'selected': selectCurrentStep == role.value }">
+                    <div
+                        class="role-item"
+                        @click="selectRoleType(role)"
+                        v-for="(role, index) in step1Options"
+                        :key="index"
+                        :class="{ selected: selectCurrentStep == role.value }"
+                    >
                         <div class="u-img">
                             <div class="role-name">{{ role.name }}</div>
                         </div>
                         <div class="role-info" v-html="`<${role.info}>`"></div>
                     </div>
-
                 </div>
                 <!-- 我的角色列表/亲友角色列表 -->
                 <div class="role-items" v-if="currentStep == 2 || currentStep == 4">
-                    <div class="role-item" v-for="(role, index) in roles" :key="index" @click="selectRole(role)"
-                        :class="{ 'selected': selectedRole && selectedRole.jx3id == role.jx3id }">
+                    <div
+                        class="role-item"
+                        v-for="(role, index) in roles"
+                        :key="index"
+                        @click="selectRole(role)"
+                        :class="{ selected: selectedRole && selectedRole.jx3id == role.jx3id }"
+                    >
                         <div class="u-img">
                             <RoleAvatar class="u-avatar-img" :mount="role.mount" :body_type="role.body_type" />
                             <div class="role-name">{{ role.name }}</div>
@@ -27,15 +42,19 @@
                 </div>
                 <!-- 亲友列表 -->
                 <div class="role-items" v-if="currentStep == 3">
-                    <div class="role-item" v-for="(friend, index) in friends" :key="index" @click="selectFriend(friend)"
-                        :class="{ 'selected': selectedFriend && selectedFriend.kith_id == friend.kith_id }">
+                    <div
+                        class="role-item"
+                        v-for="(friend, index) in friends"
+                        :key="index"
+                        @click="selectFriend(friend)"
+                        :class="{ selected: selectedFriend && selectedFriend.kith_id == friend.kith_id }"
+                    >
                         <div class="u-img">
                             <div class="role-name">{{ friend.kith_info?.display_name }}</div>
                         </div>
                         <div class="role-info" v-html="`<${'亲友UID' + friend.kith_id}>`"></div>
                     </div>
                 </div>
-
             </div>
             <!-- 底部按钮 -->
             <div class="role-button-group">
@@ -54,12 +73,12 @@
  */
 import { getUserRolesList } from "@/utils/wiki_miniprogram";
 import { getMyKith, getMyKithRoles } from "@/service/wiki";
-import { showSchoolIcon, } from "@jx3box/jx3box-common/js/utils";
+import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 export default {
     name: "AddFriend",
     components: {
-        RoleAvatar
+        RoleAvatar,
     },
     // 组件属性
     props: {
@@ -68,7 +87,7 @@ export default {
          */
         visible: {
             type: Boolean,
-            default: false
+            default: false,
         },
     },
     // 计算属性
@@ -81,8 +100,8 @@ export default {
                 return this.visible;
             },
             set(val) {
-                this.$emit('update:visible', val);
-            }
+                this.$emit("update:visible", val);
+            },
         },
         /**
          * 抽屉标题
@@ -101,13 +120,13 @@ export default {
                 {
                     name: "我的角色",
                     value: 2,
-                    info: "从我的角色里面进行选择"
+                    info: "从我的角色里面进行选择",
                 },
                 {
                     name: "亲友的角色",
                     value: 3,
-                    info: "从亲友的角色里面进行选择"
-                }
+                    info: "从亲友的角色里面进行选择",
+                },
             ],
             // 角色列表数据
             roles: [],
@@ -120,8 +139,8 @@ export default {
             // 选中的角色
             selectedRole: null,
             // 遮罩层显示状态
-            showMask: false
-        }
+            showMask: false,
+        };
     },
     // 监听属性变化
     watch: {
@@ -136,7 +155,7 @@ export default {
                 // 抽屉打开后，在下一个DOM更新周期获取元素并添加事件监听
                 this.$nextTick(() => {
                     if (this.$refs.roleListContainer) {
-                        this.$refs.roleListContainer.addEventListener('scroll', this.checkScrollPosition);
+                        this.$refs.roleListContainer.addEventListener("scroll", this.checkScrollPosition);
                         // 初始化时检查一次
                         this.checkScrollPosition();
                     }
@@ -147,12 +166,11 @@ export default {
             }
         },
     },
-    beforeDestroy() {
+    beforeUnmount() {
         // 组件销毁前移除事件监听
         this.removeScrollListener();
     },
-    created() {
-    },
+    created() {},
     // 方法定义
     methods: {
         showSchoolIcon,
@@ -161,7 +179,7 @@ export default {
          */
         removeScrollListener() {
             if (this.$refs.roleListContainer) {
-                this.$refs.roleListContainer.removeEventListener('scroll', this.checkScrollPosition);
+                this.$refs.roleListContainer.removeEventListener("scroll", this.checkScrollPosition);
             }
         },
         /**
@@ -252,7 +270,7 @@ export default {
                     break;
                 case 2:
                     if (this.selectedRole !== null) {
-                        this.$emit('confirmSelection', this.selectedRole);
+                        this.$emit("confirmSelection", this.selectedRole);
                         this.drawerVisible = false;
                     }
                     break;
@@ -282,16 +300,16 @@ export default {
                 // 距离底部大于40px时显示遮罩层
                 this.showMask = distanceToBottom > 40;
             }
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style lang="less">
 .c-role-list-drawer {
     .el-drawer {
         border-radius: 20px 20px 0 0;
-        background: #24292E;
+        background: #24292e;
     }
 
     .el-drawer__header {
@@ -322,7 +340,7 @@ export default {
                 background: rgba(255, 255, 255, 0.05);
 
                 &.selected {
-                    border: 4px solid #FEDAA3;
+                    border: 4px solid #fedaa3;
                 }
 
                 .u-img {
@@ -337,7 +355,7 @@ export default {
                     }
 
                     .role-name {
-                        color: rgba(255, 255, 255, 0.80);
+                        color: rgba(255, 255, 255, 0.8);
                         font-size: 16px;
                         font-weight: 700;
                         line-height: 24px;
@@ -346,16 +364,14 @@ export default {
 
                 // 角色信息样式
                 .role-info {
-                    color: rgba(255, 255, 255, 0.80);
+                    color: rgba(255, 255, 255, 0.8);
                     text-align: center;
                     font-size: 12px;
                     font-weight: 400;
                     line-height: 18px;
-
                 }
             }
         }
-
     }
 
     // 底部按钮样式
@@ -379,14 +395,14 @@ export default {
         }
 
         .u-reset {
-            background: rgba(255, 255, 255, 0.10);
-            color: rgba(255, 255, 255, 0.40);
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .u-submit {
             flex: 1;
-            background: #FEDAA3;
-            color: #24292E;
+            background: #fedaa3;
+            color: #24292e;
             /* 150% */
         }
     }
@@ -398,7 +414,7 @@ export default {
         left: 0;
         width: 100%;
         height: 76px;
-        background: linear-gradient(180deg, rgba(36, 41, 46, 0.00) 0%, #24292E 73.94%);
+        background: linear-gradient(180deg, rgba(36, 41, 46, 0) 0%, #24292e 73.94%);
     }
 }
 </style>

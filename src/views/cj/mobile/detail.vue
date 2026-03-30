@@ -13,7 +13,9 @@
                     </div>
                 </div>
                 <wiki-item :item="source" />
-                <button  class="m-confirm" :class="{complete: isComplete,disabled:!isVirtual}" @click="setConfirm">{{ isComplete ? "已完成" : "设为已完成" }}</button>
+                <button class="m-confirm" :class="{ complete: isComplete, disabled: !isVirtual }" @click="setConfirm">
+                    {{ isComplete ? "已完成" : "设为已完成" }}
+                </button>
             </div>
             <div class="m-wiki">
                 <div class="m-wiki-header">
@@ -51,11 +53,21 @@
                     <div class="u-action" @click="() => (userSelectShow = true)">
                         <img src="@/assets/img/cj/mobile/user.svg" svg-inline />
                     </div>
-                    <div class="u-action" @click="()=>$refs.suspendCommon.clickDrawer({ type: 'collect', text: '收藏' }, 1)">
-                        <img v-if="$refs.suspendCommon?.isCollect" src="@/assets/img/cj/mobile/collect_un.svg" svg-inline />
-                        <img v-else src="@/assets/img/cj/mobile/collect.svg" svg-inline  />
+                    <div
+                        class="u-action"
+                        @click="() => $refs.suspendCommon.clickDrawer({ type: 'collect', text: '收藏' }, 1)"
+                    >
+                        <img
+                            v-if="$refs.suspendCommon?.isCollect"
+                            src="@/assets/img/cj/mobile/collect_un.svg"
+                            svg-inline
+                        />
+                        <img v-else src="@/assets/img/cj/mobile/collect.svg" svg-inline />
                     </div>
-                    <div class="u-action" @click="()=> $refs.suspendCommon.clickDrawer({ type: 'pin', text: '固定按钮' }, 1)">
+                    <div
+                        class="u-action"
+                        @click="() => $refs.suspendCommon.clickDrawer({ type: 'pin', text: '固定按钮' }, 1)"
+                    >
                         <img v-if="$refs.suspendCommon?.fixIsActive" src="@/assets/img/cj/mobile/pin.svg" svg-inline />
                         <img v-else src="@/assets/img/cj/mobile/pin_un.svg" svg-inline />
                     </div>
@@ -70,16 +82,16 @@
 </template>
 
 <script lang="js">
-import SuspendCommon from  '@jx3box/jx3box-common-ui/src/SuspendCommon.vue';
+import SuspendCommon from  '@jx3box/jx3box-ui/src/SuspendCommon.vue';
 import { publishLink, showAvatar, showSchoolIcon, ts2str } from "@jx3box/jx3box-common/js/utils";
 import { postHistory, postStat } from "@jx3box/jx3box-common/js/stat";
 import {
     cancelVirtualRoleAchievements,
     get_achievement, getRoleGameAchievements, getVirtualRoleAchievements, setVirtualRoleAchievements } from "@/service/achievement";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { reportNow } from "@jx3box/jx3box-common/js/reporter";
 import User from "@jx3box/jx3box-common/js/user";
-import { getConfig } from "@jx3box/jx3box-common/js/api_misc";
+import { getConfig } from "@jx3box/jx3box-common/js/system";
 import { report } from "@/service/user";
 import { icon_url } from "@/filters";
 import iconUrl from "@/filters/icon-url";
@@ -570,7 +582,7 @@ export default {
                 justify-content: center;
                 align-items: center;
                 flex: 1 0 0;
-                svg{
+                svg {
                     height: 24px;
                     width: 24px;
                 }
@@ -578,7 +590,6 @@ export default {
                     img {
                         opacity: 0.5;
                     }
-
                 }
             }
         }
@@ -643,11 +654,11 @@ export default {
             font-weight: 700;
             line-height: 24px; /* 150% */
 
-            &.complete{
+            &.complete {
                 opacity: 0.3;
             }
 
-            &.disabled{
+            &.disabled {
                 opacity: 0.3;
             }
         }

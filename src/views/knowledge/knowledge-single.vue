@@ -86,7 +86,7 @@ import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import WikiPanel from "@/components/wiki-panel.vue";
 import WikiRevisions from "@/components/wiki-revisions.vue";
 import User from "@jx3box/jx3box-common/js/user";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import WikiCommentsContent from "@/components/wiki-comments-content.vue";

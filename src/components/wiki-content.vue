@@ -32,7 +32,6 @@
             </el-button>
         </template>
         <template #body>
-
             <div class="m-wiki-compatible" v-if="compatible && !isEditMode">
                 <LegacyIcon class="el-icon-warning-outline" /> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
                     :href="publish_url(`${wiki_post.type}/${wikiPost.source_id}`)"
@@ -46,7 +45,6 @@
                 <a :href="rootPath">JX3BOX网站</a>
                 操作
             </div>
-
 
             <!-- Article -->
             <template v-if="wiki_post.source">
@@ -103,7 +101,7 @@ import player_name from "@/utils/player-name";
 import star from "@/utils/star";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import WikiPanel from "@/components/wiki-panel.vue";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
+import { wiki } from "@jx3box/jx3box-common/js/wiki.js";
 import { getTypeLabel, iconLink, publishLink } from "@jx3box/jx3box-common/js/utils";
 import { __Root, __OriginRoot } from "@/utils/config";
 export default {
@@ -179,7 +177,7 @@ export default {
                 user_nickname: this.publish.author,
                 content: document.getElementById("c-article").innerHTML,
                 remark: this.publish.remark,
-            }
+            };
             wiki.post({ type: this.wiki_post.type, ...data, client: this.client }).then((res) => {
                 res = res.data;
                 this.$message({
@@ -197,7 +195,7 @@ export default {
     },
     watch: {
         isEditMode(val) {
-            if (!val) return
+            if (!val) return;
             // 获取最新攻略
             if (this.wiki_post && this.wiki_post.type && this.wiki_post.source_id) {
                 wiki.get({ type: this.wiki_post.type, id: this.wiki_post.source_id }, { client: this.client }).then(

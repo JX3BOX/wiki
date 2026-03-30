@@ -1,12 +1,23 @@
 <template>
-    <el-drawer title="选择角色" :model-value="drawerVisible" direction="btt" size="420px" @close="handleClose"
-        class="c-role-list-drawer">
+    <el-drawer
+        title="选择角色"
+        :model-value="drawerVisible"
+        direction="btt"
+        size="420px"
+        @close="handleClose"
+        class="c-role-list-drawer"
+    >
         <div class="role-list-wrapper">
             <div class="role-list-container" ref="roleListContainer">
                 <!-- 角色列表 -->
                 <div class="role-items">
-                    <div class="role-item" v-for="(role, index) in roles" :key="index" @click="selectRole(role)"
-                        :class="{ 'selected': selectedRole.jx3id == role.jx3id }">
+                    <div
+                        class="role-item"
+                        v-for="(role, index) in roles"
+                        :key="index"
+                        @click="selectRole(role)"
+                        :class="{ selected: selectedRole.jx3id == role.jx3id }"
+                    >
                         <div class="u-img">
                             <RoleAvatar class="u-avatar-img" :mount="role.mount" :body_type="role.body_type" />
                             <div class="role-name">{{ role.name }}</div>
@@ -14,7 +25,6 @@
                         <div class="role-info" v-html="`<${role.server}>`"></div>
                     </div>
                 </div>
-
             </div>
             <!-- 底部按钮 -->
             <div class="role-button-group">
@@ -36,7 +46,7 @@ import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 export default {
     name: "RoleList",
     components: {
-        RoleAvatar
+        RoleAvatar,
     },
     // 组件属性
     props: {
@@ -45,19 +55,19 @@ export default {
          */
         visible: {
             type: Boolean,
-            default: false
+            default: false,
         },
         /**
          * 角色列表数据
          */
         roles: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         currentRole: {
             type: Object,
-            default: () => ({})
-        }
+            default: () => ({}),
+        },
     },
     // 计算属性
     computed: {
@@ -69,9 +79,9 @@ export default {
                 return this.visible;
             },
             set(val) {
-                this.$emit('update:visible', val);
-            }
-        }
+                this.$emit("update:visible", val);
+            },
+        },
     },
     // 数据定义
     data() {
@@ -79,8 +89,8 @@ export default {
             // 选中的角色
             selectedRole: null,
             // 遮罩层显示状态
-            showMask: false
-        }
+            showMask: false,
+        };
     },
     // 监听属性变化
     watch: {
@@ -92,7 +102,7 @@ export default {
                 // 抽屉打开后，在下一个DOM更新周期获取元素并添加事件监听
                 this.$nextTick(() => {
                     if (this.$refs.roleListContainer) {
-                        this.$refs.roleListContainer.addEventListener('scroll', this.checkScrollPosition);
+                        this.$refs.roleListContainer.addEventListener("scroll", this.checkScrollPosition);
                         // 初始化时检查一次
                         this.checkScrollPosition();
                     }
@@ -104,16 +114,15 @@ export default {
         },
         currentRole: {
             handler(newVal) {
-
                 if (newVal) {
                     this.selectedRole = newVal;
                 }
             },
             deep: true,
-            immediate: true
-        }
+            immediate: true,
+        },
     },
-    beforeDestroy() {
+    beforeUnmount() {
         // 组件销毁前移除事件监听
         this.removeScrollListener();
     },
@@ -125,7 +134,7 @@ export default {
          */
         removeScrollListener() {
             if (this.$refs.roleListContainer) {
-                this.$refs.roleListContainer.removeEventListener('scroll', this.checkScrollPosition);
+                this.$refs.roleListContainer.removeEventListener("scroll", this.checkScrollPosition);
             }
         },
         /**
@@ -148,7 +157,7 @@ export default {
          */
         confirmSelection() {
             if (this.selectedRole !== null) {
-                this.$emit('confirmSelection', this.selectedRole);
+                this.$emit("confirmSelection", this.selectedRole);
                 this.drawerVisible = false;
             }
         },
@@ -172,16 +181,16 @@ export default {
                 // 距离底部大于40px时显示遮罩层
                 this.showMask = distanceToBottom > 40;
             }
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style lang="less">
 .c-role-list-drawer {
     .el-drawer {
         border-radius: 20px 20px 0 0;
-        background: #24292E;
+        background: #24292e;
     }
 
     .el-drawer__header {
@@ -212,7 +221,7 @@ export default {
                 background: rgba(255, 255, 255, 0.05);
 
                 &.selected {
-                    border: 4px solid #FEDAA3;
+                    border: 4px solid #fedaa3;
                 }
 
                 .u-img {
@@ -227,7 +236,7 @@ export default {
                     }
 
                     .role-name {
-                        color: rgba(255, 255, 255, 0.80);
+                        color: rgba(255, 255, 255, 0.8);
                         font-size: 16px;
                         font-weight: 700;
                         line-height: 24px;
@@ -236,16 +245,14 @@ export default {
 
                 // 角色信息样式
                 .role-info {
-                    color: rgba(255, 255, 255, 0.80);
+                    color: rgba(255, 255, 255, 0.8);
                     text-align: center;
                     font-size: 12px;
                     font-weight: 400;
                     line-height: 18px;
-
                 }
             }
         }
-
     }
 
     // 底部按钮样式
@@ -254,7 +261,7 @@ export default {
         display: flex;
         justify-content: flex-end;
         gap: 20px;
-        border-top: 1px solid #30363D;
+        border-top: 1px solid #30363d;
 
         .el-button {
             margin-left: 0;
@@ -263,7 +270,7 @@ export default {
 
         .u-submit {
             flex: 1;
-            background: #FEDAA3;
+            background: #fedaa3;
         }
     }
 
@@ -274,7 +281,7 @@ export default {
         left: 0;
         width: 100%;
         height: 76px;
-        background: linear-gradient(180deg, rgba(36, 41, 46, 0.00) 0%, #24292E 73.94%);
+        background: linear-gradient(180deg, rgba(36, 41, 46, 0) 0%, #24292e 73.94%);
     }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="mini-program-overview">
+    <div class="mini-program-overview" v-if="currentRole">
         <!-- 用户信息区域 -->
         <div class="user-info-section">
             <div class="avatar-container">
@@ -11,7 +11,7 @@
             </div>
             <div class="user-name" @click="openRoleDrawer">{{ currentRole.name }}</div>
             <div class="user-detail">
-                <img width="30" height="30" :src="mpAvatar" class="hb-icon">
+                <img width="30" height="30" :src="mpAvatar" class="hb-icon" />
                 <span>
                     {{ xfName }}
                 </span>
@@ -27,7 +27,8 @@
                 <span class="progress-percentage">{{ totalProgress }}<span>%</span></span>
                 <span class="progress-value">
                     <!-- 总点数万字位以上 -->
-                    {{ ownPointsCountW }}<span>{{ ownPointsCountOther }}</span></span>
+                    {{ ownPointsCountW }}<span>{{ ownPointsCountOther }}</span></span
+                >
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" :style="{ width: totalProgress + '%' }"></div>
@@ -37,23 +38,33 @@
         <div class="friend-comparison">
             <div class="section-title">
                 <div class="title-content" @click="handleClickBtn('friendComparison')">
-                    <img height="24"
+                    <img
+                        height="24"
                         :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/comparison.svg`)"
-                        class="u-icon-left">
+                        class="u-icon-left"
+                    />
                     亲友对比
                 </div>
-                <img height="14" :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/right.svg`)"
-                    class="u-icon-right">
+                <img
+                    height="14"
+                    :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/right.svg`)"
+                    class="u-icon-right"
+                />
             </div>
             <div class="section-title disabled">
                 <div class="title-content">
-                    <img height="24"
+                    <img
+                        height="24"
                         :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/improvement.svg`)"
-                        class="u-icon-left">
+                        class="u-icon-left"
+                    />
                     渡劫方案
                 </div>
-                <img height="14" :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/right.svg`)"
-                    class="u-icon-right">
+                <img
+                    height="14"
+                    :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/right.svg`)"
+                    class="u-icon-right"
+                />
             </div>
         </div>
         <!-- 进度概览 -->
@@ -64,47 +75,61 @@
 
             <!-- 分类进度卡片 -->
             <div class="category-progress">
-                <div class="progress-card" v-for="(category, index) in list" :key="index"
-                    @click="handleClick(category)">
+                <div
+                    class="progress-card"
+                    v-for="(category, index) in list"
+                    :key="index"
+                    @click="handleClick(category)"
+                >
                     <!-- 详细模式top -->
                     <div class="u-top-detailed">
                         <div class="u-name">{{ category.name }}</div>
                         <div class="progress-bar-small">
-                            <div class="progress-fill"
-                                :style="{ width: getCurrentProgress(category.ownPoints, category.allPoints) + '%' }">
-                            </div>
-
+                            <div
+                                class="progress-fill"
+                                :style="{ width: getCurrentProgress(category.ownPoints, category.allPoints) + '%' }"
+                            ></div>
                         </div>
                         <div class="progress-percentage-small">
                             {{ getCurrentProgress(category.ownPoints, category.allPoints) }}%
                         </div>
                         <div class="u-info">
                             <div class="u-num">
-                                <img width="14" height="14"
-                                    :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/count.svg`)"
-                                    alt="成就logo" />
+                                <img
+                                    width="14"
+                                    height="14"
+                                    :src="
+                                        require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/count.svg`)
+                                    "
+                                    alt="成就logo"
+                                />
                                 {{ category.ownAchievements.length }}/{{ category.allAchievements.length }}
-
                             </div>
                             <div class="u-num">
-                                <img width="14" height="14"
+                                <img
+                                    width="14"
+                                    height="14"
                                     :src="require(`@/assets/img/wiki_miniprogram/${isDark ? 'Dark' : 'Light'}/sum.svg`)"
-                                    alt="资历logo" />
+                                    alt="资历logo"
+                                />
                                 {{ category.ownPoints }}/{{ category.allPoints }}
-
                             </div>
                         </div>
                     </div>
 
                     <div class="u-icon">
-                        <img :src="getIconPath(category.sub)" alt="" class="hb-icon" svg-inline>
+                        <img :src="getIconPath(category.sub)" alt="" class="hb-icon" svg-inline />
                     </div>
                 </div>
             </div>
         </div>
         <!-- 角色列表 -->
-        <RoleListVue v-model:visible="drawerVisible" :roles="roleList" :currentRole="currentRole"
-            @confirmSelection="handleConfirmSelection">
+        <RoleListVue
+            v-model:visible="drawerVisible"
+            :roles="roleList"
+            :currentRole="currentRole"
+            @confirmSelection="handleConfirmSelection"
+        >
         </RoleListVue>
     </div>
 </template>
@@ -122,11 +147,17 @@ import { __imgPath, __cdn } from "@/utils/config";
 import RoleAvatar from "@/components/wiki/RoleAvatar.vue";
 import RoleListVue from "@/views/wiki_miniprogram/components/roleList.vue";
 import { mobileOpen } from "@/utils/minprogram";
-import { getUserRolesList, getRoleGameAchievementsList, getMenuAndPoints, getAchievementsFinishStatus } from "@/utils/wiki_miniprogram";
+import {
+    getUserRolesList,
+    getRoleGameAchievementsList,
+    getMenuAndPoints,
+    getAchievementsFinishStatus,
+} from "@/utils/wiki_miniprogram";
 export default {
     name: "OverviewMiniProgram",
     components: {
-        RoleAvatar, RoleListVue,
+        RoleAvatar,
+        RoleListVue,
     },
     // 数据定义
     data() {
@@ -149,13 +180,12 @@ export default {
             ownPointsCountW: null,
             // 我拥有的所有资历点数其他位
             ownPointsCountOther: 0,
-
-        }
+        };
     },
     computed: {
         isDark() {
             // // 使用 window.matchMedia 检查系统是否启用了暗色模式
-            const mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+            const mediaQueryList = window.matchMedia("(prefers-color-scheme: dark)");
             return mediaQueryList.matches;
         },
         avatar_frame() {
@@ -174,7 +204,7 @@ export default {
         },
         xfName() {
             if (this.currentRole.mount) {
-                return schoolid[this.currentRole.mount] || '';
+                return schoolid[this.currentRole.mount] || "";
             }
             return "";
         },
@@ -186,7 +216,6 @@ export default {
         },
     },
     watch: {
-
         currentRole: {
             deep: true,
             handler(val) {
@@ -209,11 +238,13 @@ export default {
          * @param {string} btn - 按钮名称
          */
         handleClickBtn(btn) {
-            if (btn === 'friendComparison') {
-                mobileOpen(this.$router.resolve({
-                    name: "compare",
-                    query: { jx3id: this.currentRole.jx3id }
-                }).href);
+            if (btn === "friendComparison") {
+                mobileOpen(
+                    this.$router.resolve({
+                        name: "compare",
+                        query: { jx3id: this.currentRole.jx3id },
+                    }).href
+                );
             }
         },
         /**
@@ -222,10 +253,12 @@ export default {
          */
         handleClick(menu) {
             // 小程序打开界面
-            mobileOpen(this.$router.resolve({
-                name: "catalogue",
-                query: { menuId: menu.sub, jx3id: this.currentRole.jx3id }
-            }).href);
+            mobileOpen(
+                this.$router.resolve({
+                    name: "catalogue",
+                    query: { menuId: menu.sub, jx3id: this.currentRole.jx3id },
+                }).href
+            );
         },
         /**
          * 获取图标路径
@@ -233,7 +266,7 @@ export default {
          * @returns {string} - 图标路径
          */
         getIconPath(sub) {
-            return require(`@/assets/img/wiki_miniprogram/${this.isDark ? 'Dark' : 'Light'}/tog_${sub}.svg`);
+            return require(`@/assets/img/wiki_miniprogram/${this.isDark ? "Dark" : "Light"}/tog_${sub}.svg`);
         },
 
         getCurrentProgress(own, all) {
@@ -241,7 +274,7 @@ export default {
         },
         getUserInfo() {
             if (!User.isLogin()) {
-                this.$confirm("请先登录再使用")
+                this.$confirm("请先登录再使用");
                 return;
             }
             getMyInfo().then((res) => {
@@ -269,7 +302,7 @@ export default {
          */
         async loadRoleAchievements(jx3id) {
             let achievements = await getRoleGameAchievementsList(jx3id);
-            this.isSync = achievements.isSync
+            this.isSync = achievements.isSync;
             this.currentRole.achievements = achievements.list || [];
             this.getRenderList();
         },
@@ -291,7 +324,7 @@ export default {
         /*****************************获取成就列表********************************/
 
         getRenderList() {
-            let menuList = this.menuList || []
+            let menuList = this.menuList || [];
             const my_achievements = this.currentRole.achievements || [];
             const list = Object.keys(menuList).map((key) => {
                 const item = menuList[key];
@@ -316,13 +349,12 @@ export default {
                 this.ownPointsCountW = pointsStr.slice(0, -4);
                 this.ownPointsCountOther = pointsStr.slice(-4);
             } else {
-                this.ownPointsCountW = '';
+                this.ownPointsCountW = "";
                 this.ownPointsCountOther = pointsStr;
             }
         },
-
-    }
-}
+    },
+};
 </script>
 <style lang="less">
 .c-mode-list-drawer {
@@ -330,7 +362,7 @@ export default {
 
     .el-drawer {
         border-radius: 20px 20px 0 0;
-        background: #24292E;
+        background: #24292e;
     }
 
     .el-drawer__header {
@@ -343,7 +375,7 @@ export default {
         .mode-item {
             padding: 16px;
             margin-bottom: 16px;
-            border: 2px solid #30363D;
+            border: 2px solid #30363d;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
@@ -370,14 +402,13 @@ export default {
             }
 
             &.selected {
-                border-color: #FEDAA3;
+                border-color: #fedaa3;
                 background-color: rgba(255, 255, 255, 0.05);
 
                 .mode-name,
                 .mode-detail {
-                    color: #FEDAA3;
+                    color: #fedaa3;
                 }
-
             }
         }
     }
@@ -387,7 +418,7 @@ export default {
         display: flex;
         justify-content: flex-end;
         gap: 20px;
-        border-top: 1px solid #30363D;
+        border-top: 1px solid #30363d;
 
         .el-button {
             margin-left: 0;
@@ -396,7 +427,7 @@ export default {
 
         .u-submit {
             flex: 1;
-            background: #FEDAA3;
+            background: #fedaa3;
         }
     }
 }
@@ -406,7 +437,7 @@ export default {
  */
 .mini-program-overview {
     height: 100vh;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
     padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
@@ -459,15 +490,14 @@ export default {
             font-size: 18px;
             font-weight: 700;
             line-height: 28px;
-            color: #1C1C1C;
-
+            color: #1c1c1c;
         }
 
         .user-detail {
             font-size: 14px;
             line-height: 20px;
             font-weight: 400;
-            color: rgba(28, 28, 28, 0.40);
+            color: rgba(28, 28, 28, 0.4);
             display: flex;
             align-items: center;
             gap: 4px;
@@ -475,7 +505,6 @@ export default {
             .hb-icon {
                 width: 20px;
                 height: 20px;
-
             }
         }
     }
@@ -498,21 +527,20 @@ export default {
             justify-content: space-between;
 
             .title-content {
-                color: #FEDAA3;
+                color: #fedaa3;
                 font-size: 16px;
                 font-style: normal;
                 font-weight: 700;
                 line-height: 24px;
                 display: flex;
                 align-items: center;
-                gap: 8px
+                gap: 8px;
             }
 
             &.disabled {
                 cursor: not-allowed;
                 opacity: 0.5;
             }
-
         }
     }
 
@@ -581,7 +609,7 @@ export default {
                 font-size: 14px;
                 font-weight: 700;
                 line-height: 20px;
-                color: rgba(28, 28, 28, 0.80);
+                color: rgba(28, 28, 28, 0.8);
             }
 
             .toggle-mode {
@@ -590,7 +618,7 @@ export default {
                 font-size: 14px;
                 font-weight: 700;
                 line-height: 20px;
-                color: rgba(28, 28, 28, 0.40);
+                color: rgba(28, 28, 28, 0.4);
                 cursor: pointer;
                 margin-right: 4px;
                 //禁止选中
@@ -637,7 +665,7 @@ export default {
                     flex-direction: column;
                     align-items: flex-start;
                     gap: 8px;
-                    color: rgba(28, 28, 28, 0.80);
+                    color: rgba(28, 28, 28, 0.8);
                     font-style: normal;
 
                     .u-name {
@@ -677,7 +705,6 @@ export default {
                         background-color: rgba(28, 28, 28, 0.8);
                         border-radius: 4px;
                     }
-
                 }
 
                 .progress-percentage-small {
@@ -722,11 +749,11 @@ export default {
 
             .progress-info {
                 .progress-percentage {
-                    color: #24292E;
+                    color: #24292e;
                 }
 
                 .progress-value {
-                    color: #24292E;
+                    color: #24292e;
                 }
             }
 
@@ -734,7 +761,7 @@ export default {
                 background-color: rgba(255, 255, 255, 0.2);
 
                 .progress-fill {
-                    background-color: #24292E;
+                    background-color: #24292e;
                 }
             }
         }

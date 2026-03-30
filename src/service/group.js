@@ -1,4 +1,4 @@
-import { $helper, $cms } from "@jx3box/jx3box-common/js/https";
+import { $helper, $cms } from "@jx3box/jx3box-common/js/api";
 
 function get_groups(type, params) {
     return $helper().get(`api/groups/${type}`, {

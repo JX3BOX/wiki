@@ -468,7 +468,7 @@
 
 <script>
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
-// import Fav from "@jx3box/jx3box-common-ui/src/interact/Fav.vue";
+// import Fav from "@jx3box/jx3box-ui/src/interact/Fav.vue";
 import Fav from "./item-fav";
 import Item from "@/components/common/compat-item.vue";
 import GameText from "@jx3box/jx3box-editor/src/GameText.vue";
@@ -486,7 +486,7 @@ import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
+import { wiki } from "@jx3box/jx3box-common/js/wiki.js";
 import { __Links } from "@/utils/config";
 import std_servers from "@jx3box/jx3box-data/data/server/server_std.json";
 import origin_servers from "@jx3box/jx3box-data/data/server/server_origin.json";

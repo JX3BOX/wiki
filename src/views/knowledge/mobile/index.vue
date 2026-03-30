@@ -117,7 +117,7 @@
 
 <script>
 import KnowledgeSearchDrawer from "@/components/knowledge/mobile/knowledge-search-drawer.vue";
-import SuspendCommon from "@jx3box/jx3box-common-ui/src/SuspendCommon.vue";
+import SuspendCommon from "@jx3box/jx3box-ui/src/SuspendCommon.vue";
 import { getKnowledgeList, getKnowledgeMenus, getMenuGroups } from "@/service/knowledge.js";
 
 export default {

@@ -160,9 +160,9 @@ import dayjs from "dayjs";
 import { mapState } from "vuex";
 import { item_bind } from "@/filters";
 import { isInMiniprogramWebview } from "@/utils/minprogram";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { postHistory, postStat } from "@jx3box/jx3box-common/js/stat";
-import SuspendCommon from "@jx3box/jx3box-common-ui/src/SuspendCommon.vue";
+import SuspendCommon from "@jx3box/jx3box-ui/src/SuspendCommon.vue";
 import MiniprogramCommentList from "@/components/cj/mobile/comment-list.vue";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import { get_item } from "@/service/item";
@@ -177,7 +177,7 @@ import { get_item_prices } from "@/service/item";
 import { meanBy, maxBy, minBy } from "lodash";
 import PriceChart from "@/components/item/mobile/price-chart.vue";
 import { getMyFav, delMyFav } from "@/service/item.js";
-import { addFav } from "@jx3box/jx3box-common-ui/service/fav";
+import { addFav } from "@jx3box/jx3box-ui/service/fav";
 import AddItemPlanDrawer from "@/components/item/mobile/add-item-plan-drawer.vue";
 
 export default {
@@ -976,4 +976,3 @@ export default {
     }
 }
 </style>
-

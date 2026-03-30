@@ -20,7 +20,8 @@
                         <Counter type="item" :showCounter="false"></Counter>
                     </li>
                     <li class="qlink">
-                        <router-link  style="background-color: #f7b044;"
+                        <router-link
+                            style="background-color: #f7b044"
                             :to="{
                                 name: 'search',
                                 query: {
@@ -213,7 +214,7 @@ import WikiItem from "@/components/common/wiki-item.vue";
 import { iconLink, showAvatar } from "@jx3box/jx3box-common/js/utils";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { __iconPath, feedback } from "@/utils/config";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { get_newest_items, get_items_by_node } from "@/service/item.js";
 import { author_url, date_format, star } from "@/filters";
 import { ellipsis } from "@/utils/common";

@@ -23,18 +23,18 @@
                 </el-button>
                 <template #dropdown>
                     <el-dropdown-menu class="m-header__menu">
-                    <el-dropdown-item class="u-dropdown-link">
-                        <a :href="`${rootPath}adventure`">奇遇大全</a>
-                    </el-dropdown-item>
-                    <el-dropdown-item class="u-dropdown-link">
-                        <a :href="`${rootPath}pet`">宠物大全</a>
-                    </el-dropdown-item>
-                    <el-dropdown-item class="u-dropdown-link">
-                        <a :href="`${rootPath}horse`">坐骑大全</a>
-                    </el-dropdown-item>
-                    <el-dropdown-item class="u-dropdown-link">
-                        <a :href="`${rootPath}furniture`">家具大全</a>
-                    </el-dropdown-item>
+                        <el-dropdown-item class="u-dropdown-link">
+                            <a :href="`${rootPath}adventure`">奇遇大全</a>
+                        </el-dropdown-item>
+                        <el-dropdown-item class="u-dropdown-link">
+                            <a :href="`${rootPath}pet`">宠物大全</a>
+                        </el-dropdown-item>
+                        <el-dropdown-item class="u-dropdown-link">
+                            <a :href="`${rootPath}horse`">坐骑大全</a>
+                        </el-dropdown-item>
+                        <el-dropdown-item class="u-dropdown-link">
+                            <a :href="`${rootPath}furniture`">家具大全</a>
+                        </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -81,39 +81,39 @@
                             <WikiPanel :wiki-post="wiki_post">
                                 <template #meta>
                                     <div class="m-meta-list">
-                                    <!-- 参与贡献 -->
-                                    <div class="m-user-info">
-                                        <div class="u-meta" v-if="wiki_post.users && wiki_post.users.length">
-                                            <em class="u-label">参与贡献</em>
-                                            <div class="m-users">
-                                                <a
-                                                    class="u-value u-creator"
-                                                    v-for="(user, key) in wiki_post.users.slice(0, 3)"
-                                                    :key="key"
-                                                    target="_blank"
-                                                    :href="user.id ? author_url(user.id) : null"
-                                                >
-                                                    <img
-                                                        class="u-user"
-                                                        :src="thumbnail_url(user.avatar)"
-                                                        :alt="user.nickname"
-                                                        :title="user.nickname"
-                                                    />
-                                                </a>
-                                                <span class="u-more" v-if="userLength > 3">
-                                                    +{{ userLength - 3 > 999 ? 999 : userLength - 3 }}
-                                                </span>
+                                        <!-- 参与贡献 -->
+                                        <div class="m-user-info">
+                                            <div class="u-meta" v-if="wiki_post.users && wiki_post.users.length">
+                                                <em class="u-label">参与贡献</em>
+                                                <div class="m-users">
+                                                    <a
+                                                        class="u-value u-creator"
+                                                        v-for="(user, key) in wiki_post.users.slice(0, 3)"
+                                                        :key="key"
+                                                        target="_blank"
+                                                        :href="user.id ? author_url(user.id) : null"
+                                                    >
+                                                        <img
+                                                            class="u-user"
+                                                            :src="thumbnail_url(user.avatar)"
+                                                            :alt="user.nickname"
+                                                            :title="user.nickname"
+                                                        />
+                                                    </a>
+                                                    <span class="u-more" v-if="userLength > 3">
+                                                        +{{ userLength - 3 > 999 ? 999 : userLength - 3 }}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="m-article-info">
-                                        <div class="m-version" v-if="versions.length">
-                                            攻略版本：v{{ versions.length }}
+                                        <div class="m-article-info">
+                                            <div class="m-version" v-if="versions.length">
+                                                攻略版本：v{{ versions.length }}
+                                            </div>
+                                            <div class="m-wiki-signature">
+                                                本次修订由 <b>{{ user_name }}</b> 提交于{{ updated_at }}
+                                            </div>
                                         </div>
-                                        <div class="m-wiki-signature">
-                                            本次修订由 <b>{{ user_name }}</b> 提交于{{ updated_at }}
-                                        </div>
-                                    </div>
                                     </div>
                                 </template>
                                 <template #body>
@@ -154,7 +154,7 @@
 import { __Root, __OriginRoot } from "@/utils/config";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import { ts2str, authorLink, showAvatar, iconLink } from "@jx3box/jx3box-common/js/utils.js";
 import { reportNow } from "@jx3box/jx3box-common/js/reporter";
@@ -310,30 +310,30 @@ export default {
             });
             const wikiTask = wiki.mix({ type: "achievement", id: sourceId, client }).then((res) => {
                 if (this.id !== sourceId) return;
-                    const { post, source, compatible, isEmpty, users } = res;
-                    this.wiki_post = {
-                        post: post,
-                        source: source,
-                        users,
-                    };
-                    this.is_empty = isEmpty;
-                    this.compatible = compatible;
+                const { post, source, compatible, isEmpty, users } = res;
+                this.wiki_post = {
+                    post: post,
+                    source: source,
+                    users,
+                };
+                this.is_empty = isEmpty;
+                this.compatible = compatible;
 
-                    reportNow({
-                        caller: "cj_detail",
-                        data: {
-                            href: `${this.prefix}:/cj/view/${sourceId}`,
-                        },
-                    });
-
-                    User.isLogin() &&
-                        postHistory({
-                            source_type: "wujie",
-                            source_id: ~~sourceId,
-                            link: location.href,
-                            title: post.title,
-                        });
+                reportNow({
+                    caller: "cj_detail",
+                    data: {
+                        href: `${this.prefix}:/cj/view/${sourceId}`,
+                    },
                 });
+
+                User.isLogin() &&
+                    postHistory({
+                        source_type: "wujie",
+                        source_id: ~~sourceId,
+                        link: location.href,
+                        title: post.title,
+                    });
+            });
 
             const versionsTask = wiki.versions({ type: "achievement", id: sourceId }, { client }).then(
                 (res) => {

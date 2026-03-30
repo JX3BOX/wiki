@@ -1,5 +1,6 @@
 <template>
     <div class="m-achievement-single" :class="{ fold: fold, hidden: isHidden }" v-if="hasContent && !isRobot">
+        <!-- eslint-disable -->
         <el-checkbox
             v-if="initFold && isLogin && isVirtual"
             class="u-achievement-checkbox"
@@ -59,13 +60,7 @@
                     </el-button>
                 </template>
                 <template v-if="isLogin && !isVirtual">
-                    <el-button
-                        class="u-attr u-fav"
-                        plain
-                        size="small"
-                        icon="Plus"
-                        @click.stop="onAppendToLeapSchema"
-                    >
+                    <el-button class="u-attr u-fav" plain size="small" icon="Plus" @click.stop="onAppendToLeapSchema">
                         加入渡劫方案
                     </el-button>
                 </template>
@@ -167,10 +162,13 @@
                                 title="设为完成"
                                 class="u-icon el-icon-check"
                                 @click.stop="finishVirtual(series_achievement.ID)"
-                             />
+                            />
                         </el-tooltip>
                         <el-tooltip v-else class="item" effect="dark" content="取消完成" placement="bottom">
-                            <LegacyIcon class="u-icon el-icon-close" @click.stop="cancelVirtual(series_achievement.ID)" />
+                            <LegacyIcon
+                                class="u-icon el-icon-close"
+                                @click.stop="cancelVirtual(series_achievement.ID)"
+                            />
                         </el-tooltip>
                     </div>
                 </div>

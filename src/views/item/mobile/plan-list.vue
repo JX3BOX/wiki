@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import SuspendCommon from "@jx3box/jx3box-common-ui/src/SuspendCommon.vue";
+import SuspendCommon from "@jx3box/jx3box-ui/src/SuspendCommon.vue";
 import CreatePlanDrawerVue from "@/components/item/mobile/create-plan-drawer.vue";
 import { getMyPlans, getItemPlanID, updatePlan } from "@/service/item-plan.js";
 

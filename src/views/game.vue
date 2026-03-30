@@ -44,7 +44,7 @@ import WikiComments from "@/components/wiki-comments.vue";
 // import Relations from "@/components/relations.vue";
 import PriceTabs from "@/components/item/price-tabs.vue";
 import Price from "@/components/item/price.vue";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
+import { wiki } from "@jx3box/jx3box-common/js/wiki.js";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import { postStat } from "@jx3box/jx3box-common/js/stat";
 import Notice from "@/components/cj/notice.vue";

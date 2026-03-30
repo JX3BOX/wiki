@@ -1,18 +1,30 @@
 <template>
     <div>
-        <el-drawer v-model="show" direction="btt" :show-close="false" :with-header="false" append-to-body
-            custom-class="topic-view-drawer" size="400" @close="onClose" style="width: 100%">
+        <el-drawer
+            v-model="show"
+            direction="btt"
+            :show-close="false"
+            :with-header="false"
+            append-to-body
+            custom-class="topic-view-drawer"
+            size="400"
+            @close="onClose"
+            style="width: 100%"
+        >
             <template #default>
                 <div v-loading="loading" class="c-var m-topic-view">
                     <div v-if="source" class="m-achievement-info">
                         <div class="m-left">
                             <div class="u-achievement-box">
                                 <div class="u-icon">
-                                    <img :src="icon_url(source.IconID)" @error.once="
-                                        () => {
-                                            $event.target.src = icon_url();
-                                        }
-                                    " />
+                                    <img
+                                        :src="icon_url(source.IconID)"
+                                        @error.once="
+                                            () => {
+                                                $event.target.src = icon_url();
+                                            }
+                                        "
+                                    />
                                 </div>
                                 <div class="u-name">
                                     {{ source.Name }}
@@ -35,8 +47,12 @@
                         </div>
                     </div>
 
-                    <div class="m-content-box" ref="content" :class="{ 'not-on-bottom': !isAtBottom }"
-                        @contextmenu="openChild">
+                    <div
+                        class="m-content-box"
+                        ref="content"
+                        :class="{ 'not-on-bottom': !isAtBottom }"
+                        @contextmenu="openChild"
+                    >
                         <Article id="wikiArticle" :content="clearContent(wiki_post?.post?.content)" />
                     </div>
                 </div>
@@ -54,10 +70,10 @@ import { icon_url } from "@/filters";
 import { publishLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 import { postHistory, postStat } from "@jx3box/jx3box-common/js/stat";
 import { cancelVirtualRoleAchievements, get_achievement, setVirtualRoleAchievements } from "@/service/achievement";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { reportNow } from "@jx3box/jx3box-common/js/reporter";
 import User from "@jx3box/jx3box-common/js/user";
-import { getConfig } from "@jx3box/jx3box-common/js/api_misc";
+import { getConfig } from "@jx3box/jx3box-common/js/system";
 import { report } from "@/service/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils.js";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
@@ -100,7 +116,7 @@ export default {
     },
     watch: {
         current: {
-            handler() { },
+            handler() {},
             immediate: true,
             deep: true,
         },
@@ -232,7 +248,7 @@ export default {
     methods: {
         showAvatar,
         icon_url,
-        next() { },
+        next() {},
         hadCompleted(id) {
             const list = this.isVirtual ? this.achievementsVirtual : this.completeAchievements;
             return list.includes(id + "");
@@ -454,13 +470,15 @@ export default {
             this.$emit("change", this.tmpVal);
         },
         toDetail() {
-            mobileOpen(this.$router.resolve({
-                name: "view",
-                params: {
-                    post_id: this.post_id,
-                    source_id: this.id,
-                },
-            }).href);
+            mobileOpen(
+                this.$router.resolve({
+                    name: "view",
+                    params: {
+                        post_id: this.post_id,
+                        source_id: this.id,
+                    },
+                }).href
+            );
         },
         handleScroll(event) {
             const element = event.target;
@@ -468,7 +486,7 @@ export default {
             this.isAtBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - threshold;
         },
         confirmOk() {
-            this.finishVirtual([this.id])
+            this.finishVirtual([this.id]);
         },
         finishVirtual(curr) {
             const ids = curr ? curr : this.selectedAchievements.map((item) => item.ID + "");

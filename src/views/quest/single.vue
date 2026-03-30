@@ -77,9 +77,7 @@
                         :size="28"
                     ></item-icon>
                     <span v-else>{{ quest.end.name || "未知" }}</span>
-                    <span class="u-endpoint-id"
-                        >({{ pointType(quest.end.type) }}ID: {{ idFilter(quest.end.id) }})</span
-                    >
+                    <span class="u-endpoint-id">({{ pointType(quest.end.type) }}ID: {{ idFilter(quest.end.id) }})</span>
                     <point-filter
                         v-if="showPointFilter('End')"
                         :default="true"
@@ -344,7 +342,7 @@ import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import wikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat.js";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2.js";
+import { wiki } from "@jx3box/jx3box-common/js/wiki.js";
 import { getAppIcon } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 
@@ -762,19 +760,6 @@ export default {
             handler() {
                 this.loadRevision();
             },
-        },
-    },
-    filters: {
-        pointType: (value) => {
-            if (value === "npc") return "NPC";
-            else if (value === "doodad") return "交互物品";
-            else if (value === "item") return "物品";
-            else return "";
-        },
-        idFilter: (id) => {
-            if (isArray(id)) {
-                return `${id[0]}_${id[1]}`;
-            } else return id;
         },
     },
 };

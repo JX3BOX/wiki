@@ -13,7 +13,7 @@
                     <span class="u-tip">点击开始搜索内容</span>
                 </div>
             </div>
-            <router-link :to="{name: 'plan_list'}" class="m-to-plan">
+            <router-link :to="{ name: 'plan_list' }" class="m-to-plan">
                 <span>查看物品清单</span>
                 <LegacyIcon class="el-icon-arrow-right" />
             </router-link>
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import SuspendCommon from "@jx3box/jx3box-common-ui/src/SuspendCommon.vue";
+import SuspendCommon from "@jx3box/jx3box-ui/src/SuspendCommon.vue";
 import ItemCard from "@/components/item/mobile/item-card.vue";
 import { getMyFav, delMyFav } from "@/service/item.js";
 import SearchDrawer from "@/components/item/mobile/search-drawer.vue";

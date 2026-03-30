@@ -62,15 +62,15 @@
 </template>
 
 <script>
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
-import SuspendCommon from "@jx3box/jx3box-common-ui/src/SuspendCommon.vue";
+import SuspendCommon from "@jx3box/jx3box-ui/src/SuspendCommon.vue";
 import MiniprogramCommentList from "@/components/knowledge/mobile/comment-list.vue";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import { showAvatar, ts2str } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import { getMyFav, delMyFav } from "@/service/item.js"; // Reuse item service or common service
-import { addFav } from "@jx3box/jx3box-common-ui/service/fav";
+import { addFav } from "@jx3box/jx3box-ui/service/fav";
 import { isInMiniprogramWebview } from "@/utils/minprogram";
 import FoldCard from "@/components/quest/mobile/fold-card.vue";
 

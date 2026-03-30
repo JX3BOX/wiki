@@ -47,7 +47,7 @@
 
 <script>
 import { authorLink, ts2str, iconLink, showAvatar, getLink } from "@jx3box/jx3box-common/js/utils";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { ellipsis } from "@/utils/common";
 
 export default {
@@ -70,7 +70,7 @@ export default {
         ts2str,
         iconLink,
         showAvatar: function (user) {
-            const val = user?.user_avatar || '';
+            const val = user?.user_avatar || "";
             return showAvatar(val);
         },
         getLink,

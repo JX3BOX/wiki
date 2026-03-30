@@ -4,7 +4,11 @@
             <div class="m-section" v-for="(group, index) in plan.relation" :key="index">
                 <div class="m-section-title">
                     {{ group.title || `分组${index + 1}` }}
-                    <LegacyIcon class="u-edit-title el-icon-edit" v-if="group.editing" @click="onEditGroupTitle(group)" />
+                    <LegacyIcon
+                        class="u-edit-title el-icon-edit"
+                        v-if="group.editing"
+                        @click="onEditGroupTitle(group)"
+                    />
                     <div
                         class="u-edit"
                         @click="$set(group, 'editing', !group.editing)"
@@ -63,7 +67,7 @@
 </template>
 
 <script>
-import SuspendCommon from "@jx3box/jx3box-common-ui/src/SuspendCommon.vue";
+import SuspendCommon from "@jx3box/jx3box-ui/src/SuspendCommon.vue";
 import { getItemPlanID, updatePlan } from "@/service/item-plan.js";
 import ItemCard from "@/components/item/mobile/item-card.vue";
 import InputDrawerVue from "@/components/item/mobile/input-drawer.vue";

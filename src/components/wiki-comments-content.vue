@@ -38,7 +38,7 @@
 
 <script>
 import CommentTree from "@/components/wiki-comment.vue";
-import { wikiComment } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wikiComment } from "@jx3box/jx3box-common/js/wiki";
 import User from "@jx3box/jx3box-common/js/user";
 
 function buildCommentTree(comments) {

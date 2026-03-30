@@ -7,7 +7,7 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
-import { hasFav, addFav, delFav } from "@jx3box/jx3box-common-ui/service/fav";
+import { hasFav, addFav, delFav } from "@jx3box/jx3box-ui/service/fav";
 export default {
     name: "Fav",
     props: ["postType", "postId", "postTitle"],

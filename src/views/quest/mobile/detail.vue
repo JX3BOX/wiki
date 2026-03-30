@@ -175,7 +175,7 @@
 <script>
 import { mapState } from "vuex";
 
-import SuspendCommon from "@jx3box/jx3box-common-ui/src/SuspendCommon.vue";
+import SuspendCommon from "@jx3box/jx3box-ui/src/SuspendCommon.vue";
 import UserSelectDrawer from "@/components/cj/mobile/user-select-drawer.vue";
 import ConfirmOkDrawer from "@/components/cj/mobile/confirm-ok-drawer.vue";
 import MiniprogramCommentList from "@/components/cj/mobile/comment-list.vue";
@@ -188,7 +188,7 @@ import { getQuest, completeUserQuest, cancelUserQuest, listUserQuest, getQuests 
 import { isInMiniprogramWebview } from "@/utils/minprogram";
 import { publishLink, showAvatar, showSchoolIcon, ts2str } from "@jx3box/jx3box-common/js/utils";
 import { questDescFormat, questTargetDescFormat } from "@/utils/quest.js";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { postHistory, postStat } from "@jx3box/jx3box-common/js/stat";
 import User from "@jx3box/jx3box-common/js/user";
 
@@ -234,7 +234,7 @@ export default {
         },
 
         id() {
-            return Number(this.$route.params.quest_id); 
+            return Number(this.$route.params.quest_id);
         },
         post_id() {
             return this.wiki_post?.post?.id || undefined;
