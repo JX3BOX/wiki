@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getMapScales } from "@jx3box/jx3box-map/src/service/data.js";
+import { getMapScales } from "@/service/map";
 import { __imgPath } from "@/utils/config";
 
 export default {

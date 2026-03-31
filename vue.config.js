@@ -1,11 +1,11 @@
 const pages = {
     index: {
-        title: "剑三 Wiki - JX3BOX",
+        title: "剑三Wiki - JX3BOX",
         entry: "src/main.js",
         template: "public/index.html",
         filename: "index.html",
     },
-    achievement: {
+    wiki: {
         title: "资历宝典 - JX3BOX",
         template: "public/index.html",
         entry: "src/pages/wiki.js",
