@@ -5,12 +5,12 @@ const pages = {
         template: "public/index.html",
         filename: "index.html",
     },
-    wiki: {
-        title: "资历宝典 - JX3BOX",
-        template: "public/index.html",
-        entry: "src/pages/wiki.js",
-        filename: "wiki/index.html",
-    },
+    // wiki: {
+    //     title: "资历宝典 - JX3BOX",
+    //     template: "public/index.html",
+    //     entry: "src/pages/wiki.js",
+    //     filename: "wiki/index.html",
+    // },
     cj: {
         title: "成就百科 - JX3BOX",
         template: "public/index.html",
