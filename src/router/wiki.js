@@ -17,22 +17,48 @@ const routes = [
         name: "overview",
         path: "/overview",
         component: isMiniProgram() || isApp() ? overviewMiniProgram : overview,
+        meta: {
+            i18n: {
+                title: "pages.wiki.overview.title",
+                keywords: "pages.wiki.overview.keywords",
+                description: "pages.wiki.overview.description",
+            },
+        },
     },
     {
         name: "compare",
         path: "/compare",
         component: isMiniProgram() || isApp() ? compareMiniProgram : compare,
+        meta: {
+            i18n: {
+                title: "pages.wiki.compare.title",
+                keywords: "pages.wiki.compare.keywords",
+                description: "pages.wiki.compare.description",
+            },
+        },
     },
     {
         name: "leap",
         path: "/leap",
         component: leap,
+        meta: {
+            i18n: {
+                title: "pages.wiki.leap.title",
+                keywords: "pages.wiki.leap.keywords",
+                description: "pages.wiki.leap.description",
+            },
+        },
     },
     {
         name: "catalogue",
         path: "/catalogue",
         meta: {
             title: "目录列表",
+            i18n: {
+                title: "pages.wiki.catalogue.title",
+                keywords: "pages.wiki.catalogue.keywords",
+                description: "pages.wiki.catalogue.description",
+            },
         },
         component: () => import("../views/wiki_miniprogram/catalogue.vue"),
     },
@@ -41,6 +67,11 @@ const routes = [
         path: "/list",
         meta: {
             title: "成就列表",
+            i18n: {
+                title: "pages.wiki.list.title",
+                keywords: "pages.wiki.list.keywords",
+                description: "pages.wiki.list.description",
+            },
         },
         component: () => import("../views/wiki_miniprogram/achievement.vue"),
     },
@@ -49,6 +80,11 @@ const routes = [
         path: "/compare/catalogue",
         meta: {
             title: "对比目录列表",
+            i18n: {
+                title: "pages.wiki.compare.catalogue.title",
+                keywords: "pages.wiki.compare.catalogue.keywords",
+                description: "pages.wiki.compare.catalogue.description",
+            },
         },
         component: () => import("../views/wiki_miniprogram/compare/compare_catalogue.vue"),
     },
@@ -57,6 +93,11 @@ const routes = [
         path: "/compare/achievement",
         meta: {
             title: "对比成就列表",
+            i18n: {
+                title: "pages.wiki.compare.achievement.title",
+                keywords: "pages.wiki.compare.achievement.keywords",
+                description: "pages.wiki.compare.achievement.description",
+            },
         },
         component: () => import("../views/wiki_miniprogram/compare/compare_achievement.vue"),
     },

@@ -13,10 +13,54 @@ const routes = [
         component: () => import("@/views/knowledge/knowledge.vue"),
         redirect: { name: "index" },
         children: [
-            { name: "index", path: "/", component: KnowledgeIndex },
-            { name: "normal", path: "/type/:knowledge_type([a-z_]+)", component: KnowledgeList },
-            { name: "view", path: "/view/:source_id(\\d+)/:post_id(\\d+)?", component: KnowledgeSingle },
-            { name: "search", path: "/search/:keyword(.*)?", component: Search },
+            {
+                name: "index",
+                path: "/",
+                component: KnowledgeIndex,
+                meta: {
+                    i18n: {
+                        title: "pages.knowledge.index.title",
+                        keywords: "pages.knowledge.index.keywords",
+                        description: "pages.knowledge.index.description",
+                    },
+                },
+            },
+            {
+                name: "normal",
+                path: "/type/:knowledge_type([a-z_]+)",
+                component: KnowledgeList,
+                meta: {
+                    i18n: {
+                        title: "pages.knowledge.normal.title",
+                        keywords: "pages.knowledge.normal.keywords",
+                        description: "pages.knowledge.normal.description",
+                    },
+                },
+            },
+            {
+                name: "view",
+                path: "/view/:source_id(\\d+)/:post_id(\\d+)?",
+                component: KnowledgeSingle,
+                meta: {
+                    i18n: {
+                        title: "pages.knowledge.view.title",
+                        keywords: "pages.knowledge.view.keywords",
+                        description: "pages.knowledge.view.description",
+                    },
+                },
+            },
+            {
+                name: "search",
+                path: "/search/:keyword(.*)?",
+                component: Search,
+                meta: {
+                    i18n: {
+                        title: "pages.knowledge.search.title",
+                        keywords: "pages.knowledge.search.keywords",
+                        description: "pages.knowledge.search.description",
+                    },
+                },
+            },
         ],
     },
 ];
