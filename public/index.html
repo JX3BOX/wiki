@@ -47,6 +47,10 @@
         <!-- Clarity Analytics -->
         <script type="text/javascript">
             (function (c, l, a, r, i, t, y) {
+                const host = c.location && c.location.hostname;
+                const isLocal = host === "localhost" || host === "127.0.0.1" || host === "0.0.0.0";
+                if (isLocal) return;
+
                 c[a] =
                     c[a] ||
                     function () {

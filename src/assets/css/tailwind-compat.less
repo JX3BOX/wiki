@@ -1,0 +1,287 @@
+/* Tailwind 全局样式兼容修复（针对现有 Element/百科页面） */
+
+@import "var.less";
+
+/* 1) 图标与文字在按钮/操作入口中的垂直对齐与间距（收敛作用域，避免影响评论区） */
+.m-search-bar .el-button,
+.m-achievement-single .u-header .u-other .el-button,
+.c-wiki-panel .m-panel-head .m-panel-actions .el-button,
+a.el-button,
+.el-dropdown-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.m-search-bar .el-button > span,
+.m-achievement-single .u-header .u-other .el-button > span,
+.c-wiki-panel .m-panel-head .m-panel-actions .el-button > span,
+a.el-button > span,
+.el-dropdown-link > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1;
+}
+
+.m-search-bar .el-button .legacy-icon,
+.m-achievement-single .u-header .u-other .el-button .legacy-icon,
+.c-wiki-panel .m-panel-head .m-panel-actions .el-button .legacy-icon,
+a.el-button .legacy-icon,
+.el-dropdown-link .legacy-icon,
+.m-search-bar .el-button [data-legacy-icon],
+.m-achievement-single .u-header .u-other .el-button [data-legacy-icon],
+.c-wiki-panel .m-panel-head .m-panel-actions .el-button [data-legacy-icon],
+a.el-button [data-legacy-icon],
+.el-dropdown-link [data-legacy-icon] {
+    flex: none;
+    margin: 0;
+}
+
+/* 2) 搜索区（返回/搜索）图标与文字对齐 */
+.m-search-bar {
+    .u-search-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        line-height: 1;
+    }
+
+    .el-input-group__prepend,
+    .el-input-group__append {
+        display: inline-flex;
+        align-items: center;
+    }
+}
+
+/* 3) 成就详情头部右侧操作按钮（加入渡劫方案/收藏） */
+.m-achievement-single .u-header .u-other {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.m-achievement-single .u-header .u-other .u-attr {
+    margin-left: 0;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+/* 3.1) 标题区图标与文字（如“公告”“成就攻略”） */
+.m-wiki-top__header .u-title,
+.c-wiki-panel .m-panel-head .m-panel-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.2;
+}
+
+/* 3.2) 详情场景标题图标尺寸与颜色统一（与历史版一致，不放大） */
+.c-wiki-panel.m-detail-scene .m-panel-title .legacy-icon,
+.c-wiki-panel.m-detail-scene .m-panel-title [data-legacy-icon] {
+    width: 22px;
+    height: 22px;
+    font-size: 20px;
+    color: var(--el-color-primary);
+    fill: currentColor;
+}
+
+/* 3.3) 评论区恢复历史排版（回复按钮/输入栏） */
+.c-wiki-comments .m-reply .u-reply,
+.c-wiki-comments .m-reply-form .u-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.c-wiki-comments .m-reply .u-reply > span,
+.c-wiki-comments .m-reply-form .u-submit > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.c-wiki-comments .m-reply .u-reply .legacy-icon,
+.c-wiki-comments .m-reply .u-reply [data-legacy-icon],
+.c-wiki-comments .m-reply-form .u-title .legacy-icon,
+.c-wiki-comments .m-reply-form .u-title [data-legacy-icon],
+.c-wiki-comments .m-reply-form .u-submit .legacy-icon,
+.c-wiki-comments .m-reply-form .u-submit [data-legacy-icon] {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    color: inherit;
+    fill: currentColor;
+}
+
+.c-wiki-comments .m-reply-form .u-author {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.c-wiki-comments .m-reply-form .u-author input {
+    height: 28px;
+    line-height: 28px;
+}
+
+/* 4) a 标签样式（兼容 preflight 后默认链接视觉） */
+a.el-button,
+a.el-button:hover,
+a.el-button:focus {
+    text-decoration: none;
+}
+
+/* 只修正文案内容中的“裸 a 标签” */
+.m-main a:not([class]),
+.m-wiki-top__content a,
+.m-wiki-compatible a {
+    color: @color-pp;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+.m-main a:not([class]):hover,
+.m-wiki-top__content a:hover,
+.m-wiki-compatible a:hover {
+    color: @color-pp;
+}
+
+/* 5) 物品详情页（对齐成就详情页的 Tailwind 兼容修复） */
+#m-item-view {
+    .m-name .m-buttons {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .m-name .m-buttons .el-button,
+    .m-name .m-buttons a.el-button {
+        min-height: 32px;
+        padding: 0 14px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        box-sizing: border-box;
+        white-space: nowrap;
+    }
+
+    .m-name .m-buttons .el-button > span,
+    .m-name .m-buttons a.el-button > span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .m-name .m-buttons .el-button .legacy-icon,
+    .m-name .m-buttons .el-button [data-legacy-icon],
+    .m-name .m-buttons a.el-button .legacy-icon,
+    .m-name .m-buttons a.el-button [data-legacy-icon] {
+        flex: none;
+        margin: 0;
+    }
+
+    .c-wiki-panel.m-detail-scene {
+        .m-panel-head {
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .m-panel-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            line-height: 1.2;
+        }
+
+        .m-panel-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            .el-button,
+            a.el-button {
+                min-height: 32px;
+                padding: 0 14px;
+                line-height: 1;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                box-sizing: border-box;
+            }
+        }
+    }
+
+    .c-wiki-revisions .m-revisions-panel .u-op .u-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .m-wiki-signature {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    .m-wiki-signature .legacy-icon,
+    .m-wiki-signature [data-legacy-icon] {
+        flex: none;
+        width: 1em;
+        height: 1em;
+        color: inherit;
+        fill: currentColor;
+        vertical-align: middle;
+    }
+
+    .m-wiki-thx-panel .m-panel-title svg,
+    .m-wiki-thx-panel .m-panel-title i {
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        color: var(--el-color-primary);
+        fill: currentColor;
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: @phone) {
+    #m-item-view {
+        .c-wiki-panel.m-detail-scene .m-panel-head {
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .c-wiki-panel.m-detail-scene .m-panel-actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+    }
+}

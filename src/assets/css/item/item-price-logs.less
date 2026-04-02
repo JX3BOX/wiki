@@ -1,4 +1,28 @@
 .m-item-price-logs {
+    #m-item-price-chart,
+    #m-item-price-chart canvas {
+        pointer-events: auto;
+    }
+
+    .u-chart-legend {
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        color: #666;
+        font-size: 14px;
+        line-height: 1;
+
+        .u-dot {
+            width: 8px;
+            height: 8px;
+            display: inline-block;
+            border-radius: 50%;
+            background: #4e7cff;
+        }
+    }
+
     .m-today {
         padding: 15px 0 30px;
         font-weight: bold;
@@ -7,6 +31,24 @@
         .u-label {
             font-size: 28px;
             font-weight: 300;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            line-height: 1.2;
+            white-space: nowrap;
+
+            .legacy-icon,
+            [data-legacy-icon] {
+                display: inline-block;
+                width: 1em;
+                height: 1em;
+                line-height: 1;
+                font-size: 1em;
+                flex: none;
+                margin: 0;
+                vertical-align: middle;
+            }
         }
 
         .u-value {
@@ -14,7 +56,10 @@
             font-size: 16px;
             // color: darkred;
             background-color:@bg-gray;
-            .dbi;
+            .db;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
             padding:5px 10px;
             letter-spacing: 1px;
             font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;

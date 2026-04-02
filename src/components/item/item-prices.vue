@@ -14,19 +14,19 @@
                 <tr v-for="(price, key) in prices" :key="key">
                 <td>
                     <div class="m-item-icon">
-                        <img class="u-icon" :src="icon_url(item && item.IconID)" />
+                        <img class="u-icon" :src="icon_url(displayItem.IconID)" />
                         <span class="u-count" v-if="price.n_count > 1" v-text="price.n_count"></span>
                     </div>
                     <span
                         class="u-name"
-                        v-text="item.Name"
-                        :class="{ white: item.Quality == 1 }"
+                        v-text="displayItem.Name || '-'"
+                        :class="{ white: displayItem.Quality == 1 }"
                         :style="{
-                            color: item_color(item.Quality),
+                            color: item_color(displayItem.Quality || 0),
                         }"
                     ></span>
                 </td>
-                <td v-text="item && item.RequireLevel ? item.RequireLevel : 1"></td>
+                <td v-text="displayItem.RequireLevel || 1"></td>
                 <td v-text="date_format(price.timestamp)"></td>
                 <td v-text="price.server"></td>
                 <td style="text-align: right" v-text="item_price(price.price)"></td>
@@ -58,9 +58,22 @@ export default {
         client: function () {
             return this.$store.state.client;
         },
+        displayItem() {
+            return this.item || {};
+        },
     },
     methods: {
         dayjs,
+        extractTimestamp(item) {
+            const ts = item?.timestamp ?? item?.created ?? item?.date_ts ?? null;
+            if (ts) return Number(ts);
+            if (item?.date) return dayjs(item.date).unix();
+            return 0;
+        },
+        extractPrice(item) {
+            const value = item?.price ?? item?.unit_price ?? item?.n_money ?? item?.avg_price ?? 0;
+            return Number(value) || 0;
+        },
         get_data() {
             if (this.item_id) {
                 this.priceLoading = true;
@@ -70,10 +83,18 @@ export default {
                     aggregate_type: "hourly",
                 }).then((res) => {
                     this.priceLoading = false;
-                    const data = res.data || [];
-                    this.prices = data.sort((a, b) => {
-                        return b.timestamp - a.timestamp;
-                    });
+                    const data = Array.isArray(res?.data) ? res.data : [];
+                    this.prices = data
+                        .map((item) => ({
+                            ...item,
+                            timestamp: this.extractTimestamp(item),
+                            price: this.extractPrice(item),
+                        }))
+                        .filter((item) => item.timestamp)
+                        .sort((a, b) => b.timestamp - a.timestamp);
+                }).catch(() => {
+                    this.priceLoading = false;
+                    this.prices = [];
                 });
                 // 获取物品信息
                 get_item(this.item_id, this.client).then((data) => {

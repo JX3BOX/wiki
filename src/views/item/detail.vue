@@ -876,7 +876,6 @@ export default {
                         } else {
                             this.server = this.firstServer;
                         }
-                        this.$refs.item_price_chart?.render();
                     });
                 });
         },
@@ -893,8 +892,6 @@ export default {
             },
         },
         source: {
-            immediate: true,
-            deep: true,
             handler() {
                 let item = this.source;
                 if (!this.isRobot) {

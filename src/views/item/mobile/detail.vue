@@ -425,7 +425,10 @@ export default {
                 aggregate_type: "daily",
             })
                 .then((res) => {
-                    this.priceList = res.data;
+                    this.priceList = Array.isArray(res?.data) ? res.data : [];
+                })
+                .catch(() => {
+                    this.priceList = [];
                 })
                 .finally(() => {
                     this.priceLoading = false;

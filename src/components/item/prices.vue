@@ -59,16 +59,38 @@ export default {
         item_price,
         date_format,
         icon_url: iconLink,
+        extractTimestamp(item) {
+            return Number(item?.created ?? item?.timestamp ?? item?.date_ts ?? 0) || 0;
+        },
+        extractMoney(item) {
+            const total = item?.n_money ?? item?.price ?? item?.unit_price ?? item?.avg_price ?? 0;
+            return Number(total) || 0;
+        },
+        extractUnitPrice(item) {
+            const unit = item?.unit_price ?? item?.price ?? item?.avg_price ?? item?.n_money ?? 0;
+            return Number(unit) || 0;
+        },
         get_data() {
             if (this.item_id) {
                 this.priceLoading = true;
-                get_item_prices(this.item_id, {
+                get_item_prices({
+                    item_id: this.item_id,
                     server: this.server,
                     limit: 15,
                 }).then((data) => {
                     this.priceLoading = false;
-                    data = data.data;
-                    this.prices = data.data.prices || [];
+                    const list = Array.isArray(data?.data) ? data.data : [];
+                    this.prices = list
+                        .map((item) => ({
+                            ...item,
+                            created: this.extractTimestamp(item),
+                            n_money: this.extractMoney(item),
+                            unit_price: this.extractUnitPrice(item),
+                        }))
+                        .filter((item) => item.created);
+                }).catch(() => {
+                    this.priceLoading = false;
+                    this.prices = [];
                 });
                 // 获取物品信息
                 get_item(...this.params).then((data) => {

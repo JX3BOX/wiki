@@ -265,8 +265,23 @@
         top: 5px;
         left: 10px;
         z-index: 20;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        line-height: 1;
 
-        i {
+        .u-server {
+            width: 160px;
+            margin-left: 0;
+        }
+
+        i,
+        .legacy-icon,
+        [data-legacy-icon] {
+            flex: none;
+            width: 16px;
+            height: 16px;
             font-size: 20px;
             .y;
         }
@@ -583,6 +598,10 @@
         .m-tabs {
             .m-price-server {
                 .pr;
+                .flex;
+                align-items: center;
+                gap: 8px;
+                white-space: nowrap;
             }
             .el-tabs__header {
                 .none;

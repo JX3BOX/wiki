@@ -4,7 +4,7 @@
         :class="$route.name == 'plan_view' ? 'can-return' : ''"
     >
         <div class="m-return">
-            <el-button class="u-return-btn" @click="return_handle"
+            <el-button size="large" class="u-return-btn" @click="return_handle"
                 >返回</el-button
             >
         </div>

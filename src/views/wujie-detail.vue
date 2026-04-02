@@ -157,7 +157,6 @@ import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import { ts2str, authorLink, showAvatar, iconLink } from "@jx3box/jx3box-common/js/utils.js";
-import { reportNow } from "@jx3box/jx3box-common/js/reporter";
 import User from "@jx3box/jx3box-common/js/user";
 
 import { getAchievementsTotal, get_achievement } from "@/service/achievement";
@@ -318,13 +317,6 @@ export default {
                 };
                 this.is_empty = isEmpty;
                 this.compatible = compatible;
-
-                reportNow({
-                    caller: "cj_detail",
-                    data: {
-                        href: `${this.prefix}:/cj/view/${sourceId}`,
-                    },
-                });
 
                 User.isLogin() &&
                     postHistory({

@@ -89,7 +89,6 @@ import {
     cancelVirtualRoleAchievements,
     get_achievement, getRoleGameAchievements, getVirtualRoleAchievements, setVirtualRoleAchievements } from "@/service/achievement";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
-import { reportNow } from "@jx3box/jx3box-common/js/reporter";
 import User from "@jx3box/jx3box-common/js/user";
 import { getConfig } from "@jx3box/jx3box-common/js/system";
 import { report } from "@/service/user";
@@ -413,13 +412,6 @@ export default {
                     };
                     this.is_empty = isEmpty;
                     this.compatible = compatible;
-
-                    reportNow({
-                        caller: "cj_detail",
-                        data: {
-                            href: `${this.prefix}:/cj/view/${this.id}`,
-                        },
-                    });
 
                     User.isLogin() &&
                     postHistory({

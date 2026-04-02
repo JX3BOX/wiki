@@ -1,6 +1,6 @@
-﻿<template>
+<template>
     <el-popover popper-class="w-plans" placement="bottom" trigger="click" v-model="visible" width="300">
-        <el-input class="m-input" v-model.lazy="search" placeholder="璇疯緭鍏ユ竻鍗曞叧閿瓧" size="large" prefix-icon="Search"></el-input>
+        <el-input class="m-input" v-model.lazy="search" placeholder="请输入清单关键词" size="large" prefix-icon="Search"></el-input>
         <div class="m-list" v-if="list && list.length">
             <div class="u-list" v-for="(item, index) in list" :key="index">
                 <div class="u-title" @click="showRelation(item, index)">
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div v-else class="m-list">
-            <el-alert title="鏆傛棤娓呭崟" type="info" center show-icon :closable="false"> </el-alert>
+            <el-alert title="暂无清单" type="info" center show-icon :closable="false"> </el-alert>
         </div>
         <el-pagination
             class="m-pagination"
@@ -31,22 +31,22 @@
         ></el-pagination>
 
         <el-popover popper-class="w-add-plans" placement="top" width="160" trigger="click" v-model="add">
-            <el-input class="u-input" v-model="new_plan" placeholder="璇疯緭鍏ユ柊娓呭崟鍚嶇О"></el-input>
+            <el-input class="u-input" v-model="new_plan" placeholder="请输入新清单名称"></el-input>
             <div style="text-align: right; margin: 0">
-                <el-button size="small" @click="add = false">鍙栨秷</el-button>
-                <el-button type="primary" size="small" @click="createPlan">纭畾</el-button>
+                <el-button size="small" @click="add = false">取消</el-button>
+                <el-button type="primary" size="small" @click="createPlan">确定</el-button>
             </div>
             <template #reference>
                 <div class="m-create">
                     <!-- <a href="/publish/#/item_plan" target="_blank" class="el-button"><LegacyIcon class="el-icon-document-add" /> 鍒涘缓鏂版竻鍗?/a> -->
-                    <span class="el-button"><LegacyIcon class="el-icon-document-add" /> 创建新清单</span>
+                    <span class="el-button"><LegacyIcon class="el-icon-document-add" /> <span>创建新清单</span></span>
                 </div>
             </template>
         </el-popover>
 
         <template #reference>
             <el-button size="small" type="success" @click="openPlans"
-                ><LegacyIcon class="u-el-icon el-icon-shopping-cart-full" /> 鍔犲叆娓呭崟</el-button
+                ><LegacyIcon class="el-icon-shopping-cart-full" /> <span>加入清单</span></el-button
             >
         </template>
     </el-popover>
@@ -94,14 +94,14 @@ export default {
         },
     },
     methods: {
-        // 鏁版嵁
+        // 数据
         // ========================
-        // 鎵撳紑鎴戠殑娓呭崟鍒楄〃锛屾湭鐧诲綍鍒欒烦杞櫥褰曢〉
+        // 打开我的清单列表，未登录则跳转登录页
         openPlans() {
             if (!User.isLogin()) User.toLogin();
             this.loadPlans(this.params);
         },
-        // 鍔犺浇娓呭崟鍒楄〃
+        // 加载清单列表
         loadPlans(params) {
             let _params = Object.assign({ type: 1 }, params);
             getMyPlans(_params).then((res) => {
@@ -111,9 +111,9 @@ export default {
             });
         },
 
-        // 浜や簰
+        // 交互
         // =========================
-        // 鏄惁鍦ㄦ竻鍗曞唴
+        // 是否在清单内
         hasInPlan(item) {
             let plan_items = [];
             item.relation.forEach((subplan) => {
@@ -123,7 +123,7 @@ export default {
             });
             return plan_items.includes(this.item_id);
         },
-        // 鏄剧ず瀛愭竻鍗?
+        // 显示子清单
         showRelation(item, index) {
             if (this.relation_index == index) return (this.relation_index = -1);
             this.relation_index = index;
@@ -135,7 +135,7 @@ export default {
                 });
             }
         },
-        // 鍔犲叆鐗╁搧娓呭崟
+        // 加入物品清单
         addToPlan(item, k) {
             // 鍔犲埌瀵瑰簲鐨勫瓙娓呭崟
             item.relation[k].data.push({
@@ -146,11 +146,11 @@ export default {
         },
         // 鎻愪氦娓呭崟
         postPlan(id, data) {
-            const _data = pick(data, ['title', 'type', 'public', 'relation', 'description'])
+            const _data = pick(data, ["title", "type", "public", "relation", "description"]);
             updatePlan(id, _data)
                 .then(() => {
                     this.$message({
-                        message: "娣诲姞鎴愬姛",
+                        message: "添加成功",
                         type: "success",
                     });
                     this.visible = false;
@@ -159,7 +159,7 @@ export default {
                     this.relation_index = -1;
                 });
         },
-        // 鍒涘缓鏂版竻鍗?
+        // 创建新清单
         createPlan() {
             let data = {
                 title: this.new_plan,
@@ -177,8 +177,8 @@ export default {
             addMyPlan(data)
                 .then(() => {
                     this.$notify({
-                        title: "鏂板娓呭崟鎴愬姛",
-                        message: "鏂板娓呭崟鎴愬姛锛岀墿鍝佸凡娣诲姞",
+                        title: "新增清单成功",
+                        message: "新增清单成功，物品已添加",
                         type: "success",
                     });
                 })
@@ -276,4 +276,3 @@ export default {
     .w(100%);
 }
 </style>
-

@@ -44,7 +44,7 @@
             </el-col>
         </el-row>
 
-        <div v-show="!hidden" id="m-item-price-chart" />
+        <div v-show="!hidden" id="m-item-price-chart" ref="chartContainer" />
         <div v-show="!logs.length" style="text-align: center">🐖 暂无记录</div>
     </div>
 </template>
@@ -55,6 +55,7 @@ import { get_item_prices } from "@/service/item";
 import GamePrice from "@/components/game-price.vue";
 import item_price from "@/utils/item-price.js";
 import dayjs from "dayjs";
+
 export default {
     name: "ItemPriceChart",
     props: ["item_id", "server"],
@@ -63,90 +64,156 @@ export default {
             logs: [],
             chart: null,
             hidden: false,
-            currentPrice: {},
+            currentPrice: null,
+            fetchToken: 0,
         };
     },
     methods: {
+        getYAxisDomain() {
+            const prices = this.logs.map((item) => Number(item.price) || 0);
+            if (!prices.length) return { min: 0, max: 1 };
+            const min = Math.min(...prices);
+            const max = Math.max(...prices);
+            if (min === max) {
+                return { min: min - 2, max: max + 2 };
+            }
+            // 对齐历史版：下方略多留白、上方少量留白
+            return { min: Math.floor(min) - 3, max: Math.ceil(max) + 1 };
+        },
+        destroyChart() {
+            if (this.chart && typeof this.chart.destroy === "function") {
+                this.chart.destroy();
+            }
+            this.chart = null;
+        },
+        extractPrice(item) {
+            const value = item?.price ?? item?.avg_price ?? item?.unit_price ?? item?.n_money ?? 0;
+            return Number(value) || 0;
+        },
+        extractTimestamp(item) {
+            const ts = item?.timestamp ?? item?.created ?? item?.date_ts ?? null;
+            if (ts) return Number(ts);
+            if (item?.date) return dayjs(item.date).unix();
+            return 0;
+        },
         get_data() {
-            if (this.item_id) {
-                get_item_prices({
-                    item_id: this.item_id,
-                    server: this.server,
-                    aggregate_type: "daily",
-                }).then((res) => {
-                    const data = res.data || [];
-                    this.logs = data.map((item) => {
-                        return {
-                            type: "价格",
-                            date: dayjs(item.timestamp * 1000).format("YYYY-MM-DD"),
-                            price: item.price,
-                        };
-                    });
+            if (!this.item_id) return;
+            const token = ++this.fetchToken;
+            get_item_prices({
+                item_id: this.item_id,
+                server: this.server,
+                aggregate_type: "daily",
+            })
+                .then((res) => {
+                    if (token !== this.fetchToken) return;
+                    const data = Array.isArray(res?.data) ? res.data : [];
+                    this.logs = data
+                        .map((item) => {
+                            const timestamp = this.extractTimestamp(item);
+                            return {
+                                type: "价格",
+                                date: dayjs(timestamp * 1000).format("YYYY-MM-DD"),
+                                price: this.extractPrice(item),
+                            };
+                        })
+                        .filter((item) => item.date !== "Invalid Date");
+
                     const prices = this.logs.map((item) => item.price);
                     const len = prices.length;
-                    this.currentPrice = {
-                        avg:
-                            prices.reduce((acc, cur) => {
-                                return acc + cur;
-                            }, 0) / len,
-                        lower: Math.min(...prices),
-                        higher: Math.max(...prices),
-                    };
-                    this.render();
+                    this.currentPrice = len
+                        ? {
+                              avg: prices.reduce((acc, cur) => acc + cur, 0) / len,
+                              lower: Math.min(...prices),
+                              higher: Math.max(...prices),
+                          }
+                        : null;
                     this.hidden = !len;
+                    this.render();
+                })
+                .catch(() => {
+                    if (token !== this.fetchToken) return;
+                    this.logs = [];
+                    this.currentPrice = null;
+                    this.hidden = true;
+                    this.destroyChart();
                 });
-            }
         },
         render() {
-            if (this.chart) this.chart.destroy();
+            if (!this.logs.length) {
+                this.destroyChart();
+                return;
+            }
+
+            this.destroyChart();
             this.chart = new Chart({
-                container: "m-item-price-chart",
+                container: this.$refs.chartContainer || "m-item-price-chart",
                 autoFit: true,
-                width: "100%",
                 height: 200,
             });
+            const { min, max } = this.getYAxisDomain();
+            const stride = Math.max(1, Math.ceil(this.logs.length / 7));
+            const visibleDates = new Set(
+                this.logs
+                    .map((item, index) => ({ date: item.date, index }))
+                    .filter(({ index }) => index % stride === 0 || index === this.logs.length - 1)
+                    .map(({ date }) => date)
+            );
 
-            this.chart.scale({
-                date: {
-                    range: [0, 1],
+            this.chart.options({
+                type: "view",
+                data: this.logs,
+                scale: {
+                    x: { range: [0, 1] },
+                    y: { min, max, nice: false },
                 },
-                price: {
-                    nice: true,
-                },
-            });
-
-            this.chart.axis("price", {
-                label: {
-                    formatter: (val) => {
-                        return item_price(val);
+                axis: {
+                    x: {
+                        title: false,
+                        tickCount: 7,
+                        labelAutoRotate: false,
+                        labelAutoHide: false,
+                        labelFormatter: (val) => (visibleDates.has(val) ? val : ""),
+                    },
+                    y: {
+                        title: false,
+                        tickCount: 5,
+                        labelFormatter: (val) => item_price(val),
                     },
                 },
-            });
-
-            this.chart.tooltip({
-                showCrosshairs: true,
-                shared: true,
-                customItems: (items) => {
-                    for (let index = 0; index < items.length; index++) {
-                        items[index].value = item_price(items[index].value);
-                    }
-                    return items;
+                legend: {
+                    color: {
+                        position: "bottom",
+                    },
                 },
+                tooltip: {
+                    items: [
+                        {
+                            channel: "y",
+                            valueFormatter: (val) => item_price(val),
+                        },
+                    ],
+                },
+                children: [
+                    {
+                        type: "line",
+                        encode: {
+                            x: "date",
+                            y: "price",
+                            color: this.server ? "type" : "server",
+                        },
+                        style: { shape: "smooth", lineWidth: 2 },
+                    },
+                    {
+                        type: "point",
+                        encode: {
+                            x: "date",
+                            y: "price",
+                            color: this.server ? "type" : "server",
+                        },
+                        style: { shape: "circle", r: 3 },
+                    },
+                ],
             });
-
-            this.chart
-                .line()
-                .position("date*price")
-                .color(this.server ? "type" : "server")
-                .shape("smooth");
-
-            this.chart
-                .point()
-                .position("date*price")
-                .color(this.server ? "type" : "server")
-                .shape("circle");
-
-            this.chart.data(this.logs);
             this.chart.render();
         },
     },
@@ -166,6 +233,12 @@ export default {
     },
     components: {
         GamePrice,
+    },
+    beforeUnmount() {
+        this.destroyChart();
+    },
+    deactivated() {
+        this.destroyChart();
     },
 };
 </script>

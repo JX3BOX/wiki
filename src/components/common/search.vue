@@ -1,7 +1,9 @@
 <template>
     <div class="m-search-bar m-cj-search" :class="$route.name == 'view' ? 'can-return' : ''">
         <div class="m-return">
-            <el-button class="u-return-btn" @click="returnHandle"><LegacyIcon class="el-icon-arrow-left" />返回</el-button>
+            <el-button class="u-return-btn" size="large" @click="returnHandle">
+                <LegacyIcon class="el-icon-arrow-left" />返回
+            </el-button>
         </div>
         <div class="m-search">
             <el-input

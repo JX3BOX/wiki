@@ -47,11 +47,24 @@
 }
 
 .m-wiki-signature {
-    .x(right);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
     color: #999;
     .fz(12px,2);
     border-top: 1px dashed #ddd;
     padding: 5px 0;
+    white-space: nowrap;
+
+    .legacy-icon,
+    [data-legacy-icon] {
+        flex: none;
+        width: 1em;
+        height: 1em;
+        color: inherit;
+        vertical-align: middle;
+    }
 }
 
 .m-wiki-thx-panel {
@@ -60,12 +73,12 @@
         align-items: center;
         svg,
         i {
-            width: 28px;
-            height: 28px;
-            line-height: 28px;
-            color: #0366d6;
-            fill: #0366d6;
-            font-size: 22px;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            color: var(--el-color-primary);
+            fill: currentColor;
+            font-size: 20px;
         }
         span {
             font-size: 17px;
@@ -84,4 +97,49 @@
     font-size: 12px;
     margin-left: 10px;
     color: orange;
+}
+
+.m-main.p-view {
+    .m-wiki-top__header .u-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .c-wiki-panel.m-detail-scene {
+        .m-panel-head {
+            min-height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .m-panel-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            line-height: 1.2;
+        }
+
+        .m-panel-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            .el-button,
+            a.el-button {
+                min-height: 32px;
+                padding: 0 14px;
+                line-height: 1;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                box-sizing: border-box;
+            }
+        }
+    }
 }

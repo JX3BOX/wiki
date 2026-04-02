@@ -39,7 +39,20 @@ import { item_color } from "@/filters";
 
 export default {
     name: "Items",
-    props: ["items"],
+    props: {
+        items: {
+            type: Array,
+            default: () => [],
+        },
+        target: {
+            type: String,
+            default: "",
+        },
+        jump: {
+            type: Boolean,
+            default: true,
+        },
+    },
     methods: {
         url_filter: function (item_id) {
             return this.jump === true || typeof this.jump === "undefined"

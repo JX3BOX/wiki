@@ -171,6 +171,29 @@ export default {
 @import "~@/assets/css/cj/index.less";
 
 .m-cj-search {
+    align-items: stretch;
+    gap: 6px;
+
+    .m-return {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .m-search .el-input__wrapper {
+        min-height: 38px;
+    }
+
+    .m-search .el-input-group__prepend,
+    .m-search .el-input-group__append {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .m-search .el-input__inner {
+        height: 38px;
+        line-height: 38px;
+    }
+
     .cascader-wrapper {
         position: relative;
         display: inline-flex;
@@ -189,6 +212,7 @@ export default {
                 height: 38px;
                 line-height: 38px;
                 padding-right: 28px;
+                border-radius: 0;
             }
         }
         .el-cascader .el-input__inner {

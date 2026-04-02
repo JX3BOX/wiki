@@ -12,7 +12,7 @@
                     <span v-if="comments && !comments.length">💧 暂无评论</span>
                 </div>
                 <!-- 递归评论组件 -->
-                <Comment :isWujie="isWujie" :comments="comments" :source-id="sourceId" />
+                <WikiCommentTree :isWujie="isWujie" :comments="comments" :source-id="sourceId" />
                 <el-pagination
                     class="u-pagination-box"
                     background
@@ -48,7 +48,7 @@
 
 <script>
 import WikiPanel from "@/components/wiki-panel.vue";
-import Comment from "@/components/wiki-comment.vue";
+import WikiCommentTree from "@/components/wiki-comment.vue";
 import { wikiComment } from "@jx3box/jx3box-common/js/wiki";
 import User from "@jx3box/jx3box-common/js/user";
 
@@ -194,7 +194,7 @@ export default {
     },
     components: {
         WikiPanel,
-        Comment,
+        WikiCommentTree,
     },
     watch: {
         sourceId: {
