@@ -1,9 +1,38 @@
 .u-chain {
     .lh(2);
+
+    .list,
+    .branch {
+        margin-top: 10px;
+    }
+
+    .u-chain-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        column-gap: 0;
+        row-gap: 6px;
+    }
 }
 
 .u-chain-name {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    line-height: 1.9;
+    white-space: nowrap;
+
+    > span,
+    .all,
+    .one {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .all,
+    .one {
+        gap: 6px;
+    }
 
     & .u-chain-link.current {
         color: #fa9907;
@@ -14,19 +43,31 @@
         color: #8b4dff;
     }
 
-    i {
-        .fz(12px);
+    .u-chain-link {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
     }
 }
 
-.branch>.u-chain-name:not(:last-of-type)::after {
-    content: '|';
+.u-chain-separator {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 8px;
+    color: #999;
+    line-height: 1;
 }
 
-.u-chain-name .all:not(:last-of-type)::after {
-    content: '&';
+.u-chain-name .all + .all::before {
+    content: "&";
+    margin-left: 6px;
+    margin-right: 6px;
+    color: #333;
 }
 
-.u-chain-name .one:not(:last-of-type)::after {
-    content: '|';
+.u-chain-name .one + .one::before {
+    content: "|";
+    margin-left: 6px;
+    margin-right: 6px;
+    color: #999;
 }

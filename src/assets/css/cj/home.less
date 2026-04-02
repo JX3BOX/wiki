@@ -1,4 +1,10 @@
 .m-home-view {
+    a,
+    a:hover,
+    a:focus {
+        text-decoration: none;
+    }
+
     .u-qlinks-box {
         .m-panel-body {
             .pt(0);
@@ -26,9 +32,18 @@
                 color: #ffffff;
                 border-radius: 4px;
                 transition: opacity 0.2s linear;
+                text-decoration: none !important;
 
                 &:hover {
                     opacity: 0.8;
+                    text-decoration: none !important;
+                }
+
+                span,
+                i,
+                .legacy-icon,
+                [data-legacy-icon] {
+                    text-decoration: none !important;
                 }
             }
         }
@@ -72,13 +87,13 @@
             .m-achievement {
                 .mt(5px);
                 a {
-                    .underline(@color-link);
+                    text-decoration: none;
                 }
             }
 
             .u-author {
                 a {
-                    .underline(@color-link);
+                    text-decoration: none;
                 }
             }
 

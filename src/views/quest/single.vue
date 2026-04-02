@@ -87,7 +87,7 @@
                 </p>
             </div>
             <div class="u-target" v-show="targetDesc">
-                <p class="u-subtitle">▶ 任务目标</p>
+                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>任务目标</p>
                 <p v-html="targetDesc"></p>
                 <template v-if="quest.killNpcs && quest.killNpcs.length > 0">
                     <div class="u-target-sub" v-for="(killNpc, i) in quest.killNpcs" :key="i">
@@ -129,11 +129,11 @@
                 </div>
             </div>
             <div class="u-desc" v-show="questDesc">
-                <p class="u-subtitle">▶ 任务描述</p>
+                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>任务描述</p>
                 <p v-html="questDesc"></p>
             </div>
             <div class="u-offer" v-if="quest.offerItems">
-                <p class="u-subtitle">▶ 提供物品</p>
+                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>提供物品</p>
                 <div class="u-offer-list">
                     <item-icon
                         v-for="item in quest.offerItems"
@@ -144,7 +144,7 @@
                 </div>
             </div>
             <div class="u-reward" v-show="showReward">
-                <p class="u-subtitle">▶ 任务奖励</p>
+                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>任务奖励</p>
                 <div class="u-reward-list">
                     <reward-item v-for="(reward, i) in quest.rewards" :key="i" :reward="reward"></reward-item>
                 </div>
@@ -343,8 +343,8 @@ import wikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat.js";
 import { wiki } from "@jx3box/jx3box-common/js/wiki.js";
-import { getAppIcon } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
+import { getAppIcon } from "@jx3box/jx3box-common/js/utils";
 
 import { publishLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 import WikiPanel from "@/components/wiki-panel.vue";

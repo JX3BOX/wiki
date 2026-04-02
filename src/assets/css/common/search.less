@@ -11,12 +11,13 @@
         .none;
         display: flex;
         align-items: stretch;
+        height: calc(~"@{bar-height} + 8px");
 
         .el-button {
             border: 5px solid #e1efff;
             border-radius: 8px;
             background-color: #fff;
-            height: @bar-height;
+            height: 100%;
             box-sizing: border-box;
             display: inline-flex;
             align-items: center;
@@ -33,6 +34,7 @@
         transition: margin 0.3s ease;
         border: 4px solid #e1efff;
         border-radius: 8px;
+        box-sizing: border-box;
         flex-grow: 1;
         .u-search-btn {
             .db;

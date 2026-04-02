@@ -62,7 +62,7 @@
                         <span class="u-title">讨论</span>
                     </template>
                     <template #body>
-                        <WikiCommentsContent type="knowledge" :source-id="id" />
+                        <SingleComment :id="id" category="knowledge" />
                     </template>
                 </WikiPanel>
             </template>
@@ -89,11 +89,11 @@ import User from "@jx3box/jx3box-common/js/user";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
-import WikiCommentsContent from "@/components/wiki-comments-content.vue";
 import notice from "@/components/cj/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import bus from "@/store/bus";
 import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
+import SingleComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
 
 export default {
     name: "Detail",
@@ -122,10 +122,10 @@ export default {
         Article,
         WikiPanel,
         WikiRevisions,
-        WikiCommentsContent,
         notice,
         wikiRobotBottom,
         WikiRobotTip,
+        SingleComment,
     },
     computed: {
         id: function () {
@@ -430,18 +430,107 @@ export default {
     }
 }
 .m-knowledge-panel {
+    .c-wiki-panel.m-detail-scene {
+        .m-panel-head {
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .m-panel-title {
+            order: 1;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .m-panel-actions {
+            order: 2;
+            position: static;
+            top: auto;
+            right: auto;
+            transform: none;
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex: none;
+        }
+    }
+
     .m-panel-title {
-        .flex;
+        display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 6px;
+        line-height: 1.2;
+    }
+
+    .m-panel-title .u-icon {
+        display: inline-block;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        flex: none;
+        vertical-align: middle;
+    }
+
+    .m-panel-head .m-panel-actions .el-button,
+    .m-panel-head .m-panel-actions a.el-button,
+    .m-panel-head .m-panel-actions span.el-button,
+    .m-panel-head .m-panel-actions .w-qrcode {
+        min-height: 32px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        white-space: nowrap;
+    }
+
+    .m-panel-head .m-panel-actions .el-button,
+    .m-panel-head .m-panel-actions a.el-button,
+    .m-panel-head .m-panel-actions span.el-button {
+        padding: 0 14px;
+        gap: 4px;
+    }
+
+    .m-panel-head .m-panel-actions .el-button > span,
+    .m-panel-head .m-panel-actions a.el-button > span,
+    .m-panel-head .m-panel-actions span.el-button > span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .m-panel-head .m-panel-actions .legacy-icon,
+    .m-panel-head .m-panel-actions [data-legacy-icon] {
+        flex: none;
+        margin: 0;
+    }
+
+    .m-panel-head .m-panel-actions .w-qrcode {
+        gap: 4px;
+    }
+
+    .m-panel-head .m-panel-actions .w-qrcode .u-icon {
+        margin-right: 0;
+        fill: currentColor;
+    }
+    [data-legacy-icon="el-icon-time"] {
+        margin-right: 0 !important;
     }
     [data-legacy-icon="el-icon-chat-line-round"] {
-        width: 28px;
-        height: 28px;
-        line-height: 28px;
-        color: #0366d6;
-        fill: #0366d6;
-        font-size: 22px;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        color: var(--el-color-primary);
+        fill: currentColor;
+        font-size: 20px;
+        margin-right: 0 !important;
     }
     .u-title {
         font-size: 17px;
@@ -449,18 +538,31 @@ export default {
     }
 }
 .m-wiki-thx-panel {
+    .c-wiki-panel.m-detail-scene {
+        .m-panel-head {
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+    }
+
     .m-panel-title {
-        .flex;
+        display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 6px;
+        line-height: 1.2;
+        .legacy-icon,
+        [data-legacy-icon],
         svg,
         i {
-            width: 28px;
-            height: 28px;
-            line-height: 28px;
-            color: #0366d6;
-            fill: #0366d6;
-            font-size: 22px;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            color: var(--el-color-primary);
+            fill: currentColor;
+            font-size: 20px;
+            margin-right: 0 !important;
+            flex: none;
         }
         span {
             font-size: 17px;
@@ -472,6 +574,46 @@ export default {
         .w-boxcoin-records-list {
             background-color: #fff;
         }
+    }
+}
+.c-wiki-revisions {
+    .m-revisions-panel .u-op {
+        margin-top: 4px;
+    }
+
+    .m-revisions-panel .u-op .u-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        color: #303133;
+    }
+
+    .m-revisions-panel .u-op .u-btn .legacy-icon,
+    .m-revisions-panel .u-op .u-btn [data-legacy-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
+        font-size: 14px;
+        color: inherit;
+        fill: currentColor;
+        margin-right: 0 !important;
+    }
+
+    .m-revisions-panel .u-op .u-btn:hover {
+        background: transparent;
+        color: var(--el-color-primary);
     }
 }
 .u-detail-title {
@@ -491,6 +633,90 @@ export default {
     }
     .m-panel-head .m-panel-actions {
         .none;
+    }
+}
+
+.v-knowledge-single {
+    .c-wiki-revisions .m-panel-head .m-panel-actions .el-button,
+    .c-wiki-revisions .m-panel-head .m-panel-actions .u-btn,
+    .c-wiki-revisions .m-panel-head .m-panel-actions span.el-button,
+    .c-wiki-revisions .m-revisions-panel .u-op .u-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-height: 32px;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .c-wiki-revisions .m-panel-head .m-panel-actions .legacy-icon,
+    .c-wiki-revisions .m-panel-head .m-panel-actions [data-legacy-icon],
+    .c-wiki-revisions .m-revisions-panel .u-op .u-btn .legacy-icon,
+    .c-wiki-revisions .m-revisions-panel .u-op .u-btn [data-legacy-icon] {
+        color: currentColor;
+        fill: currentColor;
+    }
+
+    .c-wiki-comments .m-panel-title,
+    .c-wiki-comments .m-reply .u-reply,
+    .c-wiki-comments .m-reply-form .u-submit,
+    .c-wiki-comments .m-reply-form .u-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .c-wiki-comments .m-panel-title {
+        gap: 6px;
+        line-height: 1.2;
+    }
+
+    .c-wiki-comments .m-panel-title .legacy-icon,
+    .c-wiki-comments .m-panel-title [data-legacy-icon] {
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 20px;
+        color: var(--el-color-primary);
+        fill: currentColor;
+    }
+
+    .c-wiki-comments .m-reply .u-reply .legacy-icon,
+    .c-wiki-comments .m-reply .u-reply [data-legacy-icon],
+    .c-wiki-comments .m-reply-form .u-submit .legacy-icon,
+    .c-wiki-comments .m-reply-form .u-submit [data-legacy-icon],
+    .c-wiki-comments .m-reply-form .u-title .legacy-icon,
+    .c-wiki-comments .m-reply-form .u-title [data-legacy-icon] {
+        width: 16px;
+        height: 16px;
+        color: currentColor;
+        fill: currentColor;
+    }
+
+    .c-wiki-comments .m-reply-form .u-author {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .c-wiki-comments .m-reply-form .u-author input {
+        height: 28px;
+        line-height: 28px;
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-knowledge-panel .c-wiki-panel.m-detail-scene .m-panel-head {
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .m-knowledge-panel .c-wiki-panel.m-detail-scene .m-panel-actions {
+        width: 100%;
+        justify-content: flex-end;
     }
 }
 </style>

@@ -54,19 +54,31 @@ export default {
     },
     computed: {
         display_data() {
-            let current = this.data.current;
-            if (current?.[0]?.id?.startsWith("b_")) {
-                current[0].quests = current[0].quests.filter((item) => item.visible);
-                if (current[0].quests.length == 1) {
-                    current[0] = current[0].quests[0];
+            let current = Array.isArray(this.data?.current) ? [...this.data.current] : [];
+
+            if (typeof current?.[0]?.id === "string" && current[0].id.startsWith("b_")) {
+                const firstItem = current[0];
+                const quests = Array.isArray(firstItem.quests) ? firstItem.quests.filter((item) => item.visible) : [];
+
+                if (quests.length === 1) {
+                    current[0] = quests[0];
+                } else {
+                    current[0] = {
+                        ...firstItem,
+                        quests,
+                    };
                 }
             }
-            current = current.filter((item) => item.hasOwnProperty("logic") || item.visible);
-            let branch = this.data.branch.filter((item) => item.visible);
-            if (branch && branch.length == 1) {
-                current.push(...branch);
+
+            current = current.filter((item) => item && (Object.prototype.hasOwnProperty.call(item, "logic") || item.visible));
+
+            let branch = Array.isArray(this.data?.branch) ? this.data.branch.filter((item) => item.visible) : [];
+
+            if (branch.length === 1) {
+                current = [...current, ...branch];
                 branch = [];
             }
+
             return {
                 current,
                 branch,

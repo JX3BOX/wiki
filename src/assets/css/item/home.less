@@ -1,4 +1,10 @@
 .m-home-view {
+    a,
+    a:hover,
+    a:focus {
+        text-decoration: none;
+    }
+
     .m-qlinks {
         margin: 0;
         padding: 0;
@@ -20,10 +26,22 @@
                 color: #ffffff;
                 border-radius: 4px;
                 transition: opacity 0.2s linear;
+                text-decoration: none !important;
 
                 &:hover {
                     opacity: 0.8;
+                    text-decoration: none !important;
                 }
+            }
+
+            a,
+            a:hover,
+            a:focus,
+            .router-link-active,
+            .router-link-exact-active,
+            span {
+                text-decoration: none !important;
+                box-shadow: none !important;
             }
         }
     }

@@ -44,6 +44,31 @@ a.el-button [data-legacy-icon],
 
 /* 2) 搜索区（返回/搜索）图标与文字对齐 */
 .m-search-bar {
+    .m-return {
+        display: inline-flex;
+        align-items: stretch;
+        flex: none;
+    }
+
+    .m-return .el-button,
+    .m-return .u-return-btn {
+        min-height: 46px;
+        height: 46px;
+        padding: 0 18px;
+        box-sizing: border-box;
+        flex: none;
+        align-self: stretch;
+    }
+
+    .m-return .el-button > span,
+    .m-return .u-return-btn > span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        line-height: 1;
+    }
+
     .u-search-btn {
         display: inline-flex;
         align-items: center;
@@ -100,6 +125,7 @@ a.el-button [data-legacy-icon],
     justify-content: center;
     gap: 4px;
     white-space: nowrap;
+    text-decoration: none;
 }
 
 .c-wiki-comments .m-reply .u-reply > span,
@@ -112,6 +138,12 @@ a.el-button [data-legacy-icon],
     white-space: nowrap;
 }
 
+.c-wiki-comments .m-reply .u-reply:hover,
+.c-wiki-comments .m-reply .u-reply:focus,
+.c-wiki-comments .m-reply .u-reply:visited {
+    text-decoration: none;
+}
+
 .c-wiki-comments .m-reply .u-reply .legacy-icon,
 .c-wiki-comments .m-reply .u-reply [data-legacy-icon],
 .c-wiki-comments .m-reply-form .u-title .legacy-icon,
@@ -119,9 +151,10 @@ a.el-button [data-legacy-icon],
 .c-wiki-comments .m-reply-form .u-submit .legacy-icon,
 .c-wiki-comments .m-reply-form .u-submit [data-legacy-icon] {
     display: inline-block;
-    width: 16px;
-    height: 16px;
-    font-size: 16px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 18px;
     color: inherit;
     fill: currentColor;
 }
@@ -269,6 +302,70 @@ a.el-button:focus {
         color: var(--el-color-primary);
         fill: currentColor;
         font-size: 20px;
+    }
+}
+
+/* 6) 任务详情页公共兼容修复 */
+.m-quest-view {
+    .u-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .u-actions .el-button,
+    .u-actions a.el-button,
+    .m-wiki-post-panel .m-panel-head .m-panel-actions .el-button,
+    .m-wiki-post-panel .m-panel-head .m-panel-actions a.el-button {
+        min-height: 32px;
+        padding: 0 14px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        box-sizing: border-box;
+        white-space: nowrap;
+    }
+
+    .u-actions .el-button > span,
+    .u-actions a.el-button > span,
+    .m-wiki-post-panel .m-panel-head .m-panel-actions .el-button > span,
+    .m-wiki-post-panel .m-panel-head .m-panel-actions a.el-button > span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .u-actions .el-button .el-icon,
+    .u-actions .el-button .legacy-icon,
+    .u-actions a.el-button .el-icon,
+    .u-actions a.el-button .legacy-icon,
+    .m-wiki-post-panel .m-panel-head .m-panel-actions .el-button .el-icon,
+    .m-wiki-post-panel .m-panel-head .m-panel-actions .el-button .legacy-icon,
+    .m-wiki-post-panel .m-panel-head .m-panel-actions a.el-button .el-icon,
+    .m-wiki-post-panel .m-panel-head .m-panel-actions a.el-button .legacy-icon {
+        flex: none;
+        margin: 0;
+    }
+
+    .m-wiki-top__header .u-title,
+    .u-subtitle2 span {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .el-tabs__header {
+        margin-bottom: 12px;
+    }
+
+    .el-tabs__item {
+        height: 40px;
+        line-height: 40px;
     }
 }
 
