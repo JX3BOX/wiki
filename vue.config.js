@@ -45,7 +45,7 @@ const pages = {
         title: "云端宏 - JX3BOX",
         entry: "src/pages/macro.js",
         template: "public/macro.html",
-        filename: "macro/details/index.html",
+        filename: "macro/details.html",
     },
 };
 

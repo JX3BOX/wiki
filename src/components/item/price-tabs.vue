@@ -1,9 +1,9 @@
 <template>
     <div class="m-item-price-tabs">
         <div class="m-price-server">
-            <LegacyIcon class="el-icon-s-shop" /> 全服价格
+            <LegacyIcon class="el-icon-s-shop" />
+            <span class="u-label">全服价格</span>
             <el-select class="u-server" v-model="server" placeholder="请选择服务器" size="small">
-                <!-- <el-option key label="前五低价区服" value v-if="!isOrigin"></el-option> -->
                 <el-option v-for="serve in servers" :key="serve" :label="serve" :value="serve"></el-option>
             </el-select>
         </div>
@@ -20,10 +20,11 @@
 </template>
 
 <script>
-import ItemPrices from "@/components/item/prices.vue";
-import ItemPriceChart from "@/components/item/price-chart.vue";
+import ItemPrices from "@/components/item/item-prices.vue";
+import ItemPriceChart from "@/components/item/item-price-chart.vue";
 import servers_origin from "@jx3box/jx3box-data/data/server/server_origin.json";
 import servers_std from "@jx3box/jx3box-data/data/server/server_std.json";
+
 export default {
     name: "PriceTabs",
     props: ["sourceId"],
@@ -35,13 +36,13 @@ export default {
         };
     },
     computed: {
-        isOrigin: function () {
+        isOrigin() {
             return this.client == "origin";
         },
         routeServer() {
             return this.$route?.query?.server || "";
         },
-        servers: function () {
+        servers() {
             return this.isOrigin ? servers_origin : servers_std;
         },
     },
@@ -53,14 +54,6 @@ export default {
                 });
             }
         },
-        legacySyncServer() {
-            this.server = this.routeServer || (this.isOrigin ? "缂樿捣绋婚" : "姊︽睙鍗?");
-        },
-    },
-    legacyMounted: function () {
-        let params = new URLSearchParams(location.search);
-        let server = params.get("server");
-        this.server = server || (this.isOrigin ? "缘起稻香" : "梦江南");
     },
     mounted() {
         this.server = this.routeServer || this.servers[0] || "";

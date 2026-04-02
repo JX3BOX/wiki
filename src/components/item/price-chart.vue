@@ -1,51 +1,28 @@
 <template>
     <div class="m-item-price-logs">
-        <!--近30日价格-->
         <el-row class="m-today" v-if="currentPrice">
             <el-col :span="8">
-                <div class="u-label"><LegacyIcon class="el-icon-right u-avg" /> 近30日均价</div>
+                <div class="u-label"><LegacyIcon class="el-icon-right u-avg" /> 杩?0鏃ュ潎浠?/div>
                 <div class="u-value u-avg">
                     <GamePrice :price="currentPrice.avg" />
                 </div>
             </el-col>
             <el-col :span="8">
-                <div class="u-label"><LegacyIcon class="el-icon-bottom u-min" /> 近30日最低价</div>
+                <div class="u-label"><LegacyIcon class="el-icon-bottom u-min" /> 杩?0鏃ユ渶浣庝环</div>
                 <div class="u-value u-min">
                     <GamePrice :price="currentPrice.lower" />
                 </div>
             </el-col>
             <el-col :span="8">
-                <div class="u-label"><LegacyIcon class="el-icon-top u-max" /> 近30日最高价</div>
+                <div class="u-label"><LegacyIcon class="el-icon-top u-max" /> 杩?0鏃ユ渶楂樹环</div>
                 <div class="u-value u-max">
                     <GamePrice :price="currentPrice.higher" />
                 </div>
             </el-col>
         </el-row>
 
-        <!-- 昨日价格 -->
-        <el-row class="m-today" v-if="!today && yesterday">
-            <el-col :span="8">
-                <div class="u-label"><LegacyIcon class="el-icon-right u-avg" /> 今日均价</div>
-                <div class="u-value u-avg">
-                    <GamePrice :price="yesterday.price" />
-                </div>
-            </el-col>
-            <el-col :span="8">
-                <div class="u-label"><LegacyIcon class="el-icon-bottom u-min" /> 今日最低价</div>
-                <div class="u-value u-min">
-                    <GamePrice :price="yesterday.min_price" />
-                </div>
-            </el-col>
-            <el-col :span="8">
-                <div class="u-label"><LegacyIcon class="el-icon-top u-max" /> 今日最高价</div>
-                <div class="u-value u-max">
-                    <GamePrice :price="yesterday.max_price" />
-                </div>
-            </el-col>
-        </el-row>
-
         <div v-show="!hidden" id="m-item-price-chart" ref="chartContainer" />
-        <div v-show="!logs.length" style="text-align: center">🐖 暂无记录</div>
+        <div v-show="!logs.length" style="text-align: center">馃悥 鏆傛棤璁板綍</div>
     </div>
 </template>
 
@@ -77,7 +54,6 @@ export default {
             if (min === max) {
                 return { min: min - 2, max: max + 2 };
             }
-            // 对齐历史版：下方略多留白、上方少量留白
             return { min: Math.floor(min) - 3, max: Math.ceil(max) + 1 };
         },
         destroyChart() {
@@ -111,7 +87,7 @@ export default {
                         .map((item) => {
                             const timestamp = this.extractTimestamp(item);
                             return {
-                                type: "价格",
+                                type: "浠锋牸",
                                 date: dayjs(timestamp * 1000).format("YYYY-MM-DD"),
                                 price: this.extractPrice(item),
                             };
@@ -148,7 +124,7 @@ export default {
             this.chart = new Chart({
                 container: this.$refs.chartContainer || "m-item-price-chart",
                 autoFit: true,
-                height: 200,
+                height: 220,
             });
             const { min, max } = this.getYAxisDomain();
             const stride = Math.max(1, Math.ceil(this.logs.length / 7));

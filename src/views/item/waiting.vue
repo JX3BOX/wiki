@@ -10,7 +10,7 @@
             background
             :total="total"
             hide-on-single-page
-            layout="prev, pager, next"
+            layout="prev, pager, next, jumper"
             :page-size="15"
             @current-change="getData"
             style="text-align: center"

@@ -15,7 +15,7 @@
             background
             :total="total"
             hide-on-single-page
-            layout="prev, pager, next"
+            layout="prev, pager, next, jumper"
             :current-page="page"
             :page-size="length"
             @current-change="page_change_handle"

@@ -26,7 +26,7 @@
         <el-pagination
             hide-on-single-page
             background
-            layout="prev, pager, next"
+            layout="prev, pager, next, jumper"
             @current-change="search"
             :total="total"
             :page-size="pageSize"

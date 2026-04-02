@@ -160,4 +160,50 @@ export default {
 
 <style lang="less">
 @import "~@jx3box/jx3box-ui/assets/css/wiki/wiki-revisions.less";
+
+.c-wiki-revisions {
+    .m-revisions-panel .u-op {
+        display: flex;
+        justify-content: center;
+        margin-top: 16px;
+    }
+
+    .m-revisions-panel .u-op .u-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-height: 32px;
+        padding: 0 18px;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        color: #303133;
+        background: #f4f6fb;
+        border: 1px solid #e4e7ed;
+        border-radius: 2px;
+        box-shadow: none;
+        transition: all 0.2s ease;
+    }
+
+    .m-revisions-panel .u-op .u-btn:hover {
+        color: var(--el-color-primary);
+        background: #eef3ff;
+        border-color: #c6d4ff;
+    }
+
+    .m-revisions-panel .u-op .u-btn .legacy-icon,
+    .m-revisions-panel .u-op .u-btn [data-legacy-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
+        font-size: 14px;
+        color: inherit;
+        fill: currentColor;
+        margin-right: 0 !important;
+    }
+}
 </style>

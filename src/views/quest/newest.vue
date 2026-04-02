@@ -8,7 +8,7 @@
         </div>
         <el-pagination
             background
-            layout="prev, pager, next"
+            layout="prev, pager, next, jumper"
             :total="total"
             :page-size="15"
             hide-on-single-page

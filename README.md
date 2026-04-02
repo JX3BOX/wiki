@@ -19,6 +19,7 @@ type 缺省时默认为 achievement
 - 宠物：https://page.j3cx.com/?type=pet&id=228
 - 坐骑：https://page.j3cx.com/?type=horse&id=8_24920
 - 价格：https://page.j3cx.com/?type=price&id=5_31139&server=%E7%BB%9D%E4%BB%A3%E5%A4%A9%E9%AA%84
+- 无界成就详情： https://page.j3cx.com/wujie/cj/view/10617
 
 ## 怀旧服
 - 成就：https://page.j3cx.com/?type=cj&id=493&L=classic_yq
