@@ -144,12 +144,24 @@ body {
 
 .m-header__menu {
     margin-top: 0 !important;
+    padding: 2px !important;
+    border: none !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible;
+    backdrop-filter: none;
+}
+
+.m-header-dropdown-popper.el-popper {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
     padding: 0 !important;
-    border: 1px solid rgba(173, 195, 199, 0.2);
-    border-radius: 14px;
-    background: rgba(17, 26, 33, 0.96);
-    overflow: hidden;
-    backdrop-filter: blur(12px);
+}
+
+.m-header-dropdown-popper.el-popper .el-popper__arrow {
+    display: none !important;
 }
 
 .u-dropdown-link {
@@ -157,7 +169,7 @@ body {
     .flex;
     justify-content: center;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     background: linear-gradient(180deg, rgba(38, 67, 82, 0.96) 0%, rgba(73, 112, 133, 0.96) 100%);
     border: 1px solid rgba(194, 218, 224, 0.45);
     font-size: 12px;
@@ -168,6 +180,16 @@ body {
     min-height: 40px;
     box-sizing: border-box;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+
+    & > span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .el-icon--right {
+        margin-left: 0;
+    }
 
     a {
         color: #fff;
@@ -231,6 +253,7 @@ body {
         overflow-y: auto;
         height: auto;
         min-height: 0;
+        margin-top: 10px;
         padding-bottom: 40px;
         box-sizing: border-box;
     }
@@ -251,12 +274,40 @@ body {
             inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
         .u-pagination-box {
-            .x(right);
-            padding-right: 0;
+            .x(center);
+            margin-top: 10px;
+            padding: 6px 2px 2px;
             box-sizing: border-box;
 
-            .btn-next {
-                margin-right: 0;
+            .el-pagination {
+                display: inline-flex;
+                align-items: center;
+                gap: 2px;
+            }
+
+            .el-pagination.is-background .btn-prev,
+            .el-pagination.is-background .btn-next,
+            .el-pagination.is-background .el-pager li {
+                min-width: 28px;
+                height: 28px;
+                line-height: 28px;
+                margin: 0 2px;
+                border-radius: 6px;
+                border: 1px solid rgba(173, 195, 199, 0.32);
+                background: rgba(226, 236, 241, 0.9);
+                color: rgba(23, 43, 56, 0.88);
+                font-weight: 700;
+            }
+
+            .el-pagination.is-background .el-pager li.is-active {
+                border-color: rgba(116, 127, 255, 0.9);
+                background: linear-gradient(180deg, rgba(89, 110, 255, 0.98) 0%, rgba(73, 91, 228, 0.98) 100%);
+                color: #fff;
+            }
+
+            .el-pagination.is-background .btn-prev:disabled,
+            .el-pagination.is-background .btn-next:disabled {
+                opacity: 0.45;
             }
         }
 
@@ -293,22 +344,36 @@ body {
         .m-reply {
             .flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 6px 8px;
             padding-bottom: 0;
 
             .u-reply {
-                min-width: 60px;
-                height: 28px;
-                font-size: 12px;
+                min-width: auto;
+                height: 27px;
+                font-size: 11px;
                 font-weight: 700;
                 color: #fff;
                 .flex;
                 align-items: center;
                 justify-content: center;
                 border-radius: 999px;
-                padding: 0 10px;
+                padding: 0 9px;
                 background: linear-gradient(180deg, rgba(76, 122, 150, 1) 0%, rgba(55, 92, 114, 1) 100%);
                 border: 1px solid rgba(173, 195, 199, 0.48);
+            }
+
+            .u-time {
+                order: 2;
+                width: 100%;
+                float: none;
+                margin-top: 0;
+                font-size: 11px;
+                line-height: 1.2;
+                color: rgba(255, 255, 255, 0.52);
+                text-align: right;
+                white-space: nowrap;
             }
         }
 
@@ -329,6 +394,12 @@ body {
                 font-size: 11px;
                 font-weight: 400;
                 color: rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        .u-nickname-panel {
+            .u-nickname {
+                color: rgba(236, 248, 255, 0.92);
             }
         }
     }
@@ -381,6 +452,10 @@ body {
         span {
             font-size: 12px;
         }
+    }
+
+    .c-wiki-comments .m-comments-panel > .u-comments > .u-comment-panel > .u-comments {
+        padding-left: 12px;
     }
 
     .m-title-wrapper {

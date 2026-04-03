@@ -1,26 +1,25 @@
 <template>
-    <div class="m-comments-panel" v-loading="loading">
+    <div class="c-wiki-comments m-comments-panel" v-loading="loading">
         <div class="u-empty" v-if="!comments || !comments.length">
-            <span v-if="comments === null">加载中...</span>
-            <span v-else-if="comments === false">数据加载异常</span>
-            <span v-else>暂无评论</span>
+            <span v-if="comments === null">🎉 数据加载中...</span>
+            <span v-if="comments === false">⚠️ 数据加载异常</span>
+            <span v-if="comments && !comments.length">💧 暂无评论</span>
         </div>
-        <CommentTree :is-wujie="isWujie" :comments="comments" :source-id="sourceId" />
+        <WikiComment :comments="comments" :source-id="sourceId" />
         <el-pagination
             class="u-pagination-box"
             background
             hide-on-single-page
+            small
             :current-page="page"
             :total="total"
             :page-size="pageSize"
-            :layout="isWujie ? 'prev, next' : 'prev, pager, next, total'"
-            :size="isWujie ? 'small' : undefined"
-            :pager-count="isWujie ? 5 : 7"
+            layout="prev, next"
             @current-change="handleCurrentChange"
         ></el-pagination>
         <div id="m-reply-form" class="m-reply-form">
             <h4 class="u-title">
-                <LegacyIcon class="el-icon-chat-dot-round" />
+                <i class="el-icon-chat-dot-round"></i>
                 <span>回复</span>
             </h4>
             <textarea class="u-reply-content" v-model="reply_form.content"></textarea>
@@ -29,7 +28,7 @@
                 <input v-model="reply_form.user_nickname" type="text" />
             </div>
             <el-button type="primary" class="u-submit" @click="create_comment(reply_form)">
-                <LegacyIcon class="el-icon-check" />
+                <i class="el-icon-check"></i>
                 <span>提交</span>
             </el-button>
         </div>
@@ -37,41 +36,14 @@
 </template>
 
 <script>
-import CommentTree from "@/components/wiki-comment.vue";
+import WikiComment from "@jx3box/jx3box-ui/src/wiki/WikiComment.vue";
 import { wikiComment } from "@jx3box/jx3box-common/js/wiki";
 import User from "@jx3box/jx3box-common/js/user";
 
-function buildCommentTree(comments) {
-    const loop = (list, parent) => {
-        const outputs = [];
-        for (const comment of list || []) {
-            if (!comment || comment.parent_id !== parent) continue;
-            const children = loop(comment.children, comment.id);
-            comment.children = children.map((item) => {
-                item.parent = {
-                    user_id: comment.user_id,
-                    user_nickname: comment.user_nickname,
-                    id: comment.id,
-                };
-                item.reply_form = {
-                    show: false,
-                    content: "",
-                    user_nickname: User.getInfo().name,
-                };
-                return item;
-            });
-            outputs.push(comment);
-        }
-        return outputs;
-    };
-
-    return loop(comments, 0);
-}
-
 export default {
-    name: "WikiCommentsContent",
+    name: "WikiCommentsWujie",
     components: {
-        CommentTree,
+        WikiComment,
     },
     props: {
         type: {
@@ -79,7 +51,7 @@ export default {
             default: "",
         },
         sourceId: {
-            type: [String, Number],
+            type: [Number, String],
             default: 0,
         },
     },
@@ -97,9 +69,6 @@ export default {
         };
     },
     computed: {
-        isWujie() {
-            return this.$route.name?.includes("wujie");
-        },
         client() {
             return this.$route?.query?.L === "classic_yq" ? "origin" : "std";
         },
@@ -116,11 +85,11 @@ export default {
             wikiComment
                 .list({ type: this.type, id: this.sourceId }, { client: this.client, page: this.page })
                 .then((res) => {
-                    const data = res.data?.data || {};
-                    const comments = data.list || [];
+                    const data = res?.data?.data || {};
+                    const list = data.list || [];
 
-                    comments.forEach((comment) => {
-                        comment.reply_form = {
+                    list.forEach((item) => {
+                        item.reply_form = {
                             show: false,
                             content: "",
                             user_nickname: User.getInfo().name,
@@ -129,7 +98,7 @@ export default {
 
                     this.page = data.page || 1;
                     this.total = data.total || 0;
-                    this.comments = buildCommentTree(comments);
+                    this.comments = this.buildTree(list, 0);
                 })
                 .catch(() => {
                     this.comments = false;
@@ -139,15 +108,36 @@ export default {
                     this.loading = false;
                 });
         },
+        buildTree(comments, parent) {
+            const outputs = [];
+            for (const c of comments || []) {
+                if (!c || c.parent_id !== parent) continue;
+                const children = this.buildTree(c.children, c.id);
+                c.children = children.map((item) => {
+                    item.parent = {
+                        user_id: c.user_id,
+                        user_nickname: c.user_nickname,
+                        id: c.id,
+                    };
+                    item.reply_form = {
+                        show: false,
+                        content: "",
+                        user_nickname: User.getInfo().name,
+                    };
+                    return item;
+                });
+                outputs.push(c);
+            }
+            return outputs;
+        },
         create_comment(form, parent_id = 0) {
             if (!form.content) {
                 this.$message({
-                    message: "请先填写评论内容后再尝试提交",
+                    message: "请先填写评论内容再尝试提交",
                     type: "warning",
                 });
                 return;
             }
-
             const data = {
                 type: this.type,
                 source_id: String(this.sourceId),
@@ -156,7 +146,6 @@ export default {
                 content: form.content,
                 client: this.client,
             };
-
             wikiComment
                 .post(data)
                 .then(() => {

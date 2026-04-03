@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </div>
-            <el-dropdown class="m-header__links">
+            <el-dropdown class="m-header__links" popper-class="m-header-dropdown-popper">
                 <el-button type="primary" class="u-dropdown-link">
                     更多百科<LegacyIcon class="el-icon-arrow-down el-icon--right" />
                 </el-button>
@@ -144,7 +144,7 @@
                     <img class="u-icon" src="@/assets/img/wujie/comment.svg" svg-inline alt="百科评论" />
                     <div class="u-title">百科评论</div>
                 </div>
-                <WikiComments class="m-comment-detail" type="achievement" :source-id="id" />
+                <WikiCommentsWujie class="m-comment-detail" type="achievement" :source-id="id" />
             </div>
         </div>
     </div>
@@ -163,14 +163,14 @@ import { getAchievementsTotal, get_achievement } from "@/service/achievement";
 
 import WikiPanel from "@/components/wiki-panel.vue";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
-import WikiComments from "@/components/wiki-comments.vue";
+import WikiCommentsWujie from "@/components/wiki-comments-wujie.vue";
 import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 export default {
     name: "WujieDetail",
     components: {
         WikiPanel,
         Article,
-        WikiComments,
+        WikiCommentsWujie,
         WikiRobotTip,
     },
     data() {

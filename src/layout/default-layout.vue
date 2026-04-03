@@ -22,7 +22,9 @@
                 <div class="m-wiki-admin-drop" v-if="showAdmin">
                     <el-dropdown trigger="click" @command="handleCommand">
                         <el-button type="primary" class="c-admin-button c-admin-drop__button"
-                            ><LegacyIcon class="el-icon-setting" /> 管理<LegacyIcon class="el-icon-arrow-down el-icon--right" />
+                            ><LegacyIcon class="el-icon-setting u-left-icon" />
+                            <span class="u-label">管理</span>
+                            <LegacyIcon class="el-icon-arrow-down u-right-icon" />
                         </el-button>
                         <template #dropdown>
                             <el-dropdown-menu>
@@ -191,6 +193,25 @@ export default {
         top: -2px;
         right: 95px;
         height: 32px;
+
+        .c-admin-drop__button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0;
+
+            .legacy-icon,
+            [data-legacy-icon] {
+                line-height: 1;
+            }
+
+            .u-left-icon {
+                margin-right: 4px;
+            }
+
+            .u-right-icon {
+                margin-left: 4px;
+            }
+        }
     }
 }
 .m-wiki-footer {

@@ -40,7 +40,7 @@ import UA from "@/utils/ua";
 import star from "@/utils/star";
 import WikiContent from "@/components/wiki-content";
 import WikiRevisions from "@/components/wiki-revisions.vue";
-import WikiComments from "@/components/wiki-comments.vue";
+import WikiComments from "@jx3box/jx3box-ui/src/wiki/WikiComments.vue";
 // import Relations from "@/components/relations.vue";
 import PriceTabs from "@/components/item/price-tabs.vue";
 import Price from "@/components/item/price.vue";

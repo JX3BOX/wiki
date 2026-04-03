@@ -74,6 +74,9 @@
     }
 
     .u-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
         margin: 0;
         line-height: 2;
         white-space: nowrap;
@@ -86,11 +89,24 @@
         .fz(12px);
         padding: 0 2px;
 
-        i {
+        i,
+        .legacy-icon,
+        [data-legacy-icon] {
+            display: inline-block;
+            flex: none;
             .fz(14px);
             .mr(3px);
             // color: #ff8c03;
             color: #bbb;
+            width: 1em;
+            height: 1em;
+            line-height: 1;
+            vertical-align: middle;
+        }
+
+        > span {
+            display: inline-block;
+            vertical-align: middle;
         }
     }
     .u-updated {

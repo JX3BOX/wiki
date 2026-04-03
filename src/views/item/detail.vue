@@ -476,7 +476,7 @@ import ItemIcon from "@/components/common/item-icon.vue";
 import Plan from "@/components/item/plan.vue";
 import WikiPanel from "@/components/wiki-panel.vue";
 import WikiRevisions from "@/components/wiki-revisions.vue";
-import WikiComments from "@/components/wiki-comments.vue";
+import WikiComments from "@jx3box/jx3box-ui/src/wiki/WikiComments.vue";
 import ItemPrices from "@/components/item/item-prices.vue";
 import ItemPriceChart from "@/components/item/item-price-chart.vue";
 import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
