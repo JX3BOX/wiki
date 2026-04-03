@@ -18,9 +18,10 @@
                     <slot><LegacyIcon class="el-icon-search" /> <span class="u-text">关键词</span></slot>
                 </template>
                 <template #append>
-                    <el-button class="u-search-btn" type="primary" plain @click="searchHandle"
+                    <el-button v-if="!hideAppendSearch" class="u-search-btn" type="primary" plain @click="searchHandle"
                         ><LegacyIcon class="el-icon-position" /> <span class="u-text">搜索</span></el-button
                     >
+                    <slot name="append"></slot>
                 </template>
             </el-input>
             <slot name="filter"></slot>
@@ -38,6 +39,10 @@ export default {
         placeholder: {
             type: String,
             default: "输入关键词「回车」进行搜索",
+        },
+        hideAppendSearch: {
+            type: Boolean,
+            default: false,
         },
     },
     data() {

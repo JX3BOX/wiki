@@ -18,17 +18,18 @@
         .w(20px);
         border-radius: 3px;
         vertical-align: middle;
-        .mr(8px);
     }
+
     .u-quest-name {
         .u-name;
-        .ml(0);
     }
+
     .u-name {
         .dbi;
-        .mr(16px);
+        .ml(8px);
         vertical-align: middle;
-        flex-shrink: 0;
+        text-decoration: none;
+        color: #24292e;
 
         &:not([href]) {
             color: #3d454d;
@@ -37,32 +38,62 @@
             }
         }
     }
+
+
     .u-post-head {
-        .u-quest,
-        .u-post-user {
-            .flex;
-            flex-direction: row;
-            flex-flow: wrap;
-            align-items: center;
-            .mt(8px);
+        .u-quest {
+            .mt(5px);
             a {
-                .underline(@color-link);
+                text-decoration: none;
             }
         }
 
-        .u-quest-level {
-            flex-shrink: 0;
+        .u-author {
+            a {
+                text-decoration: none;
+            }
+        }
+
+        .u-author,
+        .u-updated,
+        .u-quest-name,
+        .u-quest-level,
+        .u-post-remark {
+            display: inline-block;
+            .mr(15px);
+            vertical-align: middle;
+        }
+
+        .u-updated {
+            .mr(0);
+            opacity: 0.75;
+            color: #666;
         }
 
         .u-post-remark,
-        .u-quest-level,
-        .u-updated {
-            .mr(16px);
+        .u-quest-level {
             .color(grey);
         }
+
+        .u-post-remark {
+            margin: 5px 0;
+        }
     }
+
     .u-post-body {
-        .mt(8px);
-        .color(grey);
+        .u-excerpt {
+            .db;
+            .mt(6px);
+            color: #999;
+            .lh(1.6);
+        }
+    }
+
+    .u-post-head {
+        .u-quest .u-quest-name:hover,
+        .u-author .u-name:hover {
+            text-decoration: underline !important;
+            text-underline-offset: 2px;
+        }
     }
 }

@@ -14,7 +14,7 @@
             </CommonNav>
         </template>
         <div class="m-search-wrap">
-            <Search class="m-quest-search" :placeholder="placeholder" @search="search">
+            <Search class="m-quest-search" :placeholder="placeholder" :hide-append-search="true" @search="search">
                 <div>
                     <el-tooltip content="查看任务链需要键入完整任务名或任务ID哦" placement="top">
                         <el-checkbox v-model="chain">查看任务链</el-checkbox>
@@ -30,26 +30,33 @@
                         <el-icon><QuestionFilled /></el-icon>
                     </el-tooltip>
                 </div>
-            </Search>
-            <el-popover popper-class="u-player-setting-popover" placement="top" width="160" v-model="settingVisible">
-                <el-input v-model="playerName" placeholder="称呼" @input="handlePlayerInfoChange" size="small"
-                    ><template #prepend>称呼</template></el-input
-                >
-                <el-input v-model="playerBody" placeholder="体型" @input="handlePlayerInfoChange" size="small"
-                    ><template #prepend>体型</template></el-input
-                >
-                <div style="text-align: right; margin: 0">
-                    <el-button type="primary" size="small" @click="settingVisible = false">确定</el-button>
-                </div>
-                <template #reference>
-                    <div class="u-player">
-                        <span class="u-player-name">{{ playerName }}</span
-                        >|
-                        <span class="u-player-body">{{ playerBody }}</span>
-                        <el-icon><Setting></Setting></el-icon>
-                    </div>
+                <template #append>
+                    <el-popover
+                        popper-class="u-player-setting-popover"
+                        placement="top"
+                        width="160"
+                        v-model="settingVisible"
+                    >
+                        <el-input v-model="playerName" placeholder="称呼" @input="handlePlayerInfoChange" size="small"
+                            ><template #prepend>称呼</template></el-input
+                        >
+                        <el-input v-model="playerBody" placeholder="体型" @input="handlePlayerInfoChange" size="small"
+                            ><template #prepend>体型</template></el-input
+                        >
+                        <div style="text-align: right; margin: 0">
+                            <el-button type="primary" size="small" @click="settingVisible = false">确定</el-button>
+                        </div>
+                        <template #reference>
+                            <div class="u-player">
+                                <span class="u-player-name">{{ playerName }}</span
+                                >|
+                                <span class="u-player-body">{{ playerBody }}</span>
+                                <el-icon><Setting></Setting></el-icon>
+                            </div>
+                        </template>
+                    </el-popover>
                 </template>
-            </el-popover>
+            </Search>
         </div>
         <router-view></router-view>
     </DefaultLayout>
@@ -110,6 +117,16 @@ export default {
         }
     }
     .m-quest-search {
+        flex: 1;
+        padding-bottom: 0;
+
+        .el-input-group__append {
+            display: inline-flex;
+            align-items: stretch;
+            gap: 0;
+            padding: 0;
+        }
+
         .el-input-group__prepend {
             padding: 4px 20px 0;
             box-sizing: border-box;
@@ -135,16 +152,18 @@ export default {
         }
     }
 
-    & > span:last-of-type {
-        flex-shrink: 0;
-    }
     .u-player {
         .flex;
-        padding: 0 12px 10px 12px;
+        height: 40px;
+        padding: 0 12px;
         align-items: center;
-        .fz(14px, 1.5);
+        .fz(14px, 1);
+        white-space: nowrap;
+        border-left: 1px solid #dcdfe6;
+        cursor: pointer;
+
         .el-icon {
-            .ml(2px);
+            .ml(4px);
         }
     }
 

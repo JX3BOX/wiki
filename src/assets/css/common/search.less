@@ -77,6 +77,14 @@
         background-color: #f5f7fa;
         color: #909399;
         border-left-width: 0;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: var(--el-color-primary);
+            border-color: var(--el-color-primary);
+            color: #fff;
+        }
     }
 
     .el-popover__reference-wrapper {
@@ -108,7 +116,16 @@
         flex-direction: column;
         gap: 10px;
         .el-select {
-            min-width: 200px;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .el-select__wrapper {
+            width: 100%;
+        }
+
+        .el-input {
+            width: 100%;
         }
     }
 
@@ -116,6 +133,28 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 12px;
+        width: 100%;
+        gap: 8px;
+
+        .el-input {
+            flex: 1 1 0;
+            min-width: 0;
+            width: 0;
+        }
+
+        .el-input__wrapper {
+            min-height: 32px;
+            padding: 0 6px;
+        }
+
+        .el-input__inner {
+            font-size: 12px;
+            text-align: center;
+            letter-spacing: 0;
+        }
+
+        .el-input__inner::placeholder {
+            font-size: 12px;
+        }
     }
 }

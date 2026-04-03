@@ -33,22 +33,33 @@
     .u-all {
         .flex;
         align-items: center;
-        gap: 4px;
-        // padding-left: 24px;
+        gap: 0;
+        height: 28px;
         line-height: 28px;
+        font-size: 14px;
+        font-weight: 400;
+        color: @color-link;
         &:hover {
             background-color: #f5f7fa;
         }
 
-        i {
-            padding: 0 5px;
+        i,
+        .legacy-icon,
+        [data-legacy-icon] {
+            width: 24px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
             color: #c0c4cc;
         }
 
         &.router-link-exact-active {
-            .bold;
             color: @color-link;
-            i {
+            .bold;
+            i,
+            .legacy-icon,
+            [data-legacy-icon] {
                 color: @color-link;
             }
         }

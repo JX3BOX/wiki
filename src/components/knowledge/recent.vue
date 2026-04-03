@@ -103,10 +103,15 @@ export default {
             .dbi;
             .ml(8px);
             vertical-align: middle;
+            text-decoration: none;
             &:not([href]) {
                 color: #3d454d;
             }
-            .underline(@color-link);
+        }
+        .u-source .u-name:hover,
+        .u-author .u-name:hover {
+            text-decoration: underline !important;
+            text-underline-offset: 2px;
         }
         .m-achievement {
             .mt(5px);

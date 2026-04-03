@@ -14,12 +14,14 @@
             <!-- 编辑 & 删除 & 收藏 -->
             <template #head-actions>
                 <template v-if="isAuthor || isEditor">
-                    <el-button type="primary" icon="Edit" size="small" plain @click="editPlan(plan.id)"
-                        >编辑</el-button
-                    >
-                    <el-button type="info" icon="Delete" size="small" plain @click="deletePlan(plan.id)"
-                        >删除</el-button
-                    >
+                    <el-button type="primary" size="small" plain @click="editPlan(plan.id)">
+                        <LegacyIcon class="el-icon-edit" />
+                        <span>编辑</span>
+                    </el-button>
+                    <el-button type="info" size="small" plain @click="deletePlan(plan.id)">
+                        <LegacyIcon class="el-icon-delete" />
+                        <span>删除</span>
+                    </el-button>
                 </template>
                 <!-- <Fav post-type="item_plan" :post-id="plan.id" :post-title="plan && plan.title" /> -->
             </template>
@@ -113,7 +115,7 @@ export default {
             loading: false,
 
             isAuthor: false,
-            plan: "",
+            plan: {},
             date_format: ts2str,
             default_avatar,
             equipList: [

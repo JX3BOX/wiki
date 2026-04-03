@@ -1,6 +1,9 @@
 <template>
     <div class="v-knowledge-single" v-loading="loading">
-        <div v-if="!isRobot" class="u-detail-title">{{ title }}</div>
+        <div v-if="!isRobot" class="u-detail-title">
+            <span>{{ title }}</span>
+            <el-tag v-if="categoryLabel" class="u-detail-category" size="small" effect="light">{{ categoryLabel }}</el-tag>
+        </div>
         <div v-else class="m-robot-header">
             <div class="m-robot-header__left">
                 <div class="u-title">{{ title }}</div>
@@ -94,6 +97,7 @@ import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import bus from "@/store/bus";
 import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 import SingleComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
+import { getKnowledgeMenus } from "@/service/knowledge.js";
 
 export default {
     name: "Detail",
@@ -111,6 +115,7 @@ export default {
         return {
             loading: false,
             data: "",
+            knowledgeTypeMap: {},
 
             imageCount: 0,
             loadedImageCount: 0,
@@ -142,6 +147,14 @@ export default {
         },
         title: function () {
             return this.data?.source?.name;
+        },
+        categoryLabel() {
+            const source = this.data?.source || {};
+            const directLabel = source.label;
+            if (directLabel) return directLabel;
+            const type = source.type;
+            if (!type) return "";
+            return this.knowledgeTypeMap[type] || type;
         },
         content: function () {
             return this.data?.post?.content;
@@ -318,12 +331,26 @@ export default {
                 this.$router.push({ name: "index" });
             }
         },
+        async loadKnowledgeTypes() {
+            try {
+                const res = await getKnowledgeMenus();
+                const list = res?.data?.data || [];
+                this.knowledgeTypeMap = list.reduce((acc, item) => {
+                    if (!item?.name) return acc;
+                    acc[item.name] = item.label || item.name;
+                    return acc;
+                }, {});
+            } catch (e) {
+                this.knowledgeTypeMap = {};
+            }
+        },
         publishLink,
     },
     beforeUnmount() {
         window.removeEventListener("load", this.initImageLoader);
     },
     mounted() {
+        this.loadKnowledgeTypes();
         bus.on("openWikiPush", (param) => {
             console.log(this.wiki_post);
             if (!this.data?.source?.post?.id) {
@@ -617,9 +644,18 @@ export default {
     }
 }
 .u-detail-title {
+    display: inline-flex;
+    align-items: center;
     font-size: 18px;
     .bold;
     line-height: 2;
+
+    .u-detail-category {
+        margin-left: 8px;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 1;
+    }
 }
 
 .m-wiki.is-robot {
