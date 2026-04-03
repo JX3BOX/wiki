@@ -7,4 +7,4 @@ const query = qs.parse(location.search, { ignoreQueryPrefix: true });
 const rootPath = query.L === "classic_yq" ? __OriginRoot : __Root;
 const xf = xfid[query.kungfu];
 
-location.href = rootPath + "macro/?subtype=" + xf; //+ '#/rank'
+location.href = rootPath + "macro/rank/?subtype=" + xf; //+ '#/rank'

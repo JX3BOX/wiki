@@ -8,7 +8,7 @@ const name = decodeURIComponent(query.name);
 
 jquery.ajax({
     async: true,
-    url: "https://pull.j3cx.com/api/macro/query",
+    url: "https://pull-gplugin.jx3box.com/api/macro/query",
     type: "GET",
     data: { name: name },
     dataType: "json",
