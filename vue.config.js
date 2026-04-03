@@ -1,16 +1,14 @@
 const pages = {
+
+    // 游戏百科
     index: {
         title: "剑三Wiki - JX3BOX",
         entry: "src/main.js",
         template: "public/index.html",
         filename: "index.html",
     },
-    // wiki: {
-    //     title: "资历宝典 - JX3BOX",
-    //     template: "public/index.html",
-    //     entry: "src/pages/wiki.js",
-    //     filename: "wiki/index.html",
-    // },
+
+    // 百科栏目
     cj: {
         title: "成就百科 - JX3BOX",
         template: "public/index.html",
@@ -35,6 +33,8 @@ const pages = {
         entry: "src/pages/knowledge.js",
         filename: "knowledge/index.html",
     },
+
+    // 云端宏跳转
     macros: {
         title: "云端宏排行榜 - JX3BOX",
         entry: "src/pages/macros.js",

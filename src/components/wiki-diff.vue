@@ -22,7 +22,7 @@
         </div>
         <template #footer>
             <span class="dialog-footer">
-                <el-button size="small" @click="close">关闭</el-button>
+                <el-button @click="close" plain>关闭</el-button>
             </span>
         </template>
     </el-dialog>
