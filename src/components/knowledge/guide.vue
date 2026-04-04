@@ -2,7 +2,7 @@
     <div class="m-knowledge-panel">
         <div class="m-title">
             <span class="u-text"><LegacyIcon class="el-icon-orange" /><span> 玩法指南</span></span>
-            <router-link class="u-more" to="/type/game">查看更多 &raquo;</router-link>
+            <router-link class="u-wiki-more" to="/type/game">查看更多 &raquo;</router-link>
         </div>
         <div class="m-guide m-panel">
             <div v-for="(item, index) in data" :key="index" class="u-guide">
@@ -78,7 +78,7 @@ export default {
                 min-width: 30%;
                 .mb(5px);
                 .mr(10px);
-                .color(#0366d6,@pink);
+                .color(@v4primary,@pink);
                 span {
                     color: #888;
                     margin-left: 5px;

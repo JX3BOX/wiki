@@ -1,5 +1,5 @@
 <template>
-    <div class="v-knowledge-index" v-loading="loading">
+    <div class="v-knowledge-index m-home-view" v-loading="loading">
         <!-- 搜索结果 -->
         <knowledgeList v-if="search" :list="list" :total="total" :pagination="pagination" @onPageKey="onPageKey" />
         <template v-else>

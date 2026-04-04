@@ -222,10 +222,10 @@ export default {
                 for (const key in data.relation) {
                     _arr.push(...data.relation[key]);
                 }
-				getItemsByNode({ ids: _arr, per: _arr.length }).then((res) => {
+                getItemsByNode({ ids: _arr, per: _arr.length }).then((res) => {
                     let items = res.data.list;
 
-					for (const key in data.relation) {
+                    for (const key in data.relation) {
                         data.relation[key] = data.relation[key].map((el) => {
                             el = items.filter((k) => {
                                 if (el == k.id) return k;
@@ -246,7 +246,7 @@ export default {
                         });
                         return list;
                     });
-				})
+                });
             }
         },
         // 将装备object转换为string
@@ -318,17 +318,35 @@ export default {
 .m-panel-head {
     .z(1);
 }
-.v-plan-view .m-item-icon {
-    .u-item-icon {
-        .size(48px);
-        max-height: 48px;
-        .z(0);
+.m-plan-content {
+    .m-panel-actions {
+        .flex(y);
+        gap: 10px;
+        .el-button {
+            margin: 0 !important;
+        }
     }
-    .u-border {
-        .z(1);
+}
+
+.v-plan-view {
+    .m-plan-item {
+        .u-name {
+            .fz(12px,2) !important;
+        }
     }
-    .u-border-quest {
-        .z(2);
+    .m-item-icon {
+        .u-item-icon {
+            .size(48px);
+            max-height: 48px;
+            .z(0);
+            .r(4px);
+        }
+        .u-border {
+            .z(1);
+        }
+        .u-border-quest {
+            .z(2);
+        }
     }
 }
 

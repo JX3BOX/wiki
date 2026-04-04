@@ -56,7 +56,8 @@
                     </div>
                     <template #reference>
                         <el-button class="u-search-more" type="primary" plain>
-                            <LegacyIcon class="el-icon-more" />
+                            <el-icon><Filter /></el-icon>
+                            过滤
                         </el-button>
                     </template>
                 </el-popover>
@@ -217,4 +218,9 @@ export default {
 
 <style lang="less">
 @import "~@/assets/css/app.less";
+.m-item-search{
+    .el-input-group__append{
+        .none;
+    }
+}
 </style>

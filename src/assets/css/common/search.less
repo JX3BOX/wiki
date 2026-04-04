@@ -30,7 +30,7 @@
     .m-search {
         display: flex;
         align-items: stretch;
-        min-height: @bar-height;
+        // min-height: @bar-height;
         transition: margin 0.3s ease;
         border: 4px solid #e1efff;
         border-radius: 8px;
@@ -40,8 +40,9 @@
             .db;
         }
 
-        .el-input__wrapper {
-            min-height: calc(~"@{bar-height} - 8px");
+        .el-input-group__prepend{
+            .flex(y);
+            gap:5px;
         }
     }
 
@@ -69,9 +70,8 @@
     }
 
     .u-search-more {
-        .w(24px);
         height: 100%;
-        padding: 0 0;
+        padding: 0 10px;
         border-radius: 0 4px 4px 0;
         border: 1px solid #dcdfe6;
         background-color: #f5f7fa;

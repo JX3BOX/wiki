@@ -9,7 +9,7 @@
         border-bottom: 1px solid #eee;
 
         .u-more {
-            .underline(@color-link);
+            .underline(@v4primary);
             .fz(12px);
         }
         .u-text,
@@ -17,6 +17,19 @@
             .flex;
             align-items: center;
             gap: 5px;
+        }
+    }
+    .m-recent {
+        .m-post {
+            .u-remark {
+                color: grey;
+            }
+            .u-name{
+                color:@color;
+            }
+            .u-updated{
+                color:#666;
+            }
         }
     }
 }

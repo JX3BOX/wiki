@@ -118,7 +118,6 @@ export default {
     }
     .m-quest-search {
         flex: 1;
-        padding-bottom: 0;
 
         .el-input-group__append {
             display: inline-flex;
@@ -133,6 +132,7 @@ export default {
             .el-icon {
                 margin-left: 4px;
             }
+            border-right:none !important;
         }
     }
 

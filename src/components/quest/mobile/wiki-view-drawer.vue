@@ -73,14 +73,14 @@
                                         <el-tooltip v-if="killNpc.share" content="该目标可共享击杀" placement="top">
                                             <img src="@/assets/img/quest/target-15.png" alt="" />
                                         </el-tooltip>
-                                        <span> x {{ killNpc.amount }}</span>
+                                        <span> × {{ killNpc.amount }}</span>
                                     </div>
                                 </template>
                                 <template v-if="source?.needItems?.length > 0">
                                     <div class="u-target-sub" v-for="(needItem, i) in source.needItems" :key="i">
                                         <span>收集</span>
                                         <item-icon :item_id="needItem.id" :has_title="true" :size="18"></item-icon>
-                                        <span>x {{ needItem.amount }}</span>
+                                        <span> × {{ needItem.amount }}</span>
                                     </div>
                                 </template>
                                 <div
@@ -88,7 +88,7 @@
                                     v-for="(questValue, i) in source?.questValues || []"
                                     :key="questValue + i"
                                 >
-                                    <span>{{ questValue.str }} x {{ questValue.value }}</span>
+                                    <span>{{ questValue.str }} × {{ questValue.value }}</span>
                                 </div>
                             </div>
                         </div>

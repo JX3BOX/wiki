@@ -190,7 +190,6 @@ export default {
 .c-breadcrumb {
     .m-wiki-admin-drop {
         position: absolute;
-        top: -2px;
         right: 95px;
         height: 32px;
 

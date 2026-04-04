@@ -96,7 +96,7 @@
                         <el-tooltip v-if="killNpc.share" content="该目标可共享击杀" placement="top">
                             <img src="@/assets/img/quest/target-15.png" alt="" />
                         </el-tooltip>
-                        <span> x {{ killNpc.amount }}</span>
+                        <span> × {{ killNpc.amount }}</span>
                         <point-filter
                             v-if="showPointFilter('KillNpc' + (i + 1))"
                             :default="true"
@@ -109,7 +109,7 @@
                     <div class="u-target-sub" v-for="(needItem, i) in quest.needItems" :key="i">
                         <span>收集</span>
                         <item-icon :item_id="needItem.id" :has_title="true" :size="28"></item-icon>
-                        <span>x {{ needItem.amount }}</span>
+                        <span>× {{ needItem.amount }}</span>
                         <point-filter
                             v-if="showPointFilter('NeedItem' + (i + 1))"
                             :default="true"
@@ -119,7 +119,7 @@
                     </div>
                 </template>
                 <div class="u-target-sub" v-for="(questValue, i) in quest.questValues" :key="questValue + i">
-                    <span>{{ questValue.str }} x {{ questValue.value }}</span>
+                    <span>{{ questValue.str }} × {{ questValue.value }}</span>
                     <point-filter
                         v-if="showPointFilter('State' + (i + 1))"
                         :default="true"
@@ -215,18 +215,18 @@
                             <el-tooltip v-if="killNpc.share" content="该目标可共享击杀" placement="top">
                                 <img src="@/assets/img/quest/target-15.png" style="width: 14px; height: 14px" alt="" />
                             </el-tooltip>
-                            <span> x {{ killNpc.amount }}</span>
+                            <span> × {{ killNpc.amount }}</span>
                         </div>
                     </template>
                     <template v-if="quest.needItems && quest.needItems.length > 0">
                         <div class="u-target-sub" v-for="(needItem, i) in quest.needItems" :key="i">
                             <span>收集</span>
                             <item-icon :item_id="needItem.id" :has_title="true" :size="14"></item-icon>
-                            <span>x {{ needItem.amount }}</span>
+                            <span>× {{ needItem.amount }}</span>
                         </div>
                     </template>
                     <div class="u-target-sub" v-for="(questValue, i) in quest.questValues" :key="questValue + i">
-                        <span>{{ questValue.str }} x {{ questValue.value }}</span>
+                        <span>{{ questValue.str }} × {{ questValue.value }}</span>
                     </div>
                     <p class="u-content" v-html="targetDesc.replaceAll('&emsp;', '')"></p>
                 </div>
@@ -701,7 +701,7 @@ export default {
         questNameColor() {
             let map = {
                 common: "#0d0e0d",
-                repeat: "#0366d6",
+                repeat: "@v4primary",
                 act: "#7632ff",
             };
             return {

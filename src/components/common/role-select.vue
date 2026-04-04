@@ -101,7 +101,7 @@ export default {
         }
         a {
             padding: 0 2px;
-            box-shadow: 0 1px 0 @color-link;
+            box-shadow: 0 1px 0 @v4primary;
         }
     }
 

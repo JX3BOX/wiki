@@ -5,7 +5,7 @@
  * @Description:
 -->
 <template>
-    <div class="m-quest-home">
+    <div class="m-quest-home m-home-view">
         <!-- 头部大标题 -->
         <!-- <img class="u-logo" src="@/assets/img/quest/quest_logo.png" alt="" /> -->
         <!-- <h1 class="u-title">任务百科</h1> -->
@@ -18,7 +18,7 @@
                 <!-- <a class="other" target="_blank" :href="feedback">反馈建议 &raquo;</a> -->
             </template>
             <template #body>
-                <ul class="u-qlinks">
+                <ul class="m-qlinks">
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/1428">
                             <LegacyIcon class="el-icon-trophy" />
@@ -70,7 +70,7 @@
                 <span>最新任务</span>
             </template>
             <template #head-actions>
-                <router-link class="other" :to="{ name: 'newest' }">查看更多 &raquo;</router-link>
+                <router-link class="u-wiki-more" :to="{ name: 'newest' }">查看更多 &raquo;</router-link>
             </template>
             <template #body>
                 <quest-carousel :quests="newestQuests"></quest-carousel>

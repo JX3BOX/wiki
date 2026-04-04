@@ -2,7 +2,7 @@
     <div class="m-knowledge-panel">
         <div class="m-title">
             <span class="u-title-left"> <LegacyIcon class="el-icon-postcard" /><span> 术语大全</span> </span>
-            <router-link class="u-more" to="/type/jargon">查看更多 &raquo;</router-link>
+            <router-link class="u-wiki-more" to="/type/jargon">查看更多 &raquo;</router-link>
         </div>
         <div class="m-panel m-jargon">
             <div v-for="(item, index) in list" :key="index" class="u-jargon">
@@ -63,7 +63,7 @@ export default {
         .u-name {
             .db;
             .nobreak;
-            .color(#0366d6,@pink);
+            .color(@v4primary,@pink);
         }
         i {
             .mr(2px);

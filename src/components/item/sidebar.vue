@@ -1,9 +1,9 @@
 <template>
     <div class="m-cj-aside-left">
         <div class="m-menus">
-            <router-link class="u-all el-tree-node__label" :to="{ name: 'search', params: { keyword: '' } }"
+            <!-- <router-link class="u-all el-tree-node__label" :to="{ name: 'search', params: { keyword: '' } }"
                 ><LegacyIcon class="el-icon-caret-right" />全部</router-link
-            >
+            > -->
             <el-tree class="filter-tree" :data="menus" node-key="id" ref="tree" @node-click="clickNode">
                 <template #default="{ node, data }">
                     <router-link class="el-tree-node__label" :to="menu_url(data, node)">

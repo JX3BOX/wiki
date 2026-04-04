@@ -395,7 +395,7 @@ export default {
     border: 1px solid #eee;
 
     a:hover {
-        box-shadow: 0 1px 0 @primary;
+        box-shadow: 0 1px 0 @v4primary;
     }
     &.is-robot-empty {
         width: 100%;

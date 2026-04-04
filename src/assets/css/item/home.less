@@ -5,46 +5,7 @@
         text-decoration: none;
     }
 
-    .m-qlinks {
-        margin: 0;
-        padding: 0;
-        list-style: none;
 
-        .qlink {
-            display: inline-block;
-            margin: 0 20px 0 0;
-            i {
-                .mr(4px);
-            }
-
-            a {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                padding: 8px 20px;
-                background-color: #3a97eb;
-                color: #ffffff;
-                border-radius: 4px;
-                transition: opacity 0.2s linear;
-                text-decoration: none !important;
-
-                &:hover {
-                    opacity: 0.8;
-                    text-decoration: none !important;
-                }
-            }
-
-            a,
-            a:hover,
-            a:focus,
-            .router-link-active,
-            .router-link-exact-active,
-            span {
-                text-decoration: none !important;
-                box-shadow: none !important;
-            }
-        }
-    }
     .m-plan-list {
         .m-carousel {
             .u-item {
@@ -79,14 +40,6 @@
         }
     }
 
-    @media screen and (max-width: @ipad) {
-        .m-qlinks {
-            .qlink {
-                margin-top: 5px;
-                margin-bottom: 5px;
-            }
-        }
-    }
 
     .wiki-post-list {
         margin: -10px 0;
@@ -292,7 +245,7 @@
                 top: 0;
                 left: 0;
                 height: 100%;
-                border-left: 5px solid #3a97eb;
+                border-left: 5px solid @v4primary;
             }
         }
 

@@ -25,6 +25,7 @@
                     filterable
                     clearable
                     placeholder="地图"
+                    size="large"
                 ></el-cascader>
             </div>
         </Search>
@@ -174,53 +175,26 @@ export default {
     align-items: stretch;
     gap: 6px;
 
+    .el-input-group__prepend{
+        padding:0;
+        .el-input__wrapper{
+            background:none;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: none;
+            margin-right: -1px;
+        }
+    }
+
     .m-return {
         display: flex;
         align-items: stretch;
-    }
-
-    .m-search .el-input__wrapper {
-        min-height: 38px;
     }
 
     .m-search .el-input-group__prepend,
     .m-search .el-input-group__append {
         display: inline-flex;
         align-items: center;
-    }
-
-    .m-search .el-input__inner {
-        height: 38px;
-        line-height: 38px;
-    }
-
-    .cascader-wrapper {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-    }
-    .m-search .el-input-group__prepend {
-        border: none;
-        box-shadow: none;
-        padding: 0;
-        .el-cascader {
-            width: 140px;
-            line-height: 38px;
-            .el-input__wrapper {
-                box-shadow: none;
-                background-color: #f5f7fa;
-                height: 38px;
-                line-height: 38px;
-                padding-right: 28px;
-                border-radius: 0;
-            }
-        }
-        .el-cascader .el-input__inner {
-            border: none;
-            height: 38px;
-            line-height: 38px;
-            background-color: #f5f7fa;
-        }
     }
 }
 </style>

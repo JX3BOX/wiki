@@ -45,12 +45,12 @@
                             <span>价格走势</span>
                         </a>
                     </li>
-                    <li class="qlink">
+                    <!-- <li class="qlink">
                         <a href="/item/plan_list">
                             <LegacyIcon class="el-icon-cherry" />
                             <span>物品清单</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </template>
         </WikiPanel>

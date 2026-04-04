@@ -4,7 +4,7 @@
 			<span class="u-title-left">
 				<LegacyIcon :name="icon" /><span> {{ title }}</span>
 			</span>
-			<router-link v-if="link" class="u-title-right" to="link">查看更多 &raquo;</router-link>
+			<router-link v-if="link" class="u-wiki-more" to="link">查看更多 &raquo;</router-link>
 		</div>
 		<div class="m-panel">
 			<el-carousel height="66" direction="vertical" indicator-position="none" v-if="list.length">
@@ -101,7 +101,7 @@ export default {
 		flex-wrap: nowrap;
 		box-sizing: border-box;
 		border: 1px solid #d7dae1;
-		border-left: 5px solid #3a97eb;
+		border-left: 5px solid @v4primary;
 		background-color: #f5f7fa;
 
 		&:nth-child(3n) {

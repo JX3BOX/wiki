@@ -106,7 +106,7 @@ export default {
             top: 0;
             left: 0;
             height: 100%;
-            border-left: 5px solid #3a97eb;
+            border-left: 5px solid @v4primary;
         }
     }
     .u-title {

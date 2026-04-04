@@ -160,7 +160,7 @@ export default {
         questNameColor() {
             let map = {
                 common: "#0d0e0d",
-                repeat: "#0366d6",
+                repeat: "@v4primary",
                 act: "#7632ff",
             };
             return {

@@ -130,3 +130,99 @@
 }
 
 @import "./miniprogram/miniprogram.less";
+
+.m-wiki-post-empty {
+    .u-msg-yellow;
+    .x;
+    .s-link {
+        .underline(3px,solid,#8a6d3b);
+    }
+    letter-spacing: 2px;
+    .fz(14px);
+
+    .flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    &.is-robot-empty {
+        width: 100%;
+        height: 42px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        background: linear-gradient(to top, #383838 0%, #000000 100%);
+
+        border: 1px solid #6e6e6e !important;
+
+        box-shadow: inset 0px 10px 5px #000000;
+        text-shadow: none !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 12px;
+
+        color: rgba(#fff, 0.75) !important;
+    }
+}
+
+.m-qlinks {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    .qlink,.u-qlink {
+        display: inline-block;
+        margin: 0 20px 0 0;
+        i {
+            .mr(4px);
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 20px;
+            background-color: @v4primary;
+            color: #ffffff;
+            border-radius: 4px;
+            transition: opacity 0.2s linear;
+            text-decoration: none !important;
+
+            &:hover {
+                opacity: 0.8;
+                text-decoration: none !important;
+            }
+        }
+
+        a,
+        a:hover,
+        a:focus,
+        .router-link-active,
+        .router-link-exact-active,
+        span {
+            text-decoration: none !important;
+            box-shadow: none !important;
+        }
+    }
+}
+
+@media screen and (max-width: @ipad) {
+    .m-qlinks {
+        .qlink {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+
+.m-home-view{
+    .u-wiki-more{
+        color:@v4tip;
+        .fz(12px);
+        .smooth;
+        &:hover{
+            color:@v4primary;
+        }
+    }
+}

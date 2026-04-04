@@ -32,7 +32,7 @@ type 缺省时默认为 achievement
 - 价格：https://page.j3cx.com/?type=price&id=5_24428&server=%E7%BC%98%E8%B5%B7%E7%A8%BB%E9%A6%99
 
 #### 云端宏
-- 宏详情：https://page.j3cx.com/macro/details?l=zhcn&name=%E4%B8%B9%E6%9C%A8%23%E5%9B%9B%E6%AF%92%E7%8E%89%E7%9F%B3%E5%AE%8F&L=zhcn_hd
+- 宏详情：https://page.j3cx.com/macro/details?l=zhcn&name=流萤小姐重度依赖#启风·风宏&L=zhcn_hd
 - 宏排行：https://page.j3cx.com/macro/tops?l=zhcn&L=zhcn_hd&kungfu=10021
 
 #### Rewrite

@@ -3,6 +3,7 @@
         <div class="u-post" v-for="(post, key) in data" :key="key">
             <div class="u-post-head">
                 <div class="u-quest">
+                    <img class="u-icon" :src="icon_url(245)" />
                     <router-link
                         class="u-quest-name"
                         :to="{
@@ -66,6 +67,7 @@ export default {
         },
     },
     methods: {
+        icon_url: iconLink,
         authorLink,
         ts2str,
         iconLink,

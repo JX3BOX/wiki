@@ -214,7 +214,7 @@ export default {
         .u-title,
         .u-child {
             &:hover {
-                color: @color-link;
+                color: @v4primary;
                 background-color: @bg-gray;
             }
         }

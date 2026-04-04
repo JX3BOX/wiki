@@ -102,7 +102,7 @@ export default {
     .pl(5px);
 
     b {
-        color: @color-link;
+        color: @v4primary;
         .pointer;
         .fz(15px);
     }

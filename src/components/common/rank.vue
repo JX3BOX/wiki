@@ -124,7 +124,7 @@ export default {
             border-bottom: 1px dotted #eee;
         }
         a:hover .u-name {
-            color: @color-link;
+            color: @v4primary;
         }
     }
 
@@ -168,7 +168,7 @@ export default {
         }
         &.t3 {
             color: #fff;
-            background-color: #0366d6;
+            background-color: #2A65CF;
         }
     }
     .u-avatar {
@@ -184,7 +184,7 @@ export default {
 
     .u-count {
         .fz(12px, @h);
-        color: @primary;
+        color: @v4primary;
         .fr;
         .mr(2px);
     }

@@ -184,6 +184,7 @@ export default {
         border-radius: 2px;
         box-shadow: none;
         transition: all 0.2s ease;
+        font-size: 13px;
     }
 
     .m-revisions-panel .u-op .u-btn:hover {

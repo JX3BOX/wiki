@@ -55,7 +55,7 @@ export default {
 		.r(4px);
 		.color(#fff);
 		padding: 8px 20px;
-		background-color: #3a97eb;
+		background-color: @v4primary;
 		i {
 			.mr(5px);
 		}

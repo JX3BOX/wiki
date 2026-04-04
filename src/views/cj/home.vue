@@ -9,7 +9,7 @@
                 <a class="other" target="_blank" :href="feedback">反馈建议 &raquo;</a>
             </template> -->
             <template #body>
-                <ul class="u-qlinks">
+                <ul class="m-qlinks">
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/9126/">
                             <LegacyIcon class="el-icon-trophy" />
@@ -20,7 +20,7 @@
                         <Counter></Counter>
                     </li>
                     <li class="u-qlink">
-                        <a target="_blank" href="/achievement/overview" style="background-color: #f7b044">
+                        <a target="_blank" href="/pvx/codex/achievement" style="background-color: #f7b044">
                             <LegacyIcon class="el-icon-notebook-1" />
                             <span>资历宝典</span>
                         </a>
@@ -130,7 +130,7 @@
                 <span>最新成就</span>
             </template>
             <template #head-actions>
-                <router-link class="other" :to="{ name: 'newest' }">查看更多 &raquo;</router-link>
+                <router-link class="u-wiki-more" :to="{ name: 'newest' }">查看更多 &raquo;</router-link>
             </template>
             <template #body>
                 <el-carousel height="66px" direction="vertical" :interval="3500" indicator-position="none">

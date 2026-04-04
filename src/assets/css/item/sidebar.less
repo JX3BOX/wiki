@@ -30,6 +30,10 @@
 }
 
 .m-menus {
+
+    .el-tree-node__label{
+        color:@v4primary;
+    }
     .u-all {
         .flex;
         align-items: center;
@@ -38,7 +42,7 @@
         line-height: 28px;
         font-size: 14px;
         font-weight: 400;
-        color: @color-link;
+        color:@v4primary;
         &:hover {
             background-color: #f5f7fa;
         }
@@ -55,12 +59,12 @@
         }
 
         &.router-link-exact-active {
-            color: @color-link;
+            color: @v4primary;
             .bold;
             i,
             .legacy-icon,
             [data-legacy-icon] {
-                color: @color-link;
+                color: @v4primary;
             }
         }
     }

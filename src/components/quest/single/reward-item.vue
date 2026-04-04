@@ -5,18 +5,18 @@
         <template v-else-if="reward.type == 'affect'">
             获得声望：{{ reward.force }}（{{ affectNumber(reward.count) }}）
         </template>
-        <point-reward v-else-if="reward.type == 'titlePoint'" :type="'titlePoint'" :value="`x ${reward.count}`">
+        <point-reward v-else-if="reward.type == 'titlePoint'" :type="'titlePoint'" :value="`× ${reward.count}`">
         </point-reward>
-        <point-reward v-else-if="reward.type == 'prestige'" :type="'prestige'" :value="`x ${reward.count}`">
+        <point-reward v-else-if="reward.type == 'prestige'" :type="'prestige'" :value="`× ${reward.count}`">
         </point-reward>
-        <point-reward v-else-if="reward.type == 'tongFund'" :type="'tongFund'" :value="`x ${reward.count}`">
+        <point-reward v-else-if="reward.type == 'tongFund'" :type="'tongFund'" :value="`× ${reward.count}`">
         </point-reward>
-        <point-reward v-else-if="reward.type == 'tongResource'" :type="'tongResource'" :value="`x ${reward.count}`">
+        <point-reward v-else-if="reward.type == 'tongResource'" :type="'tongResource'" :value="`× ${reward.count}`">
         </point-reward>
-        <point-reward v-else-if="reward.type == 'justice'" :type="'justice'" :value="`x ${reward.count}`">
+        <point-reward v-else-if="reward.type == 'justice'" :type="'justice'" :value="`× ${reward.count}`">
         </point-reward>
-        <point-reward v-else-if="reward.type == 'train'" :type="'train'" :value="`x ${reward.count}`"></point-reward>
-        <point-reward v-else-if="reward.type == 'vigor'" :type="'vigor'" :value="`x ${reward.count}`"></point-reward>
+        <point-reward v-else-if="reward.type == 'train'" :type="'train'" :value="`× ${reward.count}`"></point-reward>
+        <point-reward v-else-if="reward.type == 'vigor'" :type="'vigor'" :value="`× ${reward.count}`"></point-reward>
         <point-reward
             v-else-if="reward.type == 'achievement'"
             :type="'achievement'"
