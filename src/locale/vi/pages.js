@@ -154,4 +154,7 @@ export default {
             description: "Bách khoa JX3, bách khoa đầy đủ và mới nhất, bách khoa thành tựu, bách khoa vật phẩm, bách khoa nhiệm vụ, bách khoa kiến thức",
         },
     },
+    common: {
+        appendTitle: " - JX3BOX",
+    }
 };

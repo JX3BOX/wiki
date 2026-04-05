@@ -9,7 +9,8 @@
 
 ## 游戏百科
 ### /wujie 无界内嵌
-- 成就： https://www.jx3box.com/wujie/cj/view/10617
+- 成就： https://www.jx3box.com/wujie/cj/view/11567
+- 缺失： https://www.jx3box.com/wujie/cj/view/20000
 
 ### /游戏插件
 

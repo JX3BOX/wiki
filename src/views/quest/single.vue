@@ -471,6 +471,8 @@ export default {
                 client: this.client,
             }).then((res) => {
                 this.quest = res.data;
+
+                document.title = this.quest?.name + this.$t("pages.common.appendTitle");
             });
         },
         handleTabClick(tab, event) {

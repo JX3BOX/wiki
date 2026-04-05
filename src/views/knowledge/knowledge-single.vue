@@ -300,6 +300,8 @@ export default {
                             link: location.href,
                             title: this.title,
                         });
+
+                    document.title = this.title + this.$t("pages.common.appendTitle");
                 })
                 .finally(() => {
                     this.loading = false;

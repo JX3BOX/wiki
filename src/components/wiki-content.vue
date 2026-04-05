@@ -14,11 +14,9 @@
                 <span class="u-text" v-text="wikiPost.source.Name"></span>
             </div>
             <div class="u-zhtr" @click="isTW = !isTW">
-                <LegacyIcon class="el-icon-guide" />
-                <span>[</span>
+                <el-icon><Sort /></el-icon>
                 <span v-if="isTW" class="u-tr">繁體</span>
                 <span v-else class="u-cn">简体</span>
-                <span>]</span>
             </div>
         </template>
         <template #head-actions>
@@ -47,7 +45,7 @@
             </div>
 
             <!-- Article -->
-            <template v-if="wiki_post.source">
+            <template v-if="wiki_post.source_id">
                 <div class="u-content" v-if="content || (!content && isEditMode)">
                     <Article
                         id="content"
@@ -85,8 +83,8 @@
                     </div>
                 </div>
                 <div class="u-btn">
-                    <el-button size="small" type="primary" @click="submitHanlder">提交</el-button>
-                    <el-button size="small" @click="cancelHandler">取消</el-button>
+                    <el-button type="primary" @click="submitHanlder">提交</el-button>
+                    <el-button @click="cancelHandler">取消</el-button>
                 </div>
             </div>
         </template>

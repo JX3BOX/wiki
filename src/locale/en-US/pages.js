@@ -154,4 +154,7 @@ export default {
             description: "JX3 wiki, the most complete and up-to-date encyclopedia, achievement encyclopedia, item encyclopedia, quest encyclopedia, knowledge encyclopedia",
         },
     },
+    common: {
+        appendTitle: " - JX3BOX",
+    }
 };

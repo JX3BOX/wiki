@@ -2,8 +2,7 @@ html,
 body {
     margin: 0;
     padding: 0;
-    background:
-        radial-gradient(circle at top, rgba(88, 130, 154, 0.3) 0, rgba(88, 130, 154, 0) 34%),
+    background: radial-gradient(circle at top, rgba(88, 130, 154, 0.3) 0, rgba(88, 130, 154, 0) 34%),
         linear-gradient(180deg, #10171f 0%, #1d2a35 38%, #314856 100%);
 }
 
@@ -12,8 +11,7 @@ body {
     padding: 18px 0 20px;
     box-sizing: border-box;
     overflow-x: hidden;
-    background:
-        radial-gradient(circle at 12% 0, rgba(126, 182, 215, 0.18) 0, rgba(126, 182, 215, 0) 24%),
+    background: radial-gradient(circle at 12% 0, rgba(126, 182, 215, 0.18) 0, rgba(126, 182, 215, 0) 24%),
         radial-gradient(circle at 88% 18%, rgba(232, 191, 110, 0.14) 0, rgba(232, 191, 110, 0) 18%);
 
     .m-wujie-cj-qqbot-tip {
@@ -28,6 +26,7 @@ body {
         margin: 0;
         border-radius: 999px;
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        .none;
 
         .m-qq {
             flex-direction: row-reverse;
@@ -63,10 +62,13 @@ body {
     overflow: visible;
     border: 1px solid rgba(176, 214, 228, 0.16);
     border-radius: 18px;
-    background: linear-gradient(135deg, rgba(19, 29, 37, 0.94) 0%, rgba(32, 48, 59, 0.84) 52%, rgba(51, 78, 95, 0.78) 100%);
-    box-shadow:
-        0 16px 40px rgba(0, 0, 0, 0.24),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    background: linear-gradient(
+        135deg,
+        rgba(19, 29, 37, 0.94) 0%,
+        rgba(32, 48, 59, 0.84) 52%,
+        rgba(51, 78, 95, 0.78) 100%
+    );
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .m-header__logo {
@@ -269,9 +271,7 @@ body {
         border: 1px solid rgba(174, 214, 226, 0.16);
         border-radius: 18px;
         background: linear-gradient(180deg, rgba(16, 24, 31, 0.92) 0%, rgba(27, 40, 50, 0.88) 100%);
-        box-shadow:
-            0 18px 40px rgba(0, 0, 0, 0.22),
-            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 
         .u-pagination-box {
             .x(center);
@@ -348,6 +348,7 @@ body {
             flex-wrap: wrap;
             gap: 6px 8px;
             padding-bottom: 0;
+            margin-top: 5px;
 
             .u-reply {
                 min-width: auto;
@@ -440,7 +441,8 @@ body {
         border-radius: 999px;
         padding: 0 14px;
         margin-top: 5px;
-        background: linear-gradient(90deg, rgba(122, 158, 181, 1) 0%, rgba(150, 194, 221, 1) 100%);
+        background: linear-gradient(90deg, rgba(122, 158, 181, 1) 0%, #3b769a 100%);
+        border: none !important;
     }
 
     .c-wiki-comments .m-reply-form .u-title {
@@ -501,9 +503,7 @@ body {
         border: 1px solid rgba(176, 214, 228, 0.16);
         border-radius: 18px;
         background: linear-gradient(180deg, rgba(239, 246, 250, 0.97) 0%, rgba(214, 228, 236, 0.95) 100%);
-        box-shadow:
-            0 18px 40px rgba(4, 10, 17, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        box-shadow: 0 18px 40px rgba(4, 10, 17, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.7);
     }
 
     .m-meta-list {
@@ -636,7 +636,7 @@ body {
         }
     }
 
-    // .m-wiki-post-empty {
+    .m-wiki-post-empty {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -648,7 +648,10 @@ body {
         background: linear-gradient(180deg, rgba(246, 250, 252, 0.72) 0%, rgba(221, 232, 238, 0.85) 100%);
         color: #506572;
         font-size: 14px;
-    // }
+        .s-link{
+            .underline(3px,solid,#506572);
+        }
+    }
 
     .m-series {
         .flex;
@@ -691,9 +694,7 @@ body {
         &.active {
             background: linear-gradient(180deg, rgba(32, 45, 54, 0.96) 0%, rgba(43, 60, 72, 0.98) 100%);
             border: 1px solid rgba(255, 255, 255, 0.56);
-            box-shadow:
-                0 16px 34px rgba(0, 0, 0, 0.24),
-                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
         }
 
         &.active:before {

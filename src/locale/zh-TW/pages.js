@@ -154,4 +154,7 @@ export default {
             description: "劍三百科，最全最新百科大全，成就百科，物品百科，任務百科，通識百科",
         },
     },
+    common: {
+        appendTitle: " - 劍網3魔盒（JX3BOX）",
+    }
 };
