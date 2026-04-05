@@ -1,8 +1,8 @@
 <template>
     <el-col class="m-post">
         <div class="m-head">
-            <div class="m-achievement">
-                <div class="u-achievement">
+            <div class="m-achievement u-post">
+                <div class="u-achievement u-info">
                     <img
                         class="u-icon"
                         :src="icon_url(post.source_icon_id)"

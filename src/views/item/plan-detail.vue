@@ -5,35 +5,34 @@
 			<el-button class="u-goback" size="medium" icon="ArrowLeft" @click="goBack" plain>返回列表</el-button>
 		</div> -->
         <!-- 内容展示 -->
-        <WikiPanel class="m-plan-content" :wiki-post="plan" :showQR="false">
+        <div class="m-plan-content" :wiki-post="plan" :showQR="false">
             <!-- 头部标题 -->
-            <template #head-title>
-                <LegacyIcon class="el-icon-tickets" />
-                <span class="u-plan-title"> {{ plan.title }} </span>
-            </template>
-            <!-- 编辑 & 删除 & 收藏 -->
-            <template #head-actions>
-                <template v-if="isAuthor || isEditor">
-                    <el-button type="primary" size="small" plain @click="editPlan(plan.id)">
-                        <LegacyIcon class="el-icon-edit" />
-                        <span>编辑</span>
-                    </el-button>
-                    <el-button type="info" size="small" plain @click="deletePlan(plan.id)">
-                        <LegacyIcon class="el-icon-delete" />
-                        <span>删除</span>
-                    </el-button>
-                </template>
-                <!-- <Fav post-type="item_plan" :post-id="plan.id" :post-title="plan && plan.title" /> -->
-            </template>
+            <div class="m-plan-head">
+                <span class="u-title">
+                    {{ plan.title }}
+                    <span class="u-time"><LegacyIcon class="el-icon-time" />{{ date_format(plan.updated) }}</span>
+                </span>
+                <!-- 编辑 & 删除 & 收藏 -->
+                <div class="m-plan-actions">
+                    <template v-if="isAuthor || isEditor">
+                        <el-button type="primary" size="small" plain @click="editPlan(plan.id)">
+                            <LegacyIcon class="el-icon-edit" />
+                            <span>编辑</span>
+                        </el-button>
+                        <el-button type="info" size="small" plain @click="deletePlan(plan.id)">
+                            <LegacyIcon class="el-icon-delete" />
+                            <span>删除</span>
+                        </el-button>
+                    </template>
+                    <!-- <Fav post-type="item_plan" :post-id="plan.id" :post-title="plan && plan.title" /> -->
+                </div>
+            </div>
             <!-- 详细内容 -->
-            <template #body>
+            <div class="m-plan-body">
                 <!-- 内容备注 -->
-                <div class="m-description m-border">
-                    <div class="u-title">
-                        <span>简介</span>
-                    </div>
-                    <div class="u-desc">{{ plan.description || "作者很懒什么也没写 😜" }}</div>
-                    <span class="u-user">
+                <div class="m-plan-desc">
+                    <div class="u-desc">{{ plan.description || "-" }}</div>
+                    <!-- <span class="u-user">
                         <img
                             class="u-avatar"
                             :src="showAvatar(getUserInfo(plan, 'user_avatar')) || default_avatar"
@@ -45,7 +44,7 @@
                         <span class="u-time"
                             >最后更新于 <LegacyIcon class="el-icon-time" />{{ date_format(plan.updated) }}</span
                         >
-                    </span>
+                    </span> -->
                 </div>
                 <!-- 物品 -->
                 <div class="m-plan-item" v-if="plan.type == '1'">
@@ -90,8 +89,8 @@
                         </div>
                     </div>
                 </div>
-            </template>
-        </WikiPanel>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -109,7 +108,7 @@ import bus from "@/store/bus.js";
 export default {
     name: "PlanDetail",
     props: [],
-    components: { WikiPanel, ItemIcon, Equip },
+    components: { ItemIcon, Equip },
     data: function () {
         return {
             loading: false,
@@ -315,19 +314,6 @@ export default {
 @import "~@/assets/css/item/plan-detail.less";
 </style>
 <style lang="less">
-.m-panel-head {
-    .z(1);
-}
-.m-plan-content {
-    .m-panel-actions {
-        .flex(y);
-        gap: 10px;
-        .el-button {
-            margin: 0 !important;
-        }
-    }
-}
-
 .v-plan-view {
     .m-plan-item {
         .u-name {

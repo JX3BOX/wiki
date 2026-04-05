@@ -1,25 +1,27 @@
 <template>
-    <div class="m-newest-post">
-        <div class="u-post" v-for="(post, key) in data" :key="key">
-            <div class="u-post-head">
-                <div class="u-quest">
-                    <img class="u-icon" :src="icon_url(245)" />
-                    <router-link
-                        class="u-quest-name"
-                        :to="{
-                            name: 'view',
-                            params: {
-                                quest_id: post.source_id,
-                                post_id: post.id,
-                            },
-                        }"
-                        target="_blank"
-                        >{{ questName(post.title) }}</router-link
-                    >
-                    <div class="u-quest-level" v-text="'综合难度：' + star(post.level)"></div>
-                    <div class="u-post-remark" v-if="post.remark" v-text="'📑 ' + post.remark"></div>
+    <div class="m-newest-post m-posts">
+        <div class="m-post" v-for="(post, key) in data" :key="key">
+            <div class="m-head">
+                <div class="u-post">
+                    <div class="u-info">
+                        <img class="u-icon" :src="icon_url(245)" />
+                        <router-link
+                            class="u-name"
+                            :to="{
+                                name: 'view',
+                                params: {
+                                    quest_id: post.source_id,
+                                    post_id: post.id,
+                                },
+                            }"
+                            target="_blank"
+                            >{{ questName(post.title) }}</router-link
+                        >
+                    </div>
+                    <div class="u-level" v-text="'综合难度：' + star(post.level)"></div>
+                    <div class="u-remark" v-if="post.remark" v-text="'📑 ' + post.remark"></div>
                 </div>
-                <div class="u-post-user">
+                <div class="m-user">
                     <div class="u-author">
                         <img class="u-icon" :src="showAvatar(post.user)" :alt="post.user_nickname" />
                         <a
@@ -32,7 +34,7 @@
                     <div class="u-updated" v-text="ts2str(post.updated)"></div>
                 </div>
             </div>
-            <div class="u-post-body">
+            <div class="m-body">
                 <div
                     class="u-excerpt"
                     :to="{

@@ -149,11 +149,11 @@
                 <span>最新攻略</span>
             </template>
             <template #body>
-                <div class="wiki-post-list" v-if="newest_posts.length">
-                    <div class="wiki-post" v-for="(post, key) in newest_posts" :key="key">
-                        <div class="m-about-post">
-                            <div class="m-wiki">
-                                <div class="u-wiki">
+                <div class="wiki-post-list m-posts" v-if="newest_posts.length">
+                    <div class="wiki-post m-post" v-for="(post, key) in newest_posts" :key="key">
+                        <div class="m-head m-about-post">
+                            <div class="m-wiki u-post">
+                                <div class="u-wiki u-info">
                                     <img
                                         class="u-icon"
                                         :src="icon_url(post.source_icon_id)"
@@ -188,7 +188,7 @@
                                 <div class="u-updated" v-text="date_format(post.updated)"></div>
                             </div>
                         </div>
-                        <div class="m-excerpt">
+                        <div class="m-body m-excerpt">
                             <router-link
                                 class="u-excerpt"
                                 :to="{

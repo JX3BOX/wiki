@@ -3,12 +3,12 @@
         <div class="m-title m-recent-title">
             <span class="u-title-left"><LegacyIcon class="el-icon-time" /><span> 最新更新</span></span>
         </div>
-        <div class="m-recent m-panel">
+        <div class="m-recent m-panel m-posts">
             <div class="m-post" v-for="(post, key) in list" :key="key">
                 <div class="m-head">
-                    <div class="m-source">
-                        <div class="u-source">
-                            <img class="u-icon" svg-inline src="../../assets/img/knowledge.svg" />
+                    <div class="m-source u-post">
+                        <div class="u-info">
+                            <img class="u-icon" :src="icon_url(388)" />
                             <router-link class="u-name" :to="{ name: 'view', params: { source_id: post.source_id } }">{{
                                 post.title
                             }}</router-link>
@@ -23,6 +23,7 @@
                             :href="post.user_id ? authorLink(post.user_id) : null"
                             class="u-name"
                             v-text="post.user_nickname"
+                            target="_blank"
                         ></a>
                     </div>
                     <div class="u-updated" v-text="ts2str(post.updated)"></div>
@@ -39,7 +40,7 @@
     </div>
 </template>
 <script>
-import { authorLink, ts2str, showAvatar } from "@jx3box/jx3box-common/js/utils";
+import { authorLink, ts2str, showAvatar, iconLink } from "@jx3box/jx3box-common/js/utils";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { ellipsis } from "@/utils/common";
 export default {
@@ -49,9 +50,16 @@ export default {
             list: [],
         };
     },
-    computed: {},
+    computed: {
+        client() {
+            return this.$store.state.client;
+        },
+    },
     watch: {},
     methods: {
+        icon_url: function (id) {
+            return iconLink(id, this.client);
+        },
         // 获取最新帖子数据
         getRecentData() {
             wiki.latest({ type: "knowledge" }, { client: null }).then(
@@ -78,72 +86,72 @@ export default {
 };
 </script>
 <style scoped lang="less">
-.m-knowledge-panel .m-recent-title {
-    margin-bottom: 0;
-}
-.m-recent {
-    .m-post {
-        .fz(12px);
-        .clip;
-        padding: 15px 10px;
-        border-bottom: 1px solid #ccc;
-        .m-head {
-            margin-top: 5px;
-        }
-        &:last-child {
-            border-bottom: none;
-        }
-        .u-icon {
-            .dbi;
-            .w(20px);
-            .r(3px);
-            vertical-align: middle;
-        }
-        .u-name {
-            .dbi;
-            .ml(8px);
-            vertical-align: middle;
-            text-decoration: none;
-            &:not([href]) {
-                color: #3d454d;
-            }
-        }
-        .u-source .u-name:hover,
-        .u-author .u-name:hover {
-            text-decoration: underline !important;
-            text-underline-offset: 2px;
-        }
-        .m-achievement {
-            .mt(5px);
-        }
-        .u-author,
-        .u-updated,
-        .u-source,
-        .u-remark {
-            .mr(15px);
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .m-user {
-            .x(left);
-            padding-bottom: 5px;
-        }
-        .u-updated {
-            // .fr;
-            .mr(0);
-            opacity: 0.75;
-        }
-        .u-remark {
-            margin-top: 5px;
-            margin-bottom: 5px;
-        }
-        .u-excerpt {
-            margin-top: 5px;
-            margin-bottom: 5px;
-            .db;
-            .lh(1.6);
-            color: #999;
-        }
-    }
-}
+// .m-knowledge-panel .m-recent-title {
+//     margin-bottom: 0;
+// }
+// .m-recent {
+//     .m-post {
+//         .fz(12px);
+//         .clip;
+//         padding: 15px 10px;
+//         border-bottom: 1px solid #ccc;
+//         .m-head {
+//             margin-top: 5px;
+//         }
+//         &:last-child {
+//             border-bottom: none;
+//         }
+//         .u-icon {
+//             .dbi;
+//             .w(20px);
+//             .r(3px);
+//             vertical-align: middle;
+//         }
+//         .u-name {
+//             .dbi;
+//             .ml(8px);
+//             vertical-align: middle;
+//             text-decoration: none;
+//             &:not([href]) {
+//                 color: #3d454d;
+//             }
+//         }
+//         .u-source .u-name:hover,
+//         .u-author .u-name:hover {
+//             text-decoration: underline !important;
+//             text-underline-offset: 2px;
+//         }
+//         .m-achievement {
+//             .mt(5px);
+//         }
+//         .u-author,
+//         .u-updated,
+//         .u-source,
+//         .u-remark {
+//             .mr(15px);
+//             display: inline-block;
+//             vertical-align: middle;
+//         }
+//         .m-user {
+//             .x(left);
+//             padding-bottom: 5px;
+//         }
+//         .u-updated {
+//             // .fr;
+//             .mr(0);
+//             opacity: 0.75;
+//         }
+//         .u-remark {
+//             margin-top: 5px;
+//             margin-bottom: 5px;
+//         }
+//         .u-excerpt {
+//             margin-top: 5px;
+//             margin-bottom: 5px;
+//             .db;
+//             .lh(1.6);
+//             color: #999;
+//         }
+//     }
+// }
 </style>

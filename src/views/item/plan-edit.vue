@@ -103,7 +103,7 @@
                                 >
                                     <template #item="{ element, index: key }">
                                         <div class="u-selected u-selected-item u-selected-count">
-                                            <ItemIcon :item_id="element.id" :has_title="true" />
+                                            <ItemIcon :item_id="element.id" :has_title="true" :size="24" />
                                             <div class="u-count">
                                                 <span>数量：</span>
                                                 <el-input-number
@@ -310,4 +310,11 @@ export default {
 
 <style lang="less">
 @import "~@/assets/css/item/item-plan.less";
+.p-plan_edit{
+    .m-plan-list{
+        .u-title{
+            padding:0 10px;
+        }
+    }
+}
 </style>

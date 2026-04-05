@@ -1,5 +1,4 @@
 .v-plan-view {
-    padding: 20px 0;
     .m-plan-navigation {
         .mb(20px);
     }
@@ -10,21 +9,49 @@
     .m-border {
         .mb(15px);
         .r(5px);
-        padding: 10px 20px 0 20px;
+        padding: 0 20px;
         border: 1px solid #eee;
-        background-color: #fff;
+        background-color: @bg-light;
         .u-title {
-            .fz(18px,2);
+            .fz(15px,2.2);
             .bold;
+            .smooth;
             .x;
-            opacity: 0.8;
-            padding: 0 10px;
-            letter-spacing: 0.5em;
+            letter-spacing: 0.2em;
             border-bottom: 1px solid #ddd;
         }
     }
+
+    .m-plan-content {
+    }
+    .m-plan-head {
+        .flex(y);
+        gap: 10px;
+        justify-content: space-between;
+        .u-title {
+            .fz(18px,1.2);
+            .flex(y);
+        }
+        padding: 10px 0;
+
+        .u-time{
+            .fz(12px);
+            color:@v4tip;
+            .flex(y);
+            gap:3px;
+            margin-left: 5px;
+        }
+    }
+    .m-panel-actions {
+        .flex(y);
+        gap: 10px;
+        .el-button {
+            margin: 0 !important;
+        }
+    }
     // 内容
-    .m-description {
+    .m-plan-desc {
+        margin-bottom: 10px;
         .u-title {
             .flex;
             .lh(36px);
@@ -37,8 +64,9 @@
             }
         }
         .u-desc {
-            .fz(14px);
-            padding: 10px 10px 0 10px;
+            .fz(12px,1.6);
+            // padding: 10px 10px 0 10px;
+            color: @v4tip;
         }
         .u-user {
             .flex;
@@ -78,6 +106,7 @@
                 align-items: center;
                 .u-name {
                     .fz(14px);
+                    text-shadow: 0 0 2px rgba(0,0,0,0.3);
                 }
             }
             .u-img {

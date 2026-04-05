@@ -189,9 +189,6 @@ export default {
 }
 .c-breadcrumb {
     .m-wiki-admin-drop {
-        position: absolute;
-        right: 95px;
-        height: 32px;
 
         .c-admin-drop__button {
             display: inline-flex;

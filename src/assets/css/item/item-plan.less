@@ -21,7 +21,7 @@
         min-width: 260px;
     }
     .m-item-icon {
-        padding: 10px 0;
+        padding: 10px 0 5px 0;
     }
 }
 .m-plan-list {
@@ -58,6 +58,12 @@
         border-radius: 4px;
         .color(#aaa);
         .x;
+    }
+    .u-item-icon{
+        .r(3px);
+    }
+    .m-item-icon .u-name{
+        text-shadow:0 0 2px rgba(0,0,0,0.3);
     }
     .u-list-btn {
         .w(100%);
@@ -121,8 +127,9 @@
         cursor: move;
         padding: 0 10px;
         box-sizing: border-box;
-        background-color: @color;
-        color: #90ee90;
+        background-color: #f1f2f3;
+        // background-color: @color;
+        color: @color;
         align-items: center;
         justify-content: space-between;
 

@@ -176,6 +176,7 @@ export default {
     gap: 6px;
 
     .el-input-group__prepend{
+        .w(120px);
         padding:0;
         .el-input__wrapper{
             background:none;
