@@ -159,18 +159,7 @@ export default {
             description: "Bách khoa JX3, bách khoa đầy đủ và mới nhất, bách khoa thành tựu, bách khoa vật phẩm, bách khoa nhiệm vụ, bách khoa kiến thức",
         },
     },
-};
-            description: "Bách khoa game JX3 - Truy cập bách khoa toàn thư game toàn diện với giải thích mechanics, hướng dẫn hệ thống, tổng hợp dữ liệu và tài liệu tham khảo.",
-        },
-        wujie_cj_detail: {
-            title: "Chi tiết thành tựu Wujie - Thành tựu chế độ Vô Giới | JX3BOX",
-            keywords: "thành tựu Wujie,chế độ vô giới,thành tựu đặc biệt,chi tiết thành tựu,JX3BOX",
-            description: "Chi tiết thành tựu Wujie JX3 - Xem thành tựu độc quyền chế độ Wujie (Vô Giới), yêu cầu hoàn thành và thông tin phần thưởng.",
-        },
-        qqbot_wiki_detail: {
-            title: "Bách khoa QQ Bot - Lệnh Bot & tài liệu | JX3BOX",
-            keywords: "QQ bot,bách khoa bot,lệnh bot,công cụ bot,tham khảo lệnh,JX3BOX",
-            description: "Bách khoa QQ Bot JX3 - Tài liệu hoàn chỉnh về tính năng bot QQ, tham khảo lệnh và hướng dẫn sử dụng để làm chủ nhanh chóng.",
-        },
-    },
+    common: {
+        appendTitle: " - JX3BOX",
+    }
 };

@@ -159,4 +159,7 @@ export default {
             description: "剑三百科，最全最新百科大全，成就百科，物品百科，任务百科，通识百科",
         },
     },
+    common: {
+        appendTitle: " - 剑网3魔盒（JX3BOX）",
+    }
 };

@@ -159,18 +159,7 @@ export default {
             description: "JX3 wiki, the most complete and up-to-date encyclopedia, achievement encyclopedia, item encyclopedia, quest encyclopedia, knowledge encyclopedia",
         },
     },
-};
-            description: "JX3 Game Wiki - Access comprehensive game encyclopedia with mechanics explanations, system guides, data compendiums, and reference materials.",
-        },
-        wujie_cj_detail: {
-            title: "Wujie Achievement Details - Boundless Mode Achievements | JX3BOX",
-            keywords: "Wujie achievements,boundless mode,special achievements,achievement details,JX3BOX",
-            description: "JX3 Wujie Achievement Details - View Wujie (Boundless) mode exclusive achievements, completion requirements, and reward information.",
-        },
-        qqbot_wiki_detail: {
-            title: "QQ Bot Wiki - Bot Commands & Documentation | JX3BOX",
-            keywords: "QQ bot,bot wiki,bot commands,bot tools,command reference,JX3BOX",
-            description: "JX3 QQ Bot Wiki - Complete documentation for QQ bot features, command references, and usage instructions for quick mastery.",
-        },
-    },
+    common: {
+        appendTitle: " - JX3BOX",
+    }
 };

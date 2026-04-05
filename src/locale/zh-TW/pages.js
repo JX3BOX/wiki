@@ -159,18 +159,7 @@ export default {
             description: "劍三百科，最全最新百科大全，成就百科，物品百科，任務百科，通識百科",
         },
     },
-};
-            description: "劍網3遊戲百科 - 進入遊戲百科與資料彙整頁，查看遊戲機制、系統說明、數據圖鑑等全面內容。",
-        },
-        wujie_cj_detail: {
-            title: "劍網3無界成就詳情 - 無界模式成就 | JX3BOX",
-            keywords: "劍網3無界,無界成就,無界模式,成就詳情,JX3BOX",
-            description: "劍網3無界成就詳情 - 查看無界模式專屬成就條目、完成條件和獎勵內容，探索無界世界的成就挑戰。",
-        },
-        qqbot_wiki_detail: {
-            title: "劍網3 QQ機器人百科 - 機器人指令說明 | JX3BOX",
-            keywords: "劍網3 QQ機器人,機器人百科,QQ機器人指令,機器人工具,JX3BOX",
-            description: "劍網3 QQ機器人百科 - 查看QQ機器人相關百科、指令說明和使用方法，快速上手機器人功能。",
-        },
-    },
+    common: {
+        appendTitle: " - 劍網3魔盒（JX3BOX）",
+    }
 };
