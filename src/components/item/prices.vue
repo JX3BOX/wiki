@@ -1,5 +1,5 @@
 <template>
-    <div class="m-item-prices">
+    <div class="m-item-prices is-basic">
         <table v-if="prices.length" v-loading="priceLoading">
             <thead>
                 <tr>
@@ -117,5 +117,5 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/assets/css/item/prices.less";
+@import "~@/assets/css/item/item-prices.less";
 </style>

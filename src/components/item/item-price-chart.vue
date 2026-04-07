@@ -1,5 +1,5 @@
 <template>
-    <div class="m-item-price-logs">
+    <div class="m-item-price-logs is-echarts">
         <el-row class="m-today" v-if="currentPrice">
             <el-col :span="8">
                 <div class="u-label"><LegacyIcon class="el-icon-right u-avg" /> 近30日均价</div>

@@ -2,10 +2,11 @@
     .m-plan-navigation {
         .mb(20px);
     }
+
     .m-panel-head {
         z-index: 1;
     }
-    // 同一边框
+
     .m-border {
         .mb(15px);
         .r(5px);
@@ -22,36 +23,39 @@
         }
     }
 
-    .m-plan-content {
-    }
     .m-plan-head {
         .flex(y);
         gap: 10px;
         justify-content: space-between;
+
         .u-title {
             .fz(18px,1.2);
             .flex(y);
         }
+
         padding: 10px 0;
 
-        .u-time{
+        .u-time {
             .fz(12px);
-            color:@v4tip;
+            color: @v4tip;
             .flex(y);
-            gap:3px;
+            gap: 3px;
             margin-left: 5px;
         }
     }
+
     .m-panel-actions {
         .flex(y);
         gap: 10px;
+
         .el-button {
             margin: 0 !important;
         }
     }
-    // 内容
+
     .m-plan-desc {
         margin-bottom: 10px;
+
         .u-title {
             .flex;
             .lh(36px);
@@ -63,54 +67,63 @@
                 align-items: center;
             }
         }
+
         .u-desc {
             .fz(12px,1.6);
-            // padding: 10px 10px 0 10px;
             color: @v4tip;
         }
+
         .u-user {
             .flex;
             .fz(13px);
             justify-content: flex-end;
             align-items: center;
             padding: 10px;
+
             .u-avatar {
                 .size(16px);
                 .r(50%);
                 .mr(5px);
             }
+
             .u-name {
                 .mr(10px);
             }
+
             .u-time {
                 .flex(y);
                 gap: 3px;
                 .color(@color);
                 opacity: 0.5;
+
                 i {
                     .mr(3px);
                 }
             }
         }
     }
-    //物品
+
     .m-plan-item {
         .u-content {
             padding: 20px;
             .flex;
             flex-wrap: wrap;
+
             .u-item {
                 .flex;
                 margin: 0 20px 10px 0;
                 flex-direction: column;
                 align-items: center;
+
                 .u-name {
                     .fz(14px);
-                    text-shadow: 0 0 2px rgba(0,0,0,0.3);
+                    text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
                 }
             }
+
             .u-img {
                 .pr;
+
                 .u-count {
                     .pa;
                     .rt(0,26px);
@@ -127,35 +140,46 @@
                 }
             }
         }
+
+        .u-name {
+            .fz(12px,2) !important;
+        }
     }
-    // 装备
+
     .m-plan-equips {
-        padding: 30px 0 0 0;
+        padding: 30px 0 0;
+
         .u-content {
             .flex;
             padding: 30px 20px;
         }
+
         .u-list {
             width: 25%;
             .mr(10px);
+
             .u-item {
                 .r(5px);
                 .mb(10px);
-                border: 1px solid #eee;
                 padding: 10px;
+                border: 1px solid #eee;
+
                 .u-title {
                     .db;
                 }
             }
+
             .u-equip,
             .u-equip-null {
                 .db;
                 .mt(10px);
             }
+
             .u-equip {
                 .pr;
                 .r(5px);
                 background-color: @color;
+
                 &:first-child:before {
                     content: "主";
                     .pa;
@@ -171,5 +195,23 @@
                 }
             }
         }
+    }
+
+    .m-item-icon {
+        .u-item-icon {
+            .size(48px);
+            max-height: 48px;
+            .z(0);
+            .r(4px);
+        }
+        .u-border {
+            .z(1);
+        }
+        .u-border-quest {
+            .z(2);
+        }
+    }
+    .m-item-icon-popup {
+        padding: 0;
     }
 }

@@ -1,11 +1,9 @@
-//父级节点
 .el-tree-node__content {
     .fz(14px, 28px);
     .h(28px);
     user-select: none;
 }
 
-//子级节点
 .is-leaf + .el-tree-node__label {
     &:before {
         content: "»";
@@ -30,10 +28,10 @@
 }
 
 .m-menus {
-
-    .el-tree-node__label{
-        color:@v4primary;
+    .el-tree-node__label {
+        color: @v4primary;
     }
+
     .u-all {
         .flex;
         align-items: center;
@@ -42,7 +40,7 @@
         line-height: 28px;
         font-size: 14px;
         font-weight: 400;
-        color:@v4primary;
+        color: @v4primary;
         &:hover {
             background-color: #f5f7fa;
         }

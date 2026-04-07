@@ -1,5 +1,5 @@
 <template>
-    <div class="m-search-view">
+    <div class="m-search-view m-search-view--cj" >
         <span class="m-list-empty" v-if="isEmpty">👻 暂无记录</span>
         <div v-if="isLogin && isVirtual && !isEmpty" class="m-normal-op">
             <el-checkbox v-model="isAll" border @change="switchAll" size="small">全选</el-checkbox>

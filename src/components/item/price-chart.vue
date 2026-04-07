@@ -1,5 +1,5 @@
 <template>
-    <div class="m-item-price-logs">
+    <div class="m-item-price-logs is-g2">
         <el-row class="m-today" v-if="currentPrice">
             <el-col :span="8">
                 <div class="u-label"><LegacyIcon class="el-icon-right u-avg" /> 杩?0鏃ュ潎浠?/div>
@@ -220,5 +220,5 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/assets/css/item/price-logs.less";
+@import "~@/assets/css/item/item-price-logs.less";
 </style>

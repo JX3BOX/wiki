@@ -310,11 +310,4 @@ export default {
 
 <style lang="less">
 @import "~@/assets/css/item/item-plan.less";
-.p-plan_edit{
-    .m-plan-list{
-        .u-title{
-            padding:0 10px;
-        }
-    }
-}
 </style>

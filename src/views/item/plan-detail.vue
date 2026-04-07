@@ -310,33 +310,6 @@ export default {
     },
 };
 </script>
-<style lang="less" scoped>
-@import "~@/assets/css/item/plan-detail.less";
-</style>
 <style lang="less">
-.v-plan-view {
-    .m-plan-item {
-        .u-name {
-            .fz(12px,2) !important;
-        }
-    }
-    .m-item-icon {
-        .u-item-icon {
-            .size(48px);
-            max-height: 48px;
-            .z(0);
-            .r(4px);
-        }
-        .u-border {
-            .z(1);
-        }
-        .u-border-quest {
-            .z(2);
-        }
-    }
-}
-
-.m-item-icon-popup {
-    padding: 0;
-}
+@import "~@/assets/css/item/plan-detail.less";
 </style>

@@ -10,16 +10,16 @@
             </template>
             <template #body>
                 <ul class="m-qlinks">
-                    <li class="qlink">
+                    <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/18151/">
                             <LegacyIcon class="el-icon-trophy" />
                             <span>游戏内看百科</span>
                         </a>
                     </li>
-                    <li class="qlink">
+                    <li class="u-qlink">
                         <Counter type="item" :showCounter="false"></Counter>
                     </li>
-                    <li class="qlink">
+                    <li class="u-qlink">
                         <router-link
                             style="background-color: #f7b044"
                             :to="{
@@ -33,13 +33,13 @@
                             <span>五行石合成</span>
                         </router-link>
                     </li>
-                    <li class="qlink">
+                    <li class="u-qlink">
                         <a target="_blank" href="/pvg/manufacture">
                             <LegacyIcon class="el-icon-grape" />
                             <span>技艺助手</span>
                         </a>
                     </li>
-                    <li class="qlink">
+                    <li class="u-qlink">
                         <a target="_blank" href="/pvg/price">
                             <LegacyIcon class="el-icon-watermelon" />
                             <span>价格走势</span>

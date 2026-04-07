@@ -1,7 +1,6 @@
 .m-item-price-logs {
-    #m-item-price-chart,
-    #m-item-price-chart canvas {
-        pointer-events: auto;
+    #m-item-price-chart {
+        min-height: 220px;
     }
 
     .u-chart-legend {
@@ -13,28 +12,16 @@
         color: #666;
         font-size: 14px;
         line-height: 1;
-
-        .u-dot {
-            width: 8px;
-            height: 8px;
-            display: inline-block;
-            border-radius: 50%;
-            background: #4e7cff;
-        }
     }
 
     .m-today {
-        padding: 15px 0 30px;
         font-weight: bold;
         text-align: center;
 
         .u-label {
-            font-size: 28px;
-            font-weight: 300;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
             line-height: 1.2;
             white-space: nowrap;
 
@@ -52,20 +39,14 @@
         }
 
         .u-value {
-            .mt(4px);
-            font-size: 16px;
-            // color: darkred;
-            background-color:@bg-gray;
             .db;
             width: fit-content;
             margin-left: auto;
             margin-right: auto;
-            padding:5px 10px;
             letter-spacing: 1px;
-            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            color:@color !important;
-            img{
-              .y;
+
+            img {
+                .y;
             }
         }
 
@@ -77,6 +58,93 @@
         }
         .u-avg {
             color: #0fc312;
+        }
+    }
+}
+
+.m-item-price-logs.is-g2 {
+    .u-chart-legend {
+        .legacy-icon,
+        [data-legacy-icon] {
+            width: 14px;
+            height: 14px;
+            font-size: 14px;
+            color: #1677ff;
+        }
+    }
+
+    .m-today {
+        padding: 4px 0 18px;
+
+        .u-label {
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        .u-value {
+            .mt(8px);
+            min-width: 128px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: 1px solid #eef2f7;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+            font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+            color: @color !important;
+
+            img {
+                .w(18px);
+            }
+        }
+    }
+}
+
+.m-item-price-logs.is-echarts {
+    #m-item-price-chart,
+    #m-item-price-chart canvas {
+        pointer-events: auto;
+    }
+
+    .u-chart-legend {
+        .u-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4e7cff;
+        }
+    }
+
+    .m-today {
+        padding: 15px 0 30px;
+
+        .u-label {
+            gap: 10px;
+            font-size: 28px;
+            font-weight: 300;
+        }
+
+        .u-value {
+            .mt(4px);
+            padding: 5px 10px;
+            font-size: 16px;
+            font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+            color: @color !important;
+        }
+
+        .u-price {
+            width: fit-content;
+            min-width: 128px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 8px 14px;
+            border: 1px solid #eef2f7;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+            letter-spacing: 1px;
+            font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
         }
     }
 }

@@ -213,10 +213,4 @@ export default {
         }
     }
 }
-.m-wiki-footer {
-    .c-footer-left {
-        .flex;
-        align-items: center;
-    }
-}
 </style>

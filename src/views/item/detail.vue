@@ -399,7 +399,7 @@
                     <span class="u-txt">物品攻略</span>
                 </template>
                 <template #head-actions>
-                    <a class="el-button el-button--primary" :href="publish_url(`item/${id}`)">
+                    <a class="u-btn--link el-button el-button--primary" :href="publish_url(`item/${id}`)">
                         <LegacyIcon class="el-icon-edit" />
                         <span>完善攻略</span>
                     </a>
@@ -814,10 +814,18 @@ export default {
         },
         loadRevision: function () {
             // 获取指定攻略
-            wiki.getById(this.post_id, { type: "item" }).then((res) => {
-                this.wiki_post = res.data.data?.post;
+            return wiki.getById(this.post_id, { type: "item" }).then((res) => {
+                this.wiki_post = {
+                    ...this.wiki_post,
+                    post: res.data.data?.post || null,
+                };
             });
-            this.triggerStat();
+        },
+        syncWikiData: async function () {
+            await this.loadData();
+            if (this.post_id) {
+                await this.loadRevision();
+            }
         },
         triggerStat: function () {
             if (this.client == "origin") {
@@ -883,13 +891,19 @@ export default {
     },
     watch: {
         id: {
-            handler() {
-                this.loadData();
+            async handler() {
+                await this.syncWikiData();
             },
         },
         post_id: {
-            handler() {
-                this.loadRevision();
+            async handler() {
+                if (this.post_id) {
+                    await this.loadRevision();
+                } else {
+                    await this.loadData();
+                }
+
+                this.triggerStat();
             },
         },
         source: {
@@ -926,11 +940,7 @@ export default {
         // },
     },
     mounted: function () {
-        if (this.post_id) {
-            this.loadRevision();
-        } else {
-            this.loadData();
-        }
+        this.syncWikiData();
         this.loadUserDefaultServer();
         bus.on("openWikiPush", (param) => {
             if (!this.wiki_post?.post?.id) {
@@ -959,7 +969,7 @@ export default {
 @import "~@/assets/css/item/detail.less";
 </style>
 
-<style lang="less" scoped>
+<!-- <style lang="less" scoped>
 .u-plan {
     margin-right: 10px;
 }
@@ -973,4 +983,4 @@ export default {
         align-items: center;
     }
 }
-</style>
+</style> -->

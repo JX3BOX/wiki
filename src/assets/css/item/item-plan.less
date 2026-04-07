@@ -1,27 +1,38 @@
 .p-plan-edit {
     padding: 20px;
+
     .u-plan-header {
         margin: 0;
         padding-bottom: 20px;
     }
+
     .u-add-plan,
     .u-publish {
         width: 200px;
-        // .ml(106px);
     }
+
     .el-empty {
         .flex;
         align-items: center;
         flex-direction: column;
     }
+
     .el-empty__description {
         color: #909399;
     }
+
     .el-col {
         min-width: 260px;
     }
+
     .m-item-icon {
         padding: 10px 0 5px 0;
+    }
+
+    .m-plan-list {
+        .u-title {
+            padding: 0 10px;
+        }
     }
 }
 .m-plan-list {
@@ -53,17 +64,12 @@
     .u-title {
         .mb(10px);
     }
-    .u-normal {
-        border: 2px dashed #dcdfe6;
-        border-radius: 4px;
-        .color(#aaa);
-        .x;
-    }
-    .u-item-icon{
+
+    .u-item-icon {
         .r(3px);
     }
-    .m-item-icon .u-name{
-        text-shadow:0 0 2px rgba(0,0,0,0.3);
+    .m-item-icon .u-name {
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
     }
     .u-list-btn {
         .w(100%);
@@ -82,6 +88,7 @@
     .u-list-close {
         .fz(20px);
     }
+
     .u-to-right,
     .u-to-left {
         .pr;
@@ -92,7 +99,7 @@
         &::after {
             content: "○";
             .pa;
-			.lt(-3px);
+            .lt(-3px);
             .fz(24px);
             transform: scale(0.95);
         }
@@ -109,9 +116,7 @@
             background-color: @pink;
         }
     }
-}
 
-.m-plan-list {
     .u-change {
         .db;
         .mb(10px);
@@ -124,14 +129,13 @@
         .mb(10px);
         .lh(28px);
         .r(4px);
-        cursor: move;
         padding: 0 10px;
         box-sizing: border-box;
         background-color: #f1f2f3;
-        // background-color: @color;
         color: @color;
         align-items: center;
         justify-content: space-between;
+        cursor: move;
 
         .u-icon {
             padding: 10px 0;
@@ -194,14 +198,17 @@
         .color(#aaa);
         .x;
     }
+
     .u-selected-count {
         flex-wrap: wrap;
     }
 }
+
 .m-archive-pages {
     .pt(10px);
     overflow-x: auto;
 }
+
 @keyframes show {
     0% {
         opacity: 0;

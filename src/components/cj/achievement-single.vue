@@ -53,6 +53,7 @@
                         class="u-attr u-fav u-check"
                         type="success"
                         size="small"
+                        plain
                         icon="Check"
                         @click.stop="cancelVirtual()"
                     >

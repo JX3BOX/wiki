@@ -259,11 +259,11 @@
             <wikiRobotTip v-if="!isRobot" type-name="任务" :reply="quest.name"></wikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template #head-title>
-                    <img class="u-icon" svg-inline :src="icon" />
+                    <img class="u-icon" svg-inline src="@/assets/img/quest/quest.svg" />
                     <span class="u-txt">任务攻略</span>
                 </template>
                 <template v-if="!isRobot" #head-actions>
-                    <a class="el-button el-button--primary" :href="publish_url(`quest/${id}`)">
+                    <a class="u-btn--link el-button el-button--primary" :href="publish_url(`quest/${id}`)">
                         <LegacyIcon class="el-icon-edit" />
                         <span>完善攻略</span>
                     </a>

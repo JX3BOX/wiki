@@ -1,5 +1,5 @@
 <template>
-    <div class="m-cj-index">
+    <div class="m-search-view m-search-view--item">
         <Items :items="items">
             <template #empty-message>
                 <span>👻 暂无记录</span>
@@ -98,13 +98,15 @@ export default {
 </script>
 
 <style lang="less">
-.u-research {
-    .pl(5px);
+.m-search-view {
+    .u-research {
+        .pl(5px);
 
-    b {
-        color: @v4primary;
-        .pointer;
-        .fz(15px);
+        b {
+            color: @v4primary;
+            .pointer;
+            .fz(15px);
+        }
     }
 }
 </style>

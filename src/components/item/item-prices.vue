@@ -1,5 +1,5 @@
 <template>
-    <div class="m-item-prices">
+    <div class="m-item-prices is-scrollable">
         <table v-if="prices.length" v-loading="priceLoading">
             <thead>
                 <tr>
