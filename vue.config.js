@@ -1,12 +1,5 @@
 const pages = {
 
-    // 游戏百科
-    index: {
-        title: "剑三Wiki - JX3BOX",
-        entry: "src/main.js",
-        template: "public/index.html",
-        filename: "index.html",
-    },
 
     // 百科栏目
     cj: {
@@ -34,6 +27,13 @@ const pages = {
         filename: "knowledge/index.html",
     },
 
+    // 游戏百科（含无界）
+    index: {
+        title: "剑三Wiki - JX3BOX",
+        entry: "src/main.js",
+        template: "public/index.html",
+        filename: "wiki/index.html",
+    },
     // 云端宏跳转
     macros: {
         title: "云端宏排行榜 - JX3BOX",
@@ -55,6 +55,7 @@ const commonDomains = require("@jx3box/jx3box-common/data/jx3box.json");
 
 module.exports = {
     productionSourceMap: false,
+    transpileDependencies: true,
     //❤️ define path for static files ~
     publicPath: process.env.BUILD_PREVIEW
         ? "/" + process.env.APP_NAME
