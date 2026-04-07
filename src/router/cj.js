@@ -162,7 +162,7 @@ if (isMiniProgram() || isApp()) {
                     child.component = () => import("@/views/cj/mobile/detail.vue");
                 }
             });
-            route.component = () => import("@/views/base.vue");
+            route.component = () => import("@/App.vue");
         }
     });
 }

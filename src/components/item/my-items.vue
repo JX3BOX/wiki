@@ -3,7 +3,7 @@
         <div class="m-items-myFav" v-if="isLogin">
             <h3 class="c-sidebar-right-title">
                 <i class="u-icon u-icon-mycollection">
-                    <img svg-inline src="@/assets/img/my.svg" />
+                    <img svg-inline src="@/assets/img/item/my.svg" />
                 </i>
                 <span>收藏物品</span>
             </h3>
@@ -13,7 +13,7 @@
                         <router-link :to="{ name: 'view', params: { item_id: item.id } }">
                             <ItemIcon :item="item" />
                         </router-link>
-                        <img class="u-remove" src="@/assets/img/close.svg" svg-inline @click.stop="remove(item.fId)" />
+                        <img class="u-remove" src="@/assets/img/item/close.svg" svg-inline @click.stop="remove(item.fId)" />
                     </div>
                 </div>
                 <el-pagination

@@ -16,7 +16,7 @@
                         <span class="u-id">(ID: {{ source.id }})</span>
                         <template v-if="source.MaxStrengthLevel">
                             <img
-                                src="@/assets/img/star.svg"
+                                src="@/assets/img/item/star.svg"
                                 class="u-star"
                                 v-for="i in source.MaxStrengthLevel"
                                 :key="i"
@@ -27,15 +27,15 @@
                         <!-- 装备类型 -->
                         <div class="u-usage" v-if="show_equip_usage">
                             <template v-if="source.EquipUsage == 1">
-                                <img class="u-label-icon" src="@/assets/img/pve.png" alt="" />
+                                <img class="u-label-icon" src="@/assets/img/item/pve.png" alt="" />
                                 <span>秘境挑战(PVE)</span>
                             </template>
                             <template v-if="source.EquipUsage == 2">
-                                <img class="u-label-icon" src="@/assets/img/pvp.png" alt="" />
+                                <img class="u-label-icon" src="@/assets/img/item/pvp.png" alt="" />
                                 <span>竞技对抗(PVP)</span>
                             </template>
                             <template v-if="source.EquipUsage == 3">
-                                <img class="u-label-icon" src="@/assets/img/pvx.png" alt="" />
+                                <img class="u-label-icon" src="@/assets/img/item/pvx.png" alt="" />
                                 <span>休闲(PVX)</span>
                             </template>
                         </div>
@@ -47,7 +47,7 @@
                         <span class="u-from" v-if="source.GetType">获得途径: {{ source.GetType }}</span>
                     </div>
                 </div>
-                <img src="@/assets/img/item_robot.svg" class="u-item-img__right" />
+                <img src="@/assets/img/item/item_robot.svg" class="u-item-img__right" />
             </div>
             <div class="m-item-content">
                 <div class="u-line">
@@ -395,7 +395,7 @@
             <WikiRobotTip v-if="!isRobot" type-name="物品" :reply="source?.Name"></WikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template #head-title>
-                    <img class="u-icon" svg-inline src="@/assets/img/item.svg" />
+                    <img class="u-icon" svg-inline src="@/assets/img/item/item.svg" />
                     <span class="u-txt">物品攻略</span>
                 </template>
                 <template #head-actions>

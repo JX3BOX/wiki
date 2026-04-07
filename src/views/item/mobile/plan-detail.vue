@@ -36,7 +36,7 @@
         </div>
 
         <el-button class="m-to-top" @click="scrollToTop">
-            <img svg-inline src="@/assets/img/totop.svg" alt="" />
+            <img svg-inline src="@/assets/img/common/totop.svg" alt="" />
         </el-button>
         <suspend-common
             class="u-suspend-common"

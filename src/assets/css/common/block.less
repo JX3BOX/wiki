@@ -1,0 +1,82 @@
+// m-module
+//===============================
+.m-module {
+    .db;
+    .mb(15px);
+    background-color: #fafbfc;
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+    font-size: 14px;
+
+    &.pd {
+        padding: 10px 15px 12px;
+        box-sizing: border-box;
+    }
+
+    &.no-border {
+        background-color: transparent;
+        border: none;
+
+        .m-head {
+            background-color: transparent;
+        }
+    }
+
+    .m-head {
+        .pr;
+        background-color: #f5f7fa;
+        border-bottom: 1px solid #eeeeee;
+
+        & > .u-title {
+            padding: 10px 0 10px 15px;
+            color: #6c645c;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        & > .u-other {
+            .pa;
+            top: 0;
+            right: 0;
+            margin-right: 15px;
+            font-size: 13px;
+            line-height: 1.1;
+
+            &:hover {
+                color: @pink;
+            }
+
+            .u-more {
+                .db;
+                .mt(12px);
+            }
+        }
+    }
+
+    .m-body {
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: @ipad) {
+    .m-module {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .wechat-miniprogram {
+        .c-breadcrumb {
+            position: sticky;
+            top: 0;
+        }
+
+        .c-main {
+            margin-top: 0;
+        }
+
+        .c-sidebar-left,
+        .c-sidebar-right {
+            top: 48px;
+        }
+    }
+}

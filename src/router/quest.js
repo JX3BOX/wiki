@@ -83,7 +83,7 @@ if (isMiniProgram() || isApp()) {
                     child.component = () => import("@/views/quest/mobile/detail.vue");
                 }
             });
-            route.component = () => import("@/views/base.vue");
+            route.component = () => import("@/App.vue");
         }
     });
 }

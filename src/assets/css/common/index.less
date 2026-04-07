@@ -1,0 +1,141 @@
+.m-qlinks {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    .qlink,
+    .u-qlink {
+        display: inline-block;
+        margin: 0 20px 20px 0;
+        i {
+            .mr(4px);
+        }
+
+        a {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 20px;
+            background-color: @v4primary;
+            color: #ffffff;
+            border-radius: 4px;
+            transition: opacity 0.2s linear;
+            text-decoration: none !important;
+
+            &:hover {
+                opacity: 0.8;
+                text-decoration: none !important;
+            }
+        }
+
+        a,
+        a:hover,
+        a:focus,
+        .router-link-active,
+        .router-link-exact-active,
+        span {
+            text-decoration: none !important;
+            box-shadow: none !important;
+        }
+    }
+}
+
+@media screen and (max-width: @ipad) {
+    .m-qlinks {
+        .qlink {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.m-home-view {
+    .u-wiki-more {
+        color: @v4tip;
+        .fz(12px);
+        .smooth;
+        &:hover {
+            color: @v4primary;
+        }
+    }
+
+    .m-posts {
+        margin: -10px 0;
+        list-style: none;
+        overflow: hidden;
+
+        .m-post {
+            padding: 15px 10px;
+            border-bottom: 1px solid #cccccc;
+            font-size: 12px;
+            overflow: hidden;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .u-post {
+                .mt(5px);
+                .flex(y);
+                gap: 15px;
+            }
+
+            .u-info {
+                .flex(y);
+                gap: 5px;
+            }
+
+            .u-icon {
+                .size(20px);
+            }
+
+            .u-name {
+                color: #3d454d;
+                &:hover {
+                    color: @v4primary;
+                    .underline;
+                }
+            }
+
+            .u-remark {
+                margin: 5px 0;
+                color: grey;
+            }
+
+            .u-level {
+                color: grey;
+            }
+
+            .m-user {
+                .flex(y);
+                gap: 10px;
+            }
+
+            .u-author {
+                .flex(y);
+                gap: 5px;
+                .u-name {
+                    color: grey;
+                }
+                .u-name[href] {
+                    color: @color;
+                }
+                .u-name[href]:hover {
+                    color: @v4primary;
+                    .underline;
+                }
+            }
+
+            .u-updated {
+                color: grey;
+            }
+
+            .u-excerpt {
+                .db;
+                .mt(6px);
+                color: grey;
+                .lh(1.6);
+            }
+        }
+    }
+}

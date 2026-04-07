@@ -3,7 +3,7 @@
         <div class="m-qq">
             <span>添加魔盒QQ机器人</span>
             <span class="u-qq" @click="copy('3889010020')">
-                <img class="u-icon" src="@/assets/img/jx3box_qqbot_qq.svg" alt="" />
+                <img class="u-icon" src="@/assets/img/qqbot/jx3box_qqbot_qq.svg" alt="" />
                 <span>3889010020</span>
             </span>
         </div>

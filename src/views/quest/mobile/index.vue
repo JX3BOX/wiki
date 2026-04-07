@@ -112,7 +112,7 @@
                     :class="{ 'is-active': onlyNotCompleted }"
                     @click="toggleOnlyNotCompleted"
                 >
-                    <img src="@/assets/img/no-visible.svg" svg-inline />
+                    <img src="@/assets/img/common/no-visible.svg" svg-inline />
                     隐藏已完成的成就
                 </div>
             </template>

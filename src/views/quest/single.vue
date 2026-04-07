@@ -156,7 +156,7 @@
                 <div class="m-quest-title">
                     <div class="m-title">
                         <div class="u-title">
-                            <img class="u-title-img" src="@/assets/img/quest_title_robot.svg" />
+                            <img class="u-title-img" src="@/assets/img/quest/quest_title_robot.svg" />
                             {{ quest.name }}
                         </div>
                         <span class="u-title-id"> (ID:{{ quest.id }})</span>
@@ -178,7 +178,7 @@
                                 >({{ pointType(quest.start.type) }}ID: {{ idFilter(quest.start.id) }})</span
                             >
                         </p>
-                        <!-- <img class="u-quest-to" src="@/assets/img/quest-to.svg" /> -->
+                        <!-- <img class="u-quest-to" src="@/assets/img/quest/quest-to.svg" /> -->
                         <p class="u-endpoint">
                             <span class="u-endpoint-label">任务终点: </span>
                             <span class="u-endpoint-name">{{ quest.end.mapName }}</span>
@@ -196,11 +196,11 @@
                         </p>
                     </div>
                 </div>
-                <img src="@/assets/img/quest_robot.svg" class="u-item-img__right" />
+                <img src="@/assets/img/quest/quest_robot.svg" class="u-item-img__right" />
             </div>
             <div class="m-quest-desc">
                 <div class="u-desc-title">
-                    <img src="@/assets/img/quest_desc_robot.svg" class="u-title-img" />
+                    <img src="@/assets/img/quest/quest_desc_robot.svg" class="u-title-img" />
                     <div class="u-title">任务描述</div>
                 </div>
                 <div class="u-desc u-quest-desc" v-html="questDesc.replaceAll('&emsp;', '')"></div>

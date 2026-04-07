@@ -173,7 +173,6 @@ export default {
 
 .m-cj-search {
     align-items: stretch;
-    gap: 6px;
 
     .el-input-group__prepend{
         .w(120px);

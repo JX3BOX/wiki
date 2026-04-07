@@ -3,7 +3,7 @@
         <div class="m-header">
             <div class="m-header__logo">
                 <a class="m-logo" :href="rootPath">
-                    <img class="u-logo" src="@/assets/img/logo.png" alt="JX3BOX" />
+                    <img class="u-logo" src="@/assets/img/brand/logo.png" alt="JX3BOX" />
                 </a>
                 <div class="m-info">
                     <div class="u-title">魔盒成就百科</div>

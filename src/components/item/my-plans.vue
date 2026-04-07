@@ -3,7 +3,7 @@
         <div class="m-my-item-plans">
             <h3 class="c-sidebar-right-title">
                 <span class="u-title">
-                    <i class="u-icon u-icon-mycollection"><img svg-inline src="@/assets/img/plan.svg" /></i>
+                    <i class="u-icon u-icon-mycollection"><img svg-inline src="@/assets/img/item/plan.svg" /></i>
                     <span>我的清单</span>
                 </span>
                 <a class="fr el-button el-button--success el-button--small" @click="onAddPlan" v-if="isLogin">

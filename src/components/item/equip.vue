@@ -22,7 +22,7 @@
         </div>
         <div class="u-misc">
             <a class="u-logo" :href="link" target="_blank">
-                <img svg-inline src="@/assets/img/jx3box.svg" />
+                <img svg-inline src="@/assets/img/brand/jx3box.svg" />
                 <span>配装ID:{{ plan.id }}</span>
             </a>
         </div>

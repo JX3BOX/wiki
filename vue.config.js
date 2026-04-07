@@ -27,6 +27,7 @@ const pages = {
         filename: "knowledge/index.html",
     },
 
+    // ⚠️以下页面已迁移到game仓库
     // 游戏百科（含无界）
     index: {
         title: "剑三Wiki - JX3BOX",
@@ -74,6 +75,12 @@ module.exports = {
         proxy: buildEnvProxy(),
         allowedHosts: "all",
         port: process.env.DEV_PORT || 12028,
+        setupMiddlewares: (middlewares, devServer) => {
+            devServer.app.get("/", (_, res) => {
+                res.redirect(302, "/cj");
+            });
+            return middlewares;
+        },
         // 避免 /macro 等其它应用路由被 index SPA 接管
         // historyApiFallback: {
         //     rewrites: [

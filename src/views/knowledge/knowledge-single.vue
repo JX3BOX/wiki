@@ -9,14 +9,14 @@
                 <div class="u-title">{{ title }}</div>
                 <div class="u-desc">剑网3魔盒通识百科 - 剑三世界概念全知道！</div>
             </div>
-            <img class="u-robot-header__right" src="@/assets/img/knowledge_robot.svg" />
+            <img class="u-robot-header__right" src="@/assets/img/knowledge/knowledge_robot.svg" />
         </div>
         <notice v-if="!isRobot"></notice>
         <div class="m-wiki" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
             <WikiRobotTip v-if="!isRobot" type-name="通识" :reply="title"></WikiRobotTip>
             <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
                 <template #head-title>
-                    <img class="u-icon" svg-inline src="../../assets/img/knowledge.svg" />
+                    <img class="u-icon" svg-inline src="../../assets/img/knowledge/knowledge.svg" />
                     <span>通识攻略</span>
                 </template>
                 <template v-if="!isRobot" #head-actions>

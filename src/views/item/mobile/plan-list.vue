@@ -7,7 +7,7 @@
             v-loading="loading"
         >
             <div class="m-big-search" v-if="!planList.length" @click="onCreatePlan">
-                <img class="u-search-icon" src="@/assets/img/add_plan.svg" svg-inline />
+                <img class="u-search-icon" src="@/assets/img/item/add_plan.svg" svg-inline />
                 <div class="u-info">
                     <span class="u-title">创建清单</span>
                     <span class="u-tip">加入自己想要的物品</span>
@@ -22,7 +22,7 @@
         </div>
 
         <el-button class="m-to-top" @click="scrollToTop">
-            <img svg-inline src="@/assets/img/totop.svg" alt="" />
+            <img svg-inline src="@/assets/img/common/totop.svg" alt="" />
         </el-button>
         <suspend-common
             class="u-suspend-common"
@@ -42,7 +42,7 @@
             <template #default>
                 <div class="m-more-action">
                     <div class="u-action" @click="onCreatePlan">
-                        <img src="@/assets/img/add_plan.svg" svg-inline />
+                        <img src="@/assets/img/item/add_plan.svg" svg-inline />
                         创建清单
                     </div>
                 </div>

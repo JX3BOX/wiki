@@ -1,7 +1,7 @@
 <template>
     <header class="m-header">
         <a class="m-header-logo" :href="rootPath">
-            <img class="u-logo" src="@/assets/img/logo.png" alt="JX3BOX" />
+            <img class="u-logo" src="@/assets/img/brand/logo.png" alt="JX3BOX" />
             <strong class="u-title">JX3BOX魔盒</strong>
         </a>
         <ul class="m-header-list">

@@ -82,6 +82,12 @@ a.el-button [data-legacy-icon],
         display: inline-flex;
         align-items: center;
     }
+
+    &:not(.can-return) {
+        .m-return {
+            display: none;
+        }
+    }
 }
 
 /* 3) 成就详情头部右侧操作按钮（加入渡劫方案/收藏） */

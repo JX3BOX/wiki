@@ -50,7 +50,7 @@
         </div>
 
         <el-button class="m-to-top" @click="scrollToTop">
-            <img svg-inline src="@/assets/img/totop.svg" alt="" />
+            <img svg-inline src="@/assets/img/common/totop.svg" alt="" />
         </el-button>
         <search-drawer ref="search-drawer" :menus="menus"></search-drawer>
         <suspend-common

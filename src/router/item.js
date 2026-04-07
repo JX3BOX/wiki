@@ -111,7 +111,7 @@ const routes = [
 if (isMiniProgram() || isApp()) {
     routes.forEach((route) => {
         if (route.path === "/") {
-            route.component = () => import("@/views/base.vue");
+            route.component = () => import("@/App.vue");
             route.children.forEach((child) => {
                 if (child.name === "home") {
                     child.component = () => import("@/views/item/mobile/index.vue");
