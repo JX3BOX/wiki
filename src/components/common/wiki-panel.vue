@@ -88,8 +88,3 @@ export default {
 };
 </script>
 
-<style lang="less">
-.m-panel-title{
-    
-}
-</style>
