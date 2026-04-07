@@ -1,42 +1,11 @@
-//父级节点
-.el-tree-node__content {
-    .fz(14px, 28px);
-    .h(28px);
-    user-select: none;
-    color: @v4primary;
-}
+@import "../common/wiki-tree-nav.less";
 
-//子级节点
 .is-leaf + .el-tree-node__label {
-    &:before {
-        content: "» ";
-        color: #3d454d;
-        .mr(5px);
-    }
-
     .flex;
     align-items: center;
 }
 
-.is-current {
-    & > .el-tree-node__content {
-        .bold;
-    }
-}
-
 .el-tree-node__label {
-    .w(100%);
-    box-sizing: border-box;
-    line-height: 14px;
-    text-wrap: wrap;
-
-    .u-count {
-        font-size: 13px;
-        color: #888;
-        margin-left: 5px;
-        font-style: normal;
-    }
-
     .u-leaf-name {
         max-width: 160px;
         display: inline-block;
@@ -46,16 +15,11 @@
     }
 }
 
-.el-tree-node__expand-icon.is-leaf {
-    .none;
-}
-
-.m-nav{
+.m-nav {
     .m-menus-panel {
         .w(100%);
         overflow-y: auto;
         overflow-x: hidden;
         .scrollbar();
     }
-
 }

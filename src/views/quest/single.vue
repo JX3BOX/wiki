@@ -291,7 +291,7 @@
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
                         <template #head-title>
-                            <LegacyIcon class="u-icon el-icon-coin" />
+                            <i class="u-icon el-icon-coin"></i>
                             <span class="u-txt">参与打赏</span>
                         </template>
                         <template #body>

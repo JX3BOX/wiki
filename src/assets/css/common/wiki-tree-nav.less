@@ -1,0 +1,39 @@
+// 树形导航在通识/任务两端共用的基础样式
+.el-tree-node__content {
+    .fz(14px, 28px);
+    .h(28px);
+    user-select: none;
+    color: @v4primary;
+}
+
+.is-leaf + .el-tree-node__label {
+    &:before {
+        content: "» ";
+        color: #3d454d;
+        .mr(5px);
+    }
+}
+
+.is-current {
+    & > .el-tree-node__content {
+        .bold;
+    }
+}
+
+.el-tree-node__label {
+    .w(100%);
+    box-sizing: border-box;
+    line-height: 14px;
+    text-wrap: wrap;
+
+    .u-count {
+        margin-left: 5px;
+        font-size: 13px;
+        font-style: normal;
+        color: #888;
+    }
+}
+
+.el-tree-node__expand-icon.is-leaf {
+    .none;
+}

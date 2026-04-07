@@ -12,15 +12,15 @@
             <img class="u-robot-header__right" src="@/assets/img/knowledge/knowledge_robot.svg" />
         </div>
         <notice v-if="!isRobot"></notice>
-        <div class="m-wiki" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
+        <div class="m-wiki m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
             <WikiRobotTip v-if="!isRobot" type-name="通识" :reply="title"></WikiRobotTip>
             <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
                 <template #head-title>
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge/knowledge.svg" />
-                    <span>通识攻略</span>
+                    <span class="u-txt">通识攻略</span>
                 </template>
                 <template v-if="!isRobot" #head-actions>
-                    <a class="el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
+                    <a class="u-btn--link el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
                         <LegacyIcon class="el-icon-edit" />
                         <span>完善通识</span>
                     </a>
@@ -61,8 +61,8 @@
 
                 <WikiPanel v-if="id" class="m-knowledge-panel">
                     <template #head-title>
-                        <LegacyIcon class="el-icon-chat-line-round" />
-                        <span class="u-title">讨论</span>
+                        <LegacyIcon class="u-icon el-icon-chat-line-round" />
+                        <span class="u-txt">讨论</span>
                     </template>
                     <template #body>
                         <SingleComment :id="id" category="knowledge" />
@@ -287,11 +287,10 @@ export default {
         },
         async getData() {
             this.loading = true;
-            await wiki
+            return await wiki
                 .get({ type: "knowledge", id: this.id })
                 .then((res) => {
                     this.data = res.data.data;
-                    if (this.data.source) this.data.source.post = this.data.post;
 
                     User.isLogin() &&
                         postHistory({
@@ -316,15 +315,25 @@ export default {
         },
         getPostData() {
             this.loading = true;
-            wiki.getById(this.$route.params.post_id)
+            return wiki
+                .getById(this.$route.params.post_id)
                 .then((res) => {
                     const data = res.data.data;
-                    if (data.source) this.data.source.post = data.post;
+                    this.data = {
+                        ...this.data,
+                        post: data.post || null,
+                    };
                 })
                 .finally(() => {
                     this.loading = false;
                     postStat(this.type, this.id);
                 });
+        },
+        async syncWikiData() {
+            await this.getData();
+            if (this.$route.params.post_id) {
+                await this.getPostData();
+            }
         },
         goBack() {
             if (this.data?.source?.type) {
@@ -364,18 +373,19 @@ export default {
     watch: {
         "$route.params.post_id": {
             immediate: true,
-            handler() {
+            async handler() {
                 if (this.$route.params.post_id) {
-                    // 获取指定攻略
-                    this.getPostData();
+                    await this.getPostData();
+                } else if (this.id) {
+                    await this.getData();
                 }
             },
         },
         id: {
             immediate: true,
-            handler() {
+            async handler() {
                 if (this.id) {
-                    this.getData(this.id);
+                    await this.syncWikiData();
                 }
             },
         },

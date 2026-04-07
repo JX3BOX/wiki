@@ -1,14 +1,5 @@
-<!--
- * @Author: iRuxu
- * @Date: 2022-07-09 19:40:42
- * @LastEditTime: 2022-07-12 13:44:14
- * @Description:
--->
 <template>
     <div class="m-quest-home m-home-view">
-        <!-- 头部大标题 -->
-        <!-- <img class="u-logo" src="@/assets/img/quest/quest_logo.png" alt="" /> -->
-        <!-- <h1 class="u-title">任务百科</h1> -->
         <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-location-information" />
