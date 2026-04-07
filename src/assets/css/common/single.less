@@ -31,3 +31,70 @@
         color: rgba(#fff, 0.75) !important;
     }
 }
+
+.m-wiki-compatible {
+    .u-msg-yellow;
+    margin: 10px auto;
+    padding: 5px 10px;
+
+    a {
+        .underline(@v4primary);
+    }
+}
+
+.m-wiki-signature {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    color: #999;
+    .fz(12px, 2);
+    border-top: 1px dashed #ddd;
+    padding: 5px 0;
+    white-space: nowrap;
+
+    .legacy-icon,
+    [data-legacy-icon] {
+        flex: none;
+        width: 1em;
+        height: 1em;
+        color: inherit;
+        fill: currentColor;
+        vertical-align: middle;
+    }
+}
+
+.m-wiki-post-panel {
+    .c-wiki-panel {
+        .m-panel-title {
+            .u-icon {
+                font-size: 22px;
+                .size(22px);
+                fill: @v4primary;
+                color: @v4primary;
+            }
+            .u-txt {
+                .fz(15px,22px);
+                color: @color;
+                .smooth;
+            }
+        }
+        .m-panel-actions {
+            .u-btn--link {
+                .flex(y);
+                .gap(3px);
+            }
+        }
+    }
+}
+
+.m-wiki-thx-panel {
+    .w-thx {
+        .w-boxcoin-records-list,.w-thx-copyright {
+            background-color: #fff;
+        }
+        .w-boxcoin-records-pages *{
+            background: none;
+        }
+    }
+}

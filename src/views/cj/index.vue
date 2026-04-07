@@ -1,4 +1,5 @@
 <template>
+    <!-- 入口页 -->
     <DefaultLayout
         name="成就百科"
         slug="cj"
@@ -170,31 +171,4 @@ export default {
 <style lang="less">
 @import "~@/assets/css/app.less";
 @import "~@/assets/css/cj/index.less";
-
-.m-cj-search {
-    align-items: stretch;
-
-    .el-input-group__prepend{
-        .w(120px);
-        padding:0;
-        .el-input__wrapper{
-            background:none;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-            border-right: none;
-            margin-right: -1px;
-        }
-    }
-
-    .m-return {
-        display: flex;
-        align-items: stretch;
-    }
-
-    .m-search .el-input-group__prepend,
-    .m-search .el-input-group__append {
-        display: inline-flex;
-        align-items: center;
-    }
-}
 </style>

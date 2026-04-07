@@ -265,7 +265,7 @@
                 <template v-if="!isRobot" #head-actions>
                     <a class="el-button el-button--primary" :href="publish_url(`quest/${id}`)">
                         <LegacyIcon class="el-icon-edit" />
-                        <span>完善任务攻略</span>
+                        <span>完善攻略</span>
                     </a>
                 </template>
                 <template #body>
@@ -291,8 +291,8 @@
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
                         <template #head-title>
-                            <LegacyIcon class="el-icon-coin" />
-                            <span>参与打赏</span>
+                            <LegacyIcon class="u-icon el-icon-coin" />
+                            <span class="u-txt">参与打赏</span>
                         </template>
                         <template #body>
                             <Thx
@@ -347,8 +347,8 @@ import User from "@jx3box/jx3box-common/js/user";
 import { getAppIcon } from "@jx3box/jx3box-common/js/utils";
 
 import { publishLink, ts2str } from "@jx3box/jx3box-common/js/utils";
-import WikiPanel from "@/components/wiki-panel.vue";
-import WikiRevisions from "@/components/wiki-revisions.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
+import WikiRevisions from "@/components/common/wiki-revisions.vue";
 import WikiComments from "@jx3box/jx3box-ui/src/wiki/WikiComments.vue";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 

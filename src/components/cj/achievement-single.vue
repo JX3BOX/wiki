@@ -207,7 +207,7 @@
 
 <script>
 import { ts2str, iconLink } from "@jx3box/jx3box-common/js/utils";
-import Fav from "@/views/item/item-fav.vue";
+import Fav from "@/components/common/item-fav.vue";
 import ItemSimple from "@jx3box/jx3box-editor/src/ItemSimple.vue";
 import star from "@/utils/star";
 import { setVirtualRoleAchievements, cancelVirtualRoleAchievements } from "@/service/achievement";

@@ -60,7 +60,6 @@
                     >
                         <Article id="wikiArticle" :content="clearContent(wiki_post?.post?.content)" />
                     </div>
-                    <!--                    <div v-html="wiki_post?.post?.content" class="m-wiki-content"></div>-->
 
                     <div class="m-op">
                         <button

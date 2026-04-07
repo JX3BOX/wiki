@@ -1,5 +1,5 @@
 <template>
-    <WikiPanel :border-none="true">
+    <WikiPanel :border="false">
         <template #head-title>
             <LegacyIcon class="el-icon-collection" />
             <span>最近攻略</span>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import WikiPanel from "@/components/wiki-panel.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
 import PostItem from "@/components/common/post-item.vue";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 export default {

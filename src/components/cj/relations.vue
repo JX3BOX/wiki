@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import WikiPanel from "@/components/wiki-panel.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
 import { getRelationAchievements } from "@/service/achievement";
 import { getBossInfo } from "@/service/relations";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";

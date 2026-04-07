@@ -1,5 +1,5 @@
 .m-wiki-top {
-    background-color:@bg-light;
+    background-color: @bg-light;
     border: 1px dashed #eee;
     padding: 8px 10px;
     border-radius: 6px;
@@ -12,6 +12,7 @@
     justify-content: space-between;
     .mb(5px);
     .u-title {
+        .flex(y);
         .fz(14px);
         .bold;
         margin: 0;
@@ -28,6 +29,13 @@
 .m-wiki-top__content {
     white-space: pre-wrap;
     .fz(13px,2.2);
+
+    a {
+        color: @v4primary;
+        &:hover {
+            .underline;
+        }
+    }
 }
 
 .m-wiki-top__item {

@@ -227,6 +227,7 @@ export default {
         getLastAchievement(achievements = []) {
             // 娓告垙瑙掕壊
             // 姣斿浼犲姛锛屽彧鍙栨渶鍚庝竴涓紶鍔?00娆＄殑ID浣滀负鏄惁瀹屾垚鐨勪緷鎹?
+            if (!Array.isArray(achievements)) return [];
             return achievements.map((achievement) => {
                 if (Array.isArray(achievement)) {
                     // 姣斿浼犲姛锛屽彧鍙栨渶鍚庝竴涓紶鍔?00娆＄殑ID浣滀负鏄惁瀹屾垚鐨勪緷鎹?
@@ -441,4 +442,3 @@ export default {
 <style lang="less">
 @import "~@/assets/css/cj/left-side.less";
 </style>
-

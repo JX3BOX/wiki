@@ -98,7 +98,7 @@ import { getItemPlanID, delItemPlan } from "@/service/item-plan.js";
 import { get_items_by_node as getItemsByNode } from "@/service/item";
 import ItemIcon from "@/components/common/item-icon.vue";
 import Equip from "@/components/item/equip.vue";
-import WikiPanel from "@/components/wiki-panel.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import { __Links, default_avatar } from "@/utils/config";
 import { showAvatar, authorLink, ts2str } from "@jx3box/jx3box-common/js/utils";

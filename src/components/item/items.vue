@@ -1,9 +1,9 @@
 <template>
     <el-row class="m-items">
-        <el-col :xs="24" :md="24" class="u-list-empty" v-if="items && !items.length">
+        <el-col :xs="24" :md="24" class="m-list-empty" v-if="items && !items.length">
             <slot name="empty-message">👻 暂无记录</slot>
         </el-col>
-        <el-col :xs="24" :md="24" class="u-list-empty" v-if="items === null">
+        <el-col :xs="24" :md="24" class="m-list-empty" v-if="items === null">
             <slot name="loading-message">🐷 搜索记录中</slot>
         </el-col>
         <template v-for="(item, key) in items">

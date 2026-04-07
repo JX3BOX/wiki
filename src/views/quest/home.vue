@@ -9,7 +9,7 @@
         <!-- 头部大标题 -->
         <!-- <img class="u-logo" src="@/assets/img/quest/quest_logo.png" alt="" /> -->
         <!-- <h1 class="u-title">任务百科</h1> -->
-        <wiki-panel :border-none="true">
+        <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-location-information" />
                 <span>便捷入口</span>
@@ -55,7 +55,7 @@
                 </ul>
             </template>
         </wiki-panel>
-        <wiki-panel :border-none="true">
+        <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-1" />
                 <span>热门任务</span>
@@ -64,7 +64,7 @@
                 <quest-carousel :quests="hotQuests" :views="hotViews" :hot="true"></quest-carousel>
             </template>
         </wiki-panel>
-        <wiki-panel :border-none="true">
+        <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-2" />
                 <span>最新任务</span>
@@ -76,7 +76,7 @@
                 <quest-carousel :quests="newestQuests"></quest-carousel>
             </template>
         </wiki-panel>
-        <wiki-panel :border-none="true">
+        <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-collection" />
                 <span>最新攻略</span>
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import WikiPanel from "@/components/wiki-panel.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
 import NewestPost from "@/components/quest/home/newest-post.vue";
 import QuestCarousel from "@/components/quest/home/quest-carousel.vue";
 

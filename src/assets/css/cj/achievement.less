@@ -121,11 +121,12 @@
             right: 0;
             display: inline-flex;
             align-items: center;
+            gap: 10px;
 
             .u-attr {
                 display: inline-flex;
                 align-items: center;
-                .ml(8px);
+                // .ml(8px);
                 opacity: 0.6;
                 vertical-align: middle;
             }
@@ -144,12 +145,7 @@
                 justify-content: center;
                 gap: 4px;
                 box-sizing: border-box;
-                margin-left:0 !important;
-            }
-
-            .w-fav {
-                min-height: 30px;
-                padding: 0 12px;
+                margin-left: 0 !important;
             }
         }
     }
@@ -241,7 +237,7 @@
             margin-left: -15px;
             margin-right: -15px;
 
-            &:after {
+            &::after {
                 content: "";
                 display: block;
                 clear: both;
@@ -479,6 +475,11 @@
                 }
             }
         }
+    }
+}
+@media screen and (max-width: @phone) {
+    .m-achievement-single .u-header .u-other {
+        .ps;
     }
 }
 

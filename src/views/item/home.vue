@@ -1,6 +1,6 @@
 <template>
     <div class="m-home-view">
-        <WikiPanel :border-none="true">
+        <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-location-information" />
                 <span>便捷入口</span>
@@ -55,7 +55,7 @@
             </template>
         </WikiPanel>
 
-        <WikiPanel :border-none="true">
+        <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-1" />
                 <span>最新物品</span>
@@ -99,7 +99,7 @@
             </template>
         </WikiPanel>
 
-        <WikiPanel :border-none="true">
+        <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-1" />
                 <span>最热物品</span>
@@ -143,7 +143,7 @@
             </template>
         </WikiPanel>
 
-        <WikiPanel :border-none="true">
+        <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-collection" />
                 <span>最新攻略</span>
@@ -207,7 +207,7 @@
 </template>
 
 <script>
-import WikiPanel from "@/components/wiki-panel.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
 import WikiItem from "@/components/common/wiki-item.vue";
 // import GameText from "@jx3box/jx3box-editor/src/GameText.vue";
 

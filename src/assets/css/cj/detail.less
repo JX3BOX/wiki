@@ -42,145 +42,116 @@
         .none;
     }
 }
-.m-wiki-compatible {
-    .u-msg-yellow;
-    margin: 10px auto;
-    padding: 5px 10px;
-    a {
-        .underline(@v4primary);
-    }
-}
 
-.m-wiki-signature {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 4px;
-    color: #999;
-    .fz(12px,2);
-    border-top: 1px dashed #ddd;
-    padding: 5px 0;
-    white-space: nowrap;
+// .m-wiki-thx-panel {
+//     .m-panel-title {
+//         .flex;
+//         align-items: center;
+//         svg,
+//         i {
+//             width: 22px;
+//             height: 22px;
+//             line-height: 22px;
+//             color: var(--el-color-primary);
+//             fill: currentColor;
+//             font-size: 20px;
+//         }
+//         span {
+//             font-size: 17px;
+//             font-weight: 300;
+//         }
+//     }
+//     .m-thx {
+//         margin-top: 20px;
+//         .w-boxcoin-records-list {
+//             background-color: #fff;
+//         }
+//     }
+// }
 
-    .legacy-icon,
-    [data-legacy-icon] {
-        flex: none;
-        width: 1em;
-        height: 1em;
-        color: inherit;
-        vertical-align: middle;
-    }
-}
+// .c-wiki-panel.m-detail-scene .m-panel-title span.u-version {
+//     font-size: 12px;
+//     margin-left: 10px;
+//     color: orange;
+// }
 
-.m-wiki-thx-panel {
-    .m-panel-title {
-        .flex;
-        align-items: center;
-        svg,
-        i {
-            width: 22px;
-            height: 22px;
-            line-height: 22px;
-            color: var(--el-color-primary);
-            fill: currentColor;
-            font-size: 20px;
-        }
-        span {
-            font-size: 17px;
-            font-weight: 300;
-        }
-    }
-    .m-thx {
-        margin-top: 20px;
-        .w-boxcoin-records-list {
-            background-color: #fff;
-        }
-    }
-}
+// .m-main.p-view {
+//     .m-wiki-top__header .u-title {
+//         display: inline-flex;
+//         align-items: center;
+//         gap: 4px;
+//         margin: 0;
+//         line-height: 1.4;
+//     }
 
-.c-wiki-panel.m-detail-scene .m-panel-title span.u-version {
-    font-size: 12px;
-    margin-left: 10px;
-    color: orange;
-}
+//     .c-wiki-panel.m-detail-scene {
+//         .m-panel-head {
+//             min-height: 42px;
+//             display: flex;
+//             align-items: center;
+//             justify-content: space-between;
+//             gap: 10px;
+//         }
 
-.m-main.p-view {
-    .m-wiki-top__header .u-title {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        margin: 0;
-        line-height: 1.4;
-    }
+//         .m-panel-title {
+//             display: inline-flex;
+//             align-items: center;
+//             gap: 6px;
+//             line-height: 1.2;
+//         }
 
-    .c-wiki-panel.m-detail-scene {
-        .m-panel-head {
-            min-height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
+//         .m-panel-actions {
+//             display: flex;
+//             flex-direction: row;
+//             align-items: center;
+//             justify-content: flex-end;
+//             flex-wrap: nowrap;
+//             gap: 8px;
 
-        .m-panel-title {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            line-height: 1.2;
-        }
+//             .el-button,
+//             a.el-button,
+//             span.el-button,
+//             .w-qrcode {
+//                 min-height: 32px;
+//                 padding: 0 14px;
+//                 line-height: 1;
+//                 display: inline-flex;
+//                 align-items: center;
+//                 justify-content: center;
+//                 gap: 4px;
+//                 box-sizing: border-box;
+//                 white-space: nowrap;
+//                 vertical-align: middle;
+//             }
 
-        .m-panel-actions {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: flex-end;
-            flex-wrap: nowrap;
-            gap: 8px;
+//             .w-qrcode {
+//                 padding: 0;
+//                 gap: 4px;
+//             }
 
-            .el-button,
-            a.el-button,
-            span.el-button,
-            .w-qrcode {
-                min-height: 32px;
-                padding: 0 14px;
-                line-height: 1;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 4px;
-                box-sizing: border-box;
-                white-space: nowrap;
-                vertical-align: middle;
-            }
+//             .el-button > span,
+//             a.el-button > span,
+//             span.el-button > span {
+//                 display: inline-flex;
+//                 align-items: center;
+//                 justify-content: center;
+//                 gap: 4px;
+//                 line-height: 1;
+//                 white-space: nowrap;
+//             }
 
-            .w-qrcode {
-                padding: 0;
-                gap: 4px;
-            }
-
-            .el-button > span,
-            a.el-button > span,
-            span.el-button > span {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 4px;
-                line-height: 1;
-                white-space: nowrap;
-            }
-
-            .el-button .legacy-icon,
-            .el-button [data-legacy-icon],
-            a.el-button .legacy-icon,
-            a.el-button [data-legacy-icon],
-            span.el-button .legacy-icon,
-            span.el-button [data-legacy-icon],
-            .w-qrcode .u-icon {
-                flex: none;
-                margin: 0;
-                color: currentColor;
-                fill: currentColor;
-            }
-        }
-    }
-}
+//             .el-button .legacy-icon,
+//             .el-button [data-legacy-icon],
+//             a.el-button .legacy-icon,
+//             a.el-button [data-legacy-icon],
+//             span.el-button .legacy-icon,
+//             span.el-button [data-legacy-icon],
+//             .w-qrcode .u-icon {
+//                 flex: none;
+//                 margin: 0;
+//                 color: currentColor;
+//                 fill: currentColor;
+//             }
+//         }
+//     }
+// }

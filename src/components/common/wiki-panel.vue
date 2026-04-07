@@ -1,4 +1,5 @@
 <template>
+    <!-- 对公共库版本做了增强 -->
     <BaseWikiPanel v-bind="panelBindings">
         <template v-if="$slots['head-before']" #head-before>
             <slot name="head-before"></slot>
@@ -48,9 +49,9 @@ export default {
             type: String,
             default: "default",
         },
-        borderNone: {
+        border: {
             type: Boolean,
-            default: false,
+            default: true,
         },
         showQR: {
             type: Boolean,
@@ -86,3 +87,9 @@ export default {
     },
 };
 </script>
+
+<style lang="less">
+.m-panel-title{
+    
+}
+</style>

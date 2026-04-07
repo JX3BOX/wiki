@@ -1,6 +1,6 @@
 <template>
     <div class="m-search-view">
-        <span class="u-list-empty" v-if="isEmpty">👻 暂无记录</span>
+        <span class="m-list-empty" v-if="isEmpty">👻 暂无记录</span>
         <div v-if="isLogin && isVirtual && !isEmpty" class="m-normal-op">
             <el-checkbox v-model="isAll" border @change="switchAll" size="small">全选</el-checkbox>
             <template v-if="selectedAchievements.length">

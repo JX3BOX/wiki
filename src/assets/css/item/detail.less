@@ -387,9 +387,14 @@
         // }
         .m-buttons {
             .pr;
+            .flex;
+            align-items: center;
+            gap: 8px;
 
             .el-button {
                 margin-left: 0;
+                min-height: 32px;
+                padding: 0 14px;
             }
         }
     }
@@ -680,21 +685,48 @@
 //     }
 // }
 
-.m-wiki-compatible {
-    .u-msg-yellow;
-    margin: 10px auto;
-    padding: 5px 10px;
-    a {
-        .underline(@v4primary);
-    }
-}
+// .c-wiki-panel.m-detail-scene {
+//     .m-panel-head {
+//         min-height: 42px;
+//         display: flex;
+//         align-items: center;
+//         justify-content: space-between;
+//         gap: 10px;
+//     }
 
-.m-wiki-signature {
-    .x(right);
-    color: #999;
-    .fz(12px,2);
-    border-top: 1px dashed #ddd;
-    padding: 5px 0;
+//     .m-panel-title {
+//         display: inline-flex;
+//         align-items: center;
+//         gap: 6px;
+//         line-height: 1.2;
+
+//         .legacy-icon,
+//         [data-legacy-icon] {
+//             width: 22px;
+//             height: 22px;
+//             font-size: 20px;
+//             color: var(--el-color-primary);
+//             fill: currentColor;
+//         }
+//     }
+
+//     .m-panel-actions {
+//         display: inline-flex;
+//         align-items: center;
+//         gap: 8px;
+
+//         .el-button,
+//         a.el-button {
+//             min-height: 32px;
+//             padding: 0 14px;
+//         }
+//     }
+// }
+
+.c-wiki-revisions {
+    .m-revisions-panel .u-op .u-btn {
+        min-height: 32px;
+    }
 }
 
 .m-thx {
@@ -712,28 +744,40 @@
     }
 }
 
-.m-wiki-thx-panel {
-    .m-panel-title {
-        .flex;
-        align-items: center;
-        svg,
-        i {
-            width: 28px;
-            height: 28px;
-            line-height: 28px;
-            color: @v4primary;
-            fill: @v4primary;
-            font-size: 22px;
-        }
-        span {
-            font-size: 17px;
-            font-weight: 300;
-        }
-    }
-    .m-thx {
-        margin-top: 20px;
-        .w-boxcoin-records-list {
-            background-color: #fff;
-        }
-    }
-}
+// .m-wiki-thx-panel {
+//     .m-panel-title {
+//         .flex;
+//         align-items: center;
+//         svg,
+//         i {
+//             width: 22px;
+//             height: 22px;
+//             line-height: 22px;
+//             color: var(--el-color-primary);
+//             fill: currentColor;
+//             font-size: 20px;
+//         }
+//         span {
+//             font-size: 17px;
+//             font-weight: 300;
+//         }
+//     }
+//     .m-thx {
+//         margin-top: 20px;
+//         .w-boxcoin-records-list {
+//             background-color: #fff;
+//         }
+//     }
+// }
+
+// @media screen and (max-width: @phone) {
+//     .c-wiki-panel.m-detail-scene .m-panel-head {
+//         flex-wrap: wrap;
+//         align-items: flex-start;
+//     }
+
+//     .c-wiki-panel.m-detail-scene .m-panel-actions {
+//         width: 100%;
+//         justify-content: flex-end;
+//     }
+// }

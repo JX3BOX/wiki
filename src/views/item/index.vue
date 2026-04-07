@@ -218,9 +218,5 @@ export default {
 
 <style lang="less">
 @import "~@/assets/css/app.less";
-.m-item-search{
-    .el-input-group__append{
-        .none;
-    }
-}
+@import "~@/assets/css/item/index.less";
 </style>

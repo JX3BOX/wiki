@@ -1,11 +1,12 @@
 <template>
+    <!-- 模仿公共库版本加了DIFF功能，公共库部分用于pvx项目 -->
     <WikiPanel class="c-wiki-revisions" scene="detail">
         <template #head-title>
-            <LegacyIcon class="el-icon-time" />
-            <span>历史版本</span>
+            <LegacyIcon class="u-icon el-icon-time" />
+            <span class="u-txt">历史版本</span>
         </template>
         <template #head-actions>
-            <span class="el-button el-button--primary" @click="visible = true">
+            <span class="u-btn--link el-button el-button--primary" @click="visible = true">
                 <LegacyIcon class="el-icon-crop" />
                 <span>版本对比</span>
             </span>
@@ -56,7 +57,7 @@
 </template>
 
 <script>
-import WikiPanel from "@/components/wiki-panel.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { getLink, authorLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 import { __Root, __OriginRoot } from "@/utils/config";

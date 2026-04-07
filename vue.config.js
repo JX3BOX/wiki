@@ -26,28 +26,6 @@ const pages = {
         entry: "src/pages/knowledge.js",
         filename: "knowledge/index.html",
     },
-
-    // ⚠️以下页面已迁移到game仓库
-    // 游戏百科（含无界）
-    index: {
-        title: "剑三Wiki - JX3BOX",
-        entry: "src/main.js",
-        template: "public/index.html",
-        filename: "wiki/index.html",
-    },
-    // 云端宏跳转
-    macros: {
-        title: "云端宏排行榜 - JX3BOX",
-        entry: "src/pages/macros.js",
-        template: "public/macro.html",
-        filename: "macro/tops/index.html",
-    },
-    macro: {
-        title: "云端宏 - JX3BOX",
-        entry: "src/pages/macro.js",
-        template: "public/macro.html",
-        filename: "macro/detail/index.html",
-    },
 };
 
 const path = require("path");
@@ -81,35 +59,6 @@ module.exports = {
             });
             return middlewares;
         },
-        // 避免 /macro 等其它应用路由被 index SPA 接管
-        // historyApiFallback: {
-        //     rewrites: [
-        //         {
-        //             from: /^\/macro(\/.*)?$/,
-        //             to: (context) => context.parsedUrl.pathname,
-        //         },
-        //         {
-        //             from: /^\/notice(\/.*)?$/,
-        //             to: "/notice/index.html",
-        //         },
-        //         {
-        //             from: /^\/about(\/.*)?$/,
-        //             to: "/about/index.html",
-        //         },
-        //         {
-        //             from: /^\/search(\/.*)?$/,
-        //             to: "/search/index.html",
-        //         },
-        //         {
-        //             from: /^\/post(\/.*)?$/,
-        //             to: "/post/index.html",
-        //         },
-        //         {
-        //             from: /^\/jx3(\/.*)?$/,
-        //             to: "/jx3/index.html",
-        //         },
-        //     ],
-        // },
     },
 
     // 依赖包（element-plus/theme-chalk 等）会输出大量 Sass deprecation 警告

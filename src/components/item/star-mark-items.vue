@@ -1,5 +1,5 @@
 <template>
-    <WikiPanel :border-none="true" class="m-search-hottest m-price-header">
+    <WikiPanel :border="false" class="m-search-hottest m-price-header">
         <template #head-title>
             <div class="u-title">
                 <LegacyIcon class="el-icon-shopping-bag-1" />
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import WikiPanel from "@/components/wiki-panel.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
 import { get_item_groups_with_price } from "@/service/item-group";
 import servers_origin from "@jx3box/jx3box-data/data/server/server_origin.json";
 import servers_std from "@jx3box/jx3box-data/data/server/server_std.json";

@@ -1,56 +1,56 @@
 .m-achievement-count {
-  .fl;
-
-  .u-stat {
     .fl;
-    white-space: nowrap;
-    overflow: auto;
 
-    // .x;
-    .fz(14px);
+    .u-stat {
+        .fl;
+        white-space: nowrap;
+        overflow: auto;
 
-    em {
-      .mr(10px);
-      // .bold;
-      font-style: normal;
-    }
+        // .x;
+        .fz(14px);
 
-    b {
-      font-style: italic;
-      color: @v4primary;
-
-      &:after {
-        content: "|";
-        font-weight: 300;
-        color: #999;
-        .ml(10px);
-        font-family: Georgia, "Times New Roman", Times, serif;
-      }
-    }
-
-    span {
-      .mr(10px);
-
-      &:last-child b {
-        &:after {
-          .none;
+        em {
+            .mr(10px);
+            // .bold;
+            font-style: normal;
         }
-      }
-    }
-  }
 
-  max-width: calc(100% - 350px);
-  overflow-x: auto;
+        b {
+            font-style: italic;
+            color: @v4primary;
+
+            &:after {
+                content: "|";
+                font-weight: 300;
+                color: #999;
+                .ml(10px);
+                font-family: Georgia, "Times New Roman", Times, serif;
+            }
+        }
+
+        span {
+            .mr(10px);
+
+            &:last-child b {
+                &:after {
+                    .none;
+                }
+            }
+        }
+    }
+
+    max-width: calc(100% - 350px);
+    overflow-x: auto;
 }
 
 @media screen and (max-width: @ipad) {
-  .m-achievement-count {
-    float: none;
-    max-width: 100%;
+    .m-achievement-count {
+        float: none;
+        max-width: 100%;
 
-    .u-stat {
-      .fz(13px);
-      float: none;
+        .u-stat {
+            .fz(13px);
+            float: none;
+        }
     }
-  }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="m-home-view">
-        <WikiPanel :border-none="true" class="u-qlinks-box">
+        <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-location-information" />
                 <span>便捷入口</span>
@@ -65,7 +65,7 @@
             </template>
         </WikiPanel>
 
-        <WikiPanel :border-none="true">
+        <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-1" />
                 <span>热门成就</span>
@@ -124,7 +124,7 @@
             </template>
         </WikiPanel>
 
-        <WikiPanel :border-none="true">
+        <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-2" />
                 <span>最新成就</span>
@@ -155,7 +155,7 @@ import { feedback } from "@/utils/config";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { iconLink, showAvatar, getLink } from "@jx3box/jx3box-common/js/utils";
-import WikiPanel from "@/components/wiki-panel.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
 import WikiItem from "@/components/common/wiki-item.vue";
 import Counter from "@/components/common/counter.vue";
 import PostList from "@/components/common/post-list.vue";

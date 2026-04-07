@@ -84,3 +84,11 @@ export default {
     },
 };
 </script>
+
+<style lang="less">
+    .w-fav{
+        .legacy-icon{
+            margin-right: 4px;
+        }
+    }
+</style>

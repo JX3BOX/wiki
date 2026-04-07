@@ -183,7 +183,7 @@ export default {
     }
 
     .u-count {
-        .fz(12px, @h);
+        .fz(10px, @h);
         color: @v4primary;
         .fr;
         .mr(2px);

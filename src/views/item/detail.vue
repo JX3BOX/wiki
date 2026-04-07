@@ -401,7 +401,7 @@
                 <template #head-actions>
                     <a class="el-button el-button--primary" :href="publish_url(`item/${id}`)">
                         <LegacyIcon class="el-icon-edit" />
-                        <span>完善物品攻略</span>
+                        <span>完善攻略</span>
                     </a>
                 </template>
                 <template #body>
@@ -427,7 +427,7 @@
                 <div class="m-wiki-thx-panel">
                     <WikiPanel>
                         <template #head-title>
-                            <LegacyIcon class="el-icon-coin" />
+                            <LegacyIcon class="u-icon el-icon-coin" />
                             <span class="u-txt">参与打赏</span>
                         </template>
                         <template #body>
@@ -468,14 +468,13 @@
 
 <script>
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
-// import Fav from "@jx3box/jx3box-ui/src/interact/Fav.vue";
-import Fav from "./item-fav";
+import Fav from "@/components/common/item-fav";
 import Item from "@/components/common/compat-item.vue";
 import GameText from "@jx3box/jx3box-editor/src/GameText.vue";
 import ItemIcon from "@/components/common/item-icon.vue";
 import Plan from "@/components/item/plan.vue";
-import WikiPanel from "@/components/wiki-panel.vue";
-import WikiRevisions from "@/components/wiki-revisions.vue";
+import WikiPanel from "@/components/common/wiki-panel.vue";
+import WikiRevisions from "@/components/common/wiki-revisions.vue";
 import WikiComments from "@jx3box/jx3box-ui/src/wiki/WikiComments.vue";
 import ItemPrices from "@/components/item/item-prices.vue";
 import ItemPriceChart from "@/components/item/item-price-chart.vue";

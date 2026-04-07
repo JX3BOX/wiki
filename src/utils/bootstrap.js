@@ -15,12 +15,11 @@ import { mergeAppLocaleMessages } from "@/locale";
 import { initRouterI18nHead } from "@/router/i18n-head";
 import LegacyIcon from "@/components/common/legacy-icon.vue";
 
-import "@jx3box/jx3box-common/css/normalize.css";
 import "@jx3box/jx3box-common/css/font.css";
+import "@jx3box/jx3box-common/css/normalize.css";
 import "@jx3box/jx3box-common/css/element-plus-theme.scss";
 import "@jx3box/jx3box-common/css/element-fonticon.css";
 import "@/assets/css/tailwind.css";
-import "@/assets/css/tailwind-compat.less";
 
 export const bootstrapApp = (RootComponent, { router, store } = {}) => {
     const app = createApp(RootComponent);

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="pageClass">
         <CommonHeader :overlay-enable="overlayEnable"></CommonHeader>
         <Breadcrumb
             :name="name"
@@ -141,6 +141,9 @@ export default {
             const key = this.icon || this.slug;
             return __cdn + "logo/logo-light/" + key + ".svg";
         },
+        pageClass(){
+            return `${"p-" + this.slug + '-' + this.$route.name + ' p-' + this.slug}`;
+        }
     },
     methods: {
         hasPermission(permission) {

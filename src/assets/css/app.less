@@ -1,24 +1,10 @@
-.c-main {
-    .m-item-container {
-        .u-name.white {
-            color: @color !important;
-            // font-weight: lighter;
-            // text-shadow: -1px 0 #000000, 0 1px #000000, 1px 0 #000000,0 -1px #000000;
-        }
-    }
-}
 @media screen and (max-width: @ipad-y) {
     .c-main {
         padding: 0 20px;
     }
 }
 
-.u-icon {
-    // width: auto;
-    // height: auto;
-    border-radius: 4px;
-}
-
+// 侧边栏
 .el-tree {
     background: none !important;
 }
@@ -31,6 +17,11 @@
     background-color: #fff !important;
 }
 
+
+// 图标
+.u-icon {
+    border-radius: 4px;
+}
 .quality-0 {
     color: #a7a7a7;
 }
@@ -52,5 +43,7 @@
 
 @import "./common/block.less";
 @import "./common/index.less";
+@import "./common/list.less";
 @import "./common/single.less";
-@import "./miniprogram/miniprogram.less";
+@import "./common/wiki.less";
+@import "./miniprogram/app.less";

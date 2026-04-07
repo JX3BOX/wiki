@@ -89,15 +89,13 @@ export default {
             getMenuAchievements(sub, detail, params).then(
                 (data) => {
                     data = data.data;
-                    const achievements =
-                        data.data.achievements &&
-                        data.data.achievements.length &&
-                        data.data.achievements.sort((a, b) => {
-                            let a_level = get(a.post, "level", 1);
-                            let b_level = get(b.post, "level", 1);
-                            return a_level - b_level;
-                        });
-                    this.achievements = achievements.map((item) => {
+                    const achievements = Array.isArray(data?.data?.achievements) ? data.data.achievements : [];
+                    const sortedAchievements = achievements.sort((a, b) => {
+                        let a_level = get(a.post, "level", 1);
+                        let b_level = get(b.post, "level", 1);
+                        return a_level - b_level;
+                    });
+                    this.achievements = sortedAchievements.map((item) => {
                         return {
                             ...item,
                             checked: false,

@@ -11,6 +11,7 @@
         .none;
         display: flex;
         align-items: stretch;
+        flex: none;
         height: calc(~"@{bar-height} + 8px");
 
         .el-button {
@@ -18,13 +19,30 @@
             border-radius: 8px;
             background-color: #fff;
             height: 100%;
+            min-height: 40px;
+            padding: 0 18px;
             box-sizing: border-box;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 4px;
+            line-height: 1;
+        }
+
+        .el-button > span,
+        .u-return-btn > span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
             line-height: 1;
         }
         .mr(8px);
+    }
+    @media screen and (max-width: @phone) {
+        .m-return {
+            .none !important;
+        }
     }
 
     .m-search {
@@ -39,17 +57,36 @@
         height: 40px;
         .u-search-btn {
             .db;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            line-height: 1;
         }
 
-        .el-input-group__prepend{
+        .el-input-group__prepend {
             .flex(y);
-            gap:5px;
+            gap: 5px;
+        }
+
+        .el-input-group__append {
+            .u-search-btn {
+                .u-text {
+                    margin-left: 5px;
+                }
+            }
         }
     }
 
     &.can-return {
         .m-return {
             .db;
+        }
+    }
+
+    &:not(.can-return) {
+        .m-return {
+            .none;
         }
     }
 
