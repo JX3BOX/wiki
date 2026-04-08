@@ -167,16 +167,14 @@
             text-align: right;
             .pa;
             .rt(0,20px);
-
-            .u-attr {
-                text-align: left;
-            }
+            .flex(y);
         }
 
         .u-attr {
             display: inline-block;
             vertical-align: middle;
             cursor: pointer;
+            text-align: left;
         }
 
         .u-icon {
@@ -204,14 +202,16 @@
             font-size: 0;
         }
 
+        .u-right .m-simple-item {
+            margin-right: 10px;
+        }
         .u-point {
-            width: 24px;
-            height: 24px;
-            line-height: 24px;
-            text-indent: -24px;
-            background: url(https://cdn.jx3box.com/img/dashboard/point.svg) no-repeat center center;
+            .flex(y);
             .bold;
             color: #333333;
+            img {
+                .size(18px);
+            }
         }
     }
 

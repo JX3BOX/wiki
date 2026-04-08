@@ -93,9 +93,12 @@
                     class="u-attr u-item-simple"
                     :item="achievement.Item"
                     only-icon="true"
-                    :icon-size="'36px'"
+                    :icon-size="'28px'"
                 />
-                <div class="u-attr u-point" v-text="achievement.Point ? achievement.Point : 0"></div>
+                <div class="u-attr u-point">
+                    {{ achievement.Point ? achievement.Point : 0 }}
+                    <img src="@/assets/img/cj/point.svg" alt="资历">
+                </div>
             </div>
         </div>
         <div class="u-footer">
