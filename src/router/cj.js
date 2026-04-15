@@ -150,6 +150,28 @@ const routes = [
             },
         ],
     },
+
+    {
+        name: "view_alias",
+        path: "/:id(\\d+)",
+        redirect: (to) => {
+            return `/view/${to.params.id}`;
+        },
+    },
+    {
+        name: "achievement_alias",
+        path: "/achievement/:id(\\d+)",
+        redirect: (to) => {
+            return `/view/${to.params.id}`;
+        },
+    },
+    {
+        name: "achievement_view_alias",
+        path: "/achievement/view/:id(\\d+)",
+        redirect: (to) => {
+            return `/view/${to.params.id}`;
+        },
+    },
 ];
 
 if (isMiniProgram() || isApp()) {

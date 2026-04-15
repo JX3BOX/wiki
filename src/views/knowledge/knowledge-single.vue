@@ -2,7 +2,9 @@
     <div class="v-knowledge-single" v-loading="loading">
         <div v-if="!isRobot" class="u-detail-title">
             <span>{{ title }}</span>
-            <el-tag v-if="categoryLabel" class="u-detail-category" size="small" effect="light">{{ categoryLabel }}</el-tag>
+            <el-tag v-if="categoryLabel" class="u-detail-category" size="small" effect="light">{{
+                categoryLabel
+            }}</el-tag>
         </div>
         <div v-else class="m-robot-header">
             <div class="m-robot-header__left">
@@ -363,8 +365,7 @@ export default {
     mounted() {
         this.loadKnowledgeTypes();
         bus.on("openWikiPush", (param) => {
-            console.log(this.wiki_post);
-            if (!this.data?.source?.post?.id) {
+            if (!this.data?.source?.id) {
                 return this.$message.warning("该通识没有攻略");
             }
             this.$refs.wikiPanel?.onPush();
