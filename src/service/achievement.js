@@ -26,7 +26,7 @@ export function get_achievements(params) {
 // 获取单个成就
 export function get_achievement(achievement_id, params) {
     if (!achievement_id) return null;
-    return $.get(`api/node/achievement/${achievement_id}`, params);
+    return $.get(`api/node/achievement/${achievement_id}`, { params });
 }
 
 export function get_relation_achievements(source_id) {

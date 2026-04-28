@@ -313,14 +313,14 @@ export default {
                     this.is_empty = isEmpty;
                     this.compatible = compatible;
 
-                    document.title = this.wiki_post.source.Name + this.$t("pages.common.appendTitle");
+                    document.title = this.wiki_post.source?.Name + this.$t("pages.common.appendTitle");
 
                     User.isLogin() &&
                         postHistory({
                             source_type: this.client == "origin" ? "origin_cj" : "cj",
                             source_id: ~~this.id,
                             link: location.href,
-                            title: post.title,
+                            title: post?.title,
                         });
                 });
             }
