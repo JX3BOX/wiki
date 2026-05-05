@@ -1,5 +1,5 @@
 <template>
-    <v-chart class="m-mobile-price-chart" :option="option" autoresize />
+    <v-chart ref="chartRef" class="m-mobile-price-chart" :option="option" />
 </template>
 
 <script>
@@ -47,6 +47,16 @@ export default {
     },
     provide: {
         [THEME_KEY]: "dark",
+    },
+    data() {
+        return {
+            resizeFrame: 0,
+        };
+    },
+    watch: {
+        priceList() {
+            this.scheduleResize();
+        },
     },
     computed: {
         option() {
@@ -144,6 +154,31 @@ export default {
                     },
                 ],
             };
+        },
+    },
+    mounted() {
+        this.scheduleResize();
+        window.addEventListener("resize", this.scheduleResize);
+        window.addEventListener("orientationchange", this.scheduleResize);
+    },
+    beforeUnmount() {
+        window.removeEventListener("resize", this.scheduleResize);
+        window.removeEventListener("orientationchange", this.scheduleResize);
+        if (this.resizeFrame) {
+            cancelAnimationFrame(this.resizeFrame);
+            this.resizeFrame = 0;
+        }
+    },
+    methods: {
+        scheduleResize() {
+            if (this.resizeFrame) {
+                cancelAnimationFrame(this.resizeFrame);
+            }
+
+            this.resizeFrame = requestAnimationFrame(() => {
+                this.resizeFrame = 0;
+                this.$refs.chartRef?.resize();
+            });
         },
     },
 };

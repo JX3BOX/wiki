@@ -14,6 +14,14 @@
             top: 48px;
         }
     }
+
+    .v-miniprogram {
+        .el-drawer__body {
+            // 小程序里的 Drawer 内容通常自带内部滚动区，外层 body 再滚会出现双滚动条。
+            padding: 0;
+            overflow: hidden;
+        }
+    }
 }
 
 @import "./miniprogram-light.less";

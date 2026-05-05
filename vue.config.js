@@ -48,6 +48,14 @@ module.exports = {
     //⚛️ Proxy ~
     devServer: {
         host: "localhost",
+        client: {
+            overlay: {
+                runtimeErrors: (error) => {
+                    const message = error && error.message ? String(error.message) : "";
+                    return !/ResizeObserver loop (completed with undelivered notifications|limit exceeded)/.test(message);
+                },
+            },
+        },
         // 与 @jx3box/jx3box-common/js/api.js 对齐：
         // 本地开发开启 `VUE_APP_PROXY_ENABLE=1` 后，会把请求 baseURL 切到 `${VUE_APP_PROXY_PREFIX}/${serviceKey}`
         proxy: buildEnvProxy(),

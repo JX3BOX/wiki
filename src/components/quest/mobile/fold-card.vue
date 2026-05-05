@@ -60,20 +60,38 @@ export default {
         toggleFold() {
             this.isFold = !this.isFold;
         },
+        updateContentHeight() {
+            const targetEl = this.$refs.contentContainer;
+            if (!targetEl) {
+                return;
+            }
+
+            this.contentHeight = targetEl.scrollHeight;
+        },
     },
     mounted() {
+        if (this.fixed) {
+            return;
+        }
+
         const targetEl = this.$refs.contentContainer;
+        if (!targetEl) {
+            return;
+        }
+
+        this.updateContentHeight();
+
         this.observer = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 if (entry.target === targetEl) {
-                    this.contentHeight = entry.contentRect.height;
+                    this.updateContentHeight();
                 }
             }
         });
         this.observer.observe(targetEl);
     },
     beforeUnmount() {
-        this.observer.disconnect();
+        this.observer?.disconnect();
         this.observer = null;
     },
 };

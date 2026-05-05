@@ -14,55 +14,55 @@
                 <div class="m-meta">
                     <div class="u-meta-item">{{ item_bind(source.BindType) }}</div>
                     <div class="u-meta-item" v-if="source.MaxExistAmount">
-                        <span class="u-meta-label">鏈€澶ф嫢鏈夋暟</span>
+                        <span class="u-meta-label">最大拥有数</span>
                         <span>{{ source.MaxExistAmount }}</span>
                     </div>
                     <div class="u-meta-item" v-if="source.Price">
-                        <span class="u-meta-label">鍥炴敹浠锋牸</span>
+                        <span class="u-meta-label">回收价格</span>
                         <GamePrice class="u-value" :price="source.Price" />
                     </div>
                     <div class="u-meta-item u-misc">
                         <div class="u-meta-misc">
                             <LegacyIcon class="el-icon-check" v-if="[1, 2].includes(source.BindType)" />
                             <LegacyIcon class="el-icon-close" v-else />
-                            {{ [1, 2].includes(source.BindType) ? "鍙互" : "涓嶅彲" }}浜ゆ槗
+                            {{ [1, 2].includes(source.BindType) ? "可以" : "不可" }}交易
                         </div>
                         <div class="u-meta-misc">
                             <LegacyIcon class="el-icon-check" v-if="source.CanStack" />
                             <LegacyIcon class="el-icon-close" v-else />
-                            {{ source.CanStack ? "鍙互" : "涓嶅彲" }}鍫嗗彔
+                            {{ source.CanStack ? "可以" : "不可" }}堆叠
                         </div>
                         <div class="u-meta-misc">
                             <LegacyIcon class="el-icon-check" v-if="source.CanChangeMagic" />
                             <LegacyIcon class="el-icon-close" v-else />
-                            {{ source.CanChangeMagic ? "鍙互" : "涓嶅彲" }}闄勯瓟
+                            {{ source.CanChangeMagic ? "可以" : "不可" }}附魔
                         </div>
                         <div class="u-meta-misc">
                             <LegacyIcon class="el-icon-check" v-if="source.CanExterior" />
                             <LegacyIcon class="el-icon-close" v-else />
-                            {{ source.CanExterior ? "鍙互" : "涓嶅彲" }}鏀堕泦
+                            {{ source.CanExterior ? "可以" : "不可" }}收集
                         </div>
                         <div class="u-meta-misc">
                             <LegacyIcon class="el-icon-check" v-if="source.CanSetColor" />
                             <LegacyIcon class="el-icon-close" v-else />
-                            {{ source.CanSetColor ? "鍙互" : "涓嶅彲" }}鏌撹壊
+                            {{ source.CanSetColor ? "可以" : "不可" }}染色
                         </div>
                         <div class="u-meta-misc">
                             <LegacyIcon class="el-icon-check" v-if="source.CanApart" />
                             <LegacyIcon class="el-icon-close" v-else />
-                            {{ source.CanApart ? "鍙互" : "涓嶅彲" }}鍒嗚В
+                            {{ source.CanApart ? "可以" : "不可" }}分解
                         </div>
                         <div class="u-meta-misc">
                             <LegacyIcon class="el-icon-check" v-if="source.CanDestroy || source.CanDestroy === null" />
                             <LegacyIcon class="el-icon-close" v-else />
-                            {{ source.CanDestroy || source.CanDestroy === null ? "鍙互" : "涓嶅彲" }}鎽ф瘉
+                            {{ source.CanDestroy || source.CanDestroy === null ? "可以" : "不可" }}摧毁
                         </div>
                     </div>
                 </div>
             </div>
             <Item v-if="drawerMode || showInfo" :item="source" :item_id="id" :client="client"></Item>
             <div class="u-show-info" @click="showInfo = !showInfo" v-if="!drawerMode">
-                <span>{{ showInfo ? "鏀惰捣" : "鏌ョ湅" }}鐗╁搧淇℃伅</span>
+                <span>{{ showInfo ? "收起" : "查看" }}物品信息</span>
                 <LegacyIcon class="el-icon-arrow-down" v-if="!showInfo" />
                 <LegacyIcon class="el-icon-arrow-up" v-else />
             </div>
@@ -70,7 +70,7 @@
             <fold-card class="m-price" :fixed="true" v-loading="priceLoading">
                 <template #title>
                     <div class="m-price-head">
-                        <span>鍖烘湇浠锋牸</span>
+                        <span>区服价格</span>
                         <span class="u-server-select" @click="onServerSelect">
                             {{ server }} <LegacyIcon class="el-icon-refresh" />
                         </span>
@@ -104,7 +104,7 @@
                 </template>
                 <div class="m-price-empty" v-else>暂无数据或该物品无法上架交易行</div>
             </fold-card>
-            <fold-card title="鐗╁搧鏀荤暐" v-if="post_id">
+            <fold-card title="物品攻略" v-if="post_id">
                 <div class="m-wiki">
                     <div class="m-wiki-header">
                         <div class="u-avatar-list">
@@ -122,7 +122,7 @@
                 </div>
             </fold-card>
 
-            <!-- 璇勮鍖?-->
+            <!-- 评论区 -->
             <div class="m-comments" v-if="!drawerMode">
                 <miniprogram-comment-list :source-id="id" type="item" />
             </div>
@@ -143,9 +143,9 @@
         >
             <template #default>
                 <div class="m-more-action">
-                    <span class="u-action" @click="onAddItemPlan">鍔犲叆娓呭崟</span>
+                    <span class="u-action" @click="onAddItemPlan">加入清单</span>
                     <span v-loading="favLoading" class="u-action with-lb" @click="toggleFav">
-                        {{ isFav ? "鍙栨秷鏀惰棌" : "鏀惰棌鐗╁搧" }}
+                        {{ isFav ? "取消收藏" : "收藏物品" }}
                     </span>
                 </div>
             </template>
@@ -260,21 +260,21 @@ export default {
         },
         drawerOptions() {
             return {
-                hideType: ["report"], //闇€瑕侀殣钘忕殑type,濡俒'search','pin']
-                direction: "btt", //寮瑰嚭妗嗘柟鍚戯紝btt銆乼tb銆乺tl銆乴tr
-                drawerTitle: this.sourceName, //寮瑰嚭妗嗘爣棰?
+                hideType: ["report"], // 需要隐藏的 type，例如 ['search', 'pin']
+                direction: "btt", // 弹出框方向，btt、ttb、rtl、ltr
+                drawerTitle: this.sourceName, // 弹出框标题
                 author: {
-                    name: this.user_name, //浣滆€呭悕绉?
-                    avatar: this.user_avatar, //浣滆€呭ご鍍?
-                    author_id: this.author_id, //浣滆€卛d
+                    name: this.user_name, // 作者名称
+                    avatar: this.user_avatar, // 作者头像
+                    author_id: this.author_id, // 作者 ID
                 },
                 subscribeType: "wiki",
                 postType: "item",
                 id: this.post_id,
-                title: this.sourceName || document.title || "", //榛樿鍥哄畾鏍囬,榛樿鍙栭〉闈㈡爣棰?
-                url: window.location.href, //榛樿鍙栨祻瑙堝櫒鍦板潃
+                title: this.sourceName || document.title || "", // 默认固定标题，默认取页面标题
+                url: window.location.href, // 默认取浏览器地址
                 laterOn: {
-                    author_id: this.author_id || 0, //浣滆€卛d
+                    author_id: this.author_id || 0, // 作者 ID
                     content_meta_id: this.post_id,
                 },
             };

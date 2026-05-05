@@ -2,11 +2,11 @@
     <div>
         <el-drawer
             v-model="show"
+            class="topic-view-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
             append-to-body
-            custom-class="topic-view-drawer"
             size="400"
             @close="onClose"
             style="width: 100%"
@@ -560,7 +560,9 @@ export default {
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
-    min-height: 500px;
+    height: 100%;
+    box-sizing: border-box;
+    min-height: 0;
     position: relative;
 
     .m-achievement-info {
@@ -642,10 +644,11 @@ export default {
     }
 
     .m-content-box {
-        max-height: 320px;
-        min-height: 320px;
+        flex: 1;
+        min-height: 0;
         overflow: auto;
         margin-top: 20px;
+        margin-bottom: 86px;
         padding-bottom: 20px;
 
         box-sizing: border-box;

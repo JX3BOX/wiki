@@ -138,7 +138,8 @@ export default {
                 .then((res) => {
                     group.title = res;
                     this.savePlan();
-                });
+                })
+                .catch(() => {});
         },
         onAddItem() {
             this.$refs["add-item-search-drawer"].open(this.plan);
@@ -155,7 +156,8 @@ export default {
                         data: [],
                     });
                     this.savePlan();
-                });
+                })
+                .catch(() => {});
         },
         onEditCount(group, index) {
             const item = group.data[index];

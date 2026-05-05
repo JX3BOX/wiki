@@ -2,11 +2,11 @@
     <div>
         <el-drawer
             v-model="show"
+            class="other-filter-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
             append-to-body
-            custom-class="other-filter-drawer"
             size="400"
             @close="onClose"
             style="width:100%;"

@@ -2,11 +2,11 @@
     <div>
         <el-drawer
             v-model="show"
+            class="other-filter-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
             append-to-body
-            custom-class="other-filter-drawer"
             size="400"
             @close="onClose"
             style="width: 100%"
@@ -223,7 +223,9 @@ export default {
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
-    min-height: 300px;
+    height: 100%;
+    box-sizing: border-box;
+    min-height: 0;
     position: relative;
 
     .m-other-filter__title {
@@ -239,11 +241,11 @@ export default {
 
     .m-other-filter-list {
         flex: 1;
+        min-height: 0;
         display: flex;
         flex-direction: column;
         gap: 20px;
-        margin-bottom: 60px;
-        max-height: 345px;
+        margin-bottom: 86px;
         overflow-y: auto;
         padding-bottom: 20px;
 

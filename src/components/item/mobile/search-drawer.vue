@@ -1,12 +1,11 @@
 <template>
     <div>
         <el-drawer
-            :visible="visible"
-            class="c-var"
+            v-model="visible"
+            class="c-var item-search-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
-            custom-class="item-search-drawer"
             append-to-body
             size="400"
             @close="onClose"
@@ -176,7 +175,6 @@ export default {
     border-radius: 20px 20px 0px 0px;
     overflow: hidden;
     background: transparent;
-    min-height: 500px;
 }
 
 .m-item-search-drawer {
@@ -184,7 +182,9 @@ export default {
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
-    min-height: 500px;
+    height: 100%;
+    box-sizing: border-box;
+    min-height: 0;
     position: relative;
     gap: 12px;
     .m-user-select__title {
@@ -199,12 +199,14 @@ export default {
     .m-options-list {
         display: flex;
         flex-direction: column;
+        flex: 1;
+        min-height: 0;
         gap: 12px;
-        max-height: 400px;
         overflow: auto;
+        margin-bottom: 86px;
     }
 
-    .u-input .el-input__inner,
+    .u-input .el-input__wrapper,
     .u-menu,
     .m-options-item {
         display: flex;
@@ -234,6 +236,15 @@ export default {
                 }
             }
         }
+    }
+
+    .u-input .el-input__wrapper {
+        box-shadow: none;
+    }
+
+    .u-input .el-input__inner {
+        color: inherit;
+        background-color: transparent;
     }
 
     .m-op {

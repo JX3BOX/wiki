@@ -1,12 +1,11 @@
 <template>
     <div>
         <el-drawer
-            :visible="visible"
-            class="c-var"
+            v-model="visible"
+            class="c-var input-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
-            custom-class="input-drawer"
             append-to-body
             size="400"
             @close="onClose"
@@ -74,6 +73,9 @@ export default {
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
+    min-height: 0;
     position: relative;
     gap: 12px;
     .m-user-select__title {
@@ -85,7 +87,7 @@ export default {
         line-height: 24px; /* 150% */
     }
 
-    .u-input .el-input__inner {
+    .u-input .el-input__wrapper {
         display: flex;
         padding: var(--16, 16px) var(--20, 20px);
         align-items: flex-start;
@@ -105,6 +107,11 @@ export default {
         border: none;
 
         margin-bottom: 78px;
+    }
+
+    .u-input .el-input__inner {
+        color: inherit;
+        background-color: transparent;
     }
 
     .m-op {

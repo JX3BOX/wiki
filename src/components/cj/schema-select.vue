@@ -1,4 +1,4 @@
-<!-- 鐢ㄤ簬灏嗘垚灏辨坊鍔犺繘娓″姭鏂规鐨勬椂鍊欏彲浠ラ€夋嫨鐩爣鏂规 -->
+<!-- 用于将成就添加进渡劫方案的时候可以选择目标方案 -->
 <template>
     <el-dialog :model-value="visible" class="m-schema-select" title="添加至方案" append-to-body :before-close="onFinish">
         <el-table size="small" :data="schemas" style="width: 100%">

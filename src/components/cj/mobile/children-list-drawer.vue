@@ -2,11 +2,11 @@
     <div>
         <el-drawer
             v-model="show"
+            class="children-list-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
             append-to-body
-            custom-class="children-list-drawer"
             size="400"
             @close="onClose"
             style="width: 100%"

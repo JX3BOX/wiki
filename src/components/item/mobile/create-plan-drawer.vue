@@ -1,12 +1,11 @@
 <template>
     <div>
         <el-drawer
-            :visible="visible"
-            class="c-var"
+            v-model="visible"
+            class="c-var create-plan-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
-            custom-class="create-plan-drawer"
             append-to-body
             size="400"
             @close="onClose"
@@ -150,6 +149,9 @@ export default {
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
+    height: 100%;
+    box-sizing: border-box;
+    min-height: 0;
     position: relative;
     gap: 12px;
 
@@ -159,6 +161,7 @@ export default {
         gap: 12px;
         overflow: auto;
         flex-grow: 1;
+        min-height: 0;
         margin-bottom: 78px;
     }
 
@@ -186,7 +189,7 @@ export default {
         flex-grow: 1;
     }
 
-    .u-input .el-input__inner,
+    .u-input .el-input__wrapper,
     .u-input .el-textarea__inner,
     .m-options-item {
         display: flex;
@@ -216,6 +219,15 @@ export default {
                 }
             }
         }
+    }
+
+    .u-input .el-input__wrapper {
+        box-shadow: none;
+    }
+
+    .u-input .el-input__inner {
+        color: inherit;
+        background-color: transparent;
     }
 
     .m-op {

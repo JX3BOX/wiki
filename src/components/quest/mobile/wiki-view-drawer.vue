@@ -2,11 +2,11 @@
     <div>
         <el-drawer
             v-model="visible"
+            class="quest-view-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
             append-to-body
-            custom-class="quest-view-drawer"
             size="400"
             @close="onClose"
             style="width: 100%"
@@ -249,15 +249,20 @@ export default {
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
-    min-height: 500px;
+    height: 100%;
+    box-sizing: border-box;
+    min-height: 0;
     position: relative;
 
     .m-quest-info {
-        max-height: 400px;
+        flex: 1;
+        min-height: 0;
         overflow: auto;
         display: flex;
         flex-direction: column;
         gap: 20px;
+        margin-bottom: 86px;
+        padding-bottom: 20px;
     }
 
     .m-quest-section {

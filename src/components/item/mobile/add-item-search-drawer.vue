@@ -1,12 +1,11 @@
 <template>
     <div>
         <el-drawer
-            :visible="visible"
-            class="c-var"
+            v-model="visible"
+            class="c-var add-item-search-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
-            custom-class="add-item-search-drawer"
             append-to-body
             size="400"
             @close="onClose"
@@ -143,7 +142,7 @@ export default {
         display: flex;
         gap: 12px;
 
-        .el-input__inner {
+        .el-input__wrapper {
             display: flex;
             padding: var(--16, 16px) var(--20, 20px);
             align-items: flex-start;
@@ -161,6 +160,11 @@ export default {
             height: auto;
             box-shadow: none;
             border: none;
+        }
+
+        .el-input__inner {
+            color: inherit;
+            background-color: transparent;
         }
 
         .u-search-btn {

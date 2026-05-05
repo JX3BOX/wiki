@@ -2,12 +2,11 @@
     <div>
         <el-drawer
             v-bind="$attrs"
-            :visible="visible"
-            class="c-var"
+            v-model="visible"
+            class="c-var add-item-plan-drawer"
             direction="btt"
             :show-close="false"
             :with-header="false"
-            custom-class="add-item-plan-drawer"
             append-to-body
             size="400"
             @close="onClose"
@@ -201,7 +200,9 @@ export default {
     flex-direction: column;
     background-color: #24292e;
     padding: 20px;
-    max-height: 500px;
+    height: 100%;
+    box-sizing: border-box;
+    min-height: 0;
     position: relative;
     gap: 12px;
 
@@ -211,6 +212,7 @@ export default {
         gap: 12px;
         overflow: auto;
         flex-grow: 1;
+        min-height: 0;
         margin-bottom: 78px;
     }
 
@@ -231,7 +233,8 @@ export default {
         padding: 20px 40px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+            justify-content: space-between;
+            gap: 20px;
         font-weight: bold;
 
         color: #fff;
@@ -239,6 +242,18 @@ export default {
         font-size: 24px;
         font-weight: 700;
         line-height: 30px;
+
+            .el-input {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .el-input__wrapper {
+                padding: 0;
+                background-color: transparent;
+                box-shadow: none;
+            }
+
         .el-input__inner {
             border: none;
             box-shadow: none;

@@ -6,11 +6,7 @@ import zhTw from "element-plus/es/locale/lang/zh-tw";
 import vi from "element-plus/es/locale/lang/vi";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import { createHead } from "@vueuse/head";
-import {
-    createJx3boxUiI18n,
-    getJx3boxUiAvailableLocales,
-    install as JX3BOX_UI,
-} from "@jx3box/jx3box-ui";
+import { createJx3boxUiI18n, getJx3boxUiAvailableLocales, install as JX3BOX_UI } from "@jx3box/jx3box-ui";
 import { mergeAppLocaleMessages } from "@/locale";
 import { initRouterI18nHead } from "@/router/i18n-head";
 import LegacyIcon from "@/components/common/legacy-icon.vue";
@@ -20,6 +16,7 @@ import "@jx3box/jx3box-common/css/normalize.css";
 import "@jx3box/jx3box-common/css/element-plus-theme.scss";
 import "@jx3box/jx3box-common/css/element-fonticon.css";
 import "@/assets/css/tailwind.css";
+import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 
 export const bootstrapApp = (RootComponent, { router, store } = {}) => {
     const app = createApp(RootComponent);
@@ -68,6 +65,10 @@ export const bootstrapApp = (RootComponent, { router, store } = {}) => {
         }
     });
     app.component("LegacyIcon", LegacyIcon);
+
+    if (isMiniProgram()) {
+        document.documentElement.classList.add("v-miniprogram");
+    }
 
     return app;
 };

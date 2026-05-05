@@ -2,43 +2,43 @@
     <div>
         <el-drawer
             v-model="show"
+            :class="['user-select-drawer', customClass]"
             direction="btt"
             :show-close="false"
             :with-header="false"
             append-to-body
-            :custom-class="`user-select-drawer ${customClass}`"
             size="400"
             @close="onClose"
-            style="width:100%;"
+            style="width: 100%"
         >
             <template #default>
                 <div class="c-var m-user-select">
-                    <div class="m-user-select__title">
-                        选择角色
-                    </div>
-                    <div class="m-user-list" >
-                        <div v-for="item in list" :key="item.ID" class="m-user-item" :class="[item.ID===tmpVal.ID?'active':'']" @click="()=>selectRole(item)">
+                    <div class="m-user-select__title">选择角色</div>
+                    <div class="m-user-list">
+                        <div
+                            v-for="item in list"
+                            :key="item.ID"
+                            class="m-user-item"
+                            :class="[item.ID === tmpVal.ID ? 'active' : '']"
+                            @click="() => selectRole(item)"
+                        >
                             <div class="u-user-info">
                                 <div class="u-avatar">
-                                    <img :src="getMountAvatar(item.mount || 0,item.body_type || 1)" />
+                                    <img :src="getMountAvatar(item.mount || 0, item.body_type || 1)" />
                                 </div>
                                 <div class="u-name">
-                                    {{item.name || '虚拟角色'}}
+                                    {{ item.name || "虚拟角色" }}
                                 </div>
                             </div>
                             <div class="u-area">
-                                {{item.server}}
+                                {{ item.server }}
                             </div>
                         </div>
                     </div>
 
                     <div class="m-op">
-                        <button class="u-reset" :class="{active: !isEmptyVal}"  @click="resetVal">
-                            重置
-                        </button>
-                        <button class="u-confirm" :class="{active: changeTmp}" @click="changeValue">
-                            确定
-                        </button>
+                        <button class="u-reset" :class="{ active: !isEmptyVal }" @click="resetVal">重置</button>
+                        <button class="u-confirm" :class="{ active: changeTmp }" @click="changeValue">确定</button>
                     </div>
                 </div>
             </template>
@@ -47,8 +47,6 @@
 </template>
 
 <script>
-
-
 import { cloneDeep, isEmpty, pick } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
@@ -57,22 +55,22 @@ import { getMountAvatar } from "@/utils/common";
 
 export default {
     name: "UserSelectDrawer",
-    components: { },
+    components: {},
     emits: ["update:visible"],
     props: {
         visible: {
             type: Boolean,
-            default: false
+            default: false,
         },
-        currentRole:{
-            default: () => ({})
+        currentRole: {
+            default: () => ({}),
         },
         customClass: {
             type: String,
-            default: ""
+            default: "",
         },
     },
-    data(){
+    data() {
         return {
             tmpVal: null,
 
@@ -84,16 +82,16 @@ export default {
                 ...User.getInfo(),
                 jx3id: 0,
                 ID: ~~User.getInfo().uid,
-                server: "虚拟角色"
+                server: "虚拟角色",
             },
-        }
+        };
     },
-    watch:{
+    watch: {
         currentRole: {
             handler(newVal) {
                 this.tmpVal = cloneDeep(newVal);
             },
-            immediate: true
+            immediate: true,
         },
     },
     computed: {
@@ -103,9 +101,9 @@ export default {
             },
             set(val) {
                 this.$emit("update:visible", val);
-            }
+            },
         },
-        list(){
+        list() {
             if (this.roleList.length > 0) {
                 return [
                     ...this.roleList.map((role) => {
@@ -114,16 +112,16 @@ export default {
                             avatar: showSchoolIcon(role.mount),
                         };
                     }),
-                    this.virtualRole
+                    this.virtualRole,
                 ];
             } else {
                 return [this.virtualRole];
             }
         },
-        changeTmp(){
-           return this.tmpVal !== this.currentRole;
+        changeTmp() {
+            return this.tmpVal !== this.currentRole;
         },
-        isEmptyVal(){
+        isEmptyVal() {
             return this.tmpVal === null;
         },
     },
@@ -135,17 +133,17 @@ export default {
         onClose() {
             this.show = false;
         },
-        resetVal(){
-            if (this.roleList){
+        resetVal() {
+            if (this.roleList) {
                 this.tmpVal = this.roleList[0];
-            }else{
+            } else {
                 this.tmpVal = this.virtualRole;
             }
         },
-        changeValue(){
-            this.$emit('change',this.tmpVal)
+        changeValue() {
+            this.$emit("change", this.tmpVal);
         },
-        selectRole(val){
+        selectRole(val) {
             this.tmpVal = cloneDeep(val);
         },
         showSchoolIcon,
@@ -154,39 +152,44 @@ export default {
             getUserRoles().then((res) => {
                 this.roleList = res.data?.data?.list || [];
                 console.log(this.roleList);
-                if (isEmpty(this.currentRole)){
-                    if (this.roleList){
+                if (isEmpty(this.currentRole)) {
+                    if (this.roleList) {
                         this.$emit("change", this.roleList[0]);
-                    }else{
+                    } else {
                         this.$emit("change", this.virtualRole);
                     }
                 }
             });
         },
     },
-}
+};
 </script>
 
 <style lang="less">
-
-.user-select-drawer{
+.user-select-drawer {
     border-radius: 20px 20px 0px 0px;
     overflow: hidden;
     background: transparent;
-    min-height: 500px;
 
+    .el-drawer__body {
+        padding: 0;
+        overflow: hidden;
+        background: #24292e;
+    }
 }
 
 .m-user-select {
     display: flex;
     flex-direction: column;
-    background-color: #24292E;
+    background-color: #24292e;
     padding: 20px;
-    min-height: 500px;
+    height: 100%;
+    box-sizing: border-box;
+    min-height: 0;
     position: relative;
     gap: 12px;
-    .m-user-select__title{
-        color: rgba(255, 255, 255, 0.60);
+    .m-user-select__title {
+        color: rgba(255, 255, 255, 0.6);
 
         font-size: 16px;
         font-style: normal;
@@ -194,17 +197,17 @@ export default {
         line-height: 24px; /* 150% */
     }
 
-    .m-user-list{
+    .m-user-list {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        flex: 1;
+        min-height: 0;
         gap: 12px;
-        overflow: scroll;
-        min-height: 340px;
-        max-height: 340px;
+        overflow: auto;
+        margin-bottom: 86px;
 
-
-        .m-user-item{
+        .m-user-item {
             display: flex;
             min-height: 80px;
             padding: 0 24px 0 12px;
@@ -212,13 +215,15 @@ export default {
             gap: 12px;
             width: 100%;
             box-sizing: border-box;
-            .u-user-info{
+            color: white;
+            
+            .u-user-info {
                 display: flex;
                 gap: 12px;
                 align-items: center;
-                flex:1;
+                flex: 1;
 
-                .u-avatar{
+                .u-avatar {
                     width: 48px;
                     height: 48px;
                     border-radius: 50%;
@@ -226,14 +231,14 @@ export default {
                     flex-shrink: 0;
                 }
 
-                .u-name{
+                .u-name {
                     flex: 1;
                 }
             }
 
-            .u-area{
+            .u-area {
                 display: flex;
-                align-items:  center;
+                align-items: center;
                 /* 12 Regular */
                 font-size: 12px;
                 font-style: normal;
@@ -244,20 +249,19 @@ export default {
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.05);
 
-            &.active{
-                border: 4px solid #FEDAA3;
+            &.active {
+                border: 4px solid #fedaa3;
                 padding: 0 20px 0 8px;
 
-                .u-user-info{
-                    color: #FEDAA3;
+                .u-user-info {
+                    color: #fedaa3;
                 }
 
-                .u-area{
-                    color: #FEDAA3;
+                .u-area {
+                    color: #fedaa3;
                 }
             }
         }
-
     }
 
     .m-op {
@@ -268,10 +272,10 @@ export default {
         display: flex;
         padding: 20px 12px 30px;
         gap: 20px;
-        background-color: #24292E;
+        background-color: #24292e;
 
         button {
-            color:  rgba(28, 28, 28, 0.40);
+            color: rgba(28, 28, 28, 0.4);
 
             /* 16 Bold */
             font-size: 16px;
@@ -287,16 +291,16 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                color: rgba(255, 255, 255, 0.40);
+                color: rgba(255, 255, 255, 0.4);
                 background: rgba(255, 255, 255, 0.05);
 
-                &.active{
+                &.active {
                     color: rgba(255, 255, 255, 1);
                 }
             }
 
             &.u-confirm {
-                color: rgba(255, 255, 255, 0.40);
+                color: rgba(255, 255, 255, 0.4);
 
                 /* 16 Bold */
                 font-size: 16px;
@@ -308,14 +312,12 @@ export default {
                 border-radius: var(--12, 12px);
                 background: rgba(255, 255, 255, 0.05);
 
-                &.active{
+                &.active {
                     color: #000;
-                    background: #FEDAA3;
+                    background: #fedaa3;
                 }
             }
         }
     }
-
-
 }
 </style>
