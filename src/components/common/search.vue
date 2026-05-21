@@ -11,7 +11,7 @@
                 :model-value="keyword"
                 @update:modelValue="updateKeyword"
                 @keydown.enter="searchHandle"
-                :placeholder="placeholder"
+                :placeholder="displayPlaceholder"
                 clearable
             >
                 <template #prepend>
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { debounce } from "lodash";
+
 export default {
     props: {
         name: {
@@ -50,6 +52,24 @@ export default {
             keyword: "",
             syncingFromRoute: false,
         };
+    },
+    computed: {
+        isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+        },
+        displayPlaceholder() {
+            return this.isMobile ? "输入关键词进行搜索" : this.placeholder;
+        },
+    },
+    created() {
+        this.debouncedSearch = debounce((keyword) => {
+            this.$emit("search", keyword);
+        }, 500);
+    },
+    beforeUnmount() {
+        if (this.debouncedSearch) {
+            this.debouncedSearch.cancel();
+        }
     },
     watch: {
         "$route.fullPath": {
@@ -74,6 +94,7 @@ export default {
             }
         },
         searchHandle() {
+            if (this.debouncedSearch) this.debouncedSearch.cancel();
             const keyword = this.keyword;
             this.$emit("search", keyword);
         },
@@ -81,7 +102,10 @@ export default {
             const oldVal = this.keyword;
             this.keyword = val || "";
             if (this.syncingFromRoute) return;
-            if (oldVal && !this.keyword) {
+            
+            if (this.isMobile) {
+                this.debouncedSearch(this.keyword);
+            } else if (oldVal && !this.keyword) {
                 this.$emit("search", "");
             }
         },
