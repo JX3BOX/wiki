@@ -79,7 +79,7 @@ export default {
             });
         },
         loadItems: function (ids, limit) {
-            return get_items({ ids: ids.join(","), limit: limit });
+            return get_items({ ids: ids.join(","), per: limit });
         },
         loadHotItems: function () {
             // 获取热门物品

@@ -107,8 +107,11 @@ export default {
             },
             searchLoading: false,
             searchPage: 1,
+            searchPer: 10,
             searchTotal: 0,
             searchList: [],
+            searchLastIdKey: null,
+            searchHasNext: true,
         };
     },
     computed: {
@@ -121,7 +124,10 @@ export default {
         },
         searchHasMore() {
             if (!this.searchList.length) return;
-            return this.searchList.length < this.searchTotal;
+            return this.searchHasNext;
+        },
+        client() {
+            return this.$store.state.client;
         },
         currentMenu() {
             return this.menus.find((item) => item.AucGenre == this.search.aucGenre);
@@ -151,6 +157,8 @@ export default {
                     this.search = res;
                     this.searchList = [];
                     this.searchPage = 1;
+                    this.searchLastIdKey = null;
+                    this.searchHasNext = true;
                     this.searchLoading = false;
                     this.loadSearch();
                 })
@@ -186,18 +194,23 @@ export default {
             if (this.search.searchKey) params.keyword = this.search.searchKey;
             if (this.search.aucGenre) params.auc_genre = this.search.aucGenre;
             if (this.search.subAucGenre) params.auc_sub_type_id = this.search.subAucGenre;
+            if (this.searchLastIdKey) params.last_id_key = this.searchLastIdKey;
             this.searchLoading = true;
             get_items_search({
                 ...params,
-                page: this.searchPage++,
-                limit: 10,
+                page: this.searchPage,
+                per: this.searchPer,
                 client: this.client,
             })
                 .then((res) => {
                     const resp = res.data.data;
                     this.searchTotal = resp.total;
+                    const list = resp.data || [];
 
-                    this.searchList = [...this.searchList, ...resp.data];
+                    this.searchList = [...this.searchList, ...list];
+                    this.searchLastIdKey = list[list.length - 1]?.idKey || this.searchLastIdKey;
+                    this.searchHasNext = resp.total > this.searchPer;
+                    this.searchPage += 1;
                 })
                 .finally(() => {
                     this.searchLoading = false;
@@ -209,6 +222,7 @@ export default {
             } else if (
                 this.isSearchMode &&
                 this.searchHasMore &&
+                !this.searchLoading &&
                 Object.keys(this.search).some((x) => Boolean(this.search[x]))
             ) {
                 return this.loadSearch();

@@ -51,8 +51,11 @@ export default {
             plan: null,
             items: [],
             page: 1,
+            per: 10,
             total: 0,
             loading: false,
+            lastIdKey: null,
+            hasNext: true,
 
             search: "",
         };
@@ -69,6 +72,8 @@ export default {
                     this.page = 1;
                     this.items = [];
                     this.total = 0;
+                    this.lastIdKey = null;
+                    this.hasNext = true;
                     this.searchItems();
                 }
             },
@@ -85,14 +90,14 @@ export default {
         searchItems() {
             if (!this.search) return;
             if (this.loading) return;
-            if (this.total != 0 && this.items.length >= this.total) return;
+            if (!this.hasNext) return;
             const params = {
-                per: 10,
-                page: this.page++,
+                per: this.per,
+                page: this.page,
                 client: this.client,
             };
-            console.log(params);
-            if (this.search.match(/^\d+_\d+^/)) {
+            if (this.lastIdKey) params.last_id_key = this.lastIdKey;
+            if (this.search.match(/^\d+_\d+$/)) {
                 params.ids = this.search;
             } else {
                 params.keyword = this.search;
@@ -102,7 +107,11 @@ export default {
                 .then((res) => {
                     const resp_data = res.data.data;
                     this.total = resp_data.total;
-                    this.items = [...this.items, ...resp_data.data];
+                    const list = resp_data.data || [];
+                    this.items = [...this.items, ...list];
+                    this.lastIdKey = list[list.length - 1]?.idKey || this.lastIdKey;
+                    this.hasNext = resp_data.total > this.per;
+                    this.page += 1;
                 })
                 .finally(() => {
                     this.loading = false;
