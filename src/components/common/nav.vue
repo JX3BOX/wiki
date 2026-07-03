@@ -25,6 +25,7 @@ export default {
     width: 100%;
     gap: 10px;
     @w: 30px;
+    padding: 0 10px 10px 0;
     .c-wiki-menu {
         position: fixed;
         top: 0;
