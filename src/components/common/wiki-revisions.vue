@@ -80,7 +80,10 @@ export default {
     },
     computed: {
         client: function () {
-            return this.$route?.query?.L === "classic_yq" ? "origin" : "std";
+            return this.$route?.query?.L === "classic_yq" || this.globalClient === "origin" ? "origin" : "std";
+        },
+        globalClient: function () {
+            return this.$store.state.client;
         },
         baseUrl: function () {
             return this.client == "origin" ? __OriginRoot : __Root;
