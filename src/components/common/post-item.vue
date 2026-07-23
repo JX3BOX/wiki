@@ -29,7 +29,7 @@
                     <a
                         :href="post.user_id ? author_url(post.user_id) : null"
                         class="u-name"
-                        v-text="post.user_nickname"
+                        v-text="nickname"
                         target="_blank"
                     ></a>
                 </div>
@@ -65,6 +65,9 @@ export default {
         client() {
             return this.$store.state.client;
         },
+        nickname() {
+            return this.post?.user?.display_name || this.post?.user_nickname || "匿名";
+        }
     },
     data() {
         return {
