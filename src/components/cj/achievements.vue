@@ -1,5 +1,5 @@
 <template>
-    <ul class="m-achievement-singles">
+    <ul class="m-achievement-list">
         <AchievementSingle
             v-for="(achievement, key) in achievements"
             :key="key"
