@@ -49,7 +49,9 @@
                                 :clone="cloneSearchItem"
                             >
                                 <template #item="{ element }">
-                                    <jx3-item-simple class="u-change" :item="element" />
+                                    <div class="u-change">
+                                        <jx3-item-simple :item="element" />
+                                    </div>
                                 </template>
                             </draggable>
                         </template>
