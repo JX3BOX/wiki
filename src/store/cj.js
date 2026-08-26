@@ -13,6 +13,7 @@ const store = {
         achievements: [],
         generalTotal: 0,
         armorTotal: 0,
+        achievementMetadata: {},
         onlyUncompleted: false,
         achievementsVirtual: [],
         viewAchievementsName: null,

@@ -9,7 +9,11 @@
     </div>
 </template>
 <script>
-import { getAchievementsTotal } from "@/service/achievement";
+import { getAchievementPointsV2 } from "@/service/achievement";
+import {
+    normalizeCountableAchievementMetadata,
+    summarizeVisibleAchievements,
+} from "@/utils/achievement-statistics";
 
 export default {
     name: "AchievementCount",
@@ -26,10 +30,11 @@ export default {
         };
     },
     created() {
-        // 获取成就统计信息
-        getAchievementsTotal().then((data) => {
-            data = data.data;
-            this.count = data.data.count;
+        // 统一从 v2 点数元数据派生数量，零资历成就不进入统计。
+        getAchievementPointsV2().then((response) => {
+            const metadata = normalizeCountableAchievementMetadata(response.data?.data?.points || {});
+            this.count = summarizeVisibleAchievements(metadata);
+            this.$store.commit("SET_STATE", { key: "achievementMetadata", value: metadata });
             this.$store.commit("SET_STATE", { key: "generalTotal", value: ~~this.count["general"] });
             this.$store.commit("SET_STATE", { key: "armorTotal", value: ~~this.count["armor"] });
         });

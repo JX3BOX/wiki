@@ -48,18 +48,15 @@
                 <template #default="{ data }">
                     <router-link class="el-tree-node__label" :to="menu_url(data)">
                         <span class="u-name" v-text="data.name"></span>
-                        <em v-if="data.achievements_count" class="u-count">
+                        <em v-if="getMenuAchievementCount(data)" class="u-count">
                             (<span v-if="currentRole">{{
                                 `${
                                     uncompleted
-                                        ? data.achievements_count +
-                                          ~~data.own_achievements_count -
-                                          getMenuCompleted(data)
+                                        ? Math.max(0, getMenuAchievementCount(data) - getMenuCompleted(data))
                                         : getMenuCompleted(data)
                                 }/`
                             }}</span>
-                            <span>{{ `${data.achievements_count + ~~data.own_achievements_count}` }}</span
-                            >)
+                            <span>{{ getMenuAchievementCount(data) }}</span>)
                         </em>
                     </router-link>
                 </template>
@@ -74,7 +71,8 @@ import RoleSelect from "@/components/common/role-select.vue";
 import bus from "@/store/bus";
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
-import { flattenDeep, cloneDeep, omit } from "lodash";
+import { omit } from "lodash";
+import { collectMenuAchievementIds } from "@/utils/achievement-statistics";
 export default {
     name: "Sidebar",
     props: ["sidebar"],
@@ -127,6 +125,9 @@ export default {
         achievementsVirtual() {
             return this.$store.state.achievementsVirtual;
         },
+        achievementMetadata() {
+            return this.$store.state.achievementMetadata;
+        },
         selectedGeneral: {
             get() {
                 return this.sidebar.general;
@@ -152,7 +153,7 @@ export default {
         },
         total({ menus }) {
             const numList = menus.map((data) => {
-                return data.achievements_count + data.own_achievements_count;
+                return this.getMenuAchievementCount(data);
             });
             return numList.reduce((acc, cur) => {
                 return acc + cur;
@@ -224,44 +225,21 @@ export default {
         },
     },
     methods: {
-        getLastAchievement(achievements = []) {
-            // 娓告垙瑙掕壊
-            // 姣斿浼犲姛锛屽彧鍙栨渶鍚庝竴涓紶鍔?00娆＄殑ID浣滀负鏄惁瀹屾垚鐨勪緷鎹?
-            if (!Array.isArray(achievements)) return [];
-            return achievements.map((achievement) => {
-                if (Array.isArray(achievement)) {
-                    // 姣斿浼犲姛锛屽彧鍙栨渶鍚庝竴涓紶鍔?00娆＄殑ID浣滀负鏄惁瀹屾垚鐨勪緷鎹?
-                    const lastOne = achievement?.[achievement.length - 1];
-                    return lastOne;
-                } else {
-                    return achievement;
-                }
+        getMenuAchievementIds(data) {
+            return collectMenuAchievementIds(data).filter((id) => {
+                const item = this.achievementMetadata[id];
+                return item?.visible && item.general === this.sidebar.general;
             });
         },
+        getMenuAchievementCount(data) {
+            return this.getMenuAchievementIds(data).length;
+        },
         getMenuCompleted(data, achievementsVirtual, achievements) {
-            const newData = cloneDeep(data);
-            const newDataAchievements = this.isVirtual
-                ? flattenDeep(newData.achievements)
-                : this.getLastAchievement(newData.achievements);
-            newData.all_achievements = newData.children
-                ? Array.from(
-                      new Set(
-                          newDataAchievements.concat(
-                              flattenDeep(
-                                  newData.children.map((item) => {
-                                      return this.isVirtual
-                                          ? item.achievements
-                                          : this.getLastAchievement(item.achievements);
-                                  })
-                              )
-                          )
-                      )
-                  )
-                : newDataAchievements;
             const list = this.isVirtual
                 ? achievementsVirtual || this.achievementsVirtual
                 : achievements || this.achievements;
-            return newData.all_achievements.filter((item) => list.includes(item + ""))?.length;
+            const completedIds = new Set((list || []).map(String));
+            return this.getMenuAchievementIds(data).filter((id) => completedIds.has(id)).length;
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -338,7 +316,7 @@ export default {
             //     return;
             // }
 
-            getMenus({ general }).then(
+            getMenus({ general, client: this.$store.state.client }).then(
                 (data) => {
                     data = data.data;
                     if (data.code === 200) {
