@@ -15,7 +15,6 @@ export default {
     name: "AchievementCount",
     data() {
         return {
-            generalNum: 137, // 和游戏差异，固定加上
             count: {},
             countDict: {
                 general: "常规成就数",
@@ -31,7 +30,6 @@ export default {
         getAchievementsTotal().then((data) => {
             data = data.data;
             this.count = data.data.count;
-            this.count.general = ~~this.count?.general + this.generalNum;
             this.$store.commit("SET_STATE", { key: "generalTotal", value: ~~this.count["general"] });
             this.$store.commit("SET_STATE", { key: "armorTotal", value: ~~this.count["armor"] });
         });
