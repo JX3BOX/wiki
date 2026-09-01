@@ -90,4 +90,32 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-guide {
+        flex-direction: column;
+
+        .u-guide {
+            width: 100%;
+            border-right: 0;
+            border-bottom: 1px solid #eee;
+
+            &:last-child {
+                border-bottom: 0;
+            }
+
+            .u-list {
+                gap: 6px 10px;
+                padding: 12px;
+
+                .u-label {
+                    min-width: 0;
+                    margin: 0;
+                    flex: 1 1 calc(50% - 5px);
+                    overflow-wrap: anywhere;
+                }
+            }
+        }
+    }
+}
 </style>

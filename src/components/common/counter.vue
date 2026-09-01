@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="{ name: 'waiting' }">
+    <router-link class="u-counter-link" :to="{ name: 'waiting' }">
         <LegacyIcon class="el-icon-edit-outline" />
         <span>{{ $t("ui.common.wiki.waitingGuide", { type: name }) }}</span>
         <span v-if="showCounter" class="u-waiting" :style="waitingColorStyle()">（{{ solveRate.toFixed(2) }}%）</span>

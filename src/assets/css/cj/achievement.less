@@ -465,8 +465,30 @@
     }
 }
 @media screen and (max-width: @phone) {
-    .m-achievement-single .u-header .u-other {
-        .ps;
+    .m-achievement-single {
+        .u-header {
+            .u-title {
+                overflow-wrap: anywhere;
+            }
+
+            .u-other {
+                .ps;
+                width: 100%;
+                margin-top: 8px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+        }
+
+        .u-body {
+            .u-left {
+                margin-right: 58px;
+            }
+
+            .u-right {
+                right: 0;
+            }
+        }
     }
 }
 

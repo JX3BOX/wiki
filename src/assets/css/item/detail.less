@@ -600,6 +600,36 @@
 
 @media screen and (max-width: @phone) {
     #m-item-view {
+        .m-item-header {
+            height: auto;
+            min-height: 75px;
+            gap: 8px;
+            flex-wrap: wrap;
+
+            .u-top,
+            .u-bottom {
+                min-width: 0;
+            }
+        }
+
+        .m-item-content {
+            .u-line {
+                flex-wrap: wrap;
+            }
+
+            .u-level {
+                margin-right: 0;
+            }
+
+            .m-spec-wrapper {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        .m-item-required {
+            flex-wrap: wrap;
+        }
+
         .m-tabs {
             .m-price-server {
                 position: static;
@@ -617,12 +647,24 @@
                 .none;
             }
             .el-tabs__content {
-                padding-top: 12px;
+                padding: 12px;
             }
         }
         .m-name .m-buttons {
             .none;
         }
+    }
+
+    .m-item-prices {
+        overflow-x: auto;
+
+        table {
+            min-width: 460px;
+        }
+    }
+
+    .m-item-price-logs.is-echarts .m-today .u-label {
+        font-size: 20px;
     }
 }
 

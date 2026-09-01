@@ -572,3 +572,47 @@
         background-color: #fff;
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-quest-view {
+        padding: 0;
+
+        .w-quest {
+            .u-offer .u-offer-list,
+            .u-reward .u-reward-list {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                padding-left: 0;
+            }
+
+            .u-target .u-target-sub {
+                padding-left: 12px;
+            }
+        }
+
+        .m-quest-header {
+            height: auto;
+            align-items: flex-start;
+            flex-wrap: wrap;
+
+            .m-title {
+                min-width: 0;
+                flex: 1;
+                flex-wrap: wrap;
+            }
+
+            .u-title {
+                min-width: 0;
+                flex-wrap: wrap;
+                font-size: 18px;
+            }
+        }
+
+        .m-quest-target__reward {
+            grid-template-columns: minmax(0, 1fr);
+
+            .reward-item {
+                min-width: 100%;
+            }
+        }
+    }
+}

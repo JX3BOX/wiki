@@ -215,3 +215,69 @@
         padding: 0;
     }
 }
+
+@media screen and (max-width: @ipad) {
+    .v-plan-view {
+        .m-plan-head,
+        .m-panel-actions {
+            flex-wrap: wrap;
+        }
+
+        .m-plan-equips {
+            .u-content {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .u-list {
+                width: calc(50% - 5px);
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .v-plan-view {
+        .m-plan-head {
+            align-items: flex-start;
+            flex-direction: column;
+
+            .u-title {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .u-time {
+                margin-left: 0;
+            }
+        }
+
+        .m-border {
+            padding: 0 12px;
+        }
+
+        .m-plan-item .u-content {
+            padding: 12px;
+
+            .u-item {
+                min-width: calc(50% - 6px);
+                margin: 0 6px 12px 0;
+            }
+        }
+
+        .m-plan-equips {
+            padding-top: 12px;
+
+            .u-content {
+                display: block;
+                padding: 12px;
+            }
+
+            .u-list {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    }
+}

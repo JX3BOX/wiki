@@ -21,7 +21,11 @@
             <template #op-append>
                 <div class="m-wiki-admin-drop" v-if="showAdmin">
                     <el-dropdown trigger="click" @command="handleCommand">
-                        <el-button type="primary" class="c-admin-button c-admin-drop__button"
+                        <el-button
+                            type="primary"
+                            class="c-admin-button c-admin-drop__button"
+                            :title="$t('ui.common.actions.admin')"
+                            :aria-label="$t('ui.common.actions.admin')"
                             ><LegacyIcon class="el-icon-setting u-left-icon" />
                             <span class="u-label">{{ $t("ui.common.actions.admin") }}</span>
                             <LegacyIcon class="el-icon-arrow-down u-right-icon" />
@@ -192,7 +196,6 @@ export default {
 }
 .c-breadcrumb {
     .m-wiki-admin-drop {
-
         .c-admin-drop__button {
             display: inline-flex;
             align-items: center;
@@ -210,6 +213,21 @@ export default {
             .u-right-icon {
                 margin-left: 4px;
             }
+        }
+    }
+}
+@media screen and (max-width: @phone) {
+    .c-breadcrumb .m-wiki-admin-drop .c-admin-drop__button {
+        padding-left: 12px;
+        padding-right: 12px;
+
+        .u-label,
+        .u-right-icon {
+            display: none;
+        }
+
+        .u-left-icon {
+            margin-right: 0;
         }
     }
 }

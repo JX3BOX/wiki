@@ -132,3 +132,38 @@
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-home-view .m-qlinks {
+        gap: 8px;
+
+        .u-qlink a {
+            height: 48px;
+            min-height: 48px;
+            padding: 6px 8px;
+            gap: 4px;
+            font-size: 13px;
+            line-height: 18px;
+
+            span {
+                min-width: 0;
+                line-height: 18px;
+                white-space: nowrap;
+            }
+        }
+
+        .u-counter-link {
+            flex-direction: column;
+            gap: 0;
+
+            i {
+                display: none;
+            }
+
+            .u-waiting {
+                font-size: 12px;
+                line-height: 16px;
+            }
+        }
+    }
+}

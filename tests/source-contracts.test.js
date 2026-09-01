@@ -30,6 +30,28 @@ test("Element Plus Popover 使用 visible 参数同步可见性", async () => {
     assert.equal(sources[1].match(/v-model:visible=/g)?.length, 1);
 });
 
+test("任务地图在 Tab 显示后使用当前 Element Plus 字段重算尺寸", async () => {
+    const source = await readSource("src/views/quest/single.vue");
+
+    assert.match(source, /tab\.paneName === "map"/);
+    assert.match(source, /this\.\$refs\.map && this\.\$refs\.map\.updateSize\(\)/);
+    assert.doesNotMatch(source, /tab\.name\s*==+\s*"map"/);
+});
+
+test("任务地图坐标样式挂载在真实定位容器上", async () => {
+    const source = await readSource("src/components/quest/single/quest-map.vue");
+
+    assert.match(source, /<div\s+v-if="filter\[point\.Types\]"\s+class="u-map-point__warpper"/);
+    assert.match(source, /:style="pointStyle\(point\.Coordinates, mapId\)"/);
+    assert.doesNotMatch(source, /<el-popover\s+[^>]*class="u-map-point__warpper"/);
+});
+
+test("任务地图高度随响应式轮播自然撑开", async () => {
+    const source = await readSource("src/assets/css/quest/single/quest-map.less");
+
+    assert.doesNotMatch(source, /\.m-quest-map\s*\{[^}]*min-height:\s*768px/s);
+});
+
 test("全局事件监听在组件卸载时使用同一处理函数注销", async () => {
     const contracts = [
         ["src/views/cj/detail.vue", "openWikiPush", "handleWikiPush"],
@@ -69,7 +91,8 @@ test("PC 详情页复用可取消的文章图片就绪追踪", async () => {
 
 test("Element Plus 图标按实际使用集合注册", async () => {
     const bootstrap = await readSource("src/utils/bootstrap.js");
-    const expectedIcons = [
+    const legacyIcon = await readSource("src/components/common/legacy-icon.vue");
+    const directlyUsedIcons = [
         "ArrowLeft",
         "CaretRight",
         "Check",
@@ -82,10 +105,14 @@ test("Element Plus 图标按实际使用集合注册", async () => {
         "Setting",
         "Upload",
     ];
+    const legacyMappedIcons = [...legacyIcon.matchAll(/"el-icon-[^"]+":\s*"([A-Za-z0-9]+)"/g)].map(
+        (match) => match[1]
+    );
+    const expectedIcons = new Set([...directlyUsedIcons, ...legacyMappedIcons]);
 
     assert.doesNotMatch(bootstrap, /import \* as ElementPlusIconsVue/);
     for (const icon of expectedIcons) {
-        assert.match(bootstrap, new RegExp(`\\b${icon},`));
+        assert.match(bootstrap, new RegExp(`\\b${icon},`), `${icon} 未在 bootstrap 中注册`);
     }
 });
 

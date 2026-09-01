@@ -1,4 +1,4 @@
-@media screen and (max-width: @ipad-y) {
+@media screen and (max-width: @ipad) {
     .c-main {
         padding: 0 20px;
     }
@@ -47,3 +47,206 @@
 @import "./common/single.less";
 @import "./common/wiki.less";
 @import "./miniprogram/app.less";
+
+// Pad 及以下的通用兜底。只约束布局与内容溢出，不改变组件交互和数据行为。
+@media screen and (max-width: @ipad) {
+    .c-main,
+    .m-main {
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .c-article,
+    .c-article-box,
+    .c-article-tinymce,
+    #wikiArticle {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+
+        img,
+        video,
+        iframe,
+        canvas,
+        svg {
+            max-width: 100% !important;
+            height: auto;
+        }
+
+        pre,
+        table {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            display: block;
+        }
+    }
+
+    .c-wiki-revisions .m-revisions-panel {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .c-main {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .m-main {
+        width: 100%;
+    }
+
+    // 顶部统计仍可横向滑动，但不占用宝贵的手机纵向空间显示滚动条。
+    .m-achievement-count,
+    .m-breadcrumb {
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar,
+        .u-stat::-webkit-scrollbar {
+            display: none;
+        }
+
+        .u-stat {
+            scrollbar-width: none;
+        }
+    }
+
+    .m-search-bar,
+    .m-search-bar .m-search,
+    .m-search-bar .u-search-input,
+    .m-search-bar .el-input,
+    .m-search-bar .el-input-group {
+        min-width: 0;
+    }
+
+    .m-search-bar .m-search {
+        width: 100%;
+    }
+
+    .c-wiki-panel .m-panel-head {
+        min-width: 0;
+        gap: 8px;
+
+        .m-panel-title,
+        .m-panel-actions {
+            min-width: 0;
+        }
+    }
+
+    // 首页快捷入口改为紧凑双列，避免 320px 下出现大块无效留白。
+    .m-home-view .m-qlinks {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+
+        .u-qlink {
+            min-width: 0;
+            margin: 0;
+
+            a {
+                width: 100%;
+                min-height: 42px;
+                padding: 8px 10px;
+                justify-content: center;
+                text-align: center;
+                box-sizing: border-box;
+            }
+        }
+    }
+
+    // 每个轮播数据组包含三项；手机上纵向展开，保证后两项不会被固定高度裁掉。
+    .m-home-view .el-carousel__container {
+        height: 214px !important;
+    }
+
+    .m-home-view .m-carousel {
+        .el-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 8px;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .el-col {
+            width: 100%;
+            max-width: 100%;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+    }
+
+    // 保留上一页、页码和下一页；隐藏手机上非必要的总数与跳页输入。
+    .el-pagination {
+        display: flex !important;
+        width: 100%;
+        max-width: 100%;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        gap: 2px;
+        overflow: hidden;
+        box-sizing: border-box;
+
+        .el-pagination__total,
+        .el-pagination__jump {
+            display: none !important;
+        }
+
+        .btn-prev,
+        .btn-next,
+        .el-pager li {
+            min-width: 24px !important;
+            width: 24px;
+            height: 28px;
+            margin: 0 1px !important;
+            padding: 0 !important;
+            line-height: 28px;
+        }
+
+        .el-pager {
+            display: flex;
+            min-width: 0;
+            justify-content: center;
+        }
+    }
+
+    .el-message-box,
+    .el-dialog {
+        width: calc(100vw - 24px) !important;
+        max-width: 420px;
+    }
+
+    .el-message {
+        width: calc(100vw - 24px);
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .m-wiki-signature {
+        flex-wrap: wrap;
+        white-space: normal;
+        text-align: right;
+    }
+
+    .m-wiki-robot__bottom {
+        height: auto;
+
+        .m-wiki-bottom__top {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .m-notice {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .m-wiki-bottom__right {
+            justify-content: center;
+        }
+    }
+}

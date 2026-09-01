@@ -7,40 +7,44 @@
                     <div class="u-map-tool">
                         <p class="u-map-name">{{ mapName(mapId) }}</p>
                     </div>
-                    <template v-for="point in ps">
-                        <el-popover
+                    <template v-for="point in ps" :key="point.Types + JSON.stringify(point.Coordinates)">
+                        <div
                             v-if="filter[point.Types]"
-                            :key="point.Types + JSON.stringify(point.Coordinates)"
                             class="u-map-point__warpper"
                             :class="{
                                 'u-map-point__bigger': point.Types === 'Start' || point.Types === 'End',
                                 'u-map-point__start': point.Types === 'Start',
                             }"
-                            placement="top"
-                            trigger="hover"
                             :style="pointStyle(point.Coordinates, mapId)"
-                            popper-class="u-map-point__popover"
-                            :visible-arrow="false"
                         >
-                            <div class="u-popover-content">
-                                <p>{{ pointType(point.Types) }}</p>
-                                <p>{{ point.ObjectName }} ({{ objectType(point.ObjectType) }} {{ point.ObjectID }})</p>
-                                <p>{{ coordinates(point.Coordinates) }}</p>
-                            </div>
-                            <template #reference>
-                                <img
-                                    v-if="point.Types == 'Start'"
-                                    :class="pointClass(point)"
-                                    :src="pointIcon(point.Types, questType)"
-                                />
-                                <img
-                                    v-else-if="point.Types == 'End'"
-                                    :class="pointClass(point)"
-                                    :src="pointIcon(point.Types, questType)"
-                                />
-                                <span v-else :class="pointClass(point)"></span>
-                            </template>
-                        </el-popover>
+                            <el-popover
+                                placement="top"
+                                trigger="hover"
+                                popper-class="u-map-point__popover"
+                                :visible-arrow="false"
+                            >
+                                <div class="u-popover-content">
+                                    <p>{{ pointType(point.Types) }}</p>
+                                    <p>
+                                        {{ point.ObjectName }} ({{ objectType(point.ObjectType) }} {{ point.ObjectID }})
+                                    </p>
+                                    <p>{{ coordinates(point.Coordinates) }}</p>
+                                </div>
+                                <template #reference>
+                                    <img
+                                        v-if="point.Types == 'Start'"
+                                        :class="pointClass(point)"
+                                        :src="pointIcon(point.Types, questType)"
+                                    />
+                                    <img
+                                        v-else-if="point.Types == 'End'"
+                                        :class="pointClass(point)"
+                                        :src="pointIcon(point.Types, questType)"
+                                    />
+                                    <span v-else :class="pointClass(point)"></span>
+                                </template>
+                            </el-popover>
+                        </div>
                     </template>
                 </div>
             </el-carousel-item>

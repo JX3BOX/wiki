@@ -496,8 +496,8 @@ export default {
                     this.loading = false;
                 });
         },
-        handleTabClick(tab, event) {
-            if (tab.name == "map") {
+        handleTabClick(tab) {
+            if (tab.paneName === "map") {
                 clearTimeout(this.mapResizeTimer);
                 this.mapResizeTimer = setTimeout(() => {
                     this.$refs.map && this.$refs.map.updateSize();

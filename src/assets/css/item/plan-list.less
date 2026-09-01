@@ -76,3 +76,40 @@
         .none;
     }
 }
+
+@media screen and (max-width: @phone) {
+    .v-plan-list {
+        padding: 12px 0;
+
+        .m-plan-title {
+            margin-bottom: 14px;
+            font-size: 24px;
+        }
+
+        .m-plan-list {
+            padding: 20px 0;
+
+            .m-item {
+                padding: 10px 12px;
+
+                .u-content {
+                    min-width: 0;
+                    flex: 1;
+                }
+
+                .u-user {
+                    flex-wrap: wrap;
+                    gap: 4px 8px;
+
+                    .u-name {
+                        margin-right: 0;
+                    }
+
+                    .u-time {
+                        white-space: nowrap;
+                    }
+                }
+            }
+        }
+    }
+}

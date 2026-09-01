@@ -26,3 +26,100 @@
 
 @import "./miniprogram-light.less";
 @import "./miniprogram-dark.less";
+
+// 小程序/App 在窄至 320px 时收紧留白；Pad 上限制阅读列宽，避免单列内容横向拉得过长。
+@media screen and (min-width: (@phone + 1)) and (max-width: @ipad) {
+    .v-miniprogram {
+        .p-achievement .m-cj-list,
+        .p-achievement-detail .m-main-box,
+        .p-mobile-item > .m-page-container,
+        .p-mobile-plan-view > .m-page-container,
+        .p-mobile-quest > .m-page-container,
+        .p-mobile-quest-detail > .m-page-container,
+        .p-knowledge-mobile-index > .m-page-container,
+        .p-knowledge-mobile-detail > .m-page-container {
+            width: 100%;
+            max-width: 768px;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+        }
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .v-miniprogram {
+        .p-mobile-item > .m-page-container,
+        .p-mobile-plan-view > .m-page-container,
+        .p-mobile-quest > .m-page-container,
+        .p-knowledge-mobile-index > .m-page-container {
+            gap: 12px;
+            padding: 12px;
+        }
+
+        .p-achievement .m-cj-list {
+            gap: 12px;
+            padding: 12px 12px 100px;
+        }
+
+        .p-achievement-detail .m-main-box {
+            gap: 12px;
+            padding: 12px 12px 0;
+        }
+
+        .p-knowledge-mobile-detail {
+            .u-main-title {
+                padding: 12px 12px 0;
+                font-size: 20px;
+                line-height: 28px;
+            }
+
+            .m-content-card {
+                padding: 12px;
+            }
+        }
+
+        .m-big-search {
+            gap: 8px !important;
+            padding: 12px !important;
+
+            .u-search-icon {
+                width: 88px !important;
+                height: 88px !important;
+                flex: none;
+            }
+
+            .u-title {
+                font-size: 20px !important;
+                line-height: 26px !important;
+            }
+
+            .u-tip {
+                font-size: 13px !important;
+                line-height: 20px !important;
+            }
+        }
+
+        .m-to-top {
+            right: 12px !important;
+        }
+
+        .u-suspend-common .m-base .m-more-action {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+
+        .p-mobile-item-detail .m-page-container {
+            .c-item {
+                width: calc(100% - 40px);
+                max-width: 331px;
+                box-sizing: border-box;
+            }
+
+            .c-item-wrapper {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    }
+}

@@ -49,3 +49,31 @@
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-knowledge-item {
+        padding: 14px 4px;
+
+        .u-name {
+            display: flex;
+            min-width: 0;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .u-title,
+        .u-remark,
+        .u-tags {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .u-updated {
+            position: static;
+            display: block;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+    }
+}
