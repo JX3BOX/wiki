@@ -1,8 +1,10 @@
 <template>
     <div class="m-knowledge-panel">
         <div class="m-title">
-            <span class="u-text"><LegacyIcon class="el-icon-orange" /><span> 玩法指南</span></span>
-            <router-link class="u-wiki-more" to="/type/game">查看更多 &raquo;</router-link>
+            <span class="u-text"
+                ><LegacyIcon class="el-icon-orange" /><span> {{ $t("ui.knowledge.guide") }}</span></span
+            >
+            <router-link class="u-wiki-more" to="/type/game">{{ $t("ui.common.actions.more") }}</router-link>
         </div>
         <div class="m-guide m-panel">
             <div v-for="(item, index) in data" :key="index" class="u-guide">

@@ -1,7 +1,7 @@
 <template>
     <!-- 入口页 -->
     <DefaultLayout
-        name="成就百科"
+        :name="$t('ui.apps.achievement')"
         slug="cj"
         root="/cj"
         :publishEnable="true"
@@ -16,7 +16,7 @@
                 <Sidebar :sidebar="$store.state.sidebar" />
             </CommonNav>
         </template>
-        <Search :placeholder="placeholder" @search="search($event)">
+        <Search :placeholder="$t('ui.achievement.searchPlaceholder')" @search="search($event)">
             <div class="cascader-wrapper">
                 <el-cascader
                     v-model="regionId"
@@ -25,7 +25,7 @@
                     :options="regions"
                     filterable
                     clearable
-                    placeholder="地图"
+                    :placeholder="$t('ui.achievement.mapPlaceholder')"
                     size="large"
                 ></el-cascader>
             </div>
@@ -55,7 +55,6 @@ export default {
     name: "App",
     data() {
         return {
-            placeholder: "输入成就名称/成就描述/称号/奖励物品「回车」进行搜索",
             regions: [],
             regionId: null,
             syncingFromRoute: false,
@@ -157,13 +156,16 @@ export default {
                 );
             });
         },
+        handleAppendToLeapSchema(param) {
+            this.$refs["schema-select"]?.open(param);
+        },
     },
     mounted() {
         this.loadMapList();
-        bus.on("append-to-leap-schema", (param) => {
-            console.log(param);
-            this.$refs["schema-select"].open(param);
-        });
+        bus.on("append-to-leap-schema", this.handleAppendToLeapSchema);
+    },
+    beforeUnmount() {
+        bus.off("append-to-leap-schema", this.handleAppendToLeapSchema);
     },
 };
 </script>

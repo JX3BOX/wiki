@@ -1,18 +1,18 @@
 <template>
-    <div class="m-search-view m-search-view--cj" >
-        <span class="m-list-empty" v-if="isEmpty">👻 暂无记录</span>
+    <div class="m-search-view m-search-view--cj" v-loading="loading">
+        <AsyncState :loading="loading" :error="loadError" :empty="isEmpty" @retry="loadAchievements" />
         <div v-if="isLogin && isVirtual && !isEmpty" class="m-normal-op">
-            <el-checkbox v-model="isAll" border @change="switchAll" size="small">全选</el-checkbox>
+            <el-checkbox v-model="isAll" border @change="switchAll" size="small">{{ $t("ui.achievement.all") }}</el-checkbox>
             <template v-if="selectedAchievements.length">
-                <el-button plain icon="Check" @click.stop="finishVirtual" size="small">
-                    批量设为完成({{ selectedAchievements.length }})
+                <el-button plain icon="Check" @click.stop="finishVirtual" size="small" :loading="saving">
+                    {{ $t("ui.achievement.batchComplete", { count: selectedAchievements.length }) }}
                 </el-button>
-                <el-button type="info" icon="Close" @click.stop="cancelVirtual" size="small">
-                    批量取消完成({{ selectedAchievements.length }})
+                <el-button type="info" icon="Close" @click.stop="cancelVirtual" size="small" :loading="saving">
+                    {{ $t("ui.achievement.batchIncomplete", { count: selectedAchievements.length }) }}
                 </el-button>
             </template>
         </div>
-        <Achievements :achievements="achievements" />
+        <Achievements v-if="!loadError" :achievements="achievements" />
         <el-pagination
             background
             :total="achievements_count"
@@ -20,6 +20,7 @@
             layout="prev, pager, next, jumper"
             :current-page="page"
             :page-size="length"
+            v-if="!loadError"
             @current-change="page_change_handle"
         >
             <template #prev-icon>&laquo;</template>
@@ -33,10 +34,13 @@ import Achievements from "@/components/cj/achievements.vue";
 import { searchAchievements, setVirtualRoleAchievements, cancelVirtualRoleAchievements } from "@/service/achievement";
 
 import User from "@jx3box/jx3box-common/js/user";
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
 export default {
     name: "SearchPage",
     components: {
         Achievements,
+        AsyncState,
     },
     props: [],
     data() {
@@ -48,6 +52,11 @@ export default {
             isAll: false,
             keyword: "",
             scene: "",
+            loading: false,
+            loadError: false,
+            saving: false,
+            routeSyncReady: false,
+            requestGuard: createLatestRequestGuard(),
         };
     },
     computed: {
@@ -74,27 +83,21 @@ export default {
     watch: {
         $route: {
             immediate: true,
-            async handler() {
+            handler() {
                 this.isAll = false;
                 const scene = this.$route.query?.scene || "";
                 const keyword = this.$route.params?.keyword || "";
-                if (scene !== this.scene || keyword !== this.keyword) {
-                    this.page_change_handle(1);
-                } else {
-                    this.page = parseInt(this.$route.query.page) || 1;
-                }
+                const page = parseInt(this.$route.query.page) || 1;
+                const queryChanged = this.routeSyncReady && (scene !== this.scene || keyword !== this.keyword);
                 this.scene = scene;
                 this.keyword = keyword;
-                let data = await this.get_achievements();
-                const achievements =
-                    data.achievements?.map((item) => {
-                        return {
-                            ...item,
-                            checked: false,
-                        };
-                    }) || [];
-                this.achievements = achievements;
-                this.achievements_count = data.total;
+                this.routeSyncReady = true;
+                if (queryChanged && page !== 1) {
+                    this.page_change_handle(1);
+                    return;
+                }
+                this.page = page;
+                this.loadAchievements();
             },
         },
     },
@@ -115,35 +118,45 @@ export default {
             });
         },
         // 获取成就搜索列表
-        get_achievements() {
+        loadAchievements() {
+            const token = this.requestGuard.begin();
+            this.loading = true;
+            this.loadError = false;
             let data = { limit: this.length, page: this.page };
             if (this.scene) data["scene"] = this.scene;
             if (this.keyword) data["keyword"] = this.keyword;
-            return new Promise((resolve, reject) => {
-                searchAchievements(data).then(
-                    (data) => {
-                        data = data.data;
-                        resolve(data.data);
-                    },
-                    () => {
-                        resolve(false);
-                    }
-                );
-            });
+            searchAchievements(data)
+                .then((response) => {
+                    if (!this.requestGuard.isCurrent(token)) return;
+                    const result = response.data?.data || {};
+                    this.achievements = (result.achievements || []).map((item) => ({ ...item, checked: false }));
+                    this.achievements_count = result.total || 0;
+                })
+                .catch(() => {
+                    if (!this.requestGuard.isCurrent(token)) return;
+                    this.achievements = [];
+                    this.achievements_count = 0;
+                    this.loadError = true;
+                })
+                .finally(() => {
+                    if (this.requestGuard.isCurrent(token)) this.loading = false;
+                });
         },
         page_change_handle(page) {
             this.$router.push(this.buildSearchRoute(this.$route.params.keyword, { ...this.$route.query, page: page }));
         },
         finishVirtual() {
+            if (this.saving) return;
             const ids = this.selectedAchievements?.map((item) => item.ID + "");
             if (!ids.length) return;
             const data = {
                 achievements: ids.join(),
             };
-            setVirtualRoleAchievements(data).then((res) => {
+            this.saving = true;
+            setVirtualRoleAchievements(data).then(() => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为已完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedComplete"),
                     type: "success",
                 });
                 const list = Array.from(new Set(this.achievementsVirtual.concat(ids)));
@@ -155,17 +168,22 @@ export default {
                         checked: false,
                     };
                 });
+            }).catch(() => this.$message.error(this.$t("ui.common.status.networkError"))).finally(() => {
+                this.saving = false;
             });
         },
         cancelVirtual() {
+            if (this.saving) return;
             const ids = this.selectedAchievements?.map((item) => item.ID + "");
+            if (!ids.length) return;
             const data = {
                 achievements: ids.join(),
             };
-            cancelVirtualRoleAchievements(data).then((res) => {
+            this.saving = true;
+            cancelVirtualRoleAchievements(data).then(() => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为待完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedIncomplete"),
                     type: "success",
                 });
                 const list = this.achievementsVirtual.filter((item) => !ids.includes(item));
@@ -177,8 +195,13 @@ export default {
                         checked: false,
                     };
                 });
+            }).catch(() => this.$message.error(this.$t("ui.common.status.networkError"))).finally(() => {
+                this.saving = false;
             });
         },
+    },
+    beforeUnmount() {
+        this.requestGuard.invalidate();
     },
 };
 </script>

@@ -1,10 +1,10 @@
 <template>
 	<div class="v-plan-list" v-loading="loading">
 		<!-- 头部 - 标题&搜索 -->
-		<div class="m-plan-title">物品清单</div>
+		<div class="m-plan-title">{{ $t("ui.item.planTitle") }}</div>
 		<div class="m-plan-search">
-			<el-input placeholder="请输入搜索内容" v-model="search">
-				<template #prepend><span>关键词</span></template>
+			<el-input :placeholder="$t('ui.common.placeholders.keywordMobile')" v-model="search">
+				<template #prepend><span>{{ $t("ui.common.labels.keyword") }}</span></template>
 				<template #append><el-button icon="Search"></el-button></template>
 			</el-input>
 		</div>
@@ -18,13 +18,13 @@
 						<span class="u-desc" v-if="plan.description">{{ plan.description }}</span>
 						<span class="u-user">
 							<img class="u-avatar" :src="showAvatar(getUserInfo(plan, 'user_avatar'))" :alt="getUserInfo(plan, 'user_avatar')" />
-							<a class="u-name" :href="authorLink(plan.user_id)">{{ getUserInfo(plan, "display_name") || "匿名" }}</a>
+							<a class="u-name" :href="authorLink(plan.user_id)">{{ getUserInfo(plan, "display_name") || $t("ui.common.labels.anonymous") }}</a>
 							<span class="u-time"><LegacyIcon class="el-icon-time" />{{ date_format(plan.updated) }}</span>
 						</span>
 					</div>
 				</router-link>
 			</template>
-			<el-alert v-else center title="📋 没有对应的物品清单" type="info" :closable="false"></el-alert>
+			<el-alert v-else center :title="$t('ui.item.noMatchingPlan')" type="info" :closable="false"></el-alert>
 		</div>
 		<el-pagination v-model:current-page="page" class="m-archive-pages" background layout="total, prev, pager, next, jumper" :hide-on-single-page="true" :page-size="per" :total="total"></el-pagination>
 	</div>

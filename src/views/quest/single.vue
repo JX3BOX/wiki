@@ -1,8 +1,9 @@
 <template>
-    <div class="m-quest-view" :class="isRobot ? 'm-quest-view__robot' : ''">
-        <div v-if="!isRobot" class="w-quest">
+    <div class="m-quest-view" :class="isRobot ? 'm-quest-view__robot' : ''" v-loading="pageLoading">
+        <AsyncState :loading="pageLoading" :error="loadError" @retry="syncQuestData" />
+        <div v-if="!isRobot && !loadError" class="w-quest">
             <div class="u-actions" @click.stop>
-                <el-tooltip content="在左侧选择角色后可以标记任务完成情况" placement="top" v-if="!role">
+                <el-tooltip :content="$t('ui.quest.roleTip')" placement="top" v-if="!role">
                     <LegacyIcon class="el-icon-info" />
                 </el-tooltip>
                 <el-button
@@ -14,7 +15,7 @@
                     :disabled="!role"
                     icon="Check"
                 >
-                    标记为已完成
+                    {{ $t("ui.quest.markComplete") }}
                 </el-button>
                 <el-button
                     size="small"
@@ -26,27 +27,27 @@
                     :disabled="!role"
                     icon="Close"
                 >
-                    标记为未完成
+                    {{ $t("ui.quest.markIncomplete") }}
                 </el-button>
             </div>
 
             <p class="u-title__warpper">
                 <span class="u-title">
-                    <span class="u-title-name" :style="questNameColor">{{ quest.name }}</span>
+                    <span class="u-title-name" :class="questNameClass">{{ quest.name }}</span>
                     <img class="u-title-school" v-if="quest.schoolName" :src="schoolIcon(quest.schoolName)" alt="" />
                     <span class="u-title-difficulty" v-if="quest.difficulty">【{{ quest.difficulty }}】</span>
                 </span>
                 <span class="u-title-id"> (ID:{{ quest.id }})</span>
             </p>
             <div class="u-tag-list">
-                <el-tag v-show="quest.canShare"><img src="@/assets/img/quest/player-63.png" alt="" />可分享任务</el-tag>
+                <el-tag v-show="quest.canShare"><img src="@/assets/img/quest/player-63.png" alt="" />{{ $t("ui.quest.shareable") }}</el-tag>
                 <el-tag v-show="quest.canAssist"
-                    ><img src="@/assets/img/quest/player-62.png" alt="" />可协助任务</el-tag
+                    ><img src="@/assets/img/quest/player-62.png" alt="" />{{ $t("ui.quest.assistable") }}</el-tag
                 >
             </div>
             <div class="u-endpoint__wrapper">
                 <p class="u-endpoint" v-show="quest.start">
-                    <span class="u-endpoint-label"><LegacyIcon class="el-icon-video-play" /> 任务起点: </span>
+                    <span class="u-endpoint-label"><LegacyIcon class="el-icon-video-play" /> {{ $t("ui.quest.start") }} </span>
                     <span>{{ quest.start.mapName }}</span>
                     <span class="u-endpoint-separate"> - </span>
                     <item-icon
@@ -55,7 +56,7 @@
                         :item_id="quest.start.id"
                         :size="28"
                     ></item-icon>
-                    <span v-else>{{ quest.start.name || "未知" }}</span>
+                    <span v-else>{{ quest.start.name || $t("ui.common.labels.unknown") }}</span>
                     <span class="u-endpoint-id"
                         >({{ pointType(quest.start.type) }}ID: {{ idFilter(quest.start.id) }})</span
                     >
@@ -67,7 +68,7 @@
                     ></point-filter>
                 </p>
                 <p class="u-endpoint">
-                    <span class="u-endpoint-label"><LegacyIcon class="el-icon-remove-outline" /> 任务终点: </span>
+                    <span class="u-endpoint-label"><LegacyIcon class="el-icon-remove-outline" /> {{ $t("ui.quest.end") }} </span>
                     <span>{{ quest.end.mapName }}</span>
                     <span class="u-endpoint-separate"> - </span>
                     <item-icon
@@ -76,7 +77,7 @@
                         :item_id="quest.end.id"
                         :size="28"
                     ></item-icon>
-                    <span v-else>{{ quest.end.name || "未知" }}</span>
+                    <span v-else>{{ quest.end.name || $t("ui.common.labels.unknown") }}</span>
                     <span class="u-endpoint-id">({{ pointType(quest.end.type) }}ID: {{ idFilter(quest.end.id) }})</span>
                     <point-filter
                         v-if="showPointFilter('End')"
@@ -87,13 +88,13 @@
                 </p>
             </div>
             <div class="u-target" v-show="targetDesc">
-                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>任务目标</p>
+                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>{{ $t("ui.quest.target") }}</p>
                 <p v-html="targetDesc"></p>
                 <template v-if="quest.killNpcs && quest.killNpcs.length > 0">
                     <div class="u-target-sub" v-for="(killNpc, i) in quest.killNpcs" :key="i">
-                        <span>击杀</span>
+                        <span>{{ $t("ui.quest.kill") }}</span>
                         <span>{{ killNpc.name }}</span>
-                        <el-tooltip v-if="killNpc.share" content="该目标可共享击杀" placement="top">
+                        <el-tooltip v-if="killNpc.share" :content="$t('ui.quest.sharedKill')" placement="top">
                             <img src="@/assets/img/quest/target-15.png" alt="" />
                         </el-tooltip>
                         <span> × {{ killNpc.amount }}</span>
@@ -107,7 +108,7 @@
                 </template>
                 <template v-if="quest.needItems && quest.needItems.length > 0">
                     <div class="u-target-sub" v-for="(needItem, i) in quest.needItems" :key="i">
-                        <span>收集</span>
+                        <span>{{ $t("ui.quest.collect") }}</span>
                         <item-icon :item_id="needItem.id" :has_title="true" :size="28"></item-icon>
                         <span>× {{ needItem.amount }}</span>
                         <point-filter
@@ -129,11 +130,11 @@
                 </div>
             </div>
             <div class="u-desc" v-show="questDesc">
-                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>任务描述</p>
+                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>{{ $t("ui.quest.description") }}</p>
                 <p v-html="questDesc"></p>
             </div>
             <div class="u-offer" v-if="quest.offerItems">
-                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>提供物品</p>
+                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>{{ $t("ui.quest.providedItems") }}</p>
                 <div class="u-offer-list">
                     <item-icon
                         v-for="item in quest.offerItems"
@@ -144,14 +145,14 @@
                 </div>
             </div>
             <div class="u-reward" v-show="showReward">
-                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>任务奖励</p>
+                <p class="u-subtitle"><el-icon><CaretRight /></el-icon>{{ $t("ui.quest.reward") }}</p>
                 <div class="u-reward-list">
                     <reward-item v-for="(reward, i) in quest.rewards" :key="i" :reward="reward"></reward-item>
                 </div>
             </div>
             <quest-chain :current="id" :data="quest.chain"></quest-chain>
         </div>
-        <div v-else class="m-quest-top">
+        <div v-else-if="!loadError" class="m-quest-top">
             <div class="m-quest-header">
                 <div class="m-quest-title">
                     <div class="m-title">
@@ -164,7 +165,7 @@
 
                     <div class="u-endpoint__wrapper">
                         <p class="u-endpoint" v-show="quest.start">
-                            <span class="u-endpoint-label">任务起点: </span>
+                            <span class="u-endpoint-label">{{ $t("ui.quest.start") }} </span>
                             <span class="u-endpoint-name">{{ quest.start.mapName }}</span>
                             <span class="u-endpoint-separate"> - </span>
                             <item-icon
@@ -173,14 +174,14 @@
                                 :item_id="quest.start.id"
                                 :size="14"
                             ></item-icon>
-                            <span class="u-endpoint-name" v-else>{{ quest.start.name || "未知" }}</span>
+                            <span class="u-endpoint-name" v-else>{{ quest.start.name || $t("ui.common.labels.unknown") }}</span>
                             <span class="u-endpoint-id"
                                 >({{ pointType(quest.start.type) }}ID: {{ idFilter(quest.start.id) }})</span
                             >
                         </p>
                         <!-- <img class="u-quest-to" src="@/assets/img/quest/quest-to.svg" /> -->
                         <p class="u-endpoint">
-                            <span class="u-endpoint-label">任务终点: </span>
+                            <span class="u-endpoint-label">{{ $t("ui.quest.end") }} </span>
                             <span class="u-endpoint-name">{{ quest.end.mapName }}</span>
                             <span class="u-endpoint-separate"> - </span>
                             <item-icon
@@ -189,7 +190,7 @@
                                 :item_id="quest.end.id"
                                 :size="28"
                             ></item-icon>
-                            <span v-else class="u-endpoint-name">{{ quest.end.name || "未知" }}</span>
+                            <span v-else class="u-endpoint-name">{{ quest.end.name || $t("ui.common.labels.unknown") }}</span>
                             <span class="u-endpoint-id"
                                 >({{ pointType(quest.end.type) }}ID: {{ idFilter(quest.end.id) }})</span
                             >
@@ -201,18 +202,18 @@
             <div class="m-quest-desc">
                 <div class="u-desc-title">
                     <img src="@/assets/img/quest/quest_desc_robot.svg" class="u-title-img" />
-                    <div class="u-title">任务描述</div>
+                    <div class="u-title">{{ $t("ui.quest.description") }}</div>
                 </div>
                 <div class="u-desc u-quest-desc" v-html="questDesc.replaceAll('&emsp;', '')"></div>
             </div>
             <div class="m-quest-target__reward">
                 <div class="m-quest-target">
-                    <div class="u-title">任务目标</div>
+                    <div class="u-title">{{ $t("ui.quest.target") }}</div>
                     <template v-if="quest.killNpcs && quest.killNpcs.length > 0">
                         <div class="u-target-sub" v-for="(killNpc, i) in quest.killNpcs" :key="i">
-                            <span>击杀</span>
+                            <span>{{ $t("ui.quest.kill") }}</span>
                             <span>{{ killNpc.name }}</span>
-                            <el-tooltip v-if="killNpc.share" content="该目标可共享击杀" placement="top">
+                            <el-tooltip v-if="killNpc.share" :content="$t('ui.quest.sharedKill')" placement="top">
                                 <img src="@/assets/img/quest/target-15.png" style="width: 14px; height: 14px" alt="" />
                             </el-tooltip>
                             <span> × {{ killNpc.amount }}</span>
@@ -220,7 +221,7 @@
                     </template>
                     <template v-if="quest.needItems && quest.needItems.length > 0">
                         <div class="u-target-sub" v-for="(needItem, i) in quest.needItems" :key="i">
-                            <span>收集</span>
+                            <span>{{ $t("ui.quest.collect") }}</span>
                             <item-icon :item_id="needItem.id" :has_title="true" :size="14"></item-icon>
                             <span>× {{ needItem.amount }}</span>
                         </div>
@@ -231,23 +232,23 @@
                     <p class="u-content" v-html="targetDesc.replaceAll('&emsp;', '')"></p>
                 </div>
                 <div class="m-quest-reward">
-                    <div class="u-title">任务奖励</div>
+                    <div class="u-title">{{ $t("ui.quest.reward") }}</div>
                     <div class="u-reward-list" v-if="quest.rewards?.length">
                         <reward-item v-for="(reward, i) in quest.rewards" :key="i" :reward="reward"></reward-item>
                     </div>
-                    <div class="u-reward-list no-data" v-else>该任务无奖励</div>
+                    <div class="u-reward-list no-data" v-else>{{ $t("ui.quest.noReward") }}</div>
                 </div>
             </div>
         </div>
-        <div v-if="!isRobot">
+        <div v-if="!isRobot && !loadError">
             <Notice></Notice>
             <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-                <el-tab-pane label="任务文案" v-if="showDialog" name="dialog">
+                <el-tab-pane :label="$t('ui.quest.textTab')" v-if="showDialog" name="dialog">
                     <div class="u-quest-dialog">
                         <quest-dialog :desc="quest.desc"></quest-dialog>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="任务地图" v-if="showMap" name="map">
+                <el-tab-pane :label="$t('ui.quest.mapTab')" v-if="showMap" name="map">
                     <div class="u-quest-map">
                         <quest-map ref="map" :points="points" :filter="point_filter" :questType="quest.questType">
                         </quest-map>
@@ -256,30 +257,30 @@
             </el-tabs>
         </div>
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
-            <wikiRobotTip v-if="!isRobot" type-name="任务" :reply="quest.name"></wikiRobotTip>
+            <wikiRobotTip v-if="!isRobot" :type-name="$t('ui.types.quest')" :reply="quest.name"></wikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template #head-title>
                     <img class="u-icon" svg-inline src="@/assets/img/quest/quest.svg" />
-                    <span class="u-txt">任务攻略</span>
+                    <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.quest") }) }}</span>
                 </template>
                 <template v-if="!isRobot" #head-actions>
                     <a class="u-btn--link el-button el-button--primary" :href="publish_url(`quest/${id}`)">
                         <LegacyIcon class="el-icon-edit" />
-                        <span>完善攻略</span>
+                        <span>{{ $t("ui.common.actions.improve") }}</span>
                     </a>
                 </template>
                 <template #body>
                     <div class="m-wiki-compatible" v-if="compatible">
-                        <LegacyIcon class="el-icon-warning-outline" /> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
+                        <LegacyIcon class="el-icon-warning-outline" /> {{ $t("ui.common.wiki.originFallback") }}<a
                             class="s-link"
                             :href="publish_url(`quest/${id}`)"
-                            >参与修订</a
+                            >{{ $t("ui.common.wiki.joinRevision") }}</a
                         >。
                     </div>
                     <Article id="wikiArticle" :content="wiki_post.post.content" />
                     <div class="m-wiki-signature">
                         <LegacyIcon class="el-icon-edit" />
-                        本次修订由 <b>{{ user_name }}</b> 提交于{{ updated_at }}
+                        {{ $t("ui.common.wiki.revisionBy") }} <b>{{ user_name }}</b> {{ $t("ui.common.wiki.submittedAt") }}{{ updated_at }}
                     </div>
                 </template>
             </WikiPanel>
@@ -292,7 +293,7 @@
                     <WikiPanel>
                         <template #head-title>
                             <i class="u-icon el-icon-coin"></i>
-                            <span class="u-txt">参与打赏</span>
+                            <span class="u-txt">{{ $t("ui.common.wiki.reward") }}</span>
                         </template>
                         <template #body>
                             <Thx
@@ -318,13 +319,17 @@
                 <WikiComments type="quest" :source-id="id_str" />
             </template>
         </div>
-        <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-quest-empty' : ''" v-else>
+        <div
+            class="m-wiki-post-empty"
+            :class="isRobot ? 'is-robot-quest-empty' : ''"
+            v-else-if="!pageLoading && !loadError"
+        >
             <template v-if="!isRobot">
                 <LegacyIcon class="el-icon-s-opportunity" />
-                <span>暂无攻略，我要</span>
-                <a class="s-link" :href="publish_url(`quest/${id}`)">完善攻略</a>
+                <span>{{ $t("ui.common.wiki.noGuidePrefix") }}</span>
+                <a class="s-link" :href="publish_url(`quest/${id}`)">{{ $t("ui.common.actions.improve") }}</a>
             </template>
-            <span v-else>暂无相关攻略，欢迎热心侠士前往补充！</span>
+            <span v-else>{{ $t("ui.common.wiki.noRelatedGuide") }}</span>
         </div>
         <wiki-robot-bottom v-if="isRobot" type="quest" :id="id"></wiki-robot-bottom>
     </div>
@@ -340,6 +345,9 @@ import QuestDialog from "@/components/quest/single/quest-dialog.vue";
 import Notice from "@/components/quest/single/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import wikiRobotTip from "@/components/common/wiki-robot-tip.vue";
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
+import { createArticleReadyTracker } from "@/utils/article-ready";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat.js";
 import { wiki } from "@jx3box/jx3box-common/js/wiki.js";
@@ -357,6 +365,35 @@ import { buildPoints, schoolIcon, questDescFormat, questTargetDescFormat } from 
 import isArray from "lodash/isArray";
 import { mapState } from "vuex";
 import bus from "@/store/bus";
+
+function createEmptyQuest() {
+    return {
+        id: -1,
+        name: "",
+        start: {
+            type: "npc",
+            id: -1,
+            map: "扬州",
+            guides: [],
+        },
+        end: {
+            type: "npc",
+            id: -1,
+            map: "扬州",
+            guides: [],
+        },
+        canAssist: 0,
+        canShare: 0,
+        rewards: [],
+        chain: {
+            current: [],
+            branch: [],
+        },
+        killNpcs: [],
+        needItems: [],
+        questValues: [],
+    };
+}
 
 export default {
     name: "QuestSingle",
@@ -384,10 +421,15 @@ export default {
         Notice,
         wikiRobotBottom,
         wikiRobotTip,
+        AsyncState,
     },
     data() {
         return {
             loading: false,
+            pageLoading: false,
+            loadError: false,
+            requestGuard: createLatestRequestGuard(),
+            articleReadyTracker: createArticleReadyTracker(),
 
             wiki_post: {
                 source: {},
@@ -398,86 +440,66 @@ export default {
 
             activeTab: "dialog",
 
-            quest: {
-                id: -1,
-                name: "",
-                start: {
-                    type: "npc",
-                    id: -1,
-                    map: "扬州",
-                    guides: [],
-                },
-                end: {
-                    type: "npc",
-                    id: -1,
-                    map: "扬州",
-                    guides: [],
-                },
-                canAssist: 0,
-                canShare: 0,
-                rewards: [],
-                chain: {
-                    current: [],
-                    branch: [],
-                },
-                killNpcs: [],
-                needItems: [],
-            },
+            quest: createEmptyQuest(),
             point_filter: {
                 Start: true,
                 End: true,
             },
             icon: getAppIcon("quest"),
-
-            imageCount: 0,
-            loadedImageCount: 0,
-            images: [],
-            imagesLoaded: false,
+            mapResizeTimer: null,
         };
     },
     beforeUnmount() {
-        window.removeEventListener("load", this.initImageLoader);
+        bus.off("openWikiPush", this.handleWikiPush);
+        this.requestGuard.invalidate();
+        this.articleReadyTracker.cancel();
+        clearTimeout(this.mapResizeTimer);
     },
     methods: {
+        handleWikiPush() {
+            if (!this.wiki_post?.post?.id) {
+                return this.$message.warning(this.$t("ui.quest.noGuideWarning"));
+            }
+            this.$refs.wikiPanel?.onPush();
+        },
         onQuestCancel() {
+            if (this.loading || !this.role) return;
             const role_id = this.role.ID;
             const quest_id = this.quest.id;
             this.loading = true;
             cancelUserQuest(role_id, quest_id)
                 .then(() => {
-                    this.$message.success("操作完成");
+                    this.$message.success(this.$t("ui.common.status.operationComplete"));
                     this.$store.commit("REMOVE_COMPLETED_QUEST", quest_id);
+                })
+                .catch(() => {
+                    this.$message.error(this.$t("ui.common.status.networkError"));
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
         onQuestComplete() {
+            if (this.loading || !this.role) return;
             const role_id = this.role.ID;
             const quest_id = this.quest.id;
             this.loading = true;
             completeUserQuest(role_id, quest_id)
                 .then(() => {
-                    this.$message.success("操作完成");
+                    this.$message.success(this.$t("ui.common.status.operationComplete"));
                     this.$store.commit("ADD_COMPLETED_QUEST", quest_id);
+                })
+                .catch(() => {
+                    this.$message.error(this.$t("ui.common.status.networkError"));
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
-        getData() {
-            getQuest({
-                id: this.id,
-                client: this.client,
-            }).then((res) => {
-                this.quest = res.data;
-
-                document.title = this.quest?.name + this.$t("pages.common.appendTitle");
-            });
-        },
         handleTabClick(tab, event) {
             if (tab.name == "map") {
-                setTimeout(() => {
+                clearTimeout(this.mapResizeTimer);
+                this.mapResizeTimer = setTimeout(() => {
                     this.$refs.map && this.$refs.map.updateSize();
                 }, 100);
             }
@@ -495,146 +517,65 @@ export default {
             });
         },
 
-        initImageLoader() {
-            // 在DOM更新后获取所有图片
-            this.$nextTick(() => {
-                const container = document.getElementById("wikiArticle");
-                if (!container) {
-                    this.setGlobalReady();
-                    return;
-                }
-
-                const images = container.querySelectorAll("img");
-                this.images = images;
-                this.imageCount = images.length;
-
-                if (this.imageCount === 0) {
-                    this.setGlobalReady();
-                    return;
-                }
-
-                // 手动预加载所有图片
-                this.preloadAllImages(images);
-            });
+        async prepareArticleReady() {
+            if (!this.isRobot) return;
+            await this.$nextTick();
+            await this.articleReadyTracker.wait(this.$el?.querySelector("#wikiArticle"));
         },
-
-        // 手动预加载所有图片
-        preloadAllImages(images) {
-            let loadedInThisBatch = 0;
-            let totalProcessed = 0;
-            Array.from(images).forEach((img, index) => {
-                // 记录原始src
-                const originalSrc = img.src;
-
-                // 如果图片未加载
-                if (!img.complete) {
-                    // 创建一个Image对象来预加载
-                    const tempImg = new Image();
-
-                    tempImg.onload = () => {
-                        loadedInThisBatch++;
-
-                        // 在临时图片加载完成后，设置原始图片的src
-                        img.src = originalSrc;
-
-                        // 检查是否所有图片都已处理
-                        this.checkImageLoadCompletion(images, loadedInThisBatch);
-                    };
-
-                    tempImg.onerror = () => {
-                        console.error(`图片加载失败: ${originalSrc}`);
-                        totalProcessed++;
-
-                        // 即使加载失败，也要设置原始图片的src
-                        img.src = originalSrc;
-
-                        // 标记原始图片为已加载（错误情况）
-                        this.handleImageLoad();
-                    };
-
-                    // 开始预加载
-                    tempImg.src = originalSrc;
-                } else {
-                    // 图片已经加载完成
-                    this.handleImageLoad();
-                    totalProcessed++;
-                }
-            });
-        },
-
-        // 检查图片加载状态
-        checkImageLoadCompletion(images, loadedCount) {
-            if (images.length === this.loadedImageCount) {
-                this.setGlobalReady();
-                return;
-            }
-
-            // 设置超时检查，防止意外情况
-            setTimeout(() => {
-                const allLoaded = Array.from(images).every((img) => img.complete);
-
-                if (allLoaded) {
-                    this.setGlobalReady();
-                } else if (this.loadedImageCount === images.length) {
-                    this.setGlobalReady();
-                }
-            }, 3000);
-        },
-
-        // 判断是否全部完成
-        handleImageLoad() {
-            this.loadedImageCount++;
-            if (this.loadedImageCount === this.imageCount) {
-                this.setGlobalReady();
-            }
-        },
-
-        // 设置全局就绪状态
-        setGlobalReady() {
-            if (this.imagesLoaded) return; // 避免重复设置
-
-            this.imagesLoaded = true;
-            window.__READY__ = true;
-            console.log("全局状态设置成功: __READY__ = ", window.__READY__);
-        },
-        //百科相关
-        loadData: async function () {
-            // 获取最新攻略
-            if (this.id) {
-                await wiki.mix({ type: "quest", id: this.id, client: this.client }).then((res) => {
-                    const { post, source, compatible, isEmpty, users } = res;
-                    this.wiki_post = {
-                        post: post,
-                        source: source,
-                        users,
-                    };
-                    this.is_empty = isEmpty;
-                    this.compatible = compatible;
-
-                    User.isLogin() &&
-                        postHistory({
-                            source_type: this.client == "origin" ? "origin_quest" : "quest",
-                            source_id: ~~this.id,
-                            link: location.href,
-                            title: this.quest.name,
-                        });
-                });
-            }
-
-            // 请注意，为防止QQBOT无法抓取完全，请不要删除
+        // 百科与任务主体共享同一轮请求，路由快速切换时只采纳最后一轮结果。
+        syncQuestData: async function () {
+            if (!this.id) return;
+            const token = this.requestGuard.begin();
+            this.pageLoading = true;
+            this.loadError = false;
+            this.quest = createEmptyQuest();
+            this.wiki_post = { source: {}, post: null };
+            this.compatible = false;
+            this.is_empty = false;
             if (this.isRobot) {
-                // 数据加载后启动奇遇流程中的图片检测
-                this.initImageLoader();
+                this.articleReadyTracker.cancel();
+                window.__READY__ = false;
             }
 
-            this.triggerStat();
-        },
-        loadRevision: function () {
-            // 获取指定攻略
-            wiki.getById(this.post_id, { type: "quest" }).then((res) => {
-                this.wiki_post = res.data.data;
-            });
-            this.triggerStat();
+            try {
+                const [questResponse, wikiResponse, revisionResponse] = await Promise.all([
+                    getQuest({ id: this.id, client: this.client }),
+                    wiki.mix({ type: "quest", id: this.id, client: this.client }),
+                    this.post_id
+                        ? wiki.getById(this.post_id, { type: "quest" })
+                        : Promise.resolve(null),
+                ]);
+                if (!this.requestGuard.isCurrent(token)) return;
+
+                this.quest = questResponse?.data || createEmptyQuest();
+                const { post, source, compatible, isEmpty, users } = wikiResponse;
+                this.wiki_post = {
+                    post: revisionResponse?.data?.data?.post || post,
+                    source,
+                    users,
+                };
+                this.is_empty = isEmpty;
+                this.compatible = compatible;
+                document.title = this.quest?.name + this.$t("pages.common.appendTitle");
+
+                User.isLogin() &&
+                    postHistory({
+                        source_type: this.client == "origin" ? "origin_quest" : "quest",
+                        source_id: ~~this.id,
+                        link: location.href,
+                        title: this.quest.name,
+                    });
+
+                this.triggerStat();
+            } catch (e) {
+                if (!this.requestGuard.isCurrent(token)) return;
+                this.loadError = true;
+            } finally {
+                if (this.requestGuard.isCurrent(token)) {
+                    this.pageLoading = false;
+                    this.prepareArticleReady();
+                }
+            }
         },
         publish_url: publishLink,
         triggerStat: function () {
@@ -646,8 +587,8 @@ export default {
         },
         pointType(value) {
             if (value === "npc") return "NPC";
-            if (value === "doodad") return "交互物品";
-            if (value === "item") return "物品";
+            if (value === "doodad") return this.$t("ui.quest.interactiveItem");
+            if (value === "item") return this.$t("ui.types.item");
             return "";
         },
         idFilter(id) {
@@ -658,18 +599,7 @@ export default {
         },
     },
     mounted() {
-        this.getData();
-        if (this.post_id) {
-            this.loadRevision();
-        } else {
-            this.loadData();
-        }
-        bus.on("openWikiPush", (param) => {
-            if (!this.wiki_post?.post?.id) {
-                return this.$message.warning("该任务没有攻略");
-            }
-            this.$refs.wikiPanel?.onPush();
-        });
+        bus.on("openWikiPush", this.handleWikiPush);
     },
     computed: {
         ...mapState({
@@ -692,22 +622,21 @@ export default {
             return this.quest.desc;
         },
         questDesc: function () {
-            return questDescFormat(this.quest.desc?.Description);
+            return questDescFormat(this.quest.desc?.Description, false, {
+                playerName: this.$t("ui.quest.defaultPlayerName"),
+                playerBody: this.$t("ui.quest.defaultPlayerBody"),
+            });
         },
         targetDesc: function () {
-            return questTargetDescFormat(this.quest.desc?.Objective);
+            return questTargetDescFormat(this.quest.desc?.Objective, this.$t("ui.quest.defaultPlayerName"));
         },
         showReward: function () {
             return this.quest.rewards && this.quest.rewards.length > 0;
         },
-        questNameColor() {
-            let map = {
-                common: "#0d0e0d",
-                repeat: "@v4primary",
-                act: "#7632ff",
-            };
+        questNameClass() {
             return {
-                color: map[this.quest.questType],
+                "is-repeat": this.quest.questType === "repeat",
+                "is-act": this.quest.questType === "act",
             };
         },
         client() {
@@ -715,6 +644,9 @@ export default {
         },
         points() {
             return this.buildPoints(this.quest);
+        },
+        routeDataKey() {
+            return `${this.id || ""}:${this.post_id || ""}:${this.client || ""}`;
         },
 
         //wiki相关
@@ -754,13 +686,10 @@ export default {
         },
     },
     watch: {
-        id() {
-            this.getData();
-            this.loadData();
-        },
-        post_id: {
+        routeDataKey: {
+            immediate: true,
             handler() {
-                this.loadRevision();
+                this.syncQuestData();
             },
         },
     },

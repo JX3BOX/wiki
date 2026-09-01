@@ -4,11 +4,11 @@
             <h3 class="c-sidebar-right-title">
                 <span class="u-title">
                     <i class="u-icon u-icon-mycollection"><img svg-inline src="@/assets/img/item/plan.svg" /></i>
-                    <span>我的清单</span>
+                    <span>{{ $t("ui.item.myPlans") }}</span>
                 </span>
                 <a class="fr el-button el-button--success el-button--small" @click="onAddPlan" v-if="isLogin">
                     <LegacyIcon class="el-icon-document-add" />
-                    <span>创建</span>
+                    <span>{{ $t("ui.common.actions.create") }}</span>
                 </a>
             </h3>
             <template v-if="isLogin">
@@ -28,12 +28,12 @@
                         </h5>
                         <!-- <div class="u-misc">
                             <div class="u-delete" @click.stop="delete_plan($event, plan.id)">
-                                <LegacyIcon class="el-icon-delete " title="删除" />
+                                <LegacyIcon class="el-icon-delete " :title="$t('ui.common.actions.delete')" />
                             </div>
                             <div class="u-edit" @click.stop="edit_plan($event, plan.id)">
-                                <LegacyIcon class="el-icon-edit " title="编辑" />
+                                <LegacyIcon class="el-icon-edit " :title="$t('ui.common.actions.edit')" />
                             </div>
-                            <span class="u-updated">编辑于{{ date_format(plan.updated) }}</span>
+                            <span class="u-updated">{{ $t("ui.item.editedAt") }}{{ date_format(plan.updated) }}</span>
                         </div> -->
                     </router-link>
                     <el-pagination
@@ -48,10 +48,12 @@
                         v-model:current-page="page"
                     ></el-pagination>
                 </template>
-                <div v-else class="u-tip"><LegacyIcon class="el-icon-warning-outline" /> 暂无物品清单记录</div>
+                <div v-else class="u-tip">
+                    <LegacyIcon class="el-icon-warning-outline" /> {{ $t("ui.item.noPlanRecords") }}
+                </div>
             </template>
             <template v-else
-                ><div class="u-tip"><LegacyIcon class="el-icon-warning-outline" /> 请先进行登录</div></template
+                ><div class="u-tip"><LegacyIcon class="el-icon-warning-outline" /> {{ $t("ui.item.loginFirst") }}</div></template
             >
         </div>
     </div>
@@ -94,12 +96,16 @@ export default {
         },
     },
     mounted() {
-        bus.on("plan_list_refresh", () => {
-            this.loadData();
-        });
+        bus.on("plan_list_refresh", this.handlePlanListRefresh);
+    },
+    beforeUnmount() {
+        bus.off("plan_list_refresh", this.handlePlanListRefresh);
     },
     methods: {
         date_format,
+        handlePlanListRefresh() {
+            this.loadData();
+        },
         loadData() {
             if (!this.isLogin) {
                 return;
@@ -110,13 +116,13 @@ export default {
             });
         },
         onAddPlan() {
-            this.$prompt("请输入清单名称", "创建清单", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                inputPlaceholder: "请输入清单名称",
+            this.$prompt(this.$t("ui.item.newPlanName"), this.$t("ui.item.createPlan"), {
+                confirmButtonText: this.$t("ui.common.actions.confirm"),
+                cancelButtonText: this.$t("ui.common.actions.cancel"),
+                inputPlaceholder: this.$t("ui.item.newPlanName"),
                 inputValidator: (value) => {
                     if (!value) {
-                        return "请输入清单名称";
+                        return this.$t("ui.item.newPlanName");
                     }
                 },
                 callback: (action, instance) => {
@@ -130,7 +136,7 @@ export default {
                         };
                         addMyPlan(data).then((res) => {
                             this.$message({
-                                message: "创建成功",
+                                message: this.$t("ui.common.status.createSuccess"),
                                 type: "success",
                             });
                             this.data.unshift(res.data.data);

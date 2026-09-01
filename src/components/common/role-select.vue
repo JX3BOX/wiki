@@ -5,7 +5,7 @@
             v-bind="$attrs"
             :model-value="currentRole"
             value-key="ID"
-            placeholder="请选择当前角色"
+            :placeholder="$t('ui.common.placeholders.role')"
             :disabled="!isLogin"
             popper-class="m-related-roles-options"
             size="small"
@@ -13,16 +13,20 @@
         >
             <template #prefix>
                 <span class="u-prefix">
-                    角色
+                    {{ $t("ui.common.labels.role") }}
                     <slot name="tip"></slot>
                 </span>
             </template>
-            <el-option v-if="isLogin" :value="virtualRole" :label="virtualRole.name + '<虚拟角色>'">
+            <el-option
+                v-if="isLogin"
+                :value="virtualRole"
+                :label="`${virtualRole.name}<${$t('ui.common.role.virtual')}>`"
+            >
                 <span class="u-role">
                     <span class="u-role-name"
                         ><img class="u-role-icon" :src="virtualRole.avatar" />{{ virtualRole.name }}</span
                     >
-                    <span class="u-role-server"> &lt;虚拟角色&gt;</span>
+                    <span class="u-role-server"> &lt;{{ $t("ui.common.role.virtual") }}&gt;</span>
                 </span>
             </el-option>
             <el-option v-for="role in roleList" :key="role.ID" :value="role" :label="role.name">

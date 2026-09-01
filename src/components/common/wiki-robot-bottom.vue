@@ -2,11 +2,11 @@
     <div class="m-wiki-robot__bottom">
         <div class="m-wiki-bottom__top">
             <div class="m-notice">
-                <div class="u-title">公告</div>
+                <div class="u-title">{{ $t("ui.common.robot.notice") }}</div>
                 <div class="u-content">
-                    <div>如发现攻略不全，请直接在游戏内或魔盒官方网站百科栏目修订提交或评论。</div>
-                    <div>基于玩家共建的魔盒百科平台，人人都可参与。</div>
-                    <div class="u-link">本篇原文-{{ qrcodeUrl }}</div>
+                    <div>{{ $t("ui.common.robot.incompleteGuide") }}</div>
+                    <div>{{ $t("ui.common.robot.communityBuilt") }}</div>
+                    <div class="u-link">{{ $t("ui.common.robot.original") }}{{ qrcodeUrl }}</div>
                 </div>
             </div>
             <div class="m-wiki-bottom__right">
@@ -20,7 +20,7 @@
                 </div>
                 <div class="m-qrcode">
                     <qrcode-vue class="u-qrcode" :value="qrcodeUrl" :size="42" level="H"></qrcode-vue>
-                    <div>扫码看原文</div>
+                    <div>{{ $t("ui.common.robot.scanOriginal") }}</div>
                 </div>
             </div>
         </div>

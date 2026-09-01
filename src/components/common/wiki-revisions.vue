@@ -3,28 +3,28 @@
     <WikiPanel class="c-wiki-revisions" scene="detail">
         <template #head-title>
             <LegacyIcon class="u-icon el-icon-time" />
-            <span class="u-txt">历史版本</span>
+            <span class="u-txt">{{ $t("ui.common.wiki.revisions") }}</span>
         </template>
         <template #head-actions>
             <span class="u-btn--link el-button el-button--primary" @click="visible = true">
                 <LegacyIcon class="el-icon-crop" />
-                <span>版本对比</span>
+                <span>{{ $t("ui.common.wiki.compareVersions") }}</span>
             </span>
         </template>
         <template #body>
             <div class="m-revisions-panel">
                 <div class="u-empty" v-if="!versions || !versions.length">
-                    <span v-if="versions === null">🎉 数据加载中...</span>
-                    <span v-if="versions === false">⚠️ 数据加载异常</span>
-                    <span v-if="versions && !versions.length">💧 暂无数据</span>
+                    <span v-if="versions === null">{{ $t("ui.common.status.loading") }}</span>
+                    <span v-if="versions === false">{{ $t("ui.common.status.loadFailed") }}</span>
+                    <span v-if="versions && !versions.length">{{ $t("ui.common.status.noData") }}</span>
                 </div>
                 <table v-if="versions && versions.length" class="m-histories">
                     <thead>
                         <tr>
-                            <th>版本</th>
-                            <th>更新时间</th>
-                            <th>贡献者</th>
-                            <th>修订说明</th>
+                            <th>{{ $t("ui.common.labels.version") }}</th>
+                            <th>{{ $t("ui.common.labels.updatedTime") }}</th>
+                            <th>{{ $t("ui.common.labels.contributor") }}</th>
+                            <th>{{ $t("ui.common.labels.revisionNote") }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,7 +47,7 @@
                 <div class="u-op" v-if="remainVersions.length" @click="onToggle">
                     <div class="u-btn">
                         <LegacyIcon :class="isExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" />
-                        {{ isExpand ? "折叠" : "展开" }}
+                        {{ isExpand ? $t("ui.common.wiki.collapse") : $t("ui.common.wiki.expandAll") }}
                     </div>
                 </div>
             </div>

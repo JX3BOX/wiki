@@ -1,14 +1,25 @@
 <template>
-    <div class="m-search-view">
-        <span class="m-list-empty" v-if="isEmpty">👻 暂无记录</span>
+    <div class="m-search-view" v-loading="loading">
+        <div class="m-list-empty" v-if="loadError">
+            <span>{{ $t("ui.common.status.loadFailed") }}</span>
+            <el-button link type="primary" @click="getListData">{{ $t("ui.common.actions.retry") }}</el-button>
+        </div>
+        <span class="m-list-empty" v-else-if="!loading && isEmpty">{{ $t("ui.common.status.noRecords") }}</span>
         <!-- 搜索结果 & list列表 -->
-        <knowledgeList v-if="list" :list="list" :total="total" :pagination="pagination" @onPageKey="onPageKey" />
+        <knowledgeList
+            v-if="list && !loadError && list.length"
+            :list="list"
+            :total="total"
+            :pagination="pagination"
+            @onPageKey="onPageKey"
+        />
     </div>
 </template>
 
 <script>
 import knowledgeList from "@/components/knowledge/list.vue";
 import { getKnowledgeList } from "@/service/knowledge.js";
+import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "SearchPage",
@@ -19,7 +30,9 @@ export default {
     data() {
         return {
             loading: false,
-            list: "",
+            list: null,
+            loadError: false,
+            requestGuard: createLatestRequestGuard(),
 
             page: 1,
             per: 20,
@@ -32,7 +45,7 @@ export default {
             return this.$route.params.keyword;
         },
         isEmpty() {
-            return !this.list?.length;
+            return Array.isArray(this.list) && !this.list.length;
         },
         type() {
             return this.$route.params.knowledge_type;
@@ -59,21 +72,30 @@ export default {
     methods: {
         // 按类别获取数据
         getListData() {
+            const token = this.requestGuard.begin();
             this.loading = true;
+            this.loadError = false;
             getKnowledgeList(this.params)
                 .then((res) => {
+                    if (!this.requestGuard.isCurrent(token)) return;
                     this.total = res.data.data.total || 0;
                     this.list = res.data.data.list || [];
                 })
+                .catch(() => {
+                    if (!this.requestGuard.isCurrent(token)) return;
+                    this.total = 0;
+                    this.list = [];
+                    this.loadError = true;
+                })
                 .finally(() => {
-                    this.loading = false;
+                    if (this.requestGuard.isCurrent(token)) this.loading = false;
                 });
         },
 
         // 搜索关键词查找
         onSearchKey(val) {
-            this.search = val;
             this.page = 1;
+            this.$router.push({ name: "search", params: { keyword: val } });
         },
         // 切换页码
         onPageKey(val) {
@@ -81,15 +103,19 @@ export default {
         },
     },
     watch: {
-        params() {
-            this.getListData();
+        params: {
+            immediate: true,
+            deep: true,
+            handler() {
+                this.getListData();
+            },
         },
         type() {
             this.page = 1;
         },
     },
-    created: function () {
-        this.getListData();
+    beforeUnmount() {
+        this.requestGuard.invalidate();
     },
 };
 </script>

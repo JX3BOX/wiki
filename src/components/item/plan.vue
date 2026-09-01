@@ -1,22 +1,25 @@
 <template>
-    <el-popover popper-class="w-plans" placement="bottom" trigger="click" v-model="visible" width="300">
-        <el-input class="m-input" v-model.lazy="search" placeholder="请输入清单关键词" size="large" prefix-icon="Search"></el-input>
+    <el-popover popper-class="w-plans" placement="bottom" trigger="click" v-model:visible="visible" width="300">
+        <el-input class="m-input" v-model.lazy="search" :placeholder="$t('ui.item.planKeyword')" size="large" prefix-icon="Search"></el-input>
         <div class="m-list" v-if="list && list.length">
             <div class="u-list" v-for="(item, index) in list" :key="index">
                 <div class="u-title" @click="showRelation(item, index)">
                     <LegacyIcon :class="relation_index == index ? 'el-icon-caret-bottom' : 'el-icon-caret-right'" />
-                    <span class="u-value" :class="hasInPlan(item) ? 'u-has' : ''">{{ item.title }} </span>
+                    <span class="u-value" :class="hasInPlan(item) ? 'u-has' : ''">
+                        {{ item.title }}
+                        <span v-if="hasInPlan(item)" class="u-added">{{ $t("ui.item.alreadyAdded") }}</span>
+                    </span>
                 </div>
                 <template v-if="relation_index == index && item.relation">
                     <div class="u-child" v-for="(plan, k) in item.relation" :key="k" @click="addToPlan(item, k)">
                         <LegacyIcon class="el-icon-arrow-right" />
-                        <span>{{ plan.title || `子清单${k + 1}` }}</span>
+                        <span>{{ plan.title || `${$t("ui.item.subPlan")}${k + 1}` }}</span>
                     </div>
                 </template>
             </div>
         </div>
         <div v-else class="m-list">
-            <el-alert title="暂无清单" type="info" center show-icon :closable="false"> </el-alert>
+            <el-alert :title="$t('ui.item.noPlans')" type="info" center show-icon :closable="false"> </el-alert>
         </div>
         <el-pagination
             class="m-pagination"
@@ -30,23 +33,25 @@
             v-model:current-page="page"
         ></el-pagination>
 
-        <el-popover popper-class="w-add-plans" placement="top" width="160" trigger="click" v-model="add">
-            <el-input class="u-input" v-model="new_plan" placeholder="请输入新清单名称"></el-input>
+        <el-popover popper-class="w-add-plans" placement="top" width="160" trigger="click" v-model:visible="add">
+            <el-input class="u-input" v-model="new_plan" :placeholder="$t('ui.item.newPlanName')"></el-input>
             <div style="text-align: right; margin: 0">
-                <el-button size="small" @click="add = false">取消</el-button>
-                <el-button type="primary" size="small" @click="createPlan">确定</el-button>
+                <el-button size="small" @click="add = false">{{ $t("ui.common.actions.cancel") }}</el-button>
+                <el-button type="primary" size="small" @click="createPlan">{{ $t("ui.common.actions.confirm") }}</el-button>
             </div>
             <template #reference>
                 <div class="m-create">
                     <!-- <a href="/publish/#/item_plan" target="_blank" class="el-button"><LegacyIcon class="el-icon-document-add" /> 鍒涘缓鏂版竻鍗?/a> -->
-                    <span class="el-button"><LegacyIcon class="el-icon-document-add" /> <span>创建新清单</span></span>
+                    <span class="el-button"
+                        ><LegacyIcon class="el-icon-document-add" /> <span>{{ $t("ui.item.createPlan") }}</span></span
+                    >
                 </div>
             </template>
         </el-popover>
 
         <template #reference>
             <el-button size="small" type="success" @click="openPlans"
-                ><LegacyIcon class="el-icon-shopping-cart-full" /> <span>加入清单</span></el-button
+                ><LegacyIcon class="el-icon-shopping-cart-full" /> <span>{{ $t("ui.item.addToPlan") }}</span></el-button
             >
         </template>
     </el-popover>
@@ -130,7 +135,7 @@ export default {
             if (!item.relation?.length) {
                 item.relation = [];
                 item.relation.push({
-                    title: "子清单",
+                    title: this.$t("ui.item.subPlan"),
                     data: [],
                 });
             }
@@ -150,7 +155,7 @@ export default {
             updatePlan(id, _data)
                 .then(() => {
                     this.$message({
-                        message: "添加成功",
+                        message: this.$t("ui.common.status.addSuccess"),
                         type: "success",
                     });
                     this.visible = false;
@@ -165,7 +170,7 @@ export default {
                 title: this.new_plan,
                 relation: [
                     {
-                        title: "子清单",
+                        title: this.$t("ui.item.subPlan"),
                         data: [{ id: this.item_id, count: 1 }],
                     },
                 ],
@@ -177,8 +182,8 @@ export default {
             addMyPlan(data)
                 .then(() => {
                     this.$notify({
-                        title: "新增清单成功",
-                        message: "新增清单成功，物品已添加",
+                        title: this.$t("ui.item.planCreated"),
+                        message: this.$t("ui.item.planCreatedWithItem"),
                         type: "success",
                     });
                 })
@@ -225,8 +230,7 @@ export default {
                 width: 100%;
                 .db;
             }
-            .u-has::after {
-                content: "(已加入)";
+            .u-added {
                 .fr;
                 .fz(12px);
             }

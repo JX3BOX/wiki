@@ -1,7 +1,11 @@
 <template>
     <div class="m-knowledge-panel">
         <div class="m-title">
-            <span class="u-title-left"><LegacyIcon class="el-icon-location-information" /><span> 便捷入口</span></span>
+            <span class="u-title-left"
+                ><LegacyIcon class="el-icon-location-information" /><span>
+                    {{ $t("ui.common.home.quickEntry") }}</span
+                ></span
+            >
             <!-- <a class="u-title-right" target="_blank" :href="feedback">反馈建议 &raquo;</a> -->
         </div>
         <div class="m-entry m-panel">
@@ -19,29 +23,33 @@ export default {
     data: function () {
         return {
             feedback,
-            list: [
+        };
+    },
+    computed: {
+        list() {
+            return [
                 {
                     link: "/cj",
-                    name: "成就百科",
+                    name: this.$t("ui.apps.achievement"),
                     icon: "el-icon-medal",
                 },
                 {
                     link: "/item",
-                    name: "物品百科",
+                    name: this.$t("ui.apps.item"),
                     icon: "el-icon-apple",
                 },
                 {
                     link: "#/pet",
-                    name: "宠物百科",
+                    name: this.$t("ui.achievement.quick.pets"),
                     icon: "el-icon-pear",
                 },
                 {
                     link: "/quest",
-                    name: "任务百科",
+                    name: this.$t("ui.apps.quest"),
                     icon: "el-icon-discover",
                 },
-            ],
-        };
+            ];
+        },
     },
 };
 </script>

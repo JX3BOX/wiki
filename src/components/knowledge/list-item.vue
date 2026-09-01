@@ -8,10 +8,10 @@
 			<LegacyIcon class="el-icon-price-tag" />
 			<span v-for="item in formatTags(data.post.tags)" :key="item">{{ item }}</span>
 		</div>
-		<span class="u-remark" v-if="data.post"> <LegacyIcon class="el-icon-edit" />最后修订：{{ data.post.remark }}@{{ data.post.user_nickname }} </span>
+		<span class="u-remark" v-if="data.post"> <LegacyIcon class="el-icon-edit" />{{ $t("ui.knowledge.lastRevision") }}{{ data.post.remark }}@{{ data.post.user_nickname }} </span>
 		<div class="u-updated" v-if="data.updated">
 			<LegacyIcon class="el-icon-refresh" />
-			<span> 最后更新于{{ date_format(data.updated) }}</span>
+			<span> {{ $t("ui.knowledge.lastUpdated") }}{{ date_format(data.updated) }}</span>
 		</div>
 	</router-link>
 </template>

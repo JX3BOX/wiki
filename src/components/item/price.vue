@@ -1,14 +1,14 @@
 <template>
     <div class="p-price-new">
         <div class="m-price-title">
-            <div class="u-title">📈 价格波动</div>
+            <div class="u-title">{{ $t("ui.item.priceTrend") }}</div>
             <div class="m-server">
-                <LegacyIcon class="el-icon-s-shop" /> 服务器
+                <LegacyIcon class="el-icon-s-shop" /> {{ $t("ui.common.labels.server") }}
                 <el-select
                     class="u-server"
                     style="width: 120px"
                     v-model="server"
-                    placeholder="请选择服务器"
+                    :placeholder="$t('ui.common.placeholders.server')"
                     size="small"
                 >
                     <el-option v-for="serve in servers" :key="serve" :label="serve" :value="serve"></el-option>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="m-price-title">
-            <div class="u-title">💰 近期价格</div>
+            <div class="u-title">{{ $t("ui.item.recentPrices") }}</div>
         </div>
         <div class="m-price-content">
             <item-prices :item_id="sourceId" :server="server" />

@@ -1,17 +1,18 @@
 <template>
-    <div class="m-normal-view">
+    <div class="m-normal-view" v-loading="loading">
         <div v-if="isLogin && isVirtual" class="m-normal-op">
-            <el-checkbox v-model="isAll" border @change="switchAll" size="small">全选</el-checkbox>
+            <el-checkbox v-model="isAll" border @change="switchAll" size="small">{{ $t("ui.achievement.all") }}</el-checkbox>
             <template v-if="selectedAchievements.length">
-                <el-button plain icon="Check" @click.stop="finishVirtual" size="small">
-                    批量设为完成({{ selectedAchievements.length }})
+                <el-button plain icon="Check" @click.stop="finishVirtual" size="small" :loading="saving">
+                    {{ $t("ui.achievement.batchComplete", { count: selectedAchievements.length }) }}
                 </el-button>
-                <el-button type="info" icon="Close" @click.stop="cancelVirtual" size="small">
-                    批量取消完成({{ selectedAchievements.length }})
+                <el-button type="info" icon="Close" @click.stop="cancelVirtual" size="small" :loading="saving">
+                    {{ $t("ui.achievement.batchIncomplete", { count: selectedAchievements.length }) }}
                 </el-button>
             </template>
         </div>
-        <Achievements :achievements="achievements" />
+        <AsyncState :loading="loading" :error="loadError" :empty="!achievements.length" @retry="loadAchievements" />
+        <Achievements v-if="!loadError" :achievements="achievements" />
     </div>
 </template>
 
@@ -21,16 +22,23 @@ import { getMenuAchievements, setVirtualRoleAchievements, cancelVirtualRoleAchie
 
 import { get, flattenDeep } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "Normal",
     components: {
         Achievements,
+        AsyncState,
     },
     data() {
         return {
             achievements: [],
             isAll: false,
+            loading: false,
+            loadError: false,
+            saving: false,
+            requestGuard: createLatestRequestGuard(),
         };
     },
     computed: {
@@ -66,7 +74,7 @@ export default {
             handler() {
                 this.isAll = false;
                 // 获取成就列表
-                this.get_achievements(this.$route.params.sub, this.$route.params.detail);
+                this.loadAchievements();
             },
         },
     },
@@ -80,14 +88,24 @@ export default {
             });
         },
         // 获取成就列表
-        get_achievements(sub, detail) {
-            if (!sub) return [];
+        loadAchievements() {
+            const sub = this.$route.params.sub;
+            const detail = this.$route.params.detail;
+            const token = this.requestGuard.begin();
+            this.loading = true;
+            this.loadError = false;
+            if (!sub) {
+                this.achievements = [];
+                this.loading = false;
+                return;
+            }
             const params = {};
 
             if (this.$route.query.scene) params.scene = this.$route.query.scene;
 
-            getMenuAchievements(sub, detail, params).then(
-                (data) => {
+            getMenuAchievements(sub, detail, params)
+                .then((data) => {
+                    if (!this.requestGuard.isCurrent(token)) return;
                     data = data.data;
                     const achievements = Array.isArray(data?.data?.achievements) ? data.data.achievements : [];
                     const sortedAchievements = achievements.sort((a, b) => {
@@ -101,56 +119,71 @@ export default {
                             checked: false,
                         };
                     });
-                },
-                () => {
+                })
+                .catch(() => {
+                    if (!this.requestGuard.isCurrent(token)) return;
                     this.achievements = [];
-                }
-            );
+                    this.loadError = true;
+                })
+                .finally(() => {
+                    if (this.requestGuard.isCurrent(token)) this.loading = false;
+                });
         },
         finishVirtual() {
+            if (this.saving) return;
             const ids = this.selectedAchievements.map((item) => item.ID + "");
+            if (!ids.length) return;
             const data = {
                 achievements: ids.join(),
             };
-            setVirtualRoleAchievements(data).then((res) => {
-                this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为已完成",
-                    type: "success",
+            this.saving = true;
+            setVirtualRoleAchievements(data)
+                .then(() => {
+                    this.$notify({
+                        title: this.$t("ui.common.status.operationSuccess"),
+                        message: this.$t("ui.achievement.markedComplete"),
+                        type: "success",
+                    });
+                    const list = Array.from(new Set(this.achievementsVirtual.concat(ids)));
+                    this.$store.commit("SET_STATE", { key: "achievementsVirtual", value: list });
+                    this.clearSelection();
+                })
+                .catch(() => this.$message.error(this.$t("ui.common.status.networkError")))
+                .finally(() => {
+                    this.saving = false;
                 });
-                const list = Array.from(new Set(this.achievementsVirtual.concat(ids)));
-                this.$store.commit("SET_STATE", { key: "achievementsVirtual", value: list });
-                this.isAll = false;
-                this.achievements = this.achievements.map((item) => {
-                    return {
-                        ...item,
-                        checked: false,
-                    };
-                });
-            });
         },
         cancelVirtual() {
+            if (this.saving) return;
             const ids = this.selectedAchievements.map((item) => item.ID + "");
+            if (!ids.length) return;
             const data = {
                 achievements: ids.join(),
             };
-            cancelVirtualRoleAchievements(data).then((res) => {
-                this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为待完成",
-                    type: "success",
+            this.saving = true;
+            cancelVirtualRoleAchievements(data)
+                .then(() => {
+                    this.$notify({
+                        title: this.$t("ui.common.status.operationSuccess"),
+                        message: this.$t("ui.achievement.markedIncomplete"),
+                        type: "success",
+                    });
+                    const list = this.achievementsVirtual.filter((item) => !ids.includes(item));
+                    this.$store.commit("SET_STATE", { key: "achievementsVirtual", value: list });
+                    this.clearSelection();
+                })
+                .catch(() => this.$message.error(this.$t("ui.common.status.networkError")))
+                .finally(() => {
+                    this.saving = false;
                 });
-                const list = this.achievementsVirtual.filter((item) => !ids.includes(item));
-                this.$store.commit("SET_STATE", { key: "achievementsVirtual", value: list });
-                this.isAll = false;
-                this.achievements = this.achievements.map((item) => {
-                    return {
-                        ...item,
-                        checked: false,
-                    };
-                });
-            });
         },
+        clearSelection() {
+            this.isAll = false;
+            this.achievements = this.achievements.map((item) => ({ ...item, checked: false }));
+        },
+    },
+    beforeUnmount() {
+        this.requestGuard.invalidate();
     },
 };
 </script>

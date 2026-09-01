@@ -1,9 +1,9 @@
 <!-- 用于将成就添加进渡劫方案的时候可以选择目标方案 -->
 <template>
-    <el-dialog :model-value="visible" class="m-schema-select" title="添加至方案" append-to-body :before-close="onFinish">
+    <el-dialog :model-value="visible" class="m-schema-select" :title="$t('ui.achievement.addToPlan')" append-to-body :before-close="onFinish">
         <el-table size="small" :data="schemas" style="width: 100%">
-            <el-table-column prop="title" label="方案名称"></el-table-column>
-            <el-table-column label="操作">
+            <el-table-column prop="title" :label="$t('ui.achievement.planName')"></el-table-column>
+            <el-table-column :label="$t('ui.common.labels.operation')">
                 <template #default="{ row }">
                     <el-button
                         v-if="!row.schema.includes(achievement_id)"
@@ -11,16 +11,16 @@
                         size="small"
                         @click="addToSchema(row)"
                         :loading="loading"
-                        >添加</el-button
+                        >{{ $t("ui.common.actions.add") }}</el-button
                     >
                     <el-button v-else type="info" size="small" @click="removeFromSchema(row)" :loading="loading">
-                        移出
+                        {{ $t("ui.common.actions.remove") }}
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
         <template #footer>
-            <el-button size="small" type="primary" @click="onFinish">完成</el-button>
+            <el-button size="small" type="primary" @click="onFinish">{{ $t("ui.common.actions.complete") }}</el-button>
         </template>
     </el-dialog>
 </template>
@@ -51,7 +51,7 @@ export default {
             updateWikiAchievementLeapSchema(schema_id, { schema })
                 .then((res) => {
                     const newSchema = res.data.data;
-                    this.$message.success("添加成功");
+                    this.$message.success(this.$t("ui.common.status.addSuccess"));
                     this.schemas = this.schemas.map((item) => {
                         if (item.id === schema_id) {
                             return newSchema;
@@ -71,7 +71,7 @@ export default {
             updateWikiAchievementLeapSchema(schema_id, { schema })
                 .then((res) => {
                     const newSchema = res.data.data;
-                    this.$message.success("移出成功");
+                    this.$message.success(this.$t("ui.common.status.removeSuccess"));
                     this.schemas = this.schemas.map((item) => {
                         if (item.id === schema_id) {
                             return newSchema;
@@ -107,4 +107,3 @@ export default {
     }
 }
 </style>
-

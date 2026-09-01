@@ -8,9 +8,11 @@
             <h2 class="m-title">
                 <div class="u-title">
                     <img class="u-icon" svg-inline src="@/assets/img/cj/puzzle.svg" />
-                    <span class="u-text">各区服成就群</span>
+                    <span class="u-text">{{ $t("ui.achievement.groups") }}</span>
                 </div>
-                <a class="u-show-message" target="_blank" href="https://www.jx3box.com/tool/13659/">申请展示 »</a>
+                <a class="u-show-message" target="_blank" href="https://www.jx3box.com/tool/13659/">{{
+                    $t("ui.achievement.applyDisplay")
+                }}</a>
             </h2>
             <div class="m-group-content">
                 <!-- <el-tree
@@ -84,17 +86,17 @@ export default {
         copy(text) {
             navigator.clipboard.writeText(text).then(() => {
                 this.$notify({
-                    title: "复制成功",
+                    title: this.$t("ui.common.status.copySuccess"),
                     message: text,
                     type: "success",
                 });
             });
         },
         copy_success() {
-            this.$notify({ title: "复制成功", type: "success" });
+            this.$notify({ title: this.$t("ui.common.status.copySuccess"), type: "success" });
         },
         copy_error() {
-            this.$notify({ title: "浏览器不支持", type: "error" });
+            this.$notify({ title: this.$t("ui.common.status.browserUnsupported"), type: "error" });
         },
         checkIsHome: function () {
             this.isHome = this.$route.name == "home" || !this.$route.name;
@@ -102,8 +104,8 @@ export default {
         onQQClick() {
             navigator.clipboard.writeText(this.qq).then(() => {
                 this.$notify({
-                    title: "复制成功",
-                    message: "内容：" + this.qq,
+                    title: this.$t("ui.common.status.copySuccess"),
+                    message: this.$t("ui.common.labels.content") + this.qq,
                     type: "success",
                 });
             });

@@ -19,27 +19,29 @@ export default {
     name: "CommonMenu",
     data() {
         return {
-            menus: [
-                {
-                    label: "成就",
-                    value: "cj",
-                },
-                {
-                    label: "物品",
-                    value: "item",
-                },
-                {
-                    label: "任务",
-                    value: "quest",
-                },
-                {
-                    label: "通识",
-                    value: "knowledge",
-                },
-            ],
         };
     },
     computed: {
+        menus() {
+            return [
+                {
+                    label: this.$t("ui.types.achievement"),
+                    value: "cj",
+                },
+                {
+                    label: this.$t("ui.types.item"),
+                    value: "item",
+                },
+                {
+                    label: this.$t("ui.types.quest"),
+                    value: "quest",
+                },
+                {
+                    label: this.$t("ui.types.knowledge"),
+                    value: "knowledge",
+                },
+            ];
+        },
         pathname() {
             return location.pathname;
         },

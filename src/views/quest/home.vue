@@ -3,7 +3,7 @@
         <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-location-information" />
-                <span>便捷入口</span>
+                <span>{{ $t("ui.common.home.quickEntry") }}</span>
             </template>
             <template #head-actions>
                 <!-- <a class="other" target="_blank" :href="feedback">反馈建议 &raquo;</a> -->
@@ -13,7 +13,7 @@
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/1428">
                             <LegacyIcon class="el-icon-trophy" />
-                            <span>游戏内看百科</span>
+                            <span>{{ $t("ui.common.home.inGameWiki") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
@@ -22,25 +22,25 @@
                     <li class="u-qlink">
                         <a target="_blank" href="/exam" style="background-color: #f7b044;">
                             <LegacyIcon class="el-icon-goblet-square-full" />
-                            <span>科举题库</span>
+                            <span>{{ $t("ui.quest.quick.exam") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/reputation">
                             <LegacyIcon class="el-icon-grape" />
-                            <span>声望大全</span>
+                            <span>{{ $t("ui.quest.quick.reputation") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/book">
                             <LegacyIcon class="el-icon-watermelon" />
-                            <span>书籍大全</span>
+                            <span>{{ $t("ui.quest.quick.books") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="pvg/gonggao/daily">
                             <LegacyIcon class="el-icon-cherry" />
-                            <span>日常活动</span>
+                            <span>{{ $t("ui.quest.quick.daily") }}</span>
                         </a>
                     </li>
                 </ul>
@@ -49,7 +49,7 @@
         <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-1" />
-                <span>热门任务</span>
+                <span>{{ $t("ui.quest.hot") }}</span>
             </template>
             <template #body>
                 <quest-carousel :quests="hotQuests" :views="hotViews" :hot="true"></quest-carousel>
@@ -58,10 +58,10 @@
         <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-2" />
-                <span>最新任务</span>
+                <span>{{ $t("ui.quest.newest") }}</span>
             </template>
             <template #head-actions>
-                <router-link class="u-wiki-more" :to="{ name: 'newest' }">查看更多 &raquo;</router-link>
+                <router-link class="u-wiki-more" :to="{ name: 'newest' }">{{ $t("ui.common.actions.more") }}</router-link>
             </template>
             <template #body>
                 <quest-carousel :quests="newestQuests"></quest-carousel>
@@ -70,7 +70,7 @@
         <wiki-panel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-collection" />
-                <span>最新攻略</span>
+                <span>{{ $t("ui.common.home.latestGuide") }}</span>
             </template>
             <template #body>
                 <newest-post></newest-post>

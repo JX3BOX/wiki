@@ -17,18 +17,20 @@ export default {
     data: function () {
         return {
             count: {},
-            countDict: {
-                total: "物品总数",
-                quality_0: "破败物品数",
-                quality_1: "普通物品数",
-                quality_2: "精巧物品数",
-                quality_3: "卓越物品数",
-                quality_4: "珍奇物品数",
-                quality_5: "稀世物品数"
-            },
         };
     },
     computed: {
+        countDict() {
+            return {
+                total: this.$t("ui.item.stats.total"),
+                quality_0: this.$t("ui.item.stats.quality0"),
+                quality_1: this.$t("ui.item.stats.quality1"),
+                quality_2: this.$t("ui.item.stats.quality2"),
+                quality_3: this.$t("ui.item.stats.quality3"),
+                quality_4: this.$t("ui.item.stats.quality4"),
+                quality_5: this.$t("ui.item.stats.quality5"),
+            };
+        },
         client() {
             return this.$store.state.client;
         }

@@ -20,14 +20,17 @@ export default {
     data() {
         return {
             count: {},
-            countDict: {
-                general: "常规成就数",
-                general_point: "常规资历数",
-                armor: "五甲成就数",
-                armor_point: "五甲资历数",
-                // post_count: "收录攻略数",
-            },
         };
+    },
+    computed: {
+        countDict() {
+            return {
+                general: this.$t("ui.achievement.stats.general"),
+                general_point: this.$t("ui.achievement.stats.generalPoints"),
+                armor: this.$t("ui.achievement.stats.armor"),
+                armor_point: this.$t("ui.achievement.stats.armorPoints"),
+            };
+        },
     },
     created() {
         // 统一从 v2 点数元数据派生数量，零资历成就不进入统计。

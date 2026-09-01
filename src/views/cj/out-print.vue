@@ -1,7 +1,7 @@
 <template>
-    <div class="m-out-print-view">
-        <span class="m-list-empty" v-if="isEmpty">👻 暂无记录</span>
-        <Achievements :achievements="achievements" />
+    <div class="m-out-print-view" v-loading="loading">
+        <AsyncState :loading="loading" :error="loadError" :empty="isEmpty" @retry="get_achievements(page)" />
+        <Achievements v-if="!loadError" :achievements="achievements" />
         <el-pagination
             background
             :total="achievements_count"
@@ -9,6 +9,7 @@
             layout="prev, pager, next, jumper"
             :current-page="page"
             :page-size="length"
+            v-if="!loadError"
             @current-change="page_change_handle"
         >
             <template #prev-icon>&laquo;</template>
@@ -21,7 +22,8 @@
 import Achievements from "@/components/cj/achievements.vue";
 import { getOutPrintAchievements } from "@/service/achievement";
 
-import { get } from 'lodash'
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "OutPrint",
@@ -31,26 +33,38 @@ export default {
             achievements_count: 0,
             page: 1,
             length: 15,
+            loading: false,
+            loadError: false,
+            requestGuard: createLatestRequestGuard(),
         };
     },
     computed: {
         isEmpty() {
-            return !get(this.achievements, 'length')
-        }
+            return Array.isArray(this.achievements) && !this.achievements.length;
+        },
     },
     methods: {
         // 获取成就列表
         get_achievements(page) {
-            getOutPrintAchievements(page).then(
-                function (data) {
+            const token = this.requestGuard.begin();
+            this.loading = true;
+            this.loadError = false;
+            getOutPrintAchievements(page)
+                .then((data) => {
+                    if (!this.requestGuard.isCurrent(token)) return;
                     data = data.data;
-                    this.achievements = data.data.achievements;
-                    this.achievements_count = data.data.total;
-                },
-                function () {
-                    this.achievements = false;
-                }
-            );
+                    this.achievements = data.data.achievements || [];
+                    this.achievements_count = data.data.total || 0;
+                })
+                .catch(() => {
+                    if (!this.requestGuard.isCurrent(token)) return;
+                    this.achievements = [];
+                    this.achievements_count = 0;
+                    this.loadError = true;
+                })
+                .finally(() => {
+                    if (this.requestGuard.isCurrent(token)) this.loading = false;
+                });
         },
         page_change_handle(page) {
             this.$router.push({
@@ -62,6 +76,7 @@ export default {
     },
     components: {
         Achievements,
+        AsyncState,
     },
     watch: {
         $route: {
@@ -72,6 +87,9 @@ export default {
                 this.get_achievements(this.page);
             },
         },
+    },
+    beforeUnmount() {
+        this.requestGuard.invalidate();
     },
 };
 </script>

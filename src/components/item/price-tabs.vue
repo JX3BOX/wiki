@@ -2,17 +2,17 @@
     <div class="m-item-price-tabs">
         <div class="m-price-server">
             <LegacyIcon class="el-icon-s-shop" />
-            <span class="u-label">全服价格</span>
-            <el-select class="u-server" v-model="server" placeholder="请选择服务器" size="small">
+            <span class="u-label">{{ $t("ui.item.allServerPrices") }}</span>
+            <el-select class="u-server" v-model="server" :placeholder="$t('ui.common.placeholders.server')" size="small">
                 <el-option v-for="serve in servers" :key="serve" :label="serve" :value="serve"></el-option>
             </el-select>
         </div>
 
         <el-tabs v-model="activeTab" type="border-card" @tab-click="active_tab_handle">
-            <el-tab-pane label="📈 价格波动" name="item-price-chart">
+            <el-tab-pane :label="$t('ui.item.priceTrend')" name="item-price-chart">
                 <item-price-chart ref="item_price_chart" :item_id="sourceId" :server="server" />
             </el-tab-pane>
-            <el-tab-pane label="💰 近期价格" name="item-prices">
+            <el-tab-pane :label="$t('ui.item.recentPrices')" name="item-prices">
                 <item-prices :item_id="sourceId" :server="server" />
             </el-tab-pane>
         </el-tabs>

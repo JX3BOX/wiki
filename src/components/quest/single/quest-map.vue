@@ -3,7 +3,7 @@
         <el-carousel ref="carousel" :autoplay="false" :arrow="showArrow" :height="`${height}px`">
             <el-carousel-item v-for="(ps, mapId) in points" :key="mapId">
                 <div class="u-map__container" :style="containerSize">
-                    <img class="u-map-img" :src="mapImgUrl(mapId)" draggable="false" alt="任务地图图片" />
+                    <img class="u-map-img" :src="mapImgUrl(mapId)" draggable="false" :alt="$t('ui.quest.mapTab')" />
                     <div class="u-map-tool">
                         <p class="u-map-name">{{ mapName(mapId) }}</p>
                     </div>
@@ -107,7 +107,7 @@ export default {
             if (this.mapScales[`${id}`]) {
                 return this.mapScales[`${id}`][0].Name;
             }
-            return "未知地图";
+            return this.$t("ui.quest.unknownMap");
         },
         pointStyle(coordinates, mapId) {
             let mapScales = this.mapScales[`${mapId}`];
@@ -147,24 +147,24 @@ export default {
         },
         pointType(type) {
             const map = {
-                Start: "任务开始点",
-                End: "任务结束点",
-                KillNpc: "击杀怪物",
-                NeedItem: "需要物品",
+                Start: this.$t("ui.quest.startPoint"),
+                End: this.$t("ui.quest.endPoint"),
+                KillNpc: this.$t("ui.quest.killMonster"),
+                NeedItem: this.$t("ui.quest.neededItem"),
             };
             if (map[type]) return map[type];
-            if (type.startsWith("State")) return type.replace("State", "进度");
-            if (type.startsWith("KillNpc")) return type.replace("KillNpc", "击杀怪物");
-            if (type.startsWith("NeedItem")) return type.replace("NeedItem", "需要物品");
-            return "其他";
+            if (type.startsWith("State")) return type.replace("State", this.$t("ui.quest.progress"));
+            if (type.startsWith("KillNpc")) return type.replace("KillNpc", this.$t("ui.quest.killMonster"));
+            if (type.startsWith("NeedItem")) return type.replace("NeedItem", this.$t("ui.quest.neededItem"));
+            return this.$t("ui.quest.other");
         },
         objectType(value) {
             const map = {
                 npc: "NPC",
-                point: "坐标",
-                doodad: "交互物品",
+                point: this.$t("ui.quest.coordinate"),
+                doodad: this.$t("ui.quest.interactiveItem"),
             };
-            return map[value] ?? "其他";
+            return map[value] ?? this.$t("ui.quest.other");
         },
         coordinates(value) {
             return `(${value[0]},${value[1]},${value[2]})`;

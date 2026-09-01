@@ -23,7 +23,7 @@
         <div class="u-misc">
             <a class="u-logo" :href="link" target="_blank">
                 <img svg-inline src="@/assets/img/brand/jx3box.svg" />
-                <span>配装ID:{{ plan.id }}</span>
+                <span>{{ $t("ui.item.equipId") }}{{ plan.id }}</span>
             </a>
         </div>
     </div>
@@ -51,7 +51,7 @@ export default {
             return this.plan?.user_info?.user_avatar || default_avatar;
         },
         username: function () {
-            return this.plan?.user_info?.display_name || "匿名";
+            return this.plan?.user_info?.display_name || this.$t("ui.common.labels.anonymous");
         },
         uid: function () {
             return this.plan.user_id;

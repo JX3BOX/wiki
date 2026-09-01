@@ -1,16 +1,16 @@
 <template>
     <div class="m-robot__wiki-tip">
         <div class="m-qq">
-            <span>添加魔盒QQ机器人</span>
+            <span>{{ $t("ui.common.robot.addBot") }}</span>
             <span class="u-qq" @click="copy('3889010020')">
                 <img class="u-icon" src="@/assets/img/qqbot/jx3box_qqbot_qq.svg" alt="" />
                 <span>3889010020</span>
             </span>
         </div>
         <div class="m-reply">
-            <span>回复</span>
+            <span>{{ $t("ui.common.robot.reply") }}</span>
             <span class="u-reply" @click="copy(`${typeName} ${reply}`)">{{ typeName }} {{ reply }}</span>
-            <span>获取一图流攻略</span>
+            <span>{{ $t("ui.common.robot.getGuide") }}</span>
         </div>
     </div>
 </template>
@@ -23,7 +23,7 @@ export default {
         copy(txt) {
             navigator.clipboard.writeText(txt).then(() => {
                 this.$notify({
-                    title: "复制成功",
+                    title: this.$t("ui.common.status.copySuccess"),
                     message: txt,
                     type: "success",
                 });

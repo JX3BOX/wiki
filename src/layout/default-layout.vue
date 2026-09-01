@@ -2,7 +2,7 @@
     <div :class="pageClass">
         <CommonHeader :overlay-enable="overlayEnable"></CommonHeader>
         <Breadcrumb
-            :name="name"
+            :name="name || $t('ui.apps.achievement')"
             :slug="slug"
             :root="computedRoot"
             :publishEnable="publishEnable"
@@ -23,7 +23,7 @@
                     <el-dropdown trigger="click" @command="handleCommand">
                         <el-button type="primary" class="c-admin-button c-admin-drop__button"
                             ><LegacyIcon class="el-icon-setting u-left-icon" />
-                            <span class="u-label">管理</span>
+                            <span class="u-label">{{ $t("ui.common.actions.admin") }}</span>
                             <LegacyIcon class="el-icon-arrow-down u-right-icon" />
                         </el-button>
                         <template #dropdown>
@@ -33,10 +33,10 @@
                                     command="designTask"
                                     v-if="hasPermission('push_banner')"
                                 >
-                                    <span>推送</span>
+                                    <span>{{ $t("ui.common.actions.push") }}</span>
                                 </el-dropdown-item>
                                 <el-dropdown-item icon="Refresh" command="pictureTask">
-                                    <span>刷图</span>
+                                    <span>{{ $t("ui.common.actions.generateImage") }}</span>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
@@ -76,7 +76,7 @@ export default {
     props: {
         name: {
             type: String,
-            default: "成就百科",
+            default: "",
         },
         slug: {
             type: String,
@@ -171,11 +171,11 @@ export default {
                     task_target_id,
                 }).then((res) => {
                     if (!res.data.code) {
-                        this.$message.success("QQ机器人图片生成提交成功");
+                        this.$message.success(this.$t("ui.common.status.imageSubmitted"));
                     }
                 });
             } else {
-                this.$message.error("参数不正确");
+                this.$message.error(this.$t("ui.common.status.invalidParams"));
             }
         },
     },

@@ -1,8 +1,10 @@
 <template>
     <div class="m-knowledge-panel">
         <div class="m-title">
-            <span class="u-title-left"> <LegacyIcon class="el-icon-postcard" /><span> 术语大全</span> </span>
-            <router-link class="u-wiki-more" to="/type/jargon">查看更多 &raquo;</router-link>
+            <span class="u-title-left">
+                <LegacyIcon class="el-icon-postcard" /><span> {{ $t("ui.knowledge.terminology") }}</span>
+            </span>
+            <router-link class="u-wiki-more" to="/type/jargon">{{ $t("ui.common.actions.more") }}</router-link>
         </div>
         <div class="m-panel m-jargon">
             <div v-for="(item, index) in list" :key="index" class="u-jargon">

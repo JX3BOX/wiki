@@ -1,7 +1,7 @@
 <template>
     <div class="m-wiki-top">
         <div class="m-wiki-top__header">
-            <h3 class="u-title"><LegacyIcon class="el-icon-news" />特别说明</h3>
+            <h3 class="u-title"><LegacyIcon class="el-icon-news" />{{ $t("ui.quest.specialNotice") }}</h3>
         </div>
         <div class="m-wiki-top__content" v-html="data"></div>
     </div>

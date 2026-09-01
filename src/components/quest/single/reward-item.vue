@@ -1,9 +1,9 @@
 <template>
     <div v-if="display" class="reward-item" :class="classes">
-        <template v-if="reward.type == 'money'"> 获得金钱：<game-price :price="reward.count"></game-price> </template>
-        <template v-else-if="reward.type == 'exp'"> 获得阅历：{{ reward.count }} </template>
+        <template v-if="reward.type == 'money'"> {{ $t("ui.quest.money") }}<game-price :price="reward.count"></game-price> </template>
+        <template v-else-if="reward.type == 'exp'"> {{ $t("ui.quest.experience") }}{{ reward.count }} </template>
         <template v-else-if="reward.type == 'affect'">
-            获得声望：{{ reward.force }}（{{ affectNumber(reward.count) }}）
+            {{ $t("ui.quest.reputation") }}{{ reward.force }}（{{ affectNumber(reward.count) }}）
         </template>
         <point-reward v-else-if="reward.type == 'titlePoint'" :type="'titlePoint'" :value="`× ${reward.count}`">
         </point-reward>
@@ -87,9 +87,9 @@ export default {
         },
         itemGroupTips(award) {
             if (award.all) {
-                return award.bySchool ? "你将获得以下全部道具（根据门派）：" : "你将获得以下全部道具：";
+                return award.bySchool ? this.$t("ui.quest.receiveAllBySchool") : this.$t("ui.quest.receiveAll");
             }
-            return "你可以在以下道具中选择一种：";
+            return this.$t("ui.quest.chooseOne");
         },
     },
 };

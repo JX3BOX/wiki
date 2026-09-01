@@ -14,8 +14,8 @@
         :target="id ? '_blank' : '_self'"
     >
         <div class="u-reward-icon">
-            <img class="u-icon-bg" :src="backgroundUrl" alt="图标背景" />
-            <img v-if="icon == null" class="u-icon-img" :src="pointImgUrl" alt="图标" />
+            <img class="u-icon-bg" :src="backgroundUrl" :alt="$t('ui.common.labels.iconBackground')" />
+            <img v-if="icon == null" class="u-icon-img" :src="pointImgUrl" :alt="$t('ui.common.labels.icon')" />
         </div>
         <div class="u-reward-desc">{{ displayName }}<br />{{ value }}</div>
     </a>
@@ -60,19 +60,19 @@ export default {
     },
     computed: {
         displayName: function () {
-            let map = {
-                titlePoint: "战阶积分",
-                prestige: "威名点",
-                vigor: "精力",
-                justice: "侠行点",
-                train: "修为",
-                tongFund: "帮会资金",
-                tongResource: "载具资源",
-                achievement: "成就",
-                skill: "技能",
+            const map = {
+                titlePoint: this.$t("ui.quest.rewardTypes.combatRank"),
+                prestige: this.$t("ui.quest.rewardTypes.prestige"),
+                vigor: this.$t("ui.quest.rewardTypes.vigor"),
+                justice: this.$t("ui.quest.rewardTypes.justice"),
+                train: this.$t("ui.quest.rewardTypes.cultivation"),
+                tongFund: this.$t("ui.quest.rewardTypes.guildFunds"),
+                tongResource: this.$t("ui.quest.rewardTypes.vehicleResource"),
+                achievement: this.$t("ui.quest.rewardTypes.achievement"),
+                skill: this.$t("ui.types.skill"),
             };
             if (map[this.type]) return map[this.type];
-            else return "未知奖励";
+            else return this.$t("ui.quest.unknownReward");
         },
         backgroundUrl: function () {
             if (this.icon) {

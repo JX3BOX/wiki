@@ -1,8 +1,8 @@
 <template>
-    <div class="m-waiting-view m-waiting-view--cj">
-        <el-alert class="u-waiting-alert" v-if="old" title="所有成就都已经有了各自的攻略，以下是一些比较老旧的成就攻略" type="success"></el-alert>
-        <span class="m-list-empty" v-if="isEmpty">👻 暂无记录</span>
-        <Achievements :achievements="achievements" />
+    <div class="m-waiting-view m-waiting-view--cj" v-loading="loading">
+        <el-alert class="u-waiting-alert" v-if="old" :title="$t('ui.achievement.oldGuides')" type="success"></el-alert>
+        <AsyncState :loading="loading" :error="loadError" :empty="isEmpty" @retry="get_achievements(page)" />
+        <Achievements v-if="!loadError" :achievements="achievements" />
         <el-pagination
             background
             :total="achievements_count"
@@ -10,6 +10,7 @@
             layout="prev, pager, next, jumper"
             :current-page="page"
             :page-size="length"
+            v-if="!loadError"
             @current-change="page_change_handle"
         >
             <template #prev-icon>&laquo;</template>
@@ -22,7 +23,8 @@
 import Achievements from "@/components/cj/achievements.vue";
 import { getWaitingAchievements } from "@/service/achievement";
 
-import { get } from "lodash";
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "Waiting",
@@ -33,28 +35,39 @@ export default {
             old: false,
             page: 1,
             length: 15,
+            loading: false,
+            loadError: false,
+            requestGuard: createLatestRequestGuard(),
         };
     },
     computed: {
         isEmpty() {
-            return !get(this.achievements, "length");
+            return Array.isArray(this.achievements) && !this.achievements.length;
         },
     },
     methods: {
         // 获取成就列表
         get_achievements(page) {
-            let that = this;
-            getWaitingAchievements(page).then(
-                (data) => {
+            const token = this.requestGuard.begin();
+            this.loading = true;
+            this.loadError = false;
+            getWaitingAchievements(page)
+                .then((data) => {
+                    if (!this.requestGuard.isCurrent(token)) return;
                     data = data.data;
-                    that.achievements = data.data.achievements;
-                    that.achievements_count = data.data.total;
-                    that.old = data.data.old;
-                },
-                () => {
-                    that.achievements = false;
-                }
-            );
+                    this.achievements = data.data.achievements || [];
+                    this.achievements_count = data.data.total || 0;
+                    this.old = !!data.data.old;
+                })
+                .catch(() => {
+                    if (!this.requestGuard.isCurrent(token)) return;
+                    this.achievements = [];
+                    this.achievements_count = 0;
+                    this.loadError = true;
+                })
+                .finally(() => {
+                    if (this.requestGuard.isCurrent(token)) this.loading = false;
+                });
         },
         page_change_handle(page) {
             this.$router.push({
@@ -66,6 +79,7 @@ export default {
     },
     components: {
         Achievements,
+        AsyncState,
     },
     watch: {
         $route: {
@@ -76,6 +90,9 @@ export default {
                 this.get_achievements(this.page || 1);
             },
         },
+    },
+    beforeUnmount() {
+        this.requestGuard.invalidate();
     },
 };
 </script>

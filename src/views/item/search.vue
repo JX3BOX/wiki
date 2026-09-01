@@ -1,20 +1,20 @@
 <template>
     <div class="m-search-view m-search-view--item">
-        <Items :items="items">
+        <Items :items="items" :error="loadError" @retry="loadItems">
             <template #empty-message>
-                <span>👻 暂无记录</span>
+                <span>{{ $t("ui.common.status.noRecords") }}</span>
                 <template v-if="$route.query.auc_genre || $route.query.auc_sub_type_id">
-                    <span>，在</span>
+                    <span>{{ $t("ui.item.searchIn") }}</span>
                     <span class="u-research" @click="clean_type">
-                        <b>全部分类下搜索</b>
+                        <b>{{ $t("ui.item.searchAllCategories") }}</b>
                     </span>
                 </template>
             </template>
         </Items>
         <div class="m-cursor-pagination" v-if="showPagination">
-            <el-button :disabled="!canGoPrev" @click="goPrev">&laquo; 上一页</el-button>
-            <span class="u-page">第 {{ page }} 页</span>
-            <el-button :disabled="!canGoNext" @click="goNext">下一页 &raquo;</el-button>
+            <el-button :disabled="!canGoPrev" @click="goPrev">{{ $t("ui.common.pagination.previous") }}</el-button>
+            <span class="u-page">{{ $t("ui.common.pagination.page", { page }) }}</span>
+            <el-button :disabled="!canGoNext" @click="goNext">{{ $t("ui.common.pagination.next") }}</el-button>
         </div>
     </div>
 </template>
@@ -23,6 +23,8 @@
 import Items from "@/components/item/items.vue";
 
 import { get_items_search } from "@/service/item";
+import { canGoNextCursorPage } from "@/utils/pagination";
+import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "SearchPage",
@@ -36,6 +38,8 @@ export default {
             nextCursor: null,
             cursorByPage: { 1: null },
             cursorScope: "",
+            loadError: false,
+            requestGuard: createLatestRequestGuard(),
         };
     },
     computed: {
@@ -51,10 +55,16 @@ export default {
             return Object.prototype.hasOwnProperty.call(this.cursorByPage, this.page - 1);
         },
         canGoNext() {
-            return !this.loading && !!this.nextCursor && this.total > this.length;
+            return canGoNextCursorPage({
+                loading: this.loading,
+                nextCursor: this.nextCursor,
+                total: this.total,
+                page: this.page,
+                pageSize: this.length,
+            });
         },
         showPagination() {
-            return this.page > 1 || this.total > this.length;
+            return !this.loadError && (this.page > 1 || this.total > this.length);
         },
     },
     methods: {
@@ -98,6 +108,44 @@ export default {
             this.cursorByPage[page] = this.nextCursor;
             this.pushCursorPage(page, this.nextCursor);
         },
+        loadItems() {
+            const token = this.requestGuard.begin();
+            this.items = null;
+            this.loadError = false;
+            const cursorScope = this.getCursorScope();
+            if (cursorScope !== this.cursorScope) {
+                this.cursorScope = cursorScope;
+                this.cursorByPage = { 1: null };
+            }
+            this.page = parseInt(this.$route.query.page) || 1;
+            const lastIdKey = this.page > 1 ? this.$route.query.last_id_key : null;
+            if (lastIdKey) this.cursorByPage[this.page] = lastIdKey;
+            let params = {
+                ids: this.$route.query.ids || "",
+                keyword: this.$route.params.keyword,
+                page: this.page,
+                per: this.length,
+                client: this.client,
+                ...this.$route.query,
+            };
+            if (!lastIdKey) delete params.last_id_key;
+
+            get_items_search(params)
+                .then((data) => {
+                    if (!this.requestGuard.isCurrent(token)) return;
+                    data = data.data;
+                    this.items = data.data.data || [];
+                    this.total = data.data.total || 0;
+                    this.nextCursor = this.getLastIdKey(this.items);
+                })
+                .catch(() => {
+                    if (!this.requestGuard.isCurrent(token)) return;
+                    this.items = [];
+                    this.total = 0;
+                    this.nextCursor = null;
+                    this.loadError = true;
+                });
+        },
     },
     components: {
         Items,
@@ -106,36 +154,12 @@ export default {
         $route: {
             immediate: true,
             handler() {
-                this.items = null; // 加载中状态
-                const cursorScope = this.getCursorScope();
-                if (cursorScope !== this.cursorScope) {
-                    this.cursorScope = cursorScope;
-                    this.cursorByPage = { 1: null };
-                }
-                this.page = parseInt(this.$route.query.page) || 1;
-                const lastIdKey = this.page > 1 ? this.$route.query.last_id_key : null;
-                if (lastIdKey) this.cursorByPage[this.page] = lastIdKey;
-                let params = {
-                    ids: this.$route.query.ids || "",
-                    keyword: this.$route.params.keyword,
-                    page: this.page,
-                    per: this.length,
-                    client: this.client,
-                };
-                params = {
-                    ...params,
-                    ...this.$route.query,
-                };
-                if (!lastIdKey) delete params.last_id_key;
-
-                get_items_search(params).then((data) => {
-                    data = data.data;
-                    this.items = data.data.data || [];
-                    this.total = data.data.total || 0;
-                    this.nextCursor = this.getLastIdKey(this.items);
-                });
+                this.loadItems();
             },
         },
+    },
+    beforeUnmount() {
+        this.requestGuard.invalidate();
     },
 };
 </script>

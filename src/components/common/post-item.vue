@@ -20,7 +20,10 @@
                         >{{ post.title }}</router-link
                     >
                 </div>
-                <div class="u-level" v-text="'综合难度：' + star(post.level)"></div>
+                <div
+                    class="u-level"
+                    v-text="$t('ui.common.labels.comprehensiveDifficulty') + star(post.level)"
+                ></div>
                 <div class="u-remark" v-if="post.remark" v-text="'📑 ' + post.remark"></div>
             </div>
             <div class="m-user">
@@ -66,7 +69,7 @@ export default {
             return this.$store.state.client;
         },
         nickname() {
-            return this.post?.user?.display_name || this.post?.user_nickname || "匿名";
+            return this.post?.user?.display_name || this.post?.user_nickname || this.$t("ui.common.labels.anonymous");
         }
     },
     data() {

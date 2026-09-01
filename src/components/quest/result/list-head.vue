@@ -1,10 +1,10 @@
 <template>
     <div class="m-list-head">
-        <div>起始地图</div>
-        <div>任务名称</div>
-        <div>可接等级</div>
-        <div>任务目标</div>
-        <div>任务奖励</div>
+        <div>{{ $t("ui.quest.startMap") }}</div>
+        <div>{{ $t("ui.quest.name") }}</div>
+        <div>{{ $t("ui.quest.level") }}</div>
+        <div>{{ $t("ui.quest.target") }}</div>
+        <div>{{ $t("ui.quest.reward") }}</div>
     </div>
 </template>
 

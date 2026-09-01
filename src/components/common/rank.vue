@@ -2,7 +2,7 @@
     <div class="m-wiki-rank">
         <h2 class="m-title">
             <img class="u-icon" svg-inline src="@/assets/img/cj/rank.svg" />
-            <span class="u-text">排行榜</span>
+            <span class="u-text">{{ $t("ui.common.rank") }}</span>
         </h2>
         <el-tabs v-model="activeTab">
             <el-tab-pane :label="tab.label" :name="tab.name" v-for="tab in tabs" :key="tab.name">
@@ -38,31 +38,33 @@ export default {
         return {
             ranks: [],
             activeTab: "achievement",
-            tabs: [
-                {
-                    name: "achievement",
-                    label: "成就",
-                },
-                {
-                    name: "item",
-                    label: "物品",
-                },
-                {
-                    name: "quest",
-                    label: "任务",
-                },
-                {
-                    name: "knowledge",
-                    label: "通识",
-                },
-                {
-                    name: "skill",
-                    label: "技能",
-                },
-            ],
         };
     },
     computed: {
+        tabs() {
+            return [
+                {
+                    name: "achievement",
+                    label: this.$t("ui.types.achievement"),
+                },
+                {
+                    name: "item",
+                    label: this.$t("ui.types.item"),
+                },
+                {
+                    name: "quest",
+                    label: this.$t("ui.types.quest"),
+                },
+                {
+                    name: "knowledge",
+                    label: this.$t("ui.types.knowledge"),
+                },
+                {
+                    name: "skill",
+                    label: this.$t("ui.types.skill"),
+                },
+            ];
+        },
         client() {
             return this.$store.state.client;
         },

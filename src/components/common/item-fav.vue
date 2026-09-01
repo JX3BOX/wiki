@@ -1,7 +1,7 @@
 <template>
     <el-button class="w-fav" size="small" type="primary" @click="doFav">
         <LegacyIcon :class="favorite ? 'el-icon-star-on' : 'el-icon-star-off'" />
-        <span>{{ favorite ? "取消收藏" : "收藏" }}</span>
+        <span>{{ favorite ? $t("ui.common.actions.unfavorite") : $t("ui.common.actions.favorite") }}</span>
     </el-button>
 </template>
 
@@ -61,7 +61,7 @@ export default {
             if (err.response && err.response.data && err.response.data.code) {
                 this.$message.error(`[${err.response.data.code}] ${err.response.data.msg}`);
             } else {
-                this.$message.error(typeof err === "string" ? err : "网络请求异常");
+                this.$message.error(typeof err === "string" ? err : this.$t("ui.common.status.networkError"));
             }
             console.log(err);
         },

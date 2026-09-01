@@ -4,24 +4,22 @@
         :class="$route.name == 'plan_view' ? 'can-return' : ''"
     >
         <div class="m-return">
-            <el-button size="large" class="u-return-btn" @click="return_handle"
-                >返回</el-button
-            >
+            <el-button size="large" class="u-return-btn" @click="return_handle">{{ $t("ui.common.actions.back") }}</el-button>
         </div>
         <div class="m-search">
             <el-input
                 class="u-search-input"
                 v-model="keyword"
                 @keydown.enter="search_handle"
-                placeholder="输入物品清单名称「回车」进行搜索"
+                :placeholder="$t('ui.item.planSearchPlaceholder')"
             >
-                <template #prepend><span>关键词</span></template>
+                <template #prepend><span>{{ $t("ui.common.labels.keyword") }}</span></template>
                 <template #append><el-button
                     class="u-search-btn"
                     type="primary"
                     plain
                     @click="search_handle"
-                    >搜索</el-button></template>
+                    >{{ $t("ui.common.actions.search") }}</el-button></template>
             </el-input>
         </div>
     </div>

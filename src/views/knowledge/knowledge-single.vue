@@ -1,5 +1,6 @@
 <template>
     <div class="v-knowledge-single" v-loading="loading">
+        <AsyncState :loading="loading" :error="loadError" @retry="syncWikiData" />
         <div v-if="!isRobot" class="u-detail-title">
             <span>{{ title }}</span>
             <el-tag v-if="categoryLabel" class="u-detail-category" size="small" effect="light">{{
@@ -9,22 +10,22 @@
         <div v-else class="m-robot-header">
             <div class="m-robot-header__left">
                 <div class="u-title">{{ title }}</div>
-                <div class="u-desc">剑网3魔盒通识百科 - 剑三世界概念全知道！</div>
+                <div class="u-desc">{{ $t("ui.knowledge.tagline") }}</div>
             </div>
             <img class="u-robot-header__right" src="@/assets/img/knowledge/knowledge_robot.svg" />
         </div>
         <notice v-if="!isRobot"></notice>
         <div class="m-wiki m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
-            <WikiRobotTip v-if="!isRobot" type-name="通识" :reply="title"></WikiRobotTip>
+            <WikiRobotTip v-if="!isRobot" :type-name="$t('ui.types.knowledge')" :reply="title"></WikiRobotTip>
             <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
                 <template #head-title>
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge/knowledge.svg" />
-                    <span class="u-txt">通识攻略</span>
+                    <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.knowledge") }) }}</span>
                 </template>
                 <template v-if="!isRobot" #head-actions>
                     <a class="u-btn--link el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
                         <LegacyIcon class="el-icon-edit" />
-                        <span>完善通识</span>
+                        <span>{{ $t("ui.knowledge.improve") }}</span>
                     </a>
                 </template>
                 <template #body>
@@ -40,7 +41,7 @@
                     <WikiPanel>
                         <template #head-title>
                             <LegacyIcon class="u-icon el-icon-coin" />
-                            <span class="u-txt">参与打赏</span>
+                            <span class="u-txt">{{ $t("ui.common.wiki.reward") }}</span>
                         </template>
                         <template #body>
                             <Thx
@@ -64,7 +65,7 @@
                 <WikiPanel v-if="id" class="m-knowledge-panel">
                     <template #head-title>
                         <LegacyIcon class="u-icon el-icon-chat-line-round" />
-                        <span class="u-txt">讨论</span>
+                        <span class="u-txt">{{ $t("ui.common.wiki.discussion") }}</span>
                     </template>
                     <template #body>
                         <SingleComment :id="id" category="knowledge" />
@@ -73,13 +74,13 @@
             </template>
         </div>
 
-        <div v-else class="m-wiki-null" :class="isRobot ? 'is-robot-empty' : ''">
+        <div v-else-if="!loading && !loadError" class="m-wiki-null" :class="isRobot ? 'is-robot-empty' : ''">
             <template v-if="!isRobot">
                 <LegacyIcon class="el-icon-s-opportunity" />
-                <span>暂无内容，我要</span>
-                <a class="s-link" :href="publishLink(`knowledge/${id}`)">完善通识</a>
+                <span>{{ $t("ui.common.wiki.noContentPrefix") }}</span>
+                <a class="s-link" :href="publishLink(`knowledge/${id}`)">{{ $t("ui.knowledge.improve") }}</a>
             </template>
-            <span v-else>暂无相关攻略，欢迎热心侠士前往补充！</span>
+            <span v-else>{{ $t("ui.common.wiki.noRelatedGuide") }}</span>
         </div>
         <wiki-robot-bottom v-if="isRobot" type="knowledge" :id="id"></wiki-robot-bottom>
     </div>
@@ -100,6 +101,9 @@ import bus from "@/store/bus";
 import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 import SingleComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
 import { getKnowledgeMenus } from "@/service/knowledge.js";
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
+import { createArticleReadyTracker } from "@/utils/article-ready";
 
 export default {
     name: "Detail",
@@ -118,11 +122,10 @@ export default {
             loading: false,
             data: "",
             knowledgeTypeMap: {},
-
-            imageCount: 0,
-            loadedImageCount: 0,
-            images: [],
-            imagesLoaded: false,
+            loadError: false,
+            requestGuard: createLatestRequestGuard(),
+            typesRequestGuard: createLatestRequestGuard(),
+            articleReadyTracker: createArticleReadyTracker(),
         };
     },
     components: {
@@ -133,6 +136,7 @@ export default {
         wikiRobotBottom,
         WikiRobotTip,
         SingleComment,
+        AsyncState,
     },
     computed: {
         id: function () {
@@ -180,161 +184,64 @@ export default {
         isEditor: function () {
             return User.isEditor();
         },
+        routeDataKey() {
+            return `${this.id || ""}:${this.$route.params.post_id || ""}`;
+        },
     },
     methods: {
         onSearchKey(val) {
             this.$router.push({ path: "/", query: { search: val } });
         },
-        initImageLoader() {
-            // 在DOM更新后获取所有图片
-            this.$nextTick(() => {
-                const container = document.getElementById("wikiArticle");
-                if (!container) {
-                    this.setGlobalReady();
-                    return;
-                }
-
-                const images = container.querySelectorAll("img");
-                this.images = images;
-                this.imageCount = images.length;
-
-                if (this.imageCount === 0) {
-                    this.setGlobalReady();
-                    return;
-                }
-
-                // 手动预加载所有图片
-                this.preloadAllImages(images);
-            });
-        },
-
-        // 手动预加载所有图片
-        preloadAllImages(images) {
-            let loadedInThisBatch = 0;
-            let totalProcessed = 0;
-            Array.from(images).forEach((img, index) => {
-                // 记录原始src
-                const originalSrc = img.src;
-
-                // 如果图片未加载
-                if (!img.complete) {
-                    // 创建一个Image对象来预加载
-                    const tempImg = new Image();
-
-                    tempImg.onload = () => {
-                        loadedInThisBatch++;
-
-                        // 在临时图片加载完成后，设置原始图片的src
-                        img.src = originalSrc;
-
-                        // 检查是否所有图片都已处理
-                        this.checkImageLoadCompletion(images, loadedInThisBatch);
-                    };
-
-                    tempImg.onerror = () => {
-                        console.error(`图片加载失败: ${originalSrc}`);
-                        totalProcessed++;
-
-                        // 即使加载失败，也要设置原始图片的src
-                        img.src = originalSrc;
-
-                        // 标记原始图片为已加载（错误情况）
-                        this.handleImageLoad();
-                    };
-
-                    // 开始预加载
-                    tempImg.src = originalSrc;
-                } else {
-                    // 图片已经加载完成
-                    this.handleImageLoad();
-                    totalProcessed++;
-                }
-            });
-        },
-
-        // 检查图片加载状态
-        checkImageLoadCompletion(images, loadedCount) {
-            if (images.length === this.loadedImageCount) {
-                this.setGlobalReady();
-                return;
-            }
-
-            // 设置超时检查，防止意外情况
-            setTimeout(() => {
-                const allLoaded = Array.from(images).every((img) => img.complete);
-
-                if (allLoaded) {
-                    this.setGlobalReady();
-                } else if (this.loadedImageCount === images.length) {
-                    this.setGlobalReady();
-                }
-            }, 3000);
-        },
-
-        // 判断是否全部完成
-        handleImageLoad() {
-            this.loadedImageCount++;
-            if (this.loadedImageCount === this.imageCount) {
-                this.setGlobalReady();
-            }
-        },
-
-        // 设置全局就绪状态
-        setGlobalReady() {
-            if (this.imagesLoaded) return; // 避免重复设置
-
-            this.imagesLoaded = true;
-            window.__READY__ = true;
-            console.log("全局状态设置成功: __READY__ = ", window.__READY__);
-        },
-        async getData() {
-            this.loading = true;
-            return await wiki
-                .get({ type: "knowledge", id: this.id })
-                .then((res) => {
-                    this.data = res.data.data;
-
-                    User.isLogin() &&
-                        postHistory({
-                            source_type: "knowledge",
-                            source_id: ~~this.id,
-                            link: location.href,
-                            title: this.title,
-                        });
-
-                    document.title = this.title + this.$t("pages.common.appendTitle");
-                })
-                .finally(() => {
-                    this.loading = false;
-                    postStat(this.type, this.id);
-                });
-
-            // 请注意，为防止QQBOT无法抓取完全，请不要删除
-            if (this.isRobot) {
-                // 数据加载后启动奇遇流程中的图片检测
-                this.initImageLoader();
-            }
-        },
-        getPostData() {
-            this.loading = true;
-            return wiki
-                .getById(this.$route.params.post_id)
-                .then((res) => {
-                    const data = res.data.data;
-                    this.data = {
-                        ...this.data,
-                        post: data.post || null,
-                    };
-                })
-                .finally(() => {
-                    this.loading = false;
-                    postStat(this.type, this.id);
-                });
+        async prepareArticleReady() {
+            if (!this.isRobot) return;
+            await this.$nextTick();
+            await this.articleReadyTracker.wait(this.$el?.querySelector("#wikiArticle"));
         },
         async syncWikiData() {
-            await this.getData();
-            if (this.$route.params.post_id) {
-                await this.getPostData();
+            const token = this.requestGuard.begin();
+            this.loading = true;
+            this.loadError = false;
+            if (this.isRobot) {
+                this.articleReadyTracker.cancel();
+                window.__READY__ = false;
+            }
+            try {
+                const [sourceResponse, revisionResponse] = await Promise.all([
+                    wiki.get({ type: "knowledge", id: this.id }),
+                    this.$route.params.post_id
+                        ? wiki.getById(this.$route.params.post_id)
+                        : Promise.resolve(null),
+                ]);
+                if (!this.requestGuard.isCurrent(token)) return;
+
+                const sourceData = sourceResponse.data.data;
+                this.data = revisionResponse
+                    ? {
+                          ...sourceData,
+                          post: revisionResponse.data.data?.post || null,
+                      }
+                    : sourceData;
+
+                User.isLogin() &&
+                    postHistory({
+                        source_type: "knowledge",
+                        source_id: ~~this.id,
+                        link: location.href,
+                        title: this.title,
+                    });
+
+                document.title = this.title + this.$t("pages.common.appendTitle");
+
+            } catch (e) {
+                if (!this.requestGuard.isCurrent(token)) return;
+                this.data = "";
+                this.loadError = true;
+            } finally {
+                if (this.requestGuard.isCurrent(token)) {
+                    this.loading = false;
+                    postStat(this.type, this.id);
+                    this.prepareArticleReady();
+                }
             }
         },
         goBack() {
@@ -345,8 +252,10 @@ export default {
             }
         },
         async loadKnowledgeTypes() {
+            const token = this.typesRequestGuard.begin();
             try {
                 const res = await getKnowledgeMenus();
+                if (!this.typesRequestGuard.isCurrent(token)) return;
                 const list = res?.data?.data || [];
                 this.knowledgeTypeMap = list.reduce((acc, item) => {
                     if (!item?.name) return acc;
@@ -354,39 +263,34 @@ export default {
                     return acc;
                 }, {});
             } catch (e) {
+                if (!this.typesRequestGuard.isCurrent(token)) return;
                 this.knowledgeTypeMap = {};
             }
+        },
+        handleWikiPush() {
+            if (!this.data?.source?.id) {
+                return this.$message.warning(this.$t("ui.knowledge.noGuideWarning"));
+            }
+            this.$refs.wikiPanel?.onPush();
         },
         publishLink,
     },
     beforeUnmount() {
-        window.removeEventListener("load", this.initImageLoader);
+        bus.off("openWikiPush", this.handleWikiPush);
+        this.requestGuard.invalidate();
+        this.typesRequestGuard.invalidate();
+        this.articleReadyTracker.cancel();
     },
     mounted() {
         this.loadKnowledgeTypes();
-        bus.on("openWikiPush", (param) => {
-            if (!this.data?.source?.id) {
-                return this.$message.warning("该通识没有攻略");
-            }
-            this.$refs.wikiPanel?.onPush();
-        });
+        bus.on("openWikiPush", this.handleWikiPush);
     },
     watch: {
-        "$route.params.post_id": {
+        routeDataKey: {
             immediate: true,
-            async handler() {
-                if (this.$route.params.post_id) {
-                    await this.getPostData();
-                } else if (this.id) {
-                    await this.getData();
-                }
-            },
-        },
-        id: {
-            immediate: true,
-            async handler() {
+            handler() {
                 if (this.id) {
-                    await this.syncWikiData();
+                    this.syncWikiData();
                 }
             },
         },

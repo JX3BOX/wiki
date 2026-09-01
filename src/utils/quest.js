@@ -147,8 +147,8 @@ export const schoolIcon = (school) => {
     return `${__imgPath}/image/school/${school}.png`;
 };
 
-export const questDescFormat = (desc, ignoreColor = false) => {
-    const { playerName, playerBody } = getPlayerName();
+export const questDescFormat = (desc, ignoreColor = false, defaults) => {
+    const { playerName, playerBody } = getPlayerName(defaults);
     if (desc) {
         let result = desc
             .replace(/\\n/g, "\n")
@@ -179,19 +179,19 @@ export const questDescFormat = (desc, ignoreColor = false) => {
     return "";
 };
 
-export const questTargetDescFormat = (target) => {
+export const questTargetDescFormat = (target, playerName = "侠士") => {
     if (target)
         return target
             .replace(/\\n/g, "\n")
             .replace(/\<G\>/g, "&emsp;&emsp;")
-            .replace(/\<C\>/g, "侠士")
-            .replace(/\<N\>/g, "侠士")
+            .replace(/\<C\>/g, playerName)
+            .replace(/\<N\>/g, playerName)
             .replace(/\<F\d+ (.+?)\>/g, "$1");
     else return "";
 };
 
-export const getPlayerName = () => {
-    const playerName = localStorage.getItem("QuestWiki:playerName") || "侠士";
-    const playerBody = localStorage.getItem("QuestWiki:playerBody") || "少侠";
+export const getPlayerName = (defaults = {}) => {
+    const playerName = localStorage.getItem("QuestWiki:playerName") || defaults.playerName || "侠士";
+    const playerBody = localStorage.getItem("QuestWiki:playerBody") || defaults.playerBody || "少侠";
     return { playerName, playerBody };
 };

@@ -3,12 +3,12 @@
         <table v-if="prices.length" v-loading="priceLoading">
             <thead>
                 <tr>
-                    <th>物品</th>
-                    <th>等级</th>
-                    <th>上传时间</th>
-                    <th>服务器</th>
-                    <th style="text-align: right">一口价 (总价)</th>
-                    <th style="text-align: right">一口价 (单价)</th>
+                    <th>{{ $t("ui.common.labels.item") }}</th>
+                    <th>{{ $t("ui.common.labels.level") }}</th>
+                    <th>{{ $t("ui.common.labels.uploadTime") }}</th>
+                    <th>{{ $t("ui.common.labels.server") }}</th>
+                    <th style="text-align: right">{{ $t("ui.common.labels.buyoutPrice") }} ({{ $t("ui.common.labels.totalPrice") }})</th>
+                    <th style="text-align: right">{{ $t("ui.common.labels.buyoutPrice") }} ({{ $t("ui.common.labels.unitPrice") }})</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +33,7 @@
                 </tr>
             </tbody>
         </table>
-        <div v-else style="text-align: center">🐖 暂无记录</div>
+        <div v-else style="text-align: center">{{ $t("ui.item.noPriceRecords") }}</div>
     </div>
 </template>
 

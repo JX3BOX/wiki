@@ -2,10 +2,10 @@
     <el-dialog v-model="show" class="m-wiki-diff-dialog" :title="title" :before-close="close" width="80%">
         <div class="m-contents">
             <div class="m-versions">
-                <el-select v-model="version" placeholder="版本选择" style="width: 100%" clearable>
+                <el-select v-model="version" :placeholder="$t('ui.common.placeholders.version')" style="width: 100%" clearable>
                     <el-option v-for="item in list" :label="item.version" :value="item.id" :key="item.id"></el-option>
                 </el-select>
-                <el-select v-model="version1" placeholder="版本选择" style="width: 100%" clearable>
+                <el-select v-model="version1" :placeholder="$t('ui.common.placeholders.version')" style="width: 100%" clearable>
                     <el-option v-for="item in list" :label="item.version" :value="item.id" :key="item.id"></el-option>
                 </el-select>
             </div>
@@ -22,7 +22,7 @@
         </div>
         <template #footer>
             <span class="dialog-footer">
-                <el-button @click="close" plain>关闭</el-button>
+                <el-button @click="close" plain>{{ $t("ui.common.actions.close") }}</el-button>
             </span>
         </template>
     </el-dialog>
@@ -53,7 +53,7 @@ export default {
     },
     computed: {
         title() {
-            return "版本对比";
+            return this.$t("ui.common.wiki.compareVersions");
         },
         filename() {
             const data = this.list.find((item) => item.id === this.version);

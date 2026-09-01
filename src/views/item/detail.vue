@@ -1,6 +1,7 @@
 <template>
-    <div id="m-item-view">
-        <div class="m-item-detail" v-if="isRobot">
+    <div id="m-item-view" v-loading="loading">
+        <AsyncState :loading="loading" :error="loadError" @retry="syncWikiData" />
+        <div class="m-item-detail" v-if="isRobot && !loadError">
             <div class="m-item-header">
                 <div class="m-item-header__left">
                     <div class="u-top">
@@ -28,35 +29,34 @@
                         <div class="u-usage" v-if="show_equip_usage">
                             <template v-if="source.EquipUsage == 1">
                                 <img class="u-label-icon" src="@/assets/img/item/pve.png" alt="" />
-                                <span>秘境挑战(PVE)</span>
+                                <span>{{ $t("ui.item.detail.pve") }}</span>
                             </template>
                             <template v-if="source.EquipUsage == 2">
                                 <img class="u-label-icon" src="@/assets/img/item/pvp.png" alt="" />
-                                <span>竞技对抗(PVP)</span>
+                                <span>{{ $t("ui.item.detail.pvp") }}</span>
                             </template>
                             <template v-if="source.EquipUsage == 3">
                                 <img class="u-label-icon" src="@/assets/img/item/pvx.png" alt="" />
-                                <span>休闲(PVX)</span>
+                                <span>{{ $t("ui.item.detail.pvx") }}</span>
                             </template>
                         </div>
 
-                        <div v-if="source.AucGenre == 1" class="u-weapon-type-label">武器</div>
-                        <div v-if="source.AucGenre == 2" class="u-weapon-type-label">暗器</div>
+                        <div v-if="source.AucGenre == 1" class="u-weapon-type-label">{{ $t("ui.item.detail.weapon") }}</div>
+                        <div v-if="source.AucGenre == 2" class="u-weapon-type-label">{{ $t("ui.item.detail.rangedWeapon") }}</div>
                         <!-- 物品类型文案 -->
                         <div v-if="source.TypeLabel" class="u-type-label" v-text="source.TypeLabel"></div>
-                        <span class="u-from" v-if="source.GetType">获得途径: {{ source.GetType }}</span>
+                        <span class="u-from" v-if="source.GetType">{{ $t("ui.item.detail.source") }} {{ source.GetType }}</span>
                     </div>
                 </div>
                 <img src="@/assets/img/item/item_robot.svg" class="u-item-img__right" />
             </div>
             <div class="m-item-content">
                 <div class="u-line">
-                    <div v-if="source.Level" class="u-level u-yellow" v-text="'品质等级' + source.Level"></div>
+                    <div v-if="source.Level" class="u-level u-yellow">{{ $t("ui.item.detail.qualityLevel") }}{{ source.Level }}</div>
                     <div
                         v-if="Number(source.EquipmentRating)"
                         class="u-equipment-rating u-orange"
-                        v-text="'装备分数' + source.EquipmentRating"
-                    ></div>
+                    >{{ $t("ui.item.detail.equipmentScore") }}{{ source.EquipmentRating }}</div>
                 </div>
                 <div class="u-line">
                     <!-- 需要等级 -->
@@ -68,8 +68,7 @@
                     <div
                         v-if="source.Recommend"
                         class="u-equipment-recommend"
-                        v-text="'推荐门派：' + source.Recommend"
-                    ></div>
+                    >{{ $t("ui.item.detail.recommendedSchool") }}{{ source.Recommend }}</div>
                 </div>
                 <!-- 装备属性 -->
                 <div class="m-attributes" v-if="source.attributes && source.attributes.length">
@@ -136,7 +135,7 @@
                 <div class="m-spec-wrapper">
                     <div class="m-client-spec" v-if="orange_std_attribute.length > 0">
                         <div class="u-spec-attribute-title u-yellow">
-                            <span>特殊属性效果 - <span class="u-client">旗舰</span></span>
+                            <span>{{ $t("ui.item.detail.specialEffect") }} <span class="u-client">{{ $t("ui.item.detail.flagship") }}</span></span>
                         </div>
                         <div
                             class="u-value u-spec-attribute"
@@ -148,7 +147,7 @@
                     </div>
                     <div class="m-client-spec" v-if="orange_wujie_attribute.length > 0">
                         <div class="u-spec-attribute-title u-yellow">
-                            <span>特殊属性效果 - <span class="u-client">无界</span></span>
+                            <span>{{ $t("ui.item.detail.specialEffect") }} <span class="u-client">{{ $t("ui.item.detail.mobile") }}</span></span>
                         </div>
                         <div
                             class="u-value u-spec-attribute"
@@ -157,7 +156,7 @@
                         >
                             <game-text :text="attribute.label"></game-text>
                         </div>
-                        <div class="u-value u-spec-attribute u-orange">属性效果双端一致</div>
+                        <div class="u-value u-spec-attribute u-orange">{{ $t("ui.item.detail.sameEffect") }}</div>
                     </div>
                 </div>
 
@@ -165,7 +164,7 @@
                 <div v-if="source.Set" class="u-set">
                     <div
                         class="u-yellow u-set-title"
-                        v-html="`套装属性效果-<span>${source.Set.name}(1/${source.Set.siblings.length})</span>`"
+                        v-html="`${$t('ui.item.detail.setEffects')}-<span>${source.Set.name}(1/${source.Set.siblings.length})</span>`"
                     ></div>
                     <ul class="u-set-siblings u-gray">
                         <li
@@ -201,7 +200,7 @@
                 <div class="m-attributes m-wucai-attributes" v-if="source.WuCaiHtml" v-html="source.WuCaiHtml"></div>
             </div>
         </div>
-        <template v-if="!isRobot">
+        <template v-if="!isRobot && !loadError">
             <div v-if="source" class="w-item">
                 <div class="m-item-viewer">
                     <div class="w-left">
@@ -236,7 +235,7 @@
                         </div>
                         <!-- 原料 -->
                         <div class="m-item-required" v-if="requiredList.length">
-                            <span class="u-label">制作原料</span>
+                            <span class="u-label">{{ $t("ui.item.detail.materials") }}</span>
                             <router-link
                                 class="u-item"
                                 v-for="item in requiredList"
@@ -251,17 +250,17 @@
                         <!-- 其余属性 -->
                         <ul class="m-other-fields">
                             <li class="m-other-field">
-                                <span class="u-label">拾取绑定</span>
-                                <span class="u-value">{{ item_bind(source.BindType) }}</span>
+                                <span class="u-label">{{ $t("ui.item.detail.bindOnPickup") }}</span>
+                                <span class="u-value">{{ itemBindLabel(source.BindType) }}</span>
                             </li>
                             <li class="m-other-field">
-                                <span class="u-label">可否交易</span>
+                                <span class="u-label">{{ $t("ui.item.detail.tradeable") }}</span>
                                 <span class="u-value">{{
-                                    [1, 2].includes(source.BindType) ? "✔️ 可以" : "❌ 不可以"
+                                    [1, 2].includes(source.BindType) ? $t("ui.item.detail.yes") : $t("ui.item.detail.no")
                                 }}</span>
                             </li>
                             <li>
-                                <span class="u-label">回购价格</span>
+                                <span class="u-label">{{ $t("ui.item.detail.buybackPrice") }}</span>
                                 <GamePrice class="u-value" :price="source.Price" v-if="source.Price" />
                                 <span class="u-value" v-else>-</span>
                             </li>
@@ -275,15 +274,15 @@
 						</li> -->
 
                             <li class="m-other-field">
-                                <span class="u-label">可否堆叠</span>
-                                <span class="u-value">{{ source.CanStack ? "✔️ 可以" : "❌ 不可以" }}</span>
+                                <span class="u-label">{{ $t("ui.item.detail.stackable") }}</span>
+                                <span class="u-value">{{ source.CanStack ? $t("ui.item.detail.yes") : $t("ui.item.detail.no") }}</span>
                             </li>
                             <li v-if="source.MaxExistAmount > 0">
-                                <span class="u-label">最大拥有数</span>
+                                <span class="u-label">{{ $t("ui.item.detail.maxCount") }}</span>
                                 <span class="u-value">{{ source.MaxExistAmount }}</span>
                             </li>
                             <li v-if="source.MaxExistTime > 0">
-                                <span class="u-label">限时有效</span>
+                                <span class="u-label">{{ $t("ui.item.detail.expires") }}</span>
                                 <span class="u-value">{{ showDuration(source.MaxExistTime) }}</span>
                             </li>
 
@@ -300,29 +299,29 @@
 							<span class="u-value">{{source.MagicType}}</span>
 						</li> -->
                             <li v-if="source.GetType">
-                                <span class="u-label">获得途径</span>
+                                <span class="u-label">{{ $t("ui.item.detail.obtainable") }}</span>
                                 <span class="u-value">{{ source.GetType }}</span>
                             </li>
                             <li v-if="source.CanChangeMagic">
-                                <span class="u-label">可否附魔</span>
-                                <span class="u-value">✔️ 可以</span>
+                                <span class="u-label">{{ $t("ui.item.detail.enchantable") }}</span>
+                                <span class="u-value">{{ $t("ui.item.detail.yes") }}</span>
                             </li>
                             <li v-if="source.CanExterior">
-                                <span class="u-label">可否收集</span>
-                                <span class="u-value">✔️ 可以</span>
+                                <span class="u-label">{{ $t("ui.item.detail.collectable") }}</span>
+                                <span class="u-value">{{ $t("ui.item.detail.yes") }}</span>
                             </li>
                             <li v-if="source.CanSetColor">
-                                <span class="u-label">可否染色</span>
-                                <span class="u-value">✔️ 可以</span>
+                                <span class="u-label">{{ $t("ui.item.detail.dyeable") }}</span>
+                                <span class="u-value">{{ $t("ui.item.detail.yes") }}</span>
                             </li>
                             <li class="m-other-field">
-                                <span class="u-label">可否分解</span>
-                                <span class="u-value">{{ source.CanApart ? "✔️ 可以" : "❌ 不可以" }}</span>
+                                <span class="u-label">{{ $t("ui.item.detail.decomposable") }}</span>
+                                <span class="u-value">{{ source.CanApart ? $t("ui.item.detail.yes") : $t("ui.item.detail.no") }}</span>
                             </li>
                             <li class="m-other-field">
-                                <span class="u-label">可否摧毁</span>
+                                <span class="u-label">{{ $t("ui.item.detail.destroyable") }}</span>
                                 <span class="u-value">{{
-                                    source.CanDestroy || source.CanDestroy === null ? "✔️ 可以" : "❌ 不可以"
+                                    source.CanDestroy || source.CanDestroy === null ? $t("ui.item.detail.yes") : $t("ui.item.detail.no")
                                 }}</span>
                             </li>
                             <!-- <li v-if="source.CanShared">
@@ -362,13 +361,13 @@
 
             <div class="m-tabs" v-if="showPrice">
                 <div class="m-price-server">
-                    <LegacyIcon class="el-icon-s-shop" /> 全服价格
+                    <LegacyIcon class="el-icon-s-shop" /> {{ $t("ui.item.allServerPrices") }}
                     <el-select
                         v-if="activeTab === 'item-price-chart' || activeTab === 'item-prices'"
                         filterable
                         class="u-server"
                         v-model="server"
-                        placeholder="请选择服务器"
+                        :placeholder="$t('ui.common.placeholders.server')"
                         size="small"
                     >
                         <el-option v-for="(serve, i) in servers" :key="i" :label="serve" :value="serve"></el-option>
@@ -376,10 +375,10 @@
                 </div>
 
                 <el-tabs v-model="activeTab" type="border-card" @tab-click="active_tab_handle" v-loading="loading">
-                    <el-tab-pane label="📈 价格波动" name="item-price-chart" v-if="source && source.BindType != 3">
+                    <el-tab-pane :label="$t('ui.item.priceTrend')" name="item-price-chart" v-if="source && source.BindType != 3">
                         <item-price-chart ref="item_price_chart" :item_id="source.id" :server="server" />
                     </el-tab-pane>
-                    <el-tab-pane label="💰 近期价格" name="item-prices" v-if="source && source.BindType != 3" lazy>
+                    <el-tab-pane :label="$t('ui.item.recentPrices')" name="item-prices" v-if="source && source.BindType != 3" lazy>
                         <item-prices ref="item_prices" :item_id="source.id" :server="server" />
                     </el-tab-pane>
                     <!-- <el-tab-pane label="📜 相关物品清单" name="relation-plans" lazy>
@@ -392,30 +391,30 @@
         </template>
 
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
-            <WikiRobotTip v-if="!isRobot" type-name="物品" :reply="source?.Name"></WikiRobotTip>
+            <WikiRobotTip v-if="!isRobot" :type-name="$t('ui.types.item')" :reply="source?.Name"></WikiRobotTip>
             <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
                 <template #head-title>
                     <img class="u-icon" svg-inline src="@/assets/img/item/item.svg" />
-                    <span class="u-txt">物品攻略</span>
+                    <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.item") }) }}</span>
                 </template>
                 <template #head-actions>
                     <a class="u-btn--link el-button el-button--primary" :href="publish_url(`item/${id}`)">
                         <LegacyIcon class="el-icon-edit" />
-                        <span>完善攻略</span>
+                        <span>{{ $t("ui.common.actions.improve") }}</span>
                     </a>
                 </template>
                 <template #body>
                     <div class="m-wiki-compatible" v-if="compatible">
-                        <LegacyIcon class="el-icon-warning-outline" /> 暂无缘起攻略，以下为重制攻略，仅作参考，<a
+                        <LegacyIcon class="el-icon-warning-outline" /> {{ $t("ui.common.wiki.originFallback") }}<a
                             class="s-link"
                             :href="publish_url(`item/${id}`)"
-                            >参与修订</a
+                            >{{ $t("ui.common.wiki.joinRevision") }}</a
                         >。
                     </div>
                     <Article id="wikiArticle" :content="wiki_post.post.content" />
                     <div class="m-wiki-signature">
                         <LegacyIcon class="el-icon-edit" />
-                        本次修订由 <b>{{ user_name }}</b> 提交于{{ updated_at }}
+                        {{ $t("ui.common.wiki.revisionBy") }} <b>{{ user_name }}</b> {{ $t("ui.common.wiki.submittedAt") }}{{ updated_at }}
                     </div>
                 </template>
             </WikiPanel>
@@ -428,7 +427,7 @@
                     <WikiPanel>
                         <template #head-title>
                             <LegacyIcon class="u-icon el-icon-coin" />
-                            <span class="u-txt">参与打赏</span>
+                            <span class="u-txt">{{ $t("ui.common.wiki.reward") }}</span>
                         </template>
                         <template #body>
                             <Thx
@@ -454,13 +453,13 @@
                 <WikiComments type="item" :source-id="id" />
             </template>
         </div>
-        <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-empty' : ''" v-else>
+        <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-empty' : ''" v-else-if="!loading && !loadError">
             <template v-if="!isRobot">
                 <LegacyIcon class="el-icon-s-opportunity" />
-                <span>暂无攻略，我要</span>
-                <a class="s-link" :href="publish_url(`item/${id}`)">完善攻略</a>
+                <span>{{ $t("ui.common.wiki.noGuidePrefix") }}</span>
+                <a class="s-link" :href="publish_url(`item/${id}`)">{{ $t("ui.common.actions.improve") }}</a>
             </template>
-            <span v-else>暂无相关攻略，欢迎热心侠士前往补充！</span>
+            <span v-else>{{ $t("ui.common.wiki.noRelatedGuide") }}</span>
         </div>
         <wiki-robot-bottom v-if="isRobot" type="item" :id="id"></wiki-robot-bottom>
     </div>
@@ -483,13 +482,16 @@ import User from "@jx3box/jx3box-common/js/user";
 import Notice from "@/components/cj/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
+import { createArticleReadyTracker } from "@/utils/article-ready";
 
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki.js";
 import { __Links } from "@/utils/config";
 import std_servers from "@jx3box/jx3box-data/data/server/server_std.json";
 import origin_servers from "@jx3box/jx3box-data/data/server/server_origin.json";
-import { item_color, item_quality, item_price, item_bind } from "@/filters";
+import { item_color, item_quality, item_price } from "@/filters";
 import { publishLink, ts2str, showAvatar, iconLink } from "@jx3box/jx3box-common/js/utils";
 import { getManufactureDetail, getItemDetail } from "@/service/item";
 import { getMyInfo } from "@/service/user";
@@ -528,13 +530,13 @@ export default {
             server: "",
             activeTab: DEFAULT_ACTIVE_TAB,
             loading: false,
+            loadError: false,
+            requestGuard: createLatestRequestGuard(),
+            priceAvailabilityGuard: createLatestRequestGuard(),
+            detailRequestGuard: createLatestRequestGuard(),
+            articleReadyTracker: createArticleReadyTracker(),
             requiredList: [], // 原料列表
             showPrice: false,
-
-            imageCount: 0,
-            loadedImageCount: 0,
-            images: [],
-            imagesLoaded: false,
         };
     },
     computed: {
@@ -618,6 +620,9 @@ export default {
         orange_wujie_attribute() {
             return this.source?.attributes?.filter((item) => item.color == "orange" && item.is_mobile) || [];
         },
+        routeDataKey() {
+            return `${this.id || ""}:${this.post_id || ""}:${this.client || ""}`;
+        },
     },
     components: {
         "jx3-item": Item,
@@ -635,20 +640,29 @@ export default {
         wikiRobotBottom,
         GameText,
         WikiRobotTip,
+        AsyncState,
     },
     methods: {
         get_data() {
             const item_id = this.source.id;
-            if (item_id) {
-                show_item_prices(item_id, {
+            if (!item_id) {
+                this.showPrice = false;
+                return;
+            }
+            const token = this.priceAvailabilityGuard.begin();
+            show_item_prices(item_id, {
                     server: this.server,
                     limit: 15,
-                }).then((data) => {
+                })
+                .then((data) => {
+                    if (!this.priceAvailabilityGuard.isCurrent(token)) return;
                     data = data.data;
                     const prices = data.data?.prices?.sort((a, b) => a.created + b.created) || [];
                     this.showPrice = !!prices.length;
+                })
+                .catch(() => {
+                    if (this.priceAvailabilityGuard.isCurrent(token)) this.showPrice = false;
                 });
-            }
         },
         active_tab_handle(tab) {
             if (tab.name === "item-price-chart") {
@@ -665,7 +679,14 @@ export default {
         item_color,
         item_quality,
         item_price,
-        item_bind,
+        itemBindLabel(value) {
+            const labels = {
+                1: this.$t("ui.item.detail.tradeableValue"),
+                2: this.$t("ui.item.detail.tradeBeforeEquip"),
+                3: this.$t("ui.item.detail.notTradeable"),
+            };
+            return labels[value] || this.$t("ui.item.detail.unknownBindType");
+        },
         ts2str,
         iconLink(item) {
             return iconLink(item.item_info?.[0]?.IconID || item.item_info?.IconID);
@@ -673,158 +694,61 @@ export default {
         showAvatar: function (url) {
             return showAvatar(url, 32);
         },
-        initImageLoader() {
-            // 在DOM更新后获取所有图片
-            this.$nextTick(() => {
-                const container = document.getElementById("wikiArticle");
-                if (!container) {
-                    this.setGlobalReady();
-                    return;
-                }
-
-                const images = container.querySelectorAll("img");
-                this.images = images;
-                this.imageCount = images.length;
-
-                if (this.imageCount === 0) {
-                    this.setGlobalReady();
-                    return;
-                }
-
-                // 手动预加载所有图片
-                this.preloadAllImages(images);
-            });
-        },
-
-        // 手动预加载所有图片
-        preloadAllImages(images) {
-            let loadedInThisBatch = 0;
-            let totalProcessed = 0;
-            Array.from(images).forEach((img, index) => {
-                // 记录原始src
-                const originalSrc = img.src;
-
-                // 如果图片未加载
-                if (!img.complete) {
-                    // 创建一个Image对象来预加载
-                    const tempImg = new Image();
-
-                    tempImg.onload = () => {
-                        loadedInThisBatch++;
-
-                        // 在临时图片加载完成后，设置原始图片的src
-                        img.src = originalSrc;
-
-                        // 检查是否所有图片都已处理
-                        this.checkImageLoadCompletion(images, loadedInThisBatch);
-                    };
-
-                    tempImg.onerror = () => {
-                        console.error(`图片加载失败: ${originalSrc}`);
-                        totalProcessed++;
-
-                        // 即使加载失败，也要设置原始图片的src
-                        img.src = originalSrc;
-
-                        // 标记原始图片为已加载（错误情况）
-                        this.handleImageLoad();
-                    };
-
-                    // 开始预加载
-                    tempImg.src = originalSrc;
-                } else {
-                    // 图片已经加载完成
-                    this.handleImageLoad();
-                    totalProcessed++;
-                }
-            });
-        },
-
-        // 检查图片加载状态
-        checkImageLoadCompletion(images, loadedCount) {
-            if (images.length === this.loadedImageCount) {
-                this.setGlobalReady();
-                return;
-            }
-
-            // 设置超时检查，防止意外情况
-            setTimeout(() => {
-                const allLoaded = Array.from(images).every((img) => img.complete);
-
-                if (allLoaded) {
-                    this.setGlobalReady();
-                } else if (this.loadedImageCount === images.length) {
-                    this.setGlobalReady();
-                }
-            }, 3000);
-        },
-
-        // 判断是否全部完成
-        handleImageLoad() {
-            this.loadedImageCount++;
-            if (this.loadedImageCount === this.imageCount) {
-                this.setGlobalReady();
-            }
-        },
-
-        // 设置全局就绪状态
-        setGlobalReady() {
-            if (this.imagesLoaded) return; // 避免重复设置
-
-            this.imagesLoaded = true;
-            window.__READY__ = true;
-            console.log("全局状态设置成功: __READY__ = ", window.__READY__);
-        },
-        loadData: async function () {
-            // 获取最新攻略
-            if (this.id) {
-                await get_item(this.id, this.client).then((res) => {
-                    // console.log(res, "res");
-                    this.source = res?.data?.data?.item;
-                });
-                await wiki.mix({ type: "item", id: this.id, client: this.client }).then((res) => {
-                    const { post, source, compatible, isEmpty, users } = res;
-                    this.wiki_post = {
-                        post: post,
-                        source: source,
-                        users,
-                    };
-                    this.is_empty = isEmpty;
-                    this.compatible = compatible;
-
-                    document.title = this.wiki_post.source?.Name + this.$t("pages.common.appendTitle");
-
-                    User.isLogin() &&
-                        postHistory({
-                            source_type: this.client == "origin" ? "origin_item" : "item",
-                            source_id: ~~this.id,
-                            link: location.href,
-                            title: post?.title,
-                        });
-                });
-            }
-
-            // 请注意，为防止QQBOT无法抓取完全，请不要删除
-            if (this.isRobot) {
-                // 数据加载后启动奇遇流程中的图片检测
-                this.initImageLoader();
-            }
-
-            this.triggerStat();
-        },
-        loadRevision: function () {
-            // 获取指定攻略
-            return wiki.getById(this.post_id, { type: "item" }).then((res) => {
-                this.wiki_post = {
-                    ...this.wiki_post,
-                    post: res.data.data?.post || null,
-                };
-            });
+        async prepareArticleReady() {
+            if (!this.isRobot) return;
+            await this.$nextTick();
+            await this.articleReadyTracker.wait(this.$el?.querySelector("#wikiArticle"));
         },
         syncWikiData: async function () {
-            await this.loadData();
-            if (this.post_id) {
-                await this.loadRevision();
+            if (!this.id) return;
+            const token = this.requestGuard.begin();
+            this.loading = true;
+            this.loadError = false;
+            this.source = {};
+            this.wiki_post = { source: {}, post: null };
+            this.is_empty = false;
+            if (this.isRobot) {
+                this.articleReadyTracker.cancel();
+                window.__READY__ = false;
+            }
+            try {
+                const [itemResponse, wikiResponse, revisionResponse] = await Promise.all([
+                    get_item(this.id, this.client),
+                    wiki.mix({ type: "item", id: this.id, client: this.client }),
+                    this.post_id
+                        ? wiki.getById(this.post_id, { type: "item" })
+                        : Promise.resolve(null),
+                ]);
+                if (!this.requestGuard.isCurrent(token)) return;
+
+                this.source = itemResponse?.data?.data?.item || {};
+                const { post, source, compatible, isEmpty, users } = wikiResponse;
+                this.wiki_post = {
+                    post: revisionResponse?.data?.data?.post || post,
+                    source,
+                    users,
+                };
+                this.is_empty = isEmpty;
+                this.compatible = compatible;
+                document.title = this.wiki_post.source?.Name + this.$t("pages.common.appendTitle");
+
+                User.isLogin() &&
+                    postHistory({
+                        source_type: this.client == "origin" ? "origin_item" : "item",
+                        source_id: ~~this.id,
+                        link: location.href,
+                        title: this.wiki_post.post?.title,
+                    });
+
+                this.triggerStat();
+            } catch (e) {
+                if (!this.requestGuard.isCurrent(token)) return;
+                this.loadError = true;
+            } finally {
+                if (this.requestGuard.isCurrent(token)) {
+                    this.loading = false;
+                    this.prepareArticleReady();
+                }
             }
         },
         triggerStat: function () {
@@ -834,76 +758,68 @@ export default {
                 postStat("item", this.id);
             }
         },
-        loadItemDetail: function () {
-            if (this.wiki_post?.source?.UiID) {
-                getManufactureDetail({ sourceId: this.wiki_post?.source?.SourceID, client: this.client }).then(
-                    (res) => {
-                        const data = res?.data?.find(
-                            (item) => item.CreateItemIndex1 === this.wiki_post?.source?.SourceID
-                        );
+        loadItemDetail: async function () {
+            const token = this.detailRequestGuard.begin();
+            this.requiredList = [];
+            const source = this.wiki_post?.source;
+            if (!source?.UiID) return;
 
-                        if (!data) return;
+            try {
+                const res = await getManufactureDetail({ sourceId: source.SourceID, client: this.client });
+                if (!this.detailRequestGuard.isCurrent(token)) return;
+                const data = res?.data?.find((item) => item.CreateItemIndex1 === source.SourceID);
+                if (!data) return;
 
-                        let counts = [];
-                        let itemIds = [];
+                const counts = [];
+                const itemIds = [];
+                for (const key in data) {
+                    if (key.startsWith("RequireItemCount") && data[key]) counts.push(data[key]);
+                    if (key.startsWith("RequireItemIndex") && data[key]) itemIds.push(data[key]);
+                }
+                if (!itemIds.length) return;
 
-                        if (data) {
-                            for (const key in data) {
-                                if (key.startsWith("RequireItemCount") && data[key]) {
-                                    counts.push(data[key]);
-                                }
-
-                                if (key.startsWith("RequireItemIndex") && data[key]) {
-                                    itemIds.push(data[key]);
-                                }
-                            }
-                        }
-
-                        getItemDetail({ ids: itemIds.join(","), per: 10, client: this.client }).then((itemRes) => {
-                            this.requiredList = itemRes?.data?.list?.map((item, i) => {
-                                return {
-                                    ...item,
-                                    _count: counts[i],
-                                };
-                            });
-                        });
-                    }
-                );
+                const itemRes = await getItemDetail({ ids: itemIds.join(","), per: 10, client: this.client });
+                if (!this.detailRequestGuard.isCurrent(token)) return;
+                this.requiredList =
+                    itemRes?.data?.list?.map((item, i) => ({
+                        ...item,
+                        _count: counts[i],
+                    })) || [];
+            } catch (e) {
+                if (this.detailRequestGuard.isCurrent(token)) this.requiredList = [];
             }
         },
         showDuration: function (val) {
             val = Number(val);
-            return val && dayjs.duration(val).asDays().toFixed(0) + "天";
+            return val && this.$t("ui.item.detail.days", { count: dayjs.duration(val).asDays().toFixed(0) });
         },
         loadUserDefaultServer() {
             User.isLogin() &&
-                getMyInfo().then((data) => {
-                    let userServer = data?.jx3_server;
-                    this.$nextTick(() => {
-                        if (userServer && this.servers.includes(userServer)) {
-                            this.server = userServer;
-                        } else {
-                            this.server = this.firstServer;
-                        }
-                    });
-                });
+                getMyInfo()
+                    .then((data) => {
+                        let userServer = data?.jx3_server;
+                        this.$nextTick(() => {
+                            if (userServer && this.servers.includes(userServer)) {
+                                this.server = userServer;
+                            } else {
+                                this.server = this.firstServer;
+                            }
+                        });
+                    })
+                    .catch(() => {});
+        },
+        handleWikiPush() {
+            if (!this.wiki_post?.post?.id) {
+                return this.$message.warning(this.$t("ui.item.noGuideWarning"));
+            }
+            this.$refs.wikiPanel?.onPush();
         },
     },
     watch: {
-        id: {
-            async handler() {
-                await this.syncWikiData();
-            },
-        },
-        post_id: {
-            async handler() {
-                if (this.post_id) {
-                    await this.loadRevision();
-                } else {
-                    await this.loadData();
-                }
-
-                this.triggerStat();
+        routeDataKey: {
+            immediate: true,
+            handler() {
+                this.syncWikiData();
             },
         },
         source: {
@@ -940,14 +856,15 @@ export default {
         // },
     },
     mounted: function () {
-        this.syncWikiData();
         this.loadUserDefaultServer();
-        bus.on("openWikiPush", (param) => {
-            if (!this.wiki_post?.post?.id) {
-                return this.$message.warning("该物品没有攻略");
-            }
-            this.$refs.wikiPanel?.onPush();
-        });
+        bus.on("openWikiPush", this.handleWikiPush);
+    },
+    beforeUnmount() {
+        bus.off("openWikiPush", this.handleWikiPush);
+        this.requestGuard.invalidate();
+        this.priceAvailabilityGuard.invalidate();
+        this.detailRequestGuard.invalidate();
+        this.articleReadyTracker.cancel();
     },
     created() {
         if (this.$store.state.client == "origin") {

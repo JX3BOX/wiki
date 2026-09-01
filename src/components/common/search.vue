@@ -2,7 +2,7 @@
     <div class="m-search-bar m-cj-search" :class="$route.name == 'view' ? 'can-return' : ''">
         <div class="m-return">
             <el-button class="u-return-btn" @click="returnHandle">
-                <LegacyIcon class="el-icon-arrow-left" />返回
+                <LegacyIcon class="el-icon-arrow-left" />{{ $t("ui.common.actions.back") }}
             </el-button>
         </div>
         <div class="m-search">
@@ -15,11 +15,15 @@
                 clearable
             >
                 <template #prepend>
-                    <slot><LegacyIcon class="el-icon-search" /> <span class="u-text">关键词</span></slot>
+                    <slot
+                        ><LegacyIcon class="el-icon-search" />
+                        <span class="u-text">{{ $t("ui.common.labels.keyword") }}</span></slot
+                    >
                 </template>
                 <template #append>
                     <el-button v-if="!hideAppendSearch" class="u-search-btn" type="primary" plain @click="searchHandle"
-                        ><LegacyIcon class="el-icon-position" /> <span class="u-text">搜索</span></el-button
+                        ><LegacyIcon class="el-icon-position" />
+                        <span class="u-text">{{ $t("ui.common.actions.search") }}</span></el-button
                     >
                     <slot name="append"></slot>
                 </template>
@@ -40,7 +44,7 @@ export default {
         },
         placeholder: {
             type: String,
-            default: "输入关键词「回车」进行搜索",
+            default: "",
         },
         hideAppendSearch: {
             type: Boolean,
@@ -58,7 +62,9 @@ export default {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
         },
         displayPlaceholder() {
-            return this.isMobile ? "输入关键词进行搜索" : this.placeholder;
+            return this.isMobile
+                ? this.$t("ui.common.placeholders.keywordMobile")
+                : this.placeholder || this.$t("ui.common.placeholders.keyword");
         },
     },
     created() {

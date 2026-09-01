@@ -3,16 +3,16 @@
         <div class="u-map">{{ quest.map }}</div>
         <div class="u-name">
             <span class="u-name-title">
-                <el-tooltip v-if="quest.questType == 'act'" :content="`该任务是活动任务`" placement="top">
+                <el-tooltip v-if="quest.questType == 'act'" :content="$t('ui.quest.activityTip')" placement="top">
                     <img class="u-name-type" src="@/assets/img/quest/quest_logo_purple.png" />
                 </el-tooltip>
-                <el-tooltip v-else-if="quest.questType == 'repeat'" :content="`该任务可重复完成`" placement="top">
+                <el-tooltip v-else-if="quest.questType == 'repeat'" :content="$t('ui.quest.repeatTip')" placement="top">
                     <img class="u-name-type" src="@/assets/img/quest/quest_logo_blue.png" />
                 </el-tooltip>
-                <span class="u-name-text" :style="questNameColor">{{ quest.name }}</span>
+                <span class="u-name-text" :class="questNameClass">{{ quest.name }}</span>
                 <el-tooltip
                     v-if="quest.schoolName"
-                    :content="`该任务仅 ${quest.schoolName} 门派可接取`"
+                    :content="$t('ui.quest.schoolTip', { school: quest.schoolName })"
                     placement="top"
                 >
                     <img class="u-name-school" :src="schoolIcon(quest.schoolName)" alt="" />
@@ -41,7 +41,7 @@
         </div>
 
         <div class="u-actions" @click.stop>
-            <el-tooltip content="在左侧选择角色后可以标记任务完成情况" placement="top" v-if="!role">
+            <el-tooltip :content="$t('ui.quest.roleTip')" placement="top" v-if="!role">
                 <LegacyIcon class="el-icon-info" />
             </el-tooltip>
             <el-button
@@ -53,7 +53,7 @@
                 :disabled="!role"
                 icon="Check"
             >
-                标记为已完成
+                {{ $t("ui.quest.markComplete") }}
             </el-button>
             <el-button
                 size="small"
@@ -65,7 +65,7 @@
                 :disabled="!role"
                 icon="Close"
             >
-                标记为未完成
+                {{ $t("ui.quest.markIncomplete") }}
             </el-button>
         </div>
     </div>
@@ -104,10 +104,10 @@ export default {
                 yin: Math.floor((price * 0.01) % 100) || 0,
                 tong: Math.floor(price % 100) || 0,
             };
-            if (result["zhuan"]) z += `${result["zhuan"]}砖`;
-            if (result["jin"]) z += `${result["jin"]}金`;
-            if (result["yin"]) z += `${result["yin"]}银`;
-            if (result["tong"]) z += `${result["tong"]}铜`;
+            if (result["zhuan"]) z += `${result["zhuan"]}${this.$t("ui.quest.currency.brick")}`;
+            if (result["jin"]) z += `${result["jin"]}${this.$t("ui.quest.currency.gold")}`;
+            if (result["yin"]) z += `${result["yin"]}${this.$t("ui.quest.currency.silver")}`;
+            if (result["tong"]) z += `${result["tong"]}${this.$t("ui.quest.currency.copper")}`;
             return `${z}`;
         },
         onQuestCancel() {
@@ -116,7 +116,7 @@ export default {
             this.loading = true;
             cancelUserQuest(role_id, quest_id)
                 .then(() => {
-                    this.$message.success("操作完成");
+                    this.$message.success(this.$t("ui.common.status.operationComplete"));
                     this.$store.commit("REMOVE_COMPLETED_QUEST", quest_id);
                 })
                 .finally(() => {
@@ -129,7 +129,7 @@ export default {
             this.loading = true;
             completeUserQuest(role_id, quest_id)
                 .then(() => {
-                    this.$message.success("操作完成");
+                    this.$message.success(this.$t("ui.common.status.operationComplete"));
                     this.$store.commit("ADD_COMPLETED_QUEST", quest_id);
                 })
                 .finally(() => {
@@ -146,41 +146,40 @@ export default {
             return this.completed.includes(this.quest.id);
         },
         targetFormatted() {
-            return questTargetDescFormat(this.quest.desc?.Objective);
+            return questTargetDescFormat(this.quest.desc?.Objective, this.$t("ui.quest.defaultPlayerName"));
         },
         items() {
             if (!this.quest.reward || this.quest.reward.length == 0) {
                 return [];
             }
-            let rewards = this.quest.reward.filter((i) => i.type == "item_group");
+            const rewards = this.quest.reward.filter((i) => i.type == "item_group");
             let items = [];
-            for (let reward of rewards) items.push(...reward.items);
+            for (const reward of rewards) {
+                if (Array.isArray(reward.items)) items.push(...reward.items);
+            }
             return items.slice(0, 7);
         },
-        questNameColor() {
-            let map = {
-                common: "#0d0e0d",
-                repeat: "@v4primary",
-                act: "#7632ff",
-            };
+        questNameClass() {
             return {
-                color: map[this.quest.questType],
+                "is-repeat": this.quest.questType === "repeat",
+                "is-act": this.quest.questType === "act",
             };
         },
         textReward() {
-            let rewards = this.quest.reward.filter((i) => i.type != "item_group");
+            const rewardList = Array.isArray(this.quest.reward) ? this.quest.reward : [];
+            const rewards = rewardList.filter((i) => i.type != "item_group");
             let textRewards = [];
-            let rewardName = {
-                money: "金钱",
-                exp: "阅历",
-                justice: "侠行点",
-                prestige: "威名点",
-                tongFund: "帮会资金",
-                vigor: "精力",
-                tongResource: "载具资源",
-                affect: "声望",
-                achievement: "成就",
-                train: "修为",
+            const rewardName = {
+                money: this.$t("ui.quest.rewardTypes.money"),
+                exp: this.$t("ui.quest.rewardTypes.exp"),
+                justice: this.$t("ui.quest.rewardTypes.justice"),
+                prestige: this.$t("ui.quest.rewardTypes.prestige"),
+                tongFund: this.$t("ui.quest.rewardTypes.guildFunds"),
+                vigor: this.$t("ui.quest.rewardTypes.vigor"),
+                tongResource: this.$t("ui.quest.rewardTypes.vehicleResource"),
+                affect: this.$t("ui.quest.rewardTypes.reputation"),
+                achievement: this.$t("ui.quest.rewardTypes.achievement"),
+                train: this.$t("ui.quest.rewardTypes.cultivation"),
             };
             for (let r of rewards) {
                 let data = r.count;

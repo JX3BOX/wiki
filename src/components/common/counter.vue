@@ -1,7 +1,7 @@
 <template>
     <router-link :to="{ name: 'waiting' }">
         <LegacyIcon class="el-icon-edit-outline" />
-        <span>待攻略{{ name }}</span>
+        <span>{{ $t("ui.common.wiki.waitingGuide", { type: name }) }}</span>
         <span v-if="showCounter" class="u-waiting" :style="waitingColorStyle()">（{{ solveRate.toFixed(2) }}%）</span>
     </router-link>
 </template>
@@ -29,14 +29,7 @@ export default {
     },
     computed: {
         name() {
-            let name = "成就";
-            if (this.type === "item") {
-                name = "物品";
-            }
-            if (this.type === "quest") {
-                name = "任务";
-            }
-            return name;
+            return this.$t(`ui.types.${this.type}`);
         },
     },
     methods: {

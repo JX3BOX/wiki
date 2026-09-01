@@ -1,6 +1,6 @@
 <template>
     <DefaultLayout
-        name="通识百科"
+        :name="$t('ui.apps.knowledge')"
         slug="knowledge"
         root="/knowledge"
         without-right
@@ -14,7 +14,7 @@
         </template>
 
         <!-- 搜索 -->
-        <Search class="u-knowledge-search" @search="onSearchKey"></Search>
+        <Search class="u-knowledge-search" :placeholder="$t('ui.knowledge.searchPlaceholder')" @search="onSearchKey"></Search>
 
         <router-view></router-view>
     </DefaultLayout>

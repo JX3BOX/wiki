@@ -2,7 +2,7 @@
     <div class="m-quest-dialog">
         <template v-if="desc.AcceptRpgID && desc.AcceptRpgID.dialogues">
             <div class="u-dialog">
-                <p class="u-subtitle2"><span>接任务对话</span></p>
+                <p class="u-subtitle2"><span>{{ $t("ui.quest.acceptDialog") }}</span></p>
                 <p
                     class="u-dialog-content"
                     v-for="(dialog, index) in desc.AcceptRpgID.dialogues"
@@ -13,7 +13,7 @@
         </template>
         <template v-if="desc.FinishRpgID && desc.FinishRpgID.dialogues">
             <div class="u-dialog">
-                <p class="u-subtitle2"><span>任务完成对话</span></p>
+                <p class="u-subtitle2"><span>{{ $t("ui.quest.completeDialog") }}</span></p>
                 <p
                     class="u-dialog-content"
                     v-for="(dialog, index) in desc.FinishRpgID.dialogues"
@@ -24,13 +24,13 @@
         </template>
         <template v-if="desc.DunningDialogue">
             <div class="u-dialog">
-                <p class="u-subtitle2"><span>任务进行中</span></p>
+                <p class="u-subtitle2"><span>{{ $t("ui.quest.inProgress") }}</span></p>
                 <p class="u-dialog-content" v-html="questDescFormat(desc.DunningDialogue)"></p>
             </div>
         </template>
         <template v-if="desc.FinishedDialogue">
             <div class="u-dialog">
-                <p class="u-subtitle2"><span>任务完成</span></p>
+                <p class="u-subtitle2"><span>{{ $t("ui.quest.completed") }}</span></p>
                 <p class="u-dialog-content" v-html="questDescFormat(desc.FinishedDialogue)"></p>
             </div>
         </template>
@@ -53,7 +53,12 @@ export default {
     },
     methods: {
         questTargetDescFormat,
-        questDescFormat,
+        questDescFormat(desc) {
+            return questDescFormat(desc, false, {
+                playerName: this.$t("ui.quest.defaultPlayerName"),
+                playerBody: this.$t("ui.quest.defaultPlayerBody"),
+            });
+        },
     },
 };
 </script>

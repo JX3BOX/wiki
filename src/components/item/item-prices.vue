@@ -1,13 +1,13 @@
 <template>
-    <div class="m-item-prices is-scrollable">
-        <table v-if="prices.length" v-loading="priceLoading">
+    <div class="m-item-prices is-scrollable" v-loading="priceLoading">
+        <table v-if="prices.length && !loadError">
             <thead>
                 <tr>
-                <th>物品</th>
-                <th>等级</th>
-                <th>上传时间</th>
-                <th>服务器</th>
-                <th style="text-align: right">一口价</th>
+                <th>{{ $t("ui.common.labels.item") }}</th>
+                <th>{{ $t("ui.common.labels.level") }}</th>
+                <th>{{ $t("ui.common.labels.uploadTime") }}</th>
+                <th>{{ $t("ui.common.labels.server") }}</th>
+                <th style="text-align: right">{{ $t("ui.common.labels.buyoutPrice") }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,7 +34,9 @@
             </tbody>
         </table>
 
-        <div v-else style="text-align: center">🐖 暂无记录</div>
+        <AsyncState :loading="priceLoading" :error="loadError" :empty="!prices.length" @retry="get_data">
+            <template #empty>{{ $t("ui.item.noPriceRecords") }}</template>
+        </AsyncState>
     </div>
 </template>
 
@@ -43,6 +45,8 @@ import { get_item, get_item_prices } from "@/service/item";
 import { item_price, item_color } from "@/filters";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import dayjs from "dayjs";
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "ItemPrices",
@@ -52,6 +56,8 @@ export default {
             item: null,
             prices: [],
             priceLoading: false,
+            loadError: false,
+            requestGuard: createLatestRequestGuard(),
         };
     },
     computed: {
@@ -60,6 +66,9 @@ export default {
         },
         displayItem() {
             return this.item || {};
+        },
+        requestKey() {
+            return `${this.item_id || ""}:${this.server || ""}:${this.client || ""}`;
         },
     },
     methods: {
@@ -75,15 +84,25 @@ export default {
             return Number(value) || 0;
         },
         get_data() {
-            if (this.item_id) {
-                this.priceLoading = true;
+            if (!this.item_id) {
+                this.prices = [];
+                this.item = null;
+                return;
+            }
+            const token = this.requestGuard.begin();
+            this.priceLoading = true;
+            this.loadError = false;
+            Promise.all([
                 get_item_prices({
                     item_id: this.item_id,
                     server: this.server,
                     aggregate_type: "hourly",
-                }).then((res) => {
-                    this.priceLoading = false;
-                    const data = Array.isArray(res?.data) ? res.data : [];
+                }),
+                get_item(this.item_id, this.client),
+            ])
+                .then(([pricesResponse, itemResponse]) => {
+                    if (!this.requestGuard.isCurrent(token)) return;
+                    const data = Array.isArray(pricesResponse?.data) ? pricesResponse.data : [];
                     this.prices = data
                         .map((item) => ({
                             ...item,
@@ -92,16 +111,17 @@ export default {
                         }))
                         .filter((item) => item.timestamp)
                         .sort((a, b) => b.timestamp - a.timestamp);
-                }).catch(() => {
-                    this.priceLoading = false;
+                    this.item = itemResponse?.data?.data?.item || null;
+                })
+                .catch(() => {
+                    if (!this.requestGuard.isCurrent(token)) return;
                     this.prices = [];
+                    this.item = null;
+                    this.loadError = true;
+                })
+                .finally(() => {
+                    if (this.requestGuard.isCurrent(token)) this.priceLoading = false;
                 });
-                // 获取物品信息
-                get_item(this.item_id, this.client).then((data) => {
-                    data = data.data;
-                    this.item = data.data.item;
-                });
-            }
         },
         icon_url: function (id) {
             return iconLink(id, this.client);
@@ -113,15 +133,18 @@ export default {
         item_color,
     },
     watch: {
-        item_id() {
-            this.get_data();
-        },
-        server: {
+        requestKey: {
             immediate: true,
             handler() {
                 this.get_data();
             },
         },
+    },
+    components: {
+        AsyncState,
+    },
+    beforeUnmount() {
+        this.requestGuard.invalidate();
     },
 };
 </script>

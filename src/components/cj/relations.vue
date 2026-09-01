@@ -2,18 +2,20 @@
     <WikiPanel class="m-relations-panel" scene="detail" v-if="(relations && relations.length) || npc">
         <template #head-title>
             <LegacyIcon class="el-icon-link" />
-            <span>关联成就</span>
-            <em class="u-remark">同BOSS下的其它成就</em>
+            <span>{{ $t("ui.achievement.relations") }}</span>
+            <em class="u-remark">{{ $t("ui.achievement.sameBoss") }}</em>
         </template>
         <template #head-actions>
-            <el-button type="primary" class="u-boss" :class="{ on: show_npc }" @click="show_npc = !show_npc">BOSS属性参考</el-button>
+            <el-button type="primary" class="u-boss" :class="{ on: show_npc }" @click="show_npc = !show_npc">{{
+                $t("ui.achievement.bossReference")
+            }}</el-button>
         </template>
         <template #body>
             <div class="m-section">
                 <div class="u-empty" v-if="!relations || !relations.length">
-                    <span v-if="relations === null">🎉 数据加载中...</span>
-                    <span v-if="relations === false">⚠️ 数据加载异常</span>
-                    <span v-if="relations && !relations.length">💧 暂无相关成就</span>
+                    <span v-if="relations === null">{{ $t("ui.common.status.loading") }}</span>
+                    <span v-if="relations === false">{{ $t("ui.common.status.loadFailed") }}</span>
+                    <span v-if="relations && !relations.length">{{ $t("ui.achievement.noRelations") }}</span>
                 </div>
                 <div class="m-relations" v-if="relations && relations.length">
                     <router-link class="u-title" v-for="(relation, key) in relations" :key="key" :to="{ name: 'view', params: { source_id: relation.ID } }">
@@ -38,7 +40,7 @@
                         {{ npc.ID }}
                     </li>
                     <li class="u-name">
-                        首领:
+                        {{ $t("ui.achievement.boss") }}
                         <em></em>
                         {{ npc.Name }}
                     </li>

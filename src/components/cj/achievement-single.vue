@@ -29,14 +29,8 @@
                 <span class="u-title-text">{{ achievement.Name }}</span>
             </a>
             <div class="u-other">
-                <span
-                    class="u-attr"
-                    v-text="achievement.post ? '修订时间：' + ts2str(achievement.post.updated) : ''"
-                ></span>
-                <span
-                    class="u-attr"
-                    v-text="achievement.post ? '综合难度：' + star(achievement.post.level) : ''"
-                ></span>
+                <span class="u-attr" v-if="achievement.post">{{ $t("ui.common.labels.revisionTime") }}{{ ts2str(achievement.post.updated) }}</span>
+                <span class="u-attr" v-if="achievement.post">{{ $t("ui.common.labels.comprehensiveDifficulty") }}{{ star(achievement.post.level) }}</span>
                 <template v-if="isLogin && isVirtual">
                     <el-button
                         v-if="!completedVirtual"
@@ -46,7 +40,7 @@
                         icon="Check"
                         @click.stop="finishVirtual()"
                     >
-                        设为完成
+                        {{ $t("ui.achievement.setComplete") }}
                     </el-button>
                     <el-button
                         v-else
@@ -57,12 +51,12 @@
                         icon="Check"
                         @click.stop="cancelVirtual()"
                     >
-                        取消完成
+                        {{ $t("ui.achievement.cancelComplete") }}
                     </el-button>
                 </template>
                 <template v-if="isLogin && !isVirtual">
                     <el-button class="u-attr u-fav" plain size="small" icon="Plus" @click.stop="onAppendToLeapSchema">
-                        加入渡劫方案
+                        {{ $t("ui.achievement.addToLeapPlan") }}
                     </el-button>
                 </template>
                 <Fav
@@ -97,14 +91,14 @@
                 />
                 <div class="u-attr u-point">
                     {{ achievement.Point ? achievement.Point : 0 }}
-                    <img src="@/assets/img/cj/point.svg" alt="资历">
+                    <img src="@/assets/img/cj/point.svg" :alt="$t('ui.achievement.qualification')">
                 </div>
             </div>
         </div>
         <div class="u-footer">
             <div v-if="achievement.Prefix || achievement.Postfix" class="u-ch">
-                <div v-if="achievement.PrefixName" v-text="'称号前缀：' + achievement.PrefixName"></div>
-                <div v-if="achievement.PostfixName" v-text="'称号后缀：' + achievement.PostfixName"></div>
+                <div v-if="achievement.PrefixName">{{ $t("ui.achievement.titlePrefix") }}{{ achievement.PrefixName }}</div>
+                <div v-if="achievement.PostfixName">{{ $t("ui.achievement.titleSuffix") }}{{ achievement.PostfixName }}</div>
             </div>
             <el-row v-if="achievement.SubAchievementList" class="u-subs" :gutter="30">
                 <el-col
@@ -145,8 +139,8 @@
                         }"
                     >
                         <div class="u-status">
-                            <span v-if="hadCompleted(series_achievement.ID)" class="u-check">已完成</span>
-                            <span v-else class="u-close">待完成</span>
+                            <span v-if="hadCompleted(series_achievement.ID)" class="u-check">{{ $t("ui.achievement.completed") }}</span>
+                            <span v-else class="u-close">{{ $t("ui.achievement.pending") }}</span>
                         </div>
                         <img class="u-icon" :src="icon_url(series_achievement.IconID)" />
                         <div class="detail">
@@ -159,16 +153,16 @@
                             v-if="!hadCompleted(series_achievement.ID)"
                             class="item"
                             effect="dark"
-                            content="设为完成"
+                            :content="$t('ui.achievement.setComplete')"
                             placement="bottom"
                         >
                             <LegacyIcon
-                                title="设为完成"
+                                :title="$t('ui.achievement.setComplete')"
                                 class="u-icon el-icon-check"
                                 @click.stop="finishVirtual(series_achievement.ID)"
                             />
                         </el-tooltip>
-                        <el-tooltip v-else class="item" effect="dark" content="取消完成" placement="bottom">
+                        <el-tooltip v-else class="item" effect="dark" :content="$t('ui.achievement.cancelComplete')" placement="bottom">
                             <LegacyIcon
                                 class="u-icon el-icon-close"
                                 @click.stop="cancelVirtual(series_achievement.ID)"
@@ -203,7 +197,7 @@
             </div>
         </div>
         <div class="u-bottom">
-            <span>成就描述：</span>
+            <span>{{ $t("ui.achievement.description") }}</span>
             <span class="u-desc" v-html="achievementDesc"></span>
         </div>
     </div>
@@ -279,9 +273,11 @@ export default {
                     }
                 });
                 const len = list.length;
-                return this.completed ? "已完成" : `待完成(${num}/${len})`;
+                return this.completed
+                    ? this.$t("ui.achievement.completed")
+                    : this.$t("ui.achievement.pendingProgress", { current: num, total: len });
             }
-            return this.completed ? "已完成" : "待完成";
+            return this.completed ? this.$t("ui.achievement.completed") : this.$t("ui.achievement.pending");
         },
         isLogin() {
             return User.isLogin();
@@ -322,9 +318,13 @@ export default {
                     }
                 });
                 const len = list.length;
-                return this.completedVirtual ? "已完成" : `待完成(${num}/${len})`;
+                return this.completedVirtual
+                    ? this.$t("ui.achievement.completed")
+                    : this.$t("ui.achievement.pendingProgress", { current: num, total: len });
             }
-            return this.completedVirtual ? "已完成" : "待完成";
+            return this.completedVirtual
+                ? this.$t("ui.achievement.completed")
+                : this.$t("ui.achievement.pending");
         },
     },
     watch: {
@@ -371,8 +371,8 @@ export default {
             }
             console.log(this.currentRole);
             if (!this.currentRole || this.currentRole.jx3id !== 0) {
-                this.$alert("请先在侧边栏选择虚拟角色", "警告", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("ui.achievement.selectVirtualRole"), this.$t("ui.achievement.warning"), {
+                    confirmButtonText: this.$t("ui.common.actions.confirm"),
                 });
                 return;
             }
@@ -385,8 +385,8 @@ export default {
             };
             setVirtualRoleAchievements(data).then((res) => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将该成就标记为已完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedOneComplete"),
                     type: "success",
                 });
                 let list = this.achievementsVirtual;
@@ -411,8 +411,8 @@ export default {
             }
 
             if (!this.currentRole || this.currentRole.jx3id) {
-                this.$alert("请先在侧边栏选择虚拟角色", "警告", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("ui.achievement.selectVirtualRole"), this.$t("ui.achievement.warning"), {
+                    confirmButtonText: this.$t("ui.common.actions.confirm"),
                 });
                 return;
             }
@@ -426,8 +426,8 @@ export default {
             };
             cancelVirtualRoleAchievements(data).then((res) => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将该成就标记为待完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedOneIncomplete"),
                     type: "success",
                 });
                 let list = this.achievementsVirtual;

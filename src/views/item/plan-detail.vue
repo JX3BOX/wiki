@@ -2,7 +2,7 @@
     <div class="v-plan-view" v-loading="loading">
         <!-- 返回 & 收藏 -->
         <!-- <div class="m-plan-navigation">
-			<el-button class="u-goback" size="medium" icon="ArrowLeft" @click="goBack" plain>返回列表</el-button>
+			<el-button class="u-goback" size="medium" icon="ArrowLeft" @click="goBack" plain>{{ $t("ui.item.returnToPlans") }}</el-button>
 		</div> -->
         <!-- 内容展示 -->
         <div class="m-plan-content" :wiki-post="plan" :showQR="false">
@@ -17,11 +17,11 @@
                     <template v-if="isAuthor || isEditor">
                         <el-button type="primary" size="small" plain @click="editPlan(plan.id)">
                             <LegacyIcon class="el-icon-edit" />
-                            <span>编辑</span>
+                            <span>{{ $t("ui.common.actions.edit") }}</span>
                         </el-button>
                         <el-button type="info" size="small" plain @click="deletePlan(plan.id)">
                             <LegacyIcon class="el-icon-delete" />
-                            <span>删除</span>
+                            <span>{{ $t("ui.common.actions.delete") }}</span>
                         </el-button>
                     </template>
                     <!-- <Fav post-type="item_plan" :post-id="plan.id" :post-title="plan && plan.title" /> -->
@@ -39,10 +39,10 @@
                             :alt="getUserInfo(plan, 'display_name')"
                         />
                         <a class="u-name" :href="authorLink(plan.user_id)">{{
-                            getUserInfo(plan, "display_name") || "匿名"
+                            getUserInfo(plan, "display_name") || $t("ui.common.labels.anonymous")
                         }}</a>
                         <span class="u-time"
-                            >最后更新于 <LegacyIcon class="el-icon-time" />{{ date_format(plan.updated) }}</span
+                            >{{ $t("ui.common.labels.lastUpdated") }} <LegacyIcon class="el-icon-time" />{{ date_format(plan.updated) }}</span
                         >
                     </span> -->
                 </div>
@@ -74,7 +74,7 @@
                     <div class="u-content">
                         <div class="u-list" v-for="(list, index) in equipList" :key="index">
                             <div class="u-item" v-for="(item, key) in list" :key="key">
-                                <span class="u-title"> {{ item.label }}</span>
+                                <span class="u-title"> {{ $t(item.labelKey) }}</span>
                                 <div v-if="item.list.length">
                                     <ItemIcon
                                         class="u-equip"
@@ -84,7 +84,7 @@
                                         :item="eq"
                                     />
                                 </div>
-                                <div v-else class="u-equip-null">- 暂无物品 -</div>
+                                <div v-else class="u-equip-null">{{ $t("ui.item.noPlanItems") }}</div>
                             </div>
                         </div>
                     </div>
@@ -119,24 +119,24 @@ export default {
             default_avatar,
             equipList: [
                 [
-                    { title: "melee_weapon", label: "武器", AucGenre: 1, list: [] },
-                    { title: "range_weapon", label: "暗器", AucGenre: 2, list: [] },
+                    { title: "melee_weapon", labelKey: "ui.item.equipment.weapon", AucGenre: 1, list: [] },
+                    { title: "range_weapon", labelKey: "ui.item.equipment.rangedWeapon", AucGenre: 2, list: [] },
                 ],
                 [
-                    { title: "helm", label: "帽子", AucGenre: 3, AucSubType: 2, list: [] },
-                    { title: "chest", label: "上衣", AucGenre: 3, AucSubType: 1, list: [] },
-                    { title: "waist", label: "腰带", AucGenre: 3, AucSubType: 3, list: [] },
+                    { title: "helm", labelKey: "ui.item.equipment.helm", AucGenre: 3, AucSubType: 2, list: [] },
+                    { title: "chest", labelKey: "ui.item.equipment.chest", AucGenre: 3, AucSubType: 1, list: [] },
+                    { title: "waist", labelKey: "ui.item.equipment.waist", AucGenre: 3, AucSubType: 3, list: [] },
                 ],
                 [
-                    { title: "bangle", label: "护腕", AucGenre: 3, AucSubType: 6, list: [] },
-                    { title: "pants", label: "下装", AucGenre: 3, AucSubType: 4, list: [] },
-                    { title: "boots", label: "鞋子", AucGenre: 3, AucSubType: 5, list: [] },
+                    { title: "bangle", labelKey: "ui.item.equipment.bangle", AucGenre: 3, AucSubType: 6, list: [] },
+                    { title: "pants", labelKey: "ui.item.equipment.pants", AucGenre: 3, AucSubType: 4, list: [] },
+                    { title: "boots", labelKey: "ui.item.equipment.boots", AucGenre: 3, AucSubType: 5, list: [] },
                 ],
                 [
-                    { title: "amulet", label: "项链", AucGenre: 4, AucSubType: 1, list: [] },
-                    { title: "pendant", label: "腰坠", AucGenre: 4, AucSubType: 3, list: [] },
-                    { title: "ring_1", label: "戒指", AucGenre: 4, AucSubType: 2, list: [] },
-                    { title: "ring_2", label: "戒指", AucGenre: 4, AucSubType: 2, list: [] },
+                    { title: "amulet", labelKey: "ui.item.equipment.amulet", AucGenre: 4, AucSubType: 1, list: [] },
+                    { title: "pendant", labelKey: "ui.item.equipment.pendant", AucGenre: 4, AucSubType: 3, list: [] },
+                    { title: "ring_1", labelKey: "ui.item.equipment.ring", AucGenre: 4, AucSubType: 2, list: [] },
+                    { title: "ring_2", labelKey: "ui.item.equipment.ring", AucGenre: 4, AucSubType: 2, list: [] },
                 ],
             ],
         };
@@ -285,13 +285,13 @@ export default {
         },
         // 删除清单
         deletePlan(plan_id) {
-            this.$confirm("确认是否删除该物品清单？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("ui.item.deletePlanConfirm"), this.$t("ui.item.prompt"), {
+                confirmButtonText: this.$t("ui.common.actions.confirm"),
+                cancelButtonText: this.$t("ui.common.actions.cancel"),
                 type: "warning",
             }).then(() => {
                 delItemPlan(plan_id).then((res) => {
-                    this.$message.success("删除成功");
+                    this.$message.success(this.$t("ui.common.status.deleteSuccess"));
                     bus.emit("plan_list_refresh");
                     this.$router.push({ name: "plan_list" });
                 });

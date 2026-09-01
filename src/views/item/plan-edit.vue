@@ -1,45 +1,46 @@
 <template>
-    <div class="p-plan-edit">
-        <h3 class="u-plan-header">编辑清单</h3>
+    <div class="p-plan-edit" v-loading="initialLoading">
+        <h3 class="u-plan-header">{{ $t("ui.item.editPlan") }}</h3>
         <el-form class="u-form" label-position="left" label-width="80px">
-            <el-form-item label="标题">
+            <el-form-item :label="$t('ui.common.labels.title')">
                 <el-input
                     v-model="data.title"
-                    placeholder="请输入物品清单标题"
+                    :placeholder="$t('ui.item.planTitlePlaceholder')"
                     maxlength="20"
                     show-word-limit
                 ></el-input>
             </el-form-item>
-            <el-form-item label="可见性">
-                <el-radio v-model="data.public" :label="1">公开</el-radio>
-                <el-radio v-model="data.public" :label="0">私有</el-radio>
+            <el-form-item :label="$t('ui.common.labels.visibility')">
+                <el-radio v-model="data.public" :label="1">{{ $t("ui.item.public") }}</el-radio>
+                <el-radio v-model="data.public" :label="0">{{ $t("ui.item.private") }}</el-radio>
             </el-form-item>
-            <el-form-item label="描述">
+            <el-form-item :label="$t('ui.common.labels.description')">
                 <el-input
                     v-model="data.description"
                     type="textarea"
                     :rows="3"
-                    placeholder="简单说明一下你的物品清单"
+                    :placeholder="$t('ui.item.planDescriptionPlaceholder')"
                     :maxlength="2000"
                     show-word-limit
                 ></el-input>
             </el-form-item>
-            <el-form-item label="清单">
+            <el-form-item :label="$t('ui.common.labels.list')">
                 <el-button class="u-add-plan" @click="addRelation" type="primary" plain>
-                    新增分组
+                    {{ $t("ui.item.addGroup") }}
                 </el-button>
             </el-form-item>
             <el-form-item label="">
                 <div class="m-plan-list">
-                    <div class="u-list-search">
+                    <div class="u-list-search" v-loading="searchLoading">
                         <el-input
                             v-model.lazy.trim="keyword"
                             class="u-title"
-                            placeholder="请输入物品名称"
+                            :placeholder="$t('ui.item.itemNamePlaceholder')"
                             clearable
                         ></el-input>
 
-                        <template v-if="searchList.length">
+                        <AsyncState :loading="searchLoading" :error="searchError" @retry="loadItems" />
+                        <template v-if="!searchError && searchList.length">
                             <draggable
                                 v-model="searchList"
                                 item-key="__dragKey"
@@ -56,9 +57,14 @@
                             </draggable>
                         </template>
 
-                        <el-empty v-else description="输入物品名称进行搜索" :image-size="200"></el-empty>
+                        <el-empty
+                            v-else-if="!searchError && !searchLoading"
+                            :description="$t('ui.item.itemSearchTip')"
+                            :image-size="200"
+                        ></el-empty>
 
                         <el-pagination
+                            v-if="!searchError"
                             v-model:current-page="page"
                             size="small"
                             class="m-archive-pages"
@@ -91,7 +97,7 @@
                                     v-model="relation.title"
                                     class="u-title"
                                     type="text"
-                                    placeholder="子清单标题（选填）"
+                                    :placeholder="$t('ui.item.groupTitlePlaceholder')"
                                     maxlength="20"
                                     show-word-limit
                                 ></el-input>
@@ -107,12 +113,12 @@
                                         <div class="u-selected u-selected-item u-selected-count">
                                             <ItemIcon :item_id="element.id" :has_title="true" :size="24" />
                                             <div class="u-count">
-                                                <span>数量：</span>
+                                                <span>{{ $t("ui.common.labels.quantity") }}</span>
                                                 <el-input-number
                                                     v-model.number="element.count"
                                                     size="small"
                                                     :min="1"
-                                                    label="数字"
+                                                    :label="$t('ui.common.labels.number')"
                                                 ></el-input-number>
                                             </div>
                                             <LegacyIcon class="u-close el-icon-circle-close" @click="relation.data.splice(key, 1)" />
@@ -120,7 +126,7 @@
                                     </template>
                                     <template #footer>
                                         <div v-if="!relation.data || !relation.data.length" class="u-normal">
-                                            拖拽所需道具到此处
+                                            {{ $t("ui.item.dragItemsHere") }}
                                         </div>
                                     </template>
                                 </draggable>
@@ -130,7 +136,9 @@
                 </div>
             </el-form-item>
             <el-form-item>
-                <el-button class="u-publish" type="primary" @click="submit" :loading="loading">保存</el-button>
+                <el-button class="u-publish" type="primary" @click="submit" :loading="loading">{{
+                    $t("ui.common.actions.save")
+                }}</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -143,6 +151,8 @@ import ItemSimple from "@jx3box/jx3box-editor/src/ItemSimple";
 import ItemIcon from "@/components/common/item-icon.vue";
 import { getItemsByName } from "@/service/item";
 import { getItemPlanID, updatePlan } from "@/service/item-plan";
+import AsyncState from "@/components/common/async-state.vue";
+import { createLatestRequestGuard } from "@/utils/latest-request";
 
 const createDragKey = (item) => {
     const sourceId = item.id || item.ID || item.Name || "item";
@@ -154,6 +164,7 @@ export default {
     components: {
         draggable,
         ItemIcon,
+        AsyncState,
         "jx3-item-simple": ItemSimple,
     },
     data() {
@@ -171,6 +182,11 @@ export default {
             per: 10,
             total: 0,
             searchList: [],
+            initialLoading: false,
+            searchLoading: false,
+            searchError: false,
+            searchRequestGuard: createLatestRequestGuard(),
+            initialRequestGuard: createLatestRequestGuard(),
         };
     },
     computed: {
@@ -214,10 +230,24 @@ export default {
             });
         },
         loadItems() {
-            getItemsByName(this.keyword, this.params).then((res) => {
-                this.searchList = (res.data.list || []).map((item) => this.normalizeDragItem(item));
-                this.total = res.data.total;
-            });
+            const token = this.searchRequestGuard.begin();
+            this.searchLoading = true;
+            this.searchError = false;
+            getItemsByName(this.keyword, this.params)
+                .then((res) => {
+                    if (!this.searchRequestGuard.isCurrent(token)) return;
+                    this.searchList = (res.data.list || []).map((item) => this.normalizeDragItem(item));
+                    this.total = res.data.total || 0;
+                })
+                .catch(() => {
+                    if (!this.searchRequestGuard.isCurrent(token)) return;
+                    this.searchList = [];
+                    this.total = 0;
+                    this.searchError = true;
+                })
+                .finally(() => {
+                    if (this.searchRequestGuard.isCurrent(token)) this.searchLoading = false;
+                });
         },
         resetPages() {
             if (this.page != 1) {
@@ -243,24 +273,39 @@ export default {
             return result;
         },
         submit() {
+            if (this.loading) return;
             this.loading = true;
             const payload = pick(this.data, ["title", "type", "public", "relation", "description"]);
             updatePlan(this.id, payload)
                 .then(() => {
                     this.$message({
-                        message: "提交成功",
+                        message: this.$t("ui.item.submitSuccess"),
                         type: "success",
                     });
                     this.$router.push({ name: "plan_view", params: { plan_id: this.id } });
+                })
+                .catch(() => {
+                    this.$message.error(this.$t("ui.common.status.networkError"));
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
         loadData() {
-            getItemPlanID(this.id).then((res) => {
-                this.data = this.extractID(res);
-            });
+            const token = this.initialRequestGuard.begin();
+            this.initialLoading = true;
+            getItemPlanID(this.id)
+                .then((res) => {
+                    if (!this.initialRequestGuard.isCurrent(token)) return;
+                    this.data = this.extractID(res);
+                })
+                .catch(() => {
+                    if (!this.initialRequestGuard.isCurrent(token)) return;
+                    this.$message.error(this.$t("ui.common.status.loadFailed"));
+                })
+                .finally(() => {
+                    if (this.initialRequestGuard.isCurrent(token)) this.initialLoading = false;
+                });
         },
         extractID(data) {
             if (data.type == 1) {
@@ -306,6 +351,10 @@ export default {
             obj = this.equipItem(obj);
             this.data.relation = obj;
         },
+    },
+    beforeUnmount() {
+        this.searchRequestGuard.invalidate();
+        this.initialRequestGuard.invalidate();
     },
 };
 </script>

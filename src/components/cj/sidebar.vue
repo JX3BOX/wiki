@@ -6,7 +6,7 @@
                     v-if="!isVirtual && !isSync"
                     class="item"
                     effect="dark"
-                    content="请先在游戏中同步成就"
+                    :content="$t('ui.achievement.syncTip')"
                     placement="top"
                 >
                     <a href="/tool/74559" target="_blank"><LegacyIcon class="el-icon-warning-outline" /></a>
@@ -15,7 +15,7 @@
                     v-else
                     class="item"
                     effect="dark"
-                    content="虚拟角色即为魔盒账号本身，可自定义进度"
+                    :content="$t('ui.common.role.virtualTip')"
                     placement="top"
                 >
                     <a href="/tool/74559" target="_blank"><LegacyIcon class="el-icon-warning-outline" /></a>
@@ -27,7 +27,7 @@
             <el-option v-for="type in menu_types" :key="type.value" :label="type.label" :value="type.value"></el-option>
         </el-select>
         <div v-if="currentRole" class="m-filters">
-            <el-checkbox v-model="uncompleted" label="只看未完成" border size="small"></el-checkbox>
+            <el-checkbox v-model="uncompleted" :label="$t('ui.achievement.onlyUnfinished')" border size="small"></el-checkbox>
             <div class="u-total" v-if="[1, 2].includes(sidebar.general)">
                 <!-- numTotal -->
                 <b class="u-completed-num">{{ uncompleted ? achievementTotal - completedNum : completedNum }}</b>
@@ -79,30 +79,21 @@ export default {
     components: {
         RoleSelect,
     },
-    data() {
-        return {
-            menus_cache: [],
-            menus: [],
-            old_node: null,
-            menu_types: [
-                { value: 1, label: "常规成就" },
-                { value: 2, label: "五甲成就" },
-                { value: 3, label: "其他板块" },
-            ],
-
-            roleList: [],
-            currentRole: null,
-            isLogin: User.isLogin(),
-            uncompleted: false,
-            virtualRole: {
-                ...User.getInfo(),
-                jx3id: 0,
-                ID: ~~User.getInfo().uid,
-            },
-            isSync: false,
-        };
-    },
     computed: {
+        menu_types() {
+            return [1, 2, 3].map((value) => ({
+                value,
+                label: this.$t(`ui.achievement.menuTypes.${value}`),
+            }));
+        },
+        staticMenus() {
+            return [
+                { name: this.$t("ui.achievement.newest"), id: "newest", router: "newest" },
+                { name: this.$t("ui.achievement.waiting"), id: "waiting", router: "waiting" },
+                { name: this.$t("ui.achievement.adventure"), id: "adventure", router: "adventure" },
+                { name: this.$t("ui.achievement.rare"), id: "rare", router: "rare" },
+            ];
+        },
         generalTotal() {
             return this.$store.state.generalTotal;
         },
@@ -140,7 +131,6 @@ export default {
             },
         },
         isVirtual() {
-            // 鏄惁鏄櫄鎷熻鑹?- 榄旂洅璐﹀彿
             return !this.currentRole?.jx3id;
         },
         completedNum({ menus, achievementsVirtual, achievements }) {
@@ -159,6 +149,23 @@ export default {
                 return acc + cur;
             }, 0);
         },
+    },
+    data() {
+        return {
+            menus_cache: [],
+            menus: [],
+            old_node: null,
+            roleList: [],
+            currentRole: null,
+            isLogin: User.isLogin(),
+            uncompleted: false,
+            virtualRole: {
+                ...User.getInfo(),
+                jx3id: 0,
+                ID: ~~User.getInfo().uid,
+            },
+            isSync: false,
+        };
     },
     watch: {
         // 鐩戝惉$route 褰撲笉澶勪簬normal璺敱鐨勬椂鍊?鍙栨秷灞曞紑 tree
@@ -293,13 +300,7 @@ export default {
             }
 
             if (general == 3) {
-                that.menus = [
-                    { name: "最新成就", id: "newest", router: "newest" },
-                    { name: "待攻略成就", id: "waiting", router: "waiting" },
-                    // { name: "缁濈増鎴愬氨", id: "out_print", router: "out_print" },
-                    { name: "奇遇成就", id: "adventure", router: "adventure" },
-                    { name: "珍宠成就", id: "rare", router: "rare" },
-                ];
+                that.menus = this.staticMenus;
                 return;
             }
 

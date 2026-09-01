@@ -1,7 +1,7 @@
 <template>
     <div class="c-wiki-side-msg">
         <RightSideMsg>
-            <em>魔盒成就群</em> :
+            <em>{{ $t("ui.achievement.groups") }}</em> :
             <strong>
                 <a href="https://jq.qq.com/?_wv=1027&k=5S50j08">{{ qq }}</a>
             </strong>

@@ -2,7 +2,7 @@
     <div class="m-waiting-view m-waiting-view--item">
         <el-alert
             v-if="old"
-            title="所有任务都已经有了各自的攻略，以下是一些比较老旧的成就攻略"
+            :title="$t('ui.item.oldGuides')"
             type="success"
         ></el-alert>
         <Items :items="items"></Items>

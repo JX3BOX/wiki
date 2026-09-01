@@ -1,10 +1,63 @@
 import { createApp } from "vue";
-import ElementPlus from "element-plus";
+import {
+    ElAlert,
+    ElButton,
+    ElCascader,
+    ElCarousel,
+    ElCarouselItem,
+    ElCheckbox,
+    ElCol,
+    ElCollapse,
+    ElCollapseItem,
+    ElDialog,
+    ElDivider,
+    ElDrawer,
+    ElDropdown,
+    ElDropdownItem,
+    ElDropdownMenu,
+    ElEmpty,
+    ElForm,
+    ElFormItem,
+    ElIcon,
+    ElInfiniteScroll,
+    ElInput,
+    ElInputNumber,
+    ElLoading,
+    ElMessage,
+    ElMessageBox,
+    ElNotification,
+    ElOption,
+    ElPagination,
+    ElPopover,
+    ElRadio,
+    ElRow,
+    ElSelect,
+    ElTabPane,
+    ElTable,
+    ElTableColumn,
+    ElTabs,
+    ElTag,
+    ElTooltip,
+    ElTree,
+    makeInstaller,
+} from "element-plus";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import en from "element-plus/es/locale/lang/en";
 import zhTw from "element-plus/es/locale/lang/zh-tw";
 import vi from "element-plus/es/locale/lang/vi";
-import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import {
+    ArrowLeft,
+    CaretRight,
+    Check,
+    Close,
+    Filter,
+    Plus,
+    QuestionFilled,
+    Refresh,
+    Search,
+    Setting,
+    Upload,
+} from "@element-plus/icons-vue";
 import { createHead } from "@vueuse/head";
 import { createJx3boxUiI18n, getJx3boxUiAvailableLocales, install as JX3BOX_UI } from "@jx3box/jx3box-ui";
 import { mergeAppLocaleMessages } from "@/locale";
@@ -17,6 +70,62 @@ import "@jx3box/jx3box-common/css/element-plus-theme.scss";
 import "@jx3box/jx3box-common/css/element-fonticon.css";
 import "@/assets/css/tailwind.css";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+
+const GLOBAL_ELEMENT_PLUS_ICONS = {
+    ArrowLeft,
+    CaretRight,
+    Check,
+    Close,
+    Filter,
+    Plus,
+    QuestionFilled,
+    Refresh,
+    Search,
+    Setting,
+    Upload,
+};
+
+const ElementPlus = makeInstaller([
+    ElAlert,
+    ElButton,
+    ElCascader,
+    ElCarousel,
+    ElCarouselItem,
+    ElCheckbox,
+    ElCol,
+    ElCollapse,
+    ElCollapseItem,
+    ElDialog,
+    ElDivider,
+    ElDrawer,
+    ElDropdown,
+    ElDropdownItem,
+    ElDropdownMenu,
+    ElEmpty,
+    ElForm,
+    ElFormItem,
+    ElIcon,
+    ElInfiniteScroll,
+    ElInput,
+    ElInputNumber,
+    ElLoading,
+    ElMessage,
+    ElMessageBox,
+    ElNotification,
+    ElOption,
+    ElPagination,
+    ElPopover,
+    ElRadio,
+    ElRow,
+    ElSelect,
+    ElTabPane,
+    ElTable,
+    ElTableColumn,
+    ElTabs,
+    ElTag,
+    ElTooltip,
+    ElTree,
+]);
 
 export const bootstrapApp = (RootComponent, { router, store } = {}) => {
     const app = createApp(RootComponent);
@@ -59,7 +168,7 @@ export const bootstrapApp = (RootComponent, { router, store } = {}) => {
         locale: elementLocaleMap[locale] || zhCn,
     });
 
-    Object.entries(ElementPlusIconsVue).forEach(([name, component]) => {
+    Object.entries(GLOBAL_ELEMENT_PLUS_ICONS).forEach(([name, component]) => {
         if (!app.component(name)) {
             app.component(name, component);
         }

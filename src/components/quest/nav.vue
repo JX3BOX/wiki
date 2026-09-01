@@ -3,14 +3,14 @@
         <div class="m-nav-header">
         <role-select v-model="role" @list-loaded="onRolesLoaded">
             <template #tip>
-                <el-tooltip class="item" effect="dark" content="虚拟角色即为魔盒账号本身，可自定义进度" placement="top">
+                <el-tooltip class="item" effect="dark" :content="$t('ui.common.role.virtualTip')" placement="top">
                     <a href="/tool/74559" target="_blank"><LegacyIcon class="el-icon-warning-outline" /></a>
                 </el-tooltip>
             </template>
         </role-select>
-        <el-input class="u-keyword" v-model="keyword" placeholder="输入关键字"> </el-input>
+        <el-input class="u-keyword" v-model="keyword" :placeholder="$t('ui.quest.navKeyword')"> </el-input>
         <div v-if="role" class="m-filters">
-            <el-checkbox v-model="uncompleted" label="只看未完成" border size="small"></el-checkbox>
+            <el-checkbox v-model="uncompleted" :label="$t('ui.quest.onlyUnfinished')" border size="small"></el-checkbox>
             <div class="u-total">
                 <!-- numTotal -->
                 <b class="u-completed-num">{{ uncompleted ? total - completedNum : completedNum }}</b>

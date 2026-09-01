@@ -5,7 +5,7 @@
                 <i class="u-icon u-icon-mycollection">
                     <img svg-inline src="@/assets/img/item/my.svg" />
                 </i>
-                <span>收藏物品</span>
+                <span>{{ $t("ui.item.savedItems") }}</span>
             </h3>
             <div class="m-items-my-list">
                 <div class="u-list" v-if="data && data.length">
@@ -31,7 +31,7 @@
                     ><LegacyIcon class="el-icon-arrow-left" /> <LegacyIcon class="el-icon-more" /> <i class="el-icon-arrow-right"></i
                 ></a> -->
             </div>
-            <div v-if="isLogin && !data.length" class="u-tip"><LegacyIcon class="el-icon-warning-outline" /> 暂无收藏物品</div>
+            <div v-if="isLogin && !data.length" class="u-tip"><LegacyIcon class="el-icon-warning-outline" /> {{ $t("ui.item.noSavedItems") }}</div>
         </div>
     </div>
 </template>

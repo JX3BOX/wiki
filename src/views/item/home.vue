@@ -3,7 +3,7 @@
         <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-location-information" />
-                <span>便捷入口</span>
+                <span>{{ $t("ui.common.home.quickEntry") }}</span>
             </template>
             <template #head-actions>
                 <!-- <a class="u-more" target="_blank" :href="feedback">反馈建议 &raquo;</a> -->
@@ -13,7 +13,7 @@
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/18151/">
                             <LegacyIcon class="el-icon-trophy" />
-                            <span>游戏内看百科</span>
+                            <span>{{ $t("ui.common.home.inGameWiki") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
@@ -30,19 +30,19 @@
                             }"
                         >
                             <LegacyIcon class="el-icon-sugar" />
-                            <span>五行石合成</span>
+                            <span>{{ $t("ui.item.quick.stone") }}</span>
                         </router-link>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/pvg/manufacture">
                             <LegacyIcon class="el-icon-grape" />
-                            <span>技艺助手</span>
+                            <span>{{ $t("ui.item.quick.craft") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/pvg/price">
                             <LegacyIcon class="el-icon-watermelon" />
-                            <span>价格走势</span>
+                            <span>{{ $t("ui.item.quick.prices") }}</span>
                         </a>
                     </li>
                     <!-- <li class="qlink">
@@ -58,7 +58,7 @@
         <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-1" />
-                <span>最新物品</span>
+                <span>{{ $t("ui.item.newest") }}</span>
             </template>
             <!-- <template slot="head-actions">
                 <a href="pvg/item_price" target="_blank" class="u-more">查看更多 &raquo;</a>
@@ -95,14 +95,14 @@
                         </el-row>
                     </el-carousel-item>
                 </el-carousel>
-                <div v-else style="text-align: center">😂 暂无物品清单</div>
+                <div v-else style="text-align: center">{{ $t("ui.item.emptyPlans") }}</div>
             </template>
         </WikiPanel>
 
         <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-1" />
-                <span>最热物品</span>
+                <span>{{ $t("ui.item.hottest") }}</span>
             </template>
             <!-- <template slot="head-actions">
                 <router-link :to="{ name: 'plan_list' }" class="u-more">查看更多 &raquo;</router-link>
@@ -139,14 +139,14 @@
                         </el-row>
                     </el-carousel-item>
                 </el-carousel>
-                <div v-else style="text-align: center">😂 暂无物品清单</div>
+                <div v-else style="text-align: center">{{ $t("ui.item.emptyPlans") }}</div>
             </template>
         </WikiPanel>
 
         <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-collection" />
-                <span>最新攻略</span>
+                <span>{{ $t("ui.common.home.latestGuide") }}</span>
             </template>
             <template #body>
                 <div class="wiki-post-list m-posts" v-if="newest_posts.length">
@@ -170,7 +170,10 @@
                                         <span v-text="post.title"></span>
                                     </router-link>
                                 </div>
-                                <div class="u-level" v-text="'综合难度：' + star(post.level)"></div>
+                                <div
+                                    class="u-level"
+                                    v-text="$t('ui.common.labels.comprehensiveDifficulty') + star(post.level)"
+                                ></div>
                                 <div class="u-remark" v-if="post.remark" v-text="'📑 ' + post.remark"></div>
                             </div>
                             <div class="m-user">
@@ -200,7 +203,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-else style="text-align: center">😂 暂无攻略</div>
+                <div v-else style="text-align: center">{{ $t("ui.item.emptyGuides") }}</div>
             </template>
         </WikiPanel>
     </div>

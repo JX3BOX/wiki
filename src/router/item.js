@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
+import { ITEM_NORMAL_PATH } from "./contracts";
 
 const routes = [
     {
@@ -22,7 +23,7 @@ const routes = [
             },
             {
                 name: "normal",
-                path: "/:AucGenre([empty|\\d]+)/:AucSubTypeID(\\d+)",
+                path: ITEM_NORMAL_PATH,
                 component: () => import("@/views/item/normal.vue"),
                 meta: {
                     i18n: {

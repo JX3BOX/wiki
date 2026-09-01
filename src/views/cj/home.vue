@@ -3,7 +3,7 @@
         <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-location-information" />
-                <span>便捷入口</span>
+                <span>{{ $t("ui.common.home.quickEntry") }}</span>
             </template>
             <!-- <template slot="head-actions">
                 <a class="other" target="_blank" :href="feedback">反馈建议 &raquo;</a>
@@ -13,7 +13,7 @@
                     <li class="u-qlink">
                         <a style="background-color: #fe7979" target="_blank" href="/tool/9126/">
                             <LegacyIcon class="el-icon-trophy" />
-                            <span>游戏内看百科</span>
+                            <span>{{ $t("ui.common.home.inGameWiki") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
@@ -22,37 +22,37 @@
                     <li class="u-qlink">
                         <a target="_blank" href="/pvx/codex/achievement" style="background-color: #f7b044">
                             <LegacyIcon class="el-icon-notebook-1" />
-                            <span>资历宝典</span>
+                            <span>{{ $t("ui.achievement.quick.handbook") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" :href="hiddenAchievementsPostLink" style="background-color: #f7b044">
                             <LegacyIcon class="el-icon-medal" />
-                            <span>隐藏成就</span>
+                            <span>{{ $t("ui.achievement.quick.hidden") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/adventure">
                             <LegacyIcon class="el-icon-ice-drink" />
-                            <span>奇遇大全</span>
+                            <span>{{ $t("ui.achievement.quick.adventures") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/pet">
                             <LegacyIcon class="el-icon-grape" />
-                            <span>宠物大全</span>
+                            <span>{{ $t("ui.achievement.quick.pets") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/horse">
                             <LegacyIcon class="el-icon-watermelon" />
-                            <span>坐骑大全</span>
+                            <span>{{ $t("ui.achievement.quick.mounts") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
                         <a target="_blank" href="/furniture">
                             <LegacyIcon class="el-icon-cherry" />
-                            <span>家具大全</span>
+                            <span>{{ $t("ui.achievement.quick.furniture") }}</span>
                         </a>
                     </li>
                     <!-- <li class="u-qlink">
@@ -68,7 +68,7 @@
         <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-1" />
-                <span>热门成就</span>
+                <span>{{ $t("ui.achievement.hot") }}</span>
             </template>
             <template #body>
                 <div class="m-achievement-slider">
@@ -127,10 +127,10 @@
         <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-notebook-2" />
-                <span>最新成就</span>
+                <span>{{ $t("ui.achievement.newest") }}</span>
             </template>
             <template #head-actions>
-                <router-link class="u-wiki-more" :to="{ name: 'newest' }">查看更多 &raquo;</router-link>
+                <router-link class="u-wiki-more" :to="{ name: 'newest' }">{{ $t("ui.common.actions.more") }}</router-link>
             </template>
             <template #body>
                 <el-carousel height="66px" direction="vertical" :interval="3500" indicator-position="none">

@@ -18,7 +18,7 @@
                             >{{ questName(post.title) }}</router-link
                         >
                     </div>
-                    <div class="u-level" v-text="'综合难度：' + star(post.level)"></div>
+                    <div class="u-level">{{ $t("ui.common.labels.comprehensiveDifficulty") }}{{ star(post.level) }}</div>
                     <div class="u-remark" v-if="post.remark" v-text="'📑 ' + post.remark"></div>
                 </div>
                 <div class="m-user">
@@ -93,7 +93,7 @@ export default {
         },
         ellipsis,
         questName(name) {
-            return name || "未知任务";
+            return name || this.$t("ui.quest.unknownQuest");
         },
     },
 };

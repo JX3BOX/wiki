@@ -1,6 +1,6 @@
 <template>
     <DefaultLayout
-        name="任务百科"
+        :name="$t('ui.apps.quest')"
         slug="quest"
         root="/quest"
         without-right
@@ -14,17 +14,17 @@
             </CommonNav>
         </template>
         <div class="m-search-wrap">
-            <Search class="m-quest-search" :placeholder="placeholder" :hide-append-search="true" @search="search">
+            <Search class="m-quest-search" :placeholder="$t('ui.quest.searchPlaceholder')" :hide-append-search="true" @search="search">
                 <div>
-                    <el-tooltip content="查看任务链需要键入完整任务名或任务ID哦" placement="top">
-                        <el-checkbox v-model="chain">查看任务链</el-checkbox>
+                    <el-tooltip :content="$t('ui.quest.chainTip')" placement="top">
+                        <el-checkbox v-model="chain">{{ $t("ui.quest.viewChain") }}</el-checkbox>
                     </el-tooltip>
                     <el-tooltip class="u-tips" effect="dark" placement="bottom">
                         <template #content>
                             <div>
-                                <span>※ 支持任务名称精确或模糊搜索</span> <br />
-                                <span>※ 支持任务相关物品名称精确搜索</span> <br />
-                                <span>※ 支持成就名称精确搜索</span> <br />
+                                <span>{{ $t("ui.quest.searchTips.name") }}</span> <br />
+                                <span>{{ $t("ui.quest.searchTips.item") }}</span> <br />
+                                <span>{{ $t("ui.quest.searchTips.achievement") }}</span> <br />
                             </div>
                         </template>
                         <el-icon><QuestionFilled /></el-icon>
@@ -35,16 +35,16 @@
                         popper-class="u-player-setting-popover"
                         placement="top"
                         width="160"
-                        v-model="settingVisible"
+                        v-model:visible="settingVisible"
                     >
-                        <el-input v-model="playerName" placeholder="称呼" @input="handlePlayerInfoChange" size="small"
-                            ><template #prepend>称呼</template></el-input
+                        <el-input v-model="playerName" :placeholder="$t('ui.quest.playerName')" @input="handlePlayerInfoChange" size="small"
+                            ><template #prepend>{{ $t("ui.quest.playerName") }}</template></el-input
                         >
-                        <el-input v-model="playerBody" placeholder="体型" @input="handlePlayerInfoChange" size="small"
-                            ><template #prepend>体型</template></el-input
+                        <el-input v-model="playerBody" :placeholder="$t('ui.quest.bodyType')" @input="handlePlayerInfoChange" size="small"
+                            ><template #prepend>{{ $t("ui.quest.bodyType") }}</template></el-input
                         >
                         <div style="text-align: right; margin: 0">
-                            <el-button type="primary" size="small" @click="settingVisible = false">确定</el-button>
+                            <el-button type="primary" size="small" @click="settingVisible = false">{{ $t("ui.common.actions.confirm") }}</el-button>
                         </div>
                         <template #reference>
                             <div class="u-player">
@@ -74,11 +74,10 @@ export default {
     components: { QuestNav, CommonNav, DefaultLayout, Search },
     data() {
         return {
-            placeholder: "输入任务关键字（可包括中括号），「回车」进行搜索",
             chain: false,
             settingVisible: false,
-            playerName: "侠士",
-            playerBody: "少侠",
+            playerName: this.$t("ui.quest.defaultPlayerName"),
+            playerBody: this.$t("ui.quest.defaultPlayerBody"),
         };
     },
     methods: {
@@ -94,7 +93,10 @@ export default {
         },
     },
     mounted() {
-        const { playerName, playerBody } = getPlayerName();
+        const { playerName, playerBody } = getPlayerName({
+            playerName: this.$t("ui.quest.defaultPlayerName"),
+            playerBody: this.$t("ui.quest.defaultPlayerBody"),
+        });
         this.playerName = playerName;
         this.playerBody = playerBody;
     },

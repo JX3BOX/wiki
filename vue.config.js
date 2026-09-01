@@ -90,13 +90,6 @@ module.exports = {
         },
     },
 
-    // 过滤依赖包里的已知兼容性 warning（不影响运行，但会刷屏）
-    configureWebpack: {
-        stats: {
-            warningsFilter: [/node_modules[\\\\/]+@jx3box[\\\\/]+jx3box-common[\\\\/]+/],
-        },
-    },
-
     //❤️ Webpack configuration
     chainWebpack: (config) => {
         //💝 in-line small imgs ~
@@ -171,6 +164,10 @@ module.exports = {
     },
 
     configureWebpack: {
+        // 过滤依赖包里的已知兼容性 warning（不影响运行，但会刷屏）
+        stats: {
+            warningsFilter: [/node_modules[\\\\/]+@jx3box[\\\\/]+jx3box-common[\\\\/]+/],
+        },
         plugins: [
             new webpack.DefinePlugin({
                 // 全局注入，用于 JS 或其他代码中

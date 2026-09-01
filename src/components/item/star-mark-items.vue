@@ -3,9 +3,9 @@
         <template #head-title>
             <div class="u-title">
                 <LegacyIcon class="el-icon-shopping-bag-1" />
-                <span>交易走势</span>
+                <span>{{ $t("ui.item.tradingTrend") }}</span>
             </div>
-            <el-select v-model="server" class="u-server" placeholder="请选择服务器" size="small">
+            <el-select v-model="server" class="u-server" :placeholder="$t('ui.common.placeholders.server')" size="small">
                 <el-option v-for="serve in servers" :key="serve" :label="serve" :value="serve"></el-option>
             </el-select>
         </template>
@@ -13,7 +13,7 @@
             <el-input
                 v-model="search"
                 class="u-search"
-                placeholder="搜索.."
+                :placeholder="$t('ui.item.priceSearchPlaceholder')"
                 size="small"
                 @keyup.enter="goItemPage"
             >
@@ -46,20 +46,20 @@
                                             {{ showItemTrending(item) }}
                                         </span>
                                         <template v-if="item.sub_days_0_price">
-                                            <span>今日：</span>
+                                            <span>{{ $t("ui.item.today") }}</span>
                                             <GamePrice :price="item.sub_days_0_price" />
                                         </template>
                                         <template v-else-if="!item.sub_days_0_price && item.sub_days_1_price">
-                                            <span>昨日：</span>
+                                            <span>{{ $t("ui.item.yesterday") }}</span>
                                             <GamePrice :price="item.sub_days_1_price" />
                                         </template>
                                         <template
                                             v-else-if="!item.sub_days_0_price && !item.sub_days_1_price && item.sub_days_2_price"
                                         >
-                                            <span>前日：</span>
+                                            <span>{{ $t("ui.item.dayBeforeYesterday") }}</span>
                                             <GamePrice :price="item.sub_days_2_price" />
                                         </template>
-                                        <span v-else>暂无价目</span>
+                                        <span v-else>{{ $t("ui.item.noPrice") }}</span>
                                     </span>
                                 </div>
                             </router-link>
