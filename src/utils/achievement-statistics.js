@@ -28,7 +28,7 @@ export function normalizeCountableAchievementMetadata(points) {
         const point = Number(tuple[0]);
         const general = Number(tuple[1]);
         const visible = Number(tuple[2]);
-        if (!Number.isFinite(point) || point <= 0 || ![0, 1, 2, 3].includes(general) || ![0, 1].includes(visible)) {
+        if (!Number.isFinite(point) || point < 0 || ![0, 1, 2, 3].includes(general) || ![0, 1].includes(visible)) {
             return metadata;
         }
 

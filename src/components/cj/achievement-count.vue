@@ -33,7 +33,7 @@ export default {
         },
     },
     created() {
-        // 统一从 v2 点数元数据派生数量，零资历成就不进入统计。
+        // 统一从 v2 点数元数据派生成就数与资历数。
         getAchievementPointsV2().then((response) => {
             const metadata = normalizeCountableAchievementMetadata(response.data?.data?.points || {});
             this.count = summarizeVisibleAchievements(metadata);
