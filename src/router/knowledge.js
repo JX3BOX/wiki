@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 
 const KnowledgeIndex = () => import("@/views/knowledge/knowledge-index.vue");
 const KnowledgeList = () => import("@/views/knowledge/knowledge-list.vue");
@@ -64,22 +63,6 @@ const routes = [
         ],
     },
 ];
-
-if (isMiniProgram() || isApp()) {
-    routes.forEach((route) => {
-        if (route.path === "/") {
-            route.component = () => import("@/App.vue");
-            route.children.forEach((child) => {
-                if (child.name === "index") {
-                    child.component = () => import("@/views/knowledge/mobile/index.vue");
-                }
-                if (child.name === "view") {
-                    child.component = () => import("@/views/knowledge/mobile/detail.vue");
-                }
-            });
-        }
-    });
-}
 
 const router = createRouter({
     history: createWebHistory("/knowledge"),

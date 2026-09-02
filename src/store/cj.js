@@ -9,7 +9,7 @@ const store = {
             detail: null,
         },
         client: location.href.includes("origin") ? "origin" : "std",
-        role: "",
+        role: null,
         achievements: [],
         generalTotal: 0,
         armorTotal: 0,

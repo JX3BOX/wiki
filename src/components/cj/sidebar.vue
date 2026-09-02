@@ -221,8 +221,8 @@ export default {
             immediate: true,
             handler(bol) {
                 if (!bol) {
-                    this.currentRole = "";
-                    this.$store.commit("SET_STATE", { key: "role", value: "" });
+                    this.currentRole = null;
+                    this.$store.commit("SET_STATE", { key: "role", value: null });
                     this.$store.commit("SET_STATE", { key: "wiki_last_sync", value: 0 });
                     localStorage.setItem("wiki_last_sync", 0);
                     // this.$store.commit("SET_STATE", { key: "cj-roles", value: [], isSession: true });
@@ -387,7 +387,7 @@ export default {
         onRoleLoaded(list, virtualRole) {
             const wiki_last_sync_jx3id = localStorage.getItem("wiki_last_sync");
             if (wiki_last_sync_jx3id && wiki_last_sync_jx3id !== "0") {
-                this.currentRole = list.find((item) => item.jx3id == wiki_last_sync_jx3id) || "";
+                this.currentRole = list.find((item) => item.jx3id == wiki_last_sync_jx3id) || null;
             } else {
                 this.currentRole = virtualRole;
                 this.$store.commit("SET_STATE", { key: "role", value: virtualRole });

@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "../store/cj";
-import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 
 const Home = () => import("@/views/cj/home.vue");
 const Normal = () => import("@/views/cj/normal.vue");
@@ -173,21 +172,6 @@ const routes = [
         },
     },
 ];
-
-if (isMiniProgram() || isApp()) {
-    routes.forEach((route) => {
-        if (route.path === "/") {
-            route.children.forEach((child) => {
-                if (child.name === "home") {
-                    child.component = () => import("@/views/cj/mobile/index.vue");
-                } else if (child.name === "view") {
-                    child.component = () => import("@/views/cj/mobile/detail.vue");
-                }
-            });
-            route.component = () => import("@/App.vue");
-        }
-    });
-}
 
 const router = createRouter({
     history: createWebHistory("/cj"),

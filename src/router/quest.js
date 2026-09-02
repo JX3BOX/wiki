@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 
 const routes = [
     {
@@ -72,21 +71,6 @@ const routes = [
         ],
     },
 ];
-
-if (isMiniProgram() || isApp()) {
-    routes.forEach((route) => {
-        if (route.path === "/") {
-            route.children.forEach((child) => {
-                if (child.name === "home") {
-                    child.component = () => import("@/views/quest/mobile/index.vue");
-                } else if (child.name === "view") {
-                    child.component = () => import("@/views/quest/mobile/detail.vue");
-                }
-            });
-            route.component = () => import("@/App.vue");
-        }
-    });
-}
 
 const router = createRouter({
     history: createWebHistory("/quest"),

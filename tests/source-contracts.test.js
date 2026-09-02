@@ -135,7 +135,42 @@ test("源码使用的 Element Plus 组件与指令均按需注册", async () => 
 
     assert.match(bootstrap, /\bElLoading,/);
     assert.match(bootstrap, /\bElInfiniteScroll,/);
+    assert.match(bootstrap, /\bElRate,/);
     assert.doesNotMatch(bootstrap, /import ElementPlus from "element-plus"/);
+});
+
+test("小程序标识不再切换独立页面或加载专用样式", async () => {
+    const routerSources = await Promise.all(
+        ["cj", "knowledge", "item", "quest"].map((name) => readSource(`src/router/${name}.js`))
+    );
+    const appStyles = await readSource("src/assets/css/app.less");
+    const bootstrap = await readSource("src/utils/bootstrap.js");
+
+    for (const source of routerSources) {
+        assert.doesNotMatch(source, /@\/views\/(?:cj|knowledge|item|quest)\/mobile\//);
+        assert.doesNotMatch(source, /\bisMiniProgram\b|\bisApp\b/);
+    }
+    assert.doesNotMatch(appStyles, /miniprogram\/app\.less/);
+    assert.match(bootstrap, /classList\.add\("v-miniprogram"\)/);
+});
+
+test("成就角色选择仅使用对象或 null 表示当前角色", async () => {
+    const sidebar = await readSource("src/components/cj/sidebar.vue");
+    const store = await readSource("src/store/cj.js");
+
+    assert.doesNotMatch(sidebar, /this\.currentRole\s*=\s*""/);
+    assert.doesNotMatch(sidebar, /key:\s*"role",\s*value:\s*""/);
+    assert.doesNotMatch(sidebar, /list\.find\([^\n]+\)\s*\|\|\s*""/);
+    assert.match(store, /\brole:\s*null,/);
+});
+
+test("成就详情的历史版本与打赏操作适配移动端窄屏", async () => {
+    const styles = await readSource("src/assets/css/cj/detail.less");
+
+    assert.match(styles, /\.m-histories\s*\{[\s\S]*?table-layout:\s*fixed/);
+    assert.match(styles, /td:nth-child\(-n \+ 3\)[\s\S]*?white-space:\s*nowrap/);
+    assert.match(styles, /\.m-wiki-thx-panel \.w-thx-panel\s*\{[\s\S]*?flex-wrap:\s*wrap/);
+    assert.match(styles, /\.u-count\s*\{[\s\S]*?white-space:\s*nowrap/);
 });
 
 test("任务名称颜色不在 JavaScript 中使用 Less 变量", async () => {

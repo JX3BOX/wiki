@@ -1,5 +1,9 @@
 <template>
-    <WikiPanel class="m-relations-panel" scene="detail" v-if="(relations && relations.length) || npc">
+    <WikiPanel
+        class="m-relations-panel"
+        scene="detail"
+        v-if="relations === false || (relations && relations.length) || npc"
+    >
         <template #head-title>
             <LegacyIcon class="el-icon-link" />
             <span>{{ $t("ui.achievement.relations") }}</span>
@@ -118,10 +122,14 @@ export default {
         // 获取boss信息
         getBossInfo(npcid) {
             npcid &&
-                getBossInfo(npcid).then((res) => {
-                    res = res.data;
-                    if (res.list && res.list.length) this.npc = res.list[0];
-                });
+                getBossInfo(npcid)
+                    .then((res) => {
+                        const list = res?.data?.list;
+                        if (list && list.length) this.npc = list[0];
+                    })
+                    .catch(() => {
+                        this.npc = null;
+                    });
         },
     },
     components: {
@@ -132,14 +140,22 @@ export default {
             immediate: true,
             handler() {
                 if (this.sourceId) {
-                    getRelationAchievements(this.sourceId).then((res) => {
-                        res = res.data;
-                        let result = res.data;
-                        this.relations = result.relations;
+                    getRelationAchievements(this.sourceId)
+                        .then((res) => {
+                            const result = res?.data?.data;
+                            if (!result) {
+                                this.relations = false;
+                                return;
+                            }
 
-                        // 获取boss信息
-                        this.getBossInfo(result.boss_id);
-                    });
+                            this.relations = Array.isArray(result.relations) ? result.relations : [];
+
+                            // 获取boss信息
+                            this.getBossInfo(result.boss_id);
+                        })
+                        .catch(() => {
+                            this.relations = false;
+                        });
                 }
             },
         },

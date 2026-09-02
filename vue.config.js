@@ -65,6 +65,10 @@ module.exports = {
         proxy: buildEnvProxy(),
         allowedHosts: "all",
         port: process.env.DEV_PORT || 12028,
+        // Vue CLI 默认开启静态目录索引；异常编码路径会被 serve-index 打成错误堆栈。
+        static: {
+            serveIndex: false,
+        },
         setupMiddlewares: (middlewares, devServer) => {
             devServer.app.get("/", (_, res) => {
                 res.redirect(302, "/cj");
@@ -228,6 +232,8 @@ function buildEnvProxy() {
                 target: normalized,
                 changeOrigin: true,
                 secure: false,
+                // 这些服务仅代理 HTTP API。关闭默认 WebSocket，避免每个代理重复注册 upgrade 监听器。
+                ws: false,
                 cookieDomainRewrite: "",
                 pathRewrite: (p) => p.replace(contextRe, ""),
             },

@@ -8,3 +8,70 @@
         .none;
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-detail-view {
+        .c-wiki-revisions {
+            .m-revisions-panel {
+                overflow-x: visible;
+            }
+
+            .m-histories {
+                width: 100%;
+                table-layout: fixed;
+
+                th,
+                td {
+                    min-width: 0;
+                    padding: 6px 4px;
+                    vertical-align: top;
+                }
+
+                th:nth-child(1),
+                td:nth-child(1) {
+                    width: 12%;
+                }
+
+                th:nth-child(2),
+                td:nth-child(2) {
+                    width: 27%;
+                }
+
+                th:nth-child(3),
+                td:nth-child(3) {
+                    width: 22%;
+                }
+
+                th:nth-child(4),
+                td:nth-child(4) {
+                    width: 39%;
+                }
+
+                th,
+                td:nth-child(-n + 3) {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+
+                td:nth-child(4) {
+                    overflow-wrap: anywhere;
+                }
+            }
+        }
+
+        .m-wiki-thx-panel .w-thx-panel {
+            flex-wrap: wrap;
+            gap: 12px 16px;
+
+            > *,
+            .u-count {
+                flex: none;
+            }
+
+            .u-count {
+                white-space: nowrap;
+            }
+        }
+    }
+}
