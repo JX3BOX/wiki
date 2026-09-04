@@ -1,5 +1,4 @@
 import { ref, watch } from "vue";
-import settings from "@/settings";
 
 function normalizeHtmlLang(locale) {
     if (!locale) return "zh-CN";
@@ -15,15 +14,18 @@ function isMissingI18nValue(value, key) {
     return key ? str === String(key) : false;
 }
 
-function withSuffix(title) {
-    // 注意：suffix 由业务侧在 settings.js 中定义，可能包含刻意的前后空格
-    // 这里不要对 suffix 做 trim/replace，保持原样拼接
+function translateOrEmpty(i18n, key) {
+    const value = i18n.global.t(key);
+    return isMissingI18nValue(value, key) ? "" : value;
+}
+
+function withSuffix(title, suffix) {
     const base = String(title || "").trim();
-    const suffix = String(settings?.suffix ?? "");
+    const normalizedSuffix = String(suffix || "");
     if (!base) return "";
-    if (!suffix) return base;
-    if (base.endsWith(suffix)) return base;
-    return `${base}${suffix}`;
+    if (!normalizedSuffix) return base;
+    if (base.endsWith(normalizedSuffix)) return base;
+    return `${base}${normalizedSuffix}`;
 }
 
 function buildHeadObjFromRoute(to, i18n) {
@@ -46,17 +48,25 @@ function buildHeadObjFromRoute(to, i18n) {
     const rawTitle = rawTitleKey ? i18n.global.t(rawTitleKey) : "";
     const rawKeywords = rawKeywordsKey ? i18n.global.t(rawKeywordsKey) : "";
     const rawDescription = rawDescriptionKey ? i18n.global.t(rawDescriptionKey) : "";
+    const fallbackTitleKey = "pages.common.fallbackTitle";
+    const fallbackKeywordsKey = "pages.common.fallbackKeywords";
+    const fallbackDescriptionKey = "pages.common.fallbackDescription";
+    const suffixKey = "pages.common.appendTitle";
 
-    const title = isMissingI18nValue(rawTitle, rawTitleKey) ? settings?.title : rawTitle;
-    const keywords = isMissingI18nValue(rawKeywords, rawKeywordsKey) ? settings?.keywords : rawKeywords;
-    const description = isMissingI18nValue(rawDescription, rawDescriptionKey) ? settings?.description : rawDescription;
+    const fallbackTitle = translateOrEmpty(i18n, fallbackTitleKey);
+    const fallbackKeywords = translateOrEmpty(i18n, fallbackKeywordsKey);
+    const fallbackDescription = translateOrEmpty(i18n, fallbackDescriptionKey);
+    const suffix = translateOrEmpty(i18n, suffixKey);
+    const title = isMissingI18nValue(rawTitle, rawTitleKey) ? fallbackTitle : rawTitle;
+    const keywords = isMissingI18nValue(rawKeywords, rawKeywordsKey) ? fallbackKeywords : rawKeywords;
+    const description = isMissingI18nValue(rawDescription, rawDescriptionKey) ? fallbackDescription : rawDescription;
 
     const meta = [];
     if (keywords) meta.push({ name: "keywords", content: String(keywords) });
     if (description) meta.push({ name: "description", content: String(description) });
 
     return {
-        title: withSuffix(title) || undefined,
+        title: withSuffix(title, suffix) || undefined,
         htmlAttrs: { lang: htmlLang },
         meta,
     };

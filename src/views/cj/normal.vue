@@ -20,7 +20,8 @@
 import Achievements from "@/components/cj/achievements.vue";
 import { getMenuAchievements, setVirtualRoleAchievements, cancelVirtualRoleAchievements } from "@/service/achievement";
 
-import { get, flattenDeep } from "lodash";
+import get from "lodash/get";
+import flattenDeep from "lodash/flattenDeep";
 import User from "@jx3box/jx3box-common/js/user";
 import AsyncState from "@/components/common/async-state.vue";
 import { createLatestRequestGuard } from "@/utils/latest-request";

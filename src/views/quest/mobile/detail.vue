@@ -6,9 +6,9 @@
                     <p v-html="targetDesc"></p>
                     <template v-if="source?.killNpcs?.length > 0">
                         <div class="u-target-sub" v-for="(killNpc, i) in source?.killNpcs" :key="`kn` + i">
-                            <span>击杀</span>
+                            <span>{{ $t("ui.quest.kill") }}</span>
                             <span>{{ killNpc.name }}</span>
-                            <el-tooltip v-if="killNpc.share" content="该目标可共享击杀" placement="top">
+                            <el-tooltip v-if="killNpc.share" :content="$t('ui.quest.sharedKill')" placement="top">
                                 <img src="@/assets/img/quest/target-15.png" alt="" />
                             </el-tooltip>
                             <span> × {{ killNpc.amount }}</span>
@@ -16,7 +16,7 @@
                     </template>
                     <template v-if="source?.needItems?.length > 0">
                         <div class="u-target-sub" v-for="(needItem, i) in source.needItems" :key="`ni` + i">
-                            <span>收集</span>
+                            <span>{{ $t("ui.quest.collect") }}</span>
                             <item-icon :item_id="needItem.id" :has_title="true" :size="18"></item-icon>
                             <span>× {{ needItem.amount }}</span>
                         </div>
@@ -31,11 +31,11 @@
                 </div>
                 <div class="u-pos">
                     <div class="u-pos-item">
-                        <span class="u-label">任务起点：</span>
+                        <span class="u-label">{{ $t("ui.quest.mobile.start") }}</span>
                         <template v-if="source?.start?.type === 'npc'">
-                            <span class="u-map"> {{ source?.start?.mapName || "未知地图" }} </span> -
+                            <span class="u-map"> {{ source?.start?.mapName || $t("ui.quest.unknownMap") }} </span> -
                             <span class="u-npc">
-                                {{ source?.start?.name || "未知NPC" }}
+                                {{ source?.start?.name || $t("ui.quest.mobile.unknownNpc") }}
                             </span>
                             <span class="u-id">(ID: {{ source?.start?.id }})</span>
                         </template>
@@ -45,11 +45,11 @@
                         </template>
                     </div>
                     <div class="u-pos-item">
-                        <span class="u-label">任务终点：</span>
+                        <span class="u-label">{{ $t("ui.quest.mobile.end") }}</span>
                         <template v-if="source?.start?.type === 'npc'">
-                            <span class="u-map"> {{ source?.start?.mapName || "未知地图" }} </span> -
+                            <span class="u-map"> {{ source?.start?.mapName || $t("ui.quest.unknownMap") }} </span> -
                             <span class="u-npc">
-                                {{ source?.start?.name || "未知NPC" }}
+                                {{ source?.start?.name || $t("ui.quest.mobile.unknownNpc") }}
                             </span>
                             <span class="u-id">(ID: {{ source?.start?.id }})</span>
                         </template>
@@ -61,16 +61,16 @@
                 </div>
             </fold-card>
             <button class="m-confirm" :class="{ complete: isCompleted }" @click="toggleConfirmShow">
-                {{ isCompleted ? "设为未完成" : "设为已完成" }}
+                {{ isCompleted ? $t("ui.quest.mobile.setIncomplete") : $t("ui.quest.mobile.setComplete") }}
             </button>
 
-            <fold-card class="m-quest-info" title="任务描述">
+            <fold-card class="m-quest-info" :title="$t('ui.quest.description')">
                 <p class="u-desc" v-html="questDesc"></p>
             </fold-card>
-            <fold-card title="任务文案">
+            <fold-card :title="$t('ui.quest.textTab')">
                 <div class="m-quest-dialog">
                     <div class="u-dialog" v-if="source?.desc?.AcceptRpgID?.dialogues?.length">
-                        <p class="u-subtitle2"><span>接任务对话</span></p>
+                        <p class="u-subtitle2"><span>{{ $t("ui.quest.acceptDialog") }}</span></p>
                         <p
                             class="u-dialog-content"
                             v-for="(dialog, index) in source.desc.AcceptRpgID.dialogues"
@@ -79,7 +79,7 @@
                         ></p>
                     </div>
                     <div class="u-dialog" v-if="source?.desc?.FinishRpgID?.dialogues?.length">
-                        <p class="u-subtitle2"><span>任务完成对话</span></p>
+                        <p class="u-subtitle2"><span>{{ $t("ui.quest.completeDialog") }}</span></p>
                         <p
                             class="u-dialog-content"
                             v-for="(dialog, index) in source.desc.FinishRpgID.dialogues"
@@ -88,17 +88,17 @@
                         ></p>
                     </div>
                     <div class="u-dialog" v-if="source?.desc?.DunningDialogue">
-                        <p class="u-subtitle2"><span>任务进行中</span></p>
+                        <p class="u-subtitle2"><span>{{ $t("ui.quest.inProgress") }}</span></p>
                         <p class="u-dialog-content" v-html="questDescFormat(source.desc.DunningDialogue)"></p>
                     </div>
                     <div class="u-dialog" v-if="source?.desc?.FinishedDialogue">
-                        <p class="u-subtitle2"><span>任务完成</span></p>
+                        <p class="u-subtitle2"><span>{{ $t("ui.quest.completed") }}</span></p>
                         <p class="u-dialog-content" v-html="questDescFormat(source.desc.FinishedDialogue)"></p>
                     </div>
                 </div>
             </fold-card>
 
-            <fold-card title="任务攻略" v-if="post_id">
+            <fold-card :title="$t('ui.common.wiki.guideTitle', { type: $t('ui.types.quest') })" v-if="post_id">
                 <div class="m-wiki">
                     <div class="m-wiki-header">
                         <div class="u-avatar-list">
@@ -116,7 +116,7 @@
                 </div>
             </fold-card>
 
-            <fold-card title="任务链" v-if="source?.chain">
+            <fold-card :title="$t('ui.quest.chain')" v-if="source?.chain">
                 <quest-chain :data="source?.chain" :current="id" />
             </fold-card>
 
@@ -146,7 +146,13 @@
                     </div>
                     <div
                         class="u-action"
-                        @click="() => $refs.suspendCommon.clickDrawer({ type: 'collect', text: '收藏' }, 1)"
+                        @click="
+                            () =>
+                                $refs.suspendCommon.clickDrawer(
+                                    { type: 'collect', text: $t('ui.common.actions.favorite') },
+                                    1
+                                )
+                        "
                     >
                         <img
                             v-if="$refs.suspendCommon?.isCollect"
@@ -157,7 +163,13 @@
                     </div>
                     <div
                         class="u-action"
-                        @click="() => $refs.suspendCommon.clickDrawer({ type: 'pin', text: '固定按钮' }, 1)"
+                        @click="
+                            () =>
+                                $refs.suspendCommon.clickDrawer(
+                                    { type: 'pin', text: $t('ui.common.actions.pin') },
+                                    1
+                                )
+                        "
                     >
                         <img v-if="$refs.suspendCommon?.fixIsActive" src="@/assets/img/cj/mobile/pin.svg" svg-inline />
                         <img v-else src="@/assets/img/cj/mobile/pin_un.svg" svg-inline />
@@ -227,10 +239,16 @@ export default {
             return this.completedQuests.includes(Number(this.id));
         },
         targetDesc() {
-            return questTargetDescFormat(this.source?.desc?.Objective).replaceAll("&emsp;", "");
+            return questTargetDescFormat(
+                this.source?.desc?.Objective,
+                this.$t("ui.quest.defaultPlayerName")
+            ).replaceAll("&emsp;", "");
         },
         questDesc() {
-            return questDescFormat(this.source?.desc?.Description, true).replace(/^&emsp;&emsp;\n/, "");
+            return questDescFormat(this.source?.desc?.Description, true, {
+                playerName: this.$t("ui.quest.defaultPlayerName"),
+                playerBody: this.$t("ui.quest.defaultPlayerBody"),
+            }).replace(/^&emsp;&emsp;\n/, "");
         },
 
         id() {
@@ -295,7 +313,10 @@ export default {
     methods: {
         showAvatar,
         questDescFormat(desc) {
-            return questDescFormat(desc, true);
+            return questDescFormat(desc, true, {
+                playerName: this.$t("ui.quest.defaultPlayerName"),
+                playerBody: this.$t("ui.quest.defaultPlayerBody"),
+            });
         },
         questTargetDescFormat,
         ts2str,
@@ -306,7 +327,7 @@ export default {
                 });
             } else {
                 this.$message({
-                    message: "非小程序环境，不支持跳转搜索页",
+                    message: this.$t("ui.common.status.miniprogramOnly"),
                     type: "warning",
                 });
             }

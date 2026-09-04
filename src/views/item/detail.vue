@@ -398,9 +398,14 @@
                     <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.item") }) }}</span>
                 </template>
                 <template #head-actions>
-                    <a class="u-btn--link el-button el-button--primary" :href="publish_url(`item/${id}`)">
-                        <LegacyIcon class="el-icon-edit" />
-                        <span>{{ $t("ui.common.actions.improve") }}</span>
+                    <a
+                        class="u-btn--link el-button el-button--primary u-wiki-action"
+                        :href="publish_url(`item/${id}`)"
+                        :aria-label="$t('ui.common.actions.improve')"
+                        :title="$t('ui.common.actions.improve')"
+                    >
+                        <LegacyIcon class="el-icon-edit" aria-hidden="true" />
+                        <span class="u-wiki-action-label">{{ $t("ui.common.actions.improve") }}</span>
                     </a>
                 </template>
                 <template #body>
@@ -475,6 +480,7 @@ import Plan from "@/components/item/plan.vue";
 import WikiPanel from "@/components/common/wiki-panel.vue";
 import WikiRevisions from "@/components/common/wiki-revisions.vue";
 import WikiComments from "@jx3box/jx3box-ui/src/wiki/WikiComments.vue";
+import Thx from "@jx3box/jx3box-ui/src/single/Thx.vue";
 import ItemPrices from "@/components/item/item-prices.vue";
 import ItemPriceChart from "@/components/item/item-price-chart.vue";
 import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
@@ -630,6 +636,7 @@ export default {
         WikiPanel,
         WikiRevisions,
         WikiComments,
+        Thx,
         Article,
         Fav,
         Plan,

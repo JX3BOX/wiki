@@ -195,13 +195,55 @@
         }
     }
 
-    .u-detail-title {
-        align-items: flex-start;
-        flex-wrap: wrap;
-        line-height: 1.5;
+    .v-knowledge-single .u-detail-title {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        width: 100%;
+        align-items: start;
+        gap: 6px 8px;
+        box-sizing: border-box;
+        line-height: 1.45;
+    }
 
-        .u-detail-category {
-            margin: 5px 0 0;
-        }
+    .v-knowledge-single .u-detail-title > span:first-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .v-knowledge-single .u-detail-title .u-detail-category {
+        margin: 3px 0 0;
+    }
+
+    .v-knowledge-single .m-wiki-top {
+        width: 100%;
+        padding: 10px 12px;
+        box-sizing: border-box;
+    }
+
+    .v-knowledge-single .m-wiki-top__content {
+        line-height: 1.75;
+        word-break: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .v-knowledge-single .m-wiki-thx-panel .w-thx-panel {
+        flex-wrap: wrap;
+        gap: 12px 16px;
+    }
+
+    .v-knowledge-single .m-wiki-thx-panel .w-thx-panel > *,
+    .v-knowledge-single .m-wiki-thx-panel .w-thx-panel .u-count {
+        flex: none;
+    }
+
+    .v-knowledge-single .m-wiki-thx-panel .u-count {
+        white-space: nowrap;
+    }
+
+    .v-knowledge-single .m-wiki-thx-panel .w-thx-copyright {
+        text-align: left;
+        line-height: 1.7;
+        word-break: normal;
+        overflow-wrap: anywhere;
     }
 }

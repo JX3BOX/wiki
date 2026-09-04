@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { pick } from "lodash";
+import pick from "lodash/pick";
 import draggable from "vuedraggable";
 import ItemSimple from "@jx3box/jx3box-editor/src/ItemSimple";
 import ItemIcon from "@/components/common/item-icon.vue";

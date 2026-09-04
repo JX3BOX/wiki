@@ -13,7 +13,7 @@
         >
             <template #default>
                 <div v-if="current" class="c-var m-children-list">
-                    <div class="u-title">查看成就</div>
+                    <div class="u-title">{{ $t("ui.achievement.viewAchievement") }}</div>
                     <Carousel
                       class="m-children-wrapper"
                       :items="current?.SeriesAchievementList || [current]"
@@ -30,8 +30,8 @@
                       </template>
                     </Carousel>
                     <div class="m-op">
-                        <button class="u-reset" @click="resetSearch">设为已完成</button>
-                        <button class="u-confirm"  @click="changeRole">切换</button>
+                        <button class="u-reset" @click="resetSearch">{{ $t("ui.achievement.mobile.setComplete") }}</button>
+                        <button class="u-confirm"  @click="changeRole">{{ $t("ui.common.actions.switch") }}</button>
                     </div>
                 </div>
             </template>
@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import { cloneDeep, pick } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
+import pick from "lodash/pick";
 import ChildItem from "@/components/cj/mobile/child-item.vue";
 import Carousel from "@/components/cj/mobile/carousel.vue";
 

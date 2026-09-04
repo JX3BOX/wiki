@@ -153,12 +153,16 @@
             }
         }
 
-        .u-counter-link {
+        .u-qlink .u-counter-link {
             flex-direction: column;
-            gap: 0;
+            flex-wrap: nowrap;
+            gap: 2px;
 
-            i {
-                display: none;
+            .u-counter-main {
+                min-width: 0;
+                justify-content: center;
+                gap: 4px;
+                line-height: 18px;
             }
 
             .u-waiting {

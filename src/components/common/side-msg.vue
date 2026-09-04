@@ -10,8 +10,13 @@
 </template>
 
 <script>
+import RightSideMsg from "@jx3box/jx3box-ui/src/RightSideMsg.vue";
+
 export default {
     name: "CommonSideMsg",
+    components: {
+        RightSideMsg,
+    },
     data() {
         return {
             qq: "614370825",

@@ -10,7 +10,7 @@
         </div>
         <div class="w-fold-card-footer" v-if="!fixed && showFold">
             <el-button @click="toggleFold" link>
-                {{ isFold ? "展示全部" : "收起全部" }}
+                {{ isFold ? $t("ui.quest.mobile.expandAll") : $t("ui.quest.mobile.collapseAll") }}
             </el-button>
         </div>
     </div>

@@ -156,5 +156,8 @@ export default {
     },
     common: {
         appendTitle: " - JX3BOX",
+        fallbackTitle: "JX3 Wiki",
+        fallbackKeywords: "JX3,JX3BOX,achievement wiki,item wiki,quest wiki,knowledge wiki",
+        fallbackDescription: "JX3BOX Wiki provides searchable achievements, items, quests, knowledge entries, and related guides.",
     }
 };

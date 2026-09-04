@@ -198,6 +198,279 @@ const characterMap = {
     骑: "騎",
 };
 
+// 逐字轉換只用來承接簡中新增鍵；台灣用語、一對多字形與排版必須按完整 key 覆蓋。
+const zhTWOverrides = {
+    common: {
+        actions: {
+            generateImage: "產生圖片",
+            search: "搜尋",
+            filter: "篩選",
+            save: "儲存",
+            add: "新增",
+            remove: "移除",
+            improve: "補充攻略",
+            retry: "重試",
+            reset: "重設",
+            switch: "切換",
+            pin: "釘選",
+            viewPage: "查看頁面",
+            backHome: "返回首頁",
+            exitEdit: "離開編輯",
+            reply: "回覆",
+        },
+        labels: {
+            keyword: "關鍵字",
+            visibility: "公開狀態",
+            lastUpdated: "最後更新於",
+            number: "數量",
+            comprehensiveDifficulty: "綜合難度：",
+            icon: "圖示",
+            iconBackground: "圖示背景",
+            category: "分類",
+            subCategory: "子分類",
+            searchResults: "搜尋結果",
+            byAuthor: "作者：{author}",
+        },
+        placeholders: {
+            keyword: "輸入關鍵字後按 Enter 搜尋",
+            keywordMobile: "輸入關鍵字搜尋",
+            role: "請選擇目前角色",
+            input: "請輸入",
+            select: "請選擇",
+        },
+        status: {
+            noData: "💧 暫無資料",
+            loading: "🎉 資料載入中…",
+            loadFailed: "⚠️ 資料載入失敗",
+            addSuccess: "新增成功",
+            copySuccess: "複製成功",
+            invalidParams: "參數不正確",
+            imageSubmitted: "已成功提交 QQ 機器人圖片產生請求",
+            noMore: "沒有更多內容了",
+            noMoreComments: "沒有更多留言了",
+            commentRequired: "請先填寫留言內容再嘗試送出",
+            commentPending: "已送出，請等待審核",
+            miniprogramOnly: "此功能僅支援小程式環境",
+        },
+        home: {
+            quickEntry: "快速入口",
+            inGameWiki: "遊戲內查看百科",
+        },
+        wiki: {
+            improveType: "補充{type}",
+            historicalVersion: "注意：您目前查看的是歷史版本，",
+            originFallback: "暫無緣起攻略，以下為重製版攻略，僅供參考，",
+            joinRevision: "參與修訂",
+            submittedAt: "提交於",
+            reward: "參與贊助",
+        },
+        robot: {
+            addBot: "新增魔盒 QQ 機器人",
+            getGuide: "取得一圖流攻略",
+            incompleteGuide: "如發現攻略內容不完整，請直接在遊戲內或魔盒官方網站的百科專區修訂內容或留言。",
+            communityBuilt: "魔盒百科是由玩家共同建立的平台，每位玩家都能參與。",
+            original: "本篇原文：",
+            scanOriginal: "掃描 QR Code 查看原文",
+        },
+        qrcode: {
+            title: "QR Code",
+            scan: "掃描即可開啟",
+            scanMobile: "使用手機掃描即可開啟",
+        },
+        role: {
+            virtualTip: "虛擬角色代表魔盒帳號本身，可自行設定進度",
+        },
+        mobile: {
+            tapToSearch: "點一下開始搜尋內容",
+            searchContent: "搜尋內容",
+        },
+        options: {
+            all: "全部",
+        },
+    },
+    achievement: {
+        searchPlaceholder: "輸入成就名稱、描述、稱號或獎勵物品後按 Enter 搜尋",
+        syncTip: "請先在遊戲中同步成就",
+        menuTypes: {
+            1: "常規成就",
+            3: "其他分類",
+        },
+        batchComplete: "批次設為完成（{count}）",
+        batchIncomplete: "批次取消完成（{count}）",
+        groups: "各伺服器成就群組",
+        sameBoss: "同一 BOSS 的其他成就",
+        bossReference: "BOSS 屬性參考",
+        boss: "首領：",
+        addToPlan: "加入方案",
+        oldGuides: "所有成就皆已有攻略，以下為較舊、可能需要更新的攻略",
+        titlePrefix: "稱號前綴：",
+        titleSuffix: "稱號後綴：",
+        pendingProgress: "待完成（{current}/{total}）",
+        stats: {
+            general: "常規成就數",
+            generalPoints: "常規資歷數",
+        },
+        selectVirtualRole: "請先在側邊欄選擇虛擬角色",
+        categories: {
+            general: "常規",
+            armor: "五甲",
+        },
+        filters: {
+            type: "類型",
+            category1: "分類 I",
+            category2: "分類 II",
+            current: "目前",
+            map1: "地圖 I",
+            map2: "地圖 II",
+        },
+        mobile: {
+            roleCategoryTitle: "{role}的{category}成就",
+            category1: "分類I",
+            category2: "分類II",
+            map1: "地圖I",
+            map2: "地圖II",
+            setComplete: "設為已完成",
+            commentLoading: "載入中...",
+            confirmComplete: "確定要將其設為已完成嗎",
+            confirmIncomplete: "確定要將其設為未完成嗎",
+            confirmAction: "確認",
+            selectRole: "選擇角色",
+            revisions: "查看歷史修訂",
+        },
+        confirmStatus: "確定要將其設為{status}嗎？",
+        viewAchievement: "查看成就",
+    },
+    item: {
+        searchPlaceholder: "輸入物品名稱（支援中括號格式）或描述後按 Enter 搜尋",
+        filters: {
+            source: "取得方式",
+            bindOnEquip: "裝備後綁定",
+            bindOnPickup: "拾取後綁定",
+        },
+        hottest: "熱門物品",
+        searching: "🐷 搜尋中",
+        searchAllCategories: "搜尋所有分類",
+        searchIn: "，可改為",
+        planKeyword: "請輸入清單關鍵字",
+        loginFirst: "請先登入",
+        private: "不公開",
+        planDescriptionPlaceholder: "請簡單說明這份物品清單",
+        itemSearchTip: "輸入物品名稱搜尋",
+        dragItemsHere: "將所需道具拖曳至此",
+        planCreatedWithItem: "清單建立成功，物品已加入",
+        editedAt: "編輯於",
+        allServerPrices: "全伺服器價格",
+        priceSearchPlaceholder: "搜尋物品",
+        planSearchPlaceholder: "輸入物品清單名稱後按 Enter 搜尋",
+        noPrice: "暫無價格資料",
+        currency: {
+            brick: "磚",
+            gold: "金",
+            silver: "銀",
+            copper: "銅",
+        },
+        equipId: "配裝 ID：",
+        returnToPlans: "返回清單列表",
+        stats: {
+            quality0: "破敗物品數",
+        },
+        oldGuides: "所有物品皆已有攻略，以下為較舊、可能需要更新的攻略",
+        equipment: {
+            waist: "腰帶",
+            bangle: "護腕",
+            amulet: "項鍊",
+            pendant: "腰墜",
+        },
+        detail: {
+            pve: "秘境挑戰（PVE）",
+            pvp: "競技對抗（PVP）",
+            pvx: "休閒（PVX）",
+            source: "取得方式：",
+            specialEffect: "特殊屬性效果：",
+            sameEffect: "兩個版本的屬性效果一致",
+            materials: "製作材料",
+            tradeable: "是否可交易",
+            stackable: "是否可堆疊",
+            maxCount: "持有上限",
+            obtainable: "取得方式",
+            enchantable: "是否可附魔",
+            collectable: "是否可收集",
+            dyeable: "是否可染色",
+            decomposable: "是否可分解",
+            destroyable: "是否可摧毀",
+            recommendedSchool: "推薦門派：",
+            shareable: "是否可分享",
+            repairCost: "修理費：",
+        },
+    },
+    quest: {
+        searchPlaceholder: "輸入任務關鍵字（可包含中括號）後按 Enter 搜尋",
+        chainTip: "請輸入完整的任務名稱或任務 ID，以查看任務鏈",
+        searchTips: {
+            name: "※ 支援以任務名稱精確或模糊搜尋",
+            item: "※ 支援以任務相關物品名稱精確搜尋",
+            achievement: "※ 支援以成就名稱精確搜尋",
+        },
+        roleTip: "在左側選擇角色後，即可標記任務完成狀態",
+        schoolTip: "此任務僅限{school}門派接取",
+        start: "任務起點：",
+        end: "任務終點：",
+        acceptDialog: "接取任務對話",
+        oldGuides: "所有任務皆已有攻略，以下為較舊、可能需要更新的攻略",
+        startPoint: "任務起點",
+        endPoint: "任務終點",
+        coordinate: "座標",
+        interactiveItem: "互動物品",
+        chooseOne: "您可以從以下道具中選擇一種：",
+        currency: {
+            brick: "磚",
+            silver: "銀",
+            copper: "銅",
+        },
+        rewardTypes: {
+            combatRank: "戰階積分",
+        },
+        unknownNpc: "未知 NPC",
+        recent: "最近更新",
+        mobile: {
+            roleMapTitle: "{role}在{map}的任務",
+            expandAll: "顯示全部",
+            collapseAll: "收起全部",
+            start: "任務起點：",
+            end: "任務終點：",
+            unknownNpc: "未知 NPC",
+            setPending: "設為待完成",
+            setIncomplete: "設為未完成",
+            setComplete: "設為已完成",
+            hideCompletedAchievements: "隱藏已完成的成就",
+        },
+    },
+    knowledge: {
+        searchPlaceholder: "輸入通識名稱或內容後按 Enter 搜尋",
+        tagline: "劍網3魔盒通識百科｜完整掌握劍三世界觀！",
+        improve: "補充通識",
+        selectCategory: "選擇分類",
+        byAuthor: "作者：{author}",
+        hot: "熱門劇情",
+        lastRevision: "最後修訂：",
+        lastUpdated: "最後更新於",
+        noContent: "暫無相關內容",
+        mobile: {
+            keywordPlaceholder: "請輸入關鍵字",
+            favoritePage: "收藏頁面",
+            more: "更多",
+            loading: "載入中...",
+            end: "結束",
+            noRelatedData: "暫無相關資料",
+            playersAndOrganizations: "玩家與組織",
+        },
+        sections: {
+            gameplay: "玩法",
+            playersAndOrganizations: "玩家與組織",
+        },
+    },
+};
+
 function convertValue(value) {
     let result = value;
     Object.entries(phraseMap).forEach(([source, target]) => {
@@ -213,4 +486,20 @@ function convertMessages(value) {
     return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, convertMessages(child)]));
 }
 
-export default convertMessages(zhCN);
+function mergeMessages(base, overrides) {
+    const result = { ...base };
+    Object.entries(overrides).forEach(([key, child]) => {
+        const current = result[key];
+        const canMerge =
+            child &&
+            current &&
+            typeof child === "object" &&
+            typeof current === "object" &&
+            !Array.isArray(child) &&
+            !Array.isArray(current);
+        result[key] = canMerge ? mergeMessages(current, child) : child;
+    });
+    return result;
+}
+
+export default mergeMessages(convertMessages(zhCN), zhTWOverrides);

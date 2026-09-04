@@ -41,12 +41,12 @@
 <script>
 import { getMapList } from "@/service/achievement";
 import DefaultLayout from "@/layout/default-layout.vue";
-import AchievementCount from "@/components/cj/achievement-count.vue";
+import CommonNav from "@/components/common/nav.vue";
 import Search from "@/components/common/search.vue";
+import AchievementCount from "@/components/cj/achievement-count.vue";
 import Sidebar from "@/components/cj/sidebar.vue";
 import Info from "@/components/cj/extend.vue";
 import { getAppIcon } from "@jx3box/jx3box-common/js/utils";
-import CommonNav from "@/components/common/nav.vue";
 
 import bus from "@/store/bus";
 import SchemaSelect from "@/components/cj/schema-select.vue";

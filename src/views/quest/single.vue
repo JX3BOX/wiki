@@ -264,9 +264,14 @@
                     <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.quest") }) }}</span>
                 </template>
                 <template v-if="!isRobot" #head-actions>
-                    <a class="u-btn--link el-button el-button--primary" :href="publish_url(`quest/${id}`)">
-                        <LegacyIcon class="el-icon-edit" />
-                        <span>{{ $t("ui.common.actions.improve") }}</span>
+                    <a
+                        class="u-btn--link el-button el-button--primary u-wiki-action"
+                        :href="publish_url(`quest/${id}`)"
+                        :aria-label="$t('ui.common.actions.improve')"
+                        :title="$t('ui.common.actions.improve')"
+                    >
+                        <LegacyIcon class="el-icon-edit" aria-hidden="true" />
+                        <span class="u-wiki-action-label">{{ $t("ui.common.actions.improve") }}</span>
                     </a>
                 </template>
                 <template #body>
@@ -336,6 +341,7 @@
 </template>
 
 <script>
+import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import QuestChain from "@/components/quest/single/quest-chain.vue";
 import QuestMap from "@/components/quest/single/quest-map.vue";
 import RewardItem from "@/components/quest/single/reward-item.vue";
@@ -343,8 +349,6 @@ import PointFilter from "@/components/quest/single/point-filter.vue";
 import ItemIcon from "@/components/common/item-icon.vue";
 import QuestDialog from "@/components/quest/single/quest-dialog.vue";
 import Notice from "@/components/quest/single/notice.vue";
-import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
-import wikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 import AsyncState from "@/components/common/async-state.vue";
 import { createLatestRequestGuard } from "@/utils/latest-request";
 import { createArticleReadyTracker } from "@/utils/article-ready";
@@ -358,7 +362,9 @@ import { publishLink, ts2str } from "@jx3box/jx3box-common/js/utils";
 import WikiPanel from "@/components/common/wiki-panel.vue";
 import WikiRevisions from "@/components/common/wiki-revisions.vue";
 import WikiComments from "@jx3box/jx3box-ui/src/wiki/WikiComments.vue";
-import Article from "@jx3box/jx3box-editor/src/Article.vue";
+import Thx from "@jx3box/jx3box-ui/src/single/Thx.vue";
+import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
+import wikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 
 import { getQuest, completeUserQuest, cancelUserQuest } from "@/service/quest";
 import { buildPoints, schoolIcon, questDescFormat, questTargetDescFormat } from "@/utils/quest.js";
@@ -418,6 +424,7 @@ export default {
         WikiPanel,
         WikiRevisions,
         WikiComments,
+        Thx,
         Notice,
         wikiRobotBottom,
         wikiRobotTip,

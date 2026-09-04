@@ -15,12 +15,17 @@
             <template #default>
                 <div class="m-knowledge-search-drawer">
                     <template v-if="!showMode">
-                        <div class="m-title">关键词</div>
-                        <el-input class="u-input" v-model="searchKey" placeholder="请输入关键词" clearable></el-input>
+                        <div class="m-title">{{ $t("ui.common.labels.keyword") }}</div>
+                        <el-input
+                            class="u-input"
+                            v-model="searchKey"
+                            :placeholder="$t('ui.knowledge.mobile.keywordPlaceholder')"
+                            clearable
+                        ></el-input>
 
-                        <div class="m-title">分类</div>
+                        <div class="m-title">{{ $t("ui.common.labels.category") }}</div>
                         <div class="u-menu" @click="openMenu('type')">
-                            {{ currentMenuLabel || "全部" }}
+                            {{ currentMenuLabel }}
                             <LegacyIcon class="el-icon-arrow-right" />
                         </div>
                     </template>
@@ -28,11 +33,11 @@
                     <template v-if="showMode == 'type'">
                         <div class="m-header">
                             <LegacyIcon class="el-icon-arrow-left" @click="showMode = ''" />
-                            <span class="m-title-center">选择分类</span>
+                            <span class="m-title-center">{{ $t("ui.knowledge.selectCategory") }}</span>
                         </div>
                         <div class="m-options-list">
                             <div class="m-options-item" @click="changeType(null)" :class="{ 'is-active': !type }">
-                                全部
+                                {{ $t("ui.common.options.all") }}
                                 <div class="w-checkbox__icon" v-if="!type">
                                     <div class="w-checkbox__checkmark"></div>
                                 </div>
@@ -53,8 +58,8 @@
                     </template>
 
                     <div class="m-op" v-if="!showMode">
-                        <button class="u-reset" @click="resetVal">重置</button>
-                        <button class="u-confirm" @click="changeValue">确定</button>
+                        <button class="u-reset" @click="resetVal">{{ $t("ui.common.actions.reset") }}</button>
+                        <button class="u-confirm" @click="changeValue">{{ $t("ui.common.actions.confirm") }}</button>
                     </div>
                 </div>
             </template>
@@ -84,7 +89,7 @@ export default {
     },
     computed: {
         currentMenuLabel() {
-            if (!this.type) return "全部";
+            if (!this.type) return this.$t("ui.common.options.all");
             return this.menus.find((item) => item.name == this.type)?.label || this.type;
         },
     },

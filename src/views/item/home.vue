@@ -221,7 +221,7 @@ import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { get_newest_items, get_items_by_node } from "@/service/item.js";
 import { author_url, date_format, star } from "@/filters";
 import { ellipsis } from "@/utils/common";
-import { chunk } from "lodash";
+import chunk from "lodash/chunk";
 
 import Counter from "@/components/common/counter.vue";
 export default {

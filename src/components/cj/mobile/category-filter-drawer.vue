@@ -34,10 +34,10 @@
                     </div>
                     <div class="m-op">
                         <button class="u-reset" :class="{active: !isEmptyVal}"  @click="resetSearch">
-                            重置
+                            {{ $t("ui.common.actions.reset") }}
                         </button>
                         <button class="u-confirm" :class="{active: changeTmp}" @click="changeValue">
-                            确定
+                            {{ $t("ui.common.actions.confirm") }}
                         </button>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
 
 <script>
 
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 
 export default {
     name: "CategoryFilterDrawer",
@@ -172,29 +172,29 @@ export default {
         filterGroup(){
             return  [
                 {
-                    title: "类型",
+                    title: this.$t("ui.achievement.filters.type"),
                     key: "general",
                     class: 'two-line',
                     list: [
-                        { name: "常规", value: null, default: true },
-                        { name: "五甲", value: 2 },
+                        { name: this.$t("ui.achievement.categories.general"), value: null, default: true },
+                        { name: this.$t("ui.achievement.categories.armor"), value: 2 },
                     ]
                 },
                 {
-                    title: "分类I",
+                    title: this.$t("ui.achievement.mobile.category1"),
                     key: "type1",
                     list: [
                         ...this.lv1List
                     ]
                 },
                 {
-                    title: "分类II",
+                    title: this.$t("ui.achievement.mobile.category2"),
                     key: "type2",
                     onlyOneFill: this.lv2List?.length === 0,
                     hidden:this.lv2List?.length === 0,
                     class: 'two-line',
                     list: [
-                        { name: "当前", value: null, default: true },
+                        { name: this.$t("ui.achievement.filters.current"), value: null, default: true },
                         ...(this.lv2List)
                     ]
                 }

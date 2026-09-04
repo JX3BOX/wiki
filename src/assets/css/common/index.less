@@ -37,6 +37,34 @@
             text-decoration: none !important;
             box-shadow: none !important;
         }
+
+        .u-counter-link {
+            flex-flow: row nowrap;
+            justify-content: center;
+            white-space: nowrap;
+
+            .u-counter-main {
+                display: inline-flex;
+                flex: none;
+                align-items: center;
+                gap: 5px;
+
+                .legacy-icon,
+                [data-legacy-icon] {
+                    flex: none;
+                    margin-right: 0;
+                }
+
+                > span {
+                    white-space: nowrap;
+                }
+            }
+
+            .u-waiting {
+                flex: none;
+                white-space: nowrap;
+            }
+        }
     }
 }
 

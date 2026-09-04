@@ -40,7 +40,7 @@
             .mr(5px);
         }
     }
-    .u-tags span {
+    .u-tags-content > span {
         &::after {
             content: "、";
         }
@@ -50,30 +50,153 @@
     }
 }
 
-@media screen and (max-width: @phone) {
+@media screen and (min-width: (@phone + 1)) {
     .m-knowledge-item {
-        padding: 14px 4px;
+        box-sizing: border-box;
+        padding: 14px 12px;
+        border-radius: 6px;
+        transition: background-color 0.16s ease;
 
         .u-name {
             display: flex;
-            min-width: 0;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 6px;
+            align-items: center;
+            padding-right: 160px;
+            line-height: 22px;
         }
 
-        .u-title,
-        .u-remark,
-        .u-tags {
+        .u-title {
+            font-weight: 500;
+        }
+
+        .u-tags,
+        .u-remark {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            padding-left: 4px;
+            padding-right: 160px;
+            line-height: 20px;
+
+            > .el-icon,
+            > svg,
+            > i {
+                flex: none;
+                margin-top: 0;
+            }
+        }
+
+        .u-tags-content,
+        .u-remark-content {
             min-width: 0;
             overflow-wrap: anywhere;
         }
 
         .u-updated {
-            position: static;
-            display: block;
-            margin-top: 8px;
+            top: 14px;
+            right: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            line-height: 20px;
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-knowledge-item {
+        box-sizing: border-box;
+        padding: 14px;
+        border: 1px solid #e6eaf0;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(31, 35, 41, 0.04);
+
+        &:active {
+            background-color: #f8fafc;
+        }
+
+        .u-name {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            min-width: 0;
+            align-items: flex-start;
+            gap: 8px;
             line-height: 1.5;
+        }
+
+        .u-type {
+            display: inline-flex;
+            align-items: center;
+            min-height: 22px;
+            margin-right: 0;
+            padding: 1px 6px;
+            line-height: 20px;
+        }
+
+        .u-title {
+            min-width: 0;
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .u-remark,
+        .u-tags {
+            display: grid;
+            grid-template-columns: 18px minmax(0, 1fr);
+            align-items: start;
+            min-width: 0;
+            margin-top: 10px;
+            padding-left: 0;
+            color: #7f8792;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+
+            > .el-icon,
+            > svg,
+            > i {
+                margin: 3px 0 0;
+                color: #9aa2ad;
+            }
+        }
+
+        .u-tags-content {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .u-remark-content {
+            min-width: 0;
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow-wrap: anywhere;
+        }
+
+        .u-updated {
+            position: static;
+            display: grid;
+            grid-template-columns: 18px minmax(0, 1fr);
+            align-items: start;
+            margin-top: 10px;
+            color: #9299a2;
+            font-size: 13px;
+            line-height: 1.6;
+
+            > .el-icon,
+            > svg,
+            > i {
+                margin-top: 3px;
+                color: #a4abb4;
+            }
         }
     }
 }

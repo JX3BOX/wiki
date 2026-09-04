@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="branch" v-if="showBranch">
-            <div class="u-more-branch">任务分支</div>
+            <div class="u-more-branch">{{ $t("ui.quest.branch") }}</div>
             <span class="u-chain-name" v-for="item in display_data.branch" :key="item.id">
                 「<router-link class="u-chain-link" :to="{ name: 'view', params: { quest_id: item.id } }">{{
                     item.name

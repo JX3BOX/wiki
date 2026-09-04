@@ -17,7 +17,7 @@
                     <div class="u-replier-name" @click="toDetail(reply.user_id)">
                         {{ reply.user_nickname }}
                     </div>
-                    <span class="u-reply">回复</span>
+                    <span class="u-reply">{{ $t("ui.common.actions.reply") }}</span>
                     <div class="u-replier-name" @click="reply.parent.user_id ? toDetail(reply.parent.user_id) : null">
                         {{ reply.parent.user_nickname }}
                     </div>
@@ -28,8 +28,8 @@
                 </div>
             </div>
         </div>
-        <div v-if="loading" class="u-loading-more">加载中...</div>
-        <div v-if="noMoreData" class="u-no-more">没有更多评论了</div>
+        <div v-if="loading" class="u-loading-more">{{ $t("ui.achievement.mobile.commentLoading") }}</div>
+        <div v-if="noMoreData" class="u-no-more">{{ $t("ui.common.status.noMoreComments") }}</div>
     </div>
 </template>
 
@@ -149,7 +149,7 @@ export default {
             // 校验评论内容
             if (!form.content) {
                 this.$message({
-                    message: "请先填写评论内容再尝试提交",
+                    message: this.$t("ui.common.status.commentRequired"),
                     type: "warning",
                 });
                 return;
@@ -168,7 +168,7 @@ export default {
                     res = res.data;
                     form.content = "";
                     this.$message({
-                        message: "提交成功，请等待审核",
+                        message: this.$t("ui.common.status.commentPending"),
                         type: "success",
                     });
                 })

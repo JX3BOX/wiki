@@ -14,7 +14,7 @@
 						<div class="u-content">
 							<div class="u-title" v-text="item.name"></div>
 							<div class="u-desc" v-if="item.post">
-								<span :title="item.post.remark">{{ "By " + item.post.user_nickname }}</span>
+								<span :title="item.post.remark">{{ $t("ui.knowledge.byAuthor", { author: item.post.user_nickname }) }}</span>
 							</div>
 						</div>
 					</router-link>

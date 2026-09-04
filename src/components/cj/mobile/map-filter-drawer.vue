@@ -45,8 +45,12 @@
                         </div>
                     </div>
                     <div class="m-op">
-                        <button class="u-reset" :class="{ active: !isEmptyVal }" @click="resetSearch">重置</button>
-                        <button class="u-confirm" :class="{ active: changeTmp }" @click="changeValue">确定</button>
+                        <button class="u-reset" :class="{ active: !isEmptyVal }" @click="resetSearch">
+                            {{ $t("ui.common.actions.reset") }}
+                        </button>
+                        <button class="u-confirm" :class="{ active: changeTmp }" @click="changeValue">
+                            {{ $t("ui.common.actions.confirm") }}
+                        </button>
                     </div>
                 </div>
             </template>
@@ -55,7 +59,8 @@
 </template>
 
 <script>
-import { cloneDeep, pick } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
+import pick from "lodash/pick";
 
 export default {
     name: "MapFilterDrawer",
@@ -143,10 +148,10 @@ export default {
         filterGroup() {
             return [
                 {
-                    title: "地图I",
+                    title: this.$t("ui.achievement.mobile.map1"),
                     key: "map_1",
                     list: [
-                        { name: "全部", value: null, default: true },
+                        { name: this.$t("ui.common.options.all"), value: null, default: true },
                         ...(this.regions || []).map((i) => {
                             return {
                                 name: i.label,
@@ -157,7 +162,7 @@ export default {
                     ],
                 },
                 {
-                    title: "地图II",
+                    title: this.$t("ui.achievement.mobile.map2"),
                     key: "map",
                     class: "two-line",
                     hidden: this.two.length === 0,

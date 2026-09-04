@@ -6,10 +6,16 @@
             <span class="u-txt">{{ $t("ui.common.wiki.revisions") }}</span>
         </template>
         <template #head-actions>
-            <span class="u-btn--link el-button el-button--primary" @click="visible = true">
-                <LegacyIcon class="el-icon-crop" />
-                <span>{{ $t("ui.common.wiki.compareVersions") }}</span>
-            </span>
+            <button
+                type="button"
+                class="u-btn--link el-button el-button--primary u-wiki-action"
+                :aria-label="$t('ui.common.wiki.compareVersions')"
+                :title="$t('ui.common.wiki.compareVersions')"
+                @click="visible = true"
+            >
+                <LegacyIcon class="el-icon-crop" aria-hidden="true" />
+                <span class="u-wiki-action-label">{{ $t("ui.common.wiki.compareVersions") }}</span>
+            </button>
         </template>
         <template #body>
             <div class="m-revisions-panel">
@@ -29,18 +35,18 @@
                     </thead>
                     <tbody>
                         <tr class="history" v-for="(ver, key) in versions" :key="key">
-                            <td>
+                            <td :data-label="$t('ui.common.labels.version')">
                                 <a
                                     :href="link(type, `${ver.source_id}/${ver.id}`)"
                                     v-text="'v' + ver.v"
                                     @click="redirectRevision(ver, $event)"
                                 ></a>
                             </td>
-                            <td v-text="ts2str(ver.updated)"></td>
-                            <td>
+                            <td :data-label="$t('ui.common.labels.updatedTime')" v-text="ts2str(ver.updated)"></td>
+                            <td :data-label="$t('ui.common.labels.contributor')">
                                 <a :href="ver.user_id ? author_url(ver.user_id) : null" v-text="ver.user_nickname"></a>
                             </td>
-                            <td v-text="ver.remark"></td>
+                            <td :data-label="$t('ui.common.labels.revisionNote')" v-text="ver.remark"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -209,6 +215,70 @@ export default {
         color: inherit;
         fill: currentColor;
         margin-right: 0 !important;
+    }
+
+    @media screen and (max-width: 480px) {
+        .m-revisions-panel {
+            overflow-x: visible;
+        }
+
+        .m-histories {
+            display: block;
+            width: 100%;
+            margin: 0;
+
+            thead {
+                display: none;
+            }
+
+            tbody {
+                display: grid;
+                gap: 10px;
+            }
+
+            tr {
+                display: grid;
+                grid-template-columns: 48px minmax(86px, 1fr) minmax(72px, 1fr);
+                border: 1px solid #e4e7ed;
+                border-radius: 6px;
+                background: #fff;
+                overflow: hidden;
+            }
+
+            td {
+                display: flex;
+                min-width: 0;
+                padding: 8px;
+                border: 0;
+                flex-direction: column;
+                gap: 2px;
+                overflow-wrap: anywhere;
+
+                &::before {
+                    content: attr(data-label);
+                    color: #909399;
+                    font-size: 11px;
+                    line-height: 1.4;
+                    white-space: nowrap;
+                }
+
+                &:nth-child(-n + 3) {
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+
+                &:nth-child(-n + 3) > a {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                &:nth-child(4) {
+                    grid-column: 1 / -1;
+                    padding-top: 7px;
+                    border-top: 1px solid #ebeef5;
+                }
+            }
+        }
     }
 }
 </style>

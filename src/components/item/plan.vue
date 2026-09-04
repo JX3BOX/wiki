@@ -12,7 +12,6 @@
                 </div>
                 <template v-if="relation_index == index && item.relation">
                     <div class="u-child" v-for="(plan, k) in item.relation" :key="k" @click="addToPlan(item, k)">
-                        <LegacyIcon class="el-icon-arrow-right" />
                         <span>{{ plan.title || `${$t("ui.item.subPlan")}${k + 1}` }}</span>
                     </div>
                 </template>
@@ -59,7 +58,7 @@
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { getMyPlans, updatePlan, addMyPlan } from "@/service/item-plan.js";
-import { pick } from "lodash";
+import pick from "lodash/pick";
 export default {
     name: "plan",
     props: [],
@@ -226,19 +225,26 @@ export default {
         .u-title {
             .flex;
             align-items: center;
+            gap: 6px;
+            min-height: 36px;
+            padding: 4px 8px;
+            border-radius: 4px;
+
             .u-value {
+                min-width: 0;
                 width: 100%;
                 .db;
             }
             .u-added {
                 .fr;
                 .fz(12px);
+                white-space: nowrap;
             }
         }
 
         .u-child:hover:after {
             content: "✓";
-            .fr;
+            margin-left: auto;
         }
         .has-child {
             &::after {
@@ -253,7 +259,12 @@ export default {
         }
 
         .u-child {
-            .pl(1em);
+            display: flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 7px 10px 7px 28px;
+            border-radius: 4px;
+            line-height: 20px;
         }
         i {
             .mr(5px);

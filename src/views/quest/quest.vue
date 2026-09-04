@@ -63,10 +63,10 @@
 </template>
 
 <script>
-import Search from "@/components/common/search.vue";
-import CommonNav from "@/components/common/nav.vue";
-import QuestNav from "@/components/quest/nav.vue";
 import DefaultLayout from "@/layout/default-layout.vue";
+import CommonNav from "@/components/common/nav.vue";
+import Search from "@/components/common/search.vue";
+import QuestNav from "@/components/quest/nav.vue";
 
 import { getPlayerName } from "@/utils/quest";
 export default {

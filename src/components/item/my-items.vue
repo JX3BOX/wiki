@@ -41,7 +41,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import ItemIcon from "@/components/common/item-icon.vue";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { get_items, getMyFav, delMyFav } from "@/service/item.js";
-import { get } from "lodash";
+import get from "lodash/get";
 export default {
     name: "MyItems",
     components: {

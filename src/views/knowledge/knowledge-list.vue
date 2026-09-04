@@ -8,19 +8,25 @@
             <el-button link type="primary" @click="getListData">{{ $t("ui.common.actions.retry") }}</el-button>
         </div>
         <div class="m-list-empty" v-else-if="!loading && list && !list.length">{{ $t("ui.common.status.noRecords") }}</div>
-        <knowledgeList v-else-if="list" :list="list" :total="total" :pagination="pagination" @onPageKey="onPageKey" />
+        <KnowledgeResultList
+            v-else-if="list"
+            :list="list"
+            :total="total"
+            :pagination="pagination"
+            @onPageKey="onPageKey"
+        />
     </div>
 </template>
 
 <script>
 // import Search from "@/components/common/search.vue";
-import knowledgeList from "@/components/knowledge/list.vue";
+import KnowledgeResultList from "@/components/knowledge/list.vue";
 import { getKnowledgeList } from "@/service/knowledge.js";
 import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "KnowledgeList",
-    components: { knowledgeList },
+    components: { KnowledgeResultList },
     data: function () {
         return {
             loading: false,

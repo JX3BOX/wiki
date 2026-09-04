@@ -626,6 +626,18 @@
             }
         }
 
+        .m-item-viewer {
+            .c-item.c-item-equipment {
+                display: block;
+                width: 100%;
+            }
+
+            .c-item-wrapper {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
         .m-item-required {
             flex-wrap: wrap;
         }
@@ -652,6 +664,27 @@
         }
         .m-name .m-buttons {
             .none;
+        }
+
+        .m-wiki-thx-panel .w-thx-panel {
+            flex-wrap: wrap;
+            gap: 12px 16px;
+        }
+
+        .m-wiki-thx-panel .w-thx-panel > *,
+        .m-wiki-thx-panel .w-thx-panel .u-count {
+            flex: none;
+        }
+
+        .m-wiki-thx-panel .u-count {
+            white-space: nowrap;
+        }
+
+        .m-wiki-thx-panel .w-thx-copyright {
+            text-align: left;
+            line-height: 1.7;
+            word-break: normal;
+            overflow-wrap: anywhere;
         }
     }
 

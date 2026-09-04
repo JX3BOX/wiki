@@ -18,59 +18,80 @@
 
             .m-histories {
                 width: 100%;
-                table-layout: fixed;
 
-                th,
+                tr {
+                    grid-template-columns: minmax(72px, auto) minmax(0, 1fr);
+                }
+
                 td {
+                    width: auto;
                     min-width: 0;
-                    padding: 6px 4px;
+                    padding: 8px 10px;
                     vertical-align: top;
-                }
-
-                th:nth-child(1),
-                td:nth-child(1) {
-                    width: 12%;
-                }
-
-                th:nth-child(2),
-                td:nth-child(2) {
-                    width: 27%;
-                }
-
-                th:nth-child(3),
-                td:nth-child(3) {
-                    width: 22%;
-                }
-
-                th:nth-child(4),
-                td:nth-child(4) {
-                    width: 39%;
-                }
-
-                th,
-                td:nth-child(-n + 3) {
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
-
-                td:nth-child(4) {
+                    white-space: normal;
+                    overflow: visible;
+                    text-overflow: clip;
                     overflow-wrap: anywhere;
+
+                    &::before {
+                        white-space: normal;
+                        overflow-wrap: anywhere;
+                    }
+
+                    &:nth-child(-n + 3) {
+                        white-space: normal;
+                        overflow: visible;
+                        text-overflow: clip;
+                    }
+
+                    &:nth-child(-n + 3) > a {
+                        white-space: normal;
+                        overflow: visible;
+                        text-overflow: clip;
+                        overflow-wrap: anywhere;
+                    }
+
+                    &:nth-child(3),
+                    &:nth-child(4) {
+                        grid-column: 1 / -1;
+                        padding-top: 7px;
+                        border-top: 1px solid #ebeef5;
+                    }
                 }
             }
         }
 
-        .m-wiki-thx-panel .w-thx-panel {
-            flex-wrap: wrap;
-            gap: 12px 16px;
+        .m-wiki-thx-panel {
+            .c-wiki-panel .m-panel-body {
+                padding: 12px;
+            }
 
-            > *,
-            .u-count {
-                flex: none;
+            .w-thx-panel {
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 12px 16px;
+                margin-bottom: 12px;
+
+                > *,
+                .u-count {
+                    flex: none;
+                }
             }
 
             .u-count {
                 white-space: nowrap;
+            }
+
+            .w-thx-copyright {
+                box-sizing: border-box;
+                max-width: 100%;
+                margin-top: 12px;
+                padding: 12px;
+                text-align: left;
+                line-height: 1.7;
+                word-break: normal;
+                overflow-wrap: anywhere;
             }
         }
     }

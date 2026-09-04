@@ -45,7 +45,7 @@ import {
 import { CanvasRenderer } from "echarts/renderers";
 import { get_item_prices } from "@/service/item";
 import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
-import { item_price } from "@/filters";
+import { item_price as formatItemPrice } from "@/filters";
 import dayjs from "dayjs";
 import AsyncState from "@/components/common/async-state.vue";
 import { createLatestRequestGuard } from "@/utils/latest-request";
@@ -93,6 +93,18 @@ export default {
             if (ts) return Number(ts);
             if (item?.date) return dayjs(item.date).unix();
             return 0;
+        },
+        formatPrice(value) {
+            return formatItemPrice(
+                value,
+                {
+                    brick: this.$t("ui.item.currency.brick"),
+                    gold: this.$t("ui.item.currency.gold"),
+                    silver: this.$t("ui.item.currency.silver"),
+                    copper: this.$t("ui.item.currency.copper"),
+                },
+                this.currentLocale
+            );
         },
         get_data() {
             if (!this.item_id) {
@@ -174,7 +186,7 @@ export default {
                     tooltip: {
                         show: true,
                         trigger: "axis",
-                        valueFormatter: (value) => item_price(Number(value) || 0),
+                        valueFormatter: (value) => this.formatPrice(Number(value) || 0),
                     },
                     xAxis: {
                         type: "category",
@@ -193,7 +205,7 @@ export default {
                     yAxis: {
                         type: "value",
                         axisLabel: {
-                            formatter: (val) => item_price(val),
+                            formatter: (val) => this.formatPrice(val),
                         },
                     },
                     series: [
@@ -232,11 +244,18 @@ export default {
         },
     },
     computed: {
+        currentLocale() {
+            const locale = this.$i18n?.locale;
+            return (locale && typeof locale === "object" ? locale.value : locale) || "zh-CN";
+        },
         requestKey() {
             return `${this.item_id || ""}:${this.server || ""}`;
         },
     },
     watch: {
+        currentLocale() {
+            if (this.logs.length) this.render();
+        },
         requestKey: {
             immediate: true,
             handler() {

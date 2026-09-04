@@ -16,10 +16,19 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
-            - name: Install && Build
+            - name: Install dependencies
+              run: npm install
+
+            - name: Quality checks
               run: |
-                  npm install
-                  npm run build
+                  npm test
+                  npm run lint
+
+            - name: Build
+              run: npm run build
+
+            - name: Check bundle budget
+              run: npm run check:bundle
 
             - name: Github Pages
               uses: JamesIves/github-pages-deploy-action@releases/v3
@@ -38,4 +47,3 @@ jobs:
                   access-key-secret: ${{secrets.Access_Key_Secret}}
             - run: ossutil cp -rf dist oss://jx3box/static/wiki
             #- run: ossutil cp -rf dist oss://jx3box-www/bbs
-

@@ -30,7 +30,7 @@
 
 <script>
 import { getWiki } from "@/service/wiki";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 
 import { CodeDiff } from "v-code-diff";
 import { ts2str } from "@jx3box/jx3box-common/js/utils";

@@ -84,11 +84,11 @@
 import { get_item_enums } from "@/service/item";
 
 import DefaultLayout from "@/layout/default-layout.vue";
+import CommonNav from "@/components/common/nav.vue";
+import Search from "@/components/common/search.vue";
 import ItemBreadcrumb from "@/components/item/item-breadcrumb.vue";
 import Sidebar from "@/components/item/sidebar.vue";
 import Extend from "@/components/item/extend.vue";
-import Search from "@/components/common/search.vue";
-import CommonNav from "@/components/common/nav.vue";
 
 export default {
     name: "ItemIndex",

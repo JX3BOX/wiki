@@ -18,7 +18,7 @@
                         <img src="@/assets/img/cj/mobile/point.svg" svg-inline >
                     </div>
                 </div>
-                <div class="u-complete" v-if="hadCompleted(item.ID)">完成</div>
+                <div class="u-complete" v-if="hadCompleted(item.ID)">{{ $t("ui.common.actions.complete") }}</div>
             </div>
         </div>
         <div class="u-title">{{item.Name}}</div>

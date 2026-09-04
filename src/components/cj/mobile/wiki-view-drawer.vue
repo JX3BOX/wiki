@@ -68,9 +68,9 @@
                             :class="{ active: isVirtual && !isComplete }"
                             @click="setConfirm"
                         >
-                            设为已完成
+                            {{ $t("ui.achievement.mobile.setComplete") }}
                         </button>
-                        <button class="u-confirm" @click="toDetail">查看页面</button>
+                        <button class="u-confirm" @click="toDetail">{{ $t("ui.common.actions.viewPage") }}</button>
                     </div>
                 </div>
             </template>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { pick } from "lodash";
+import pick from "lodash/pick";
 import ConfirmOkDrawer from "@/components/cj/mobile/confirm-ok-drawer.vue";
 import ChildrenListDrawer from "@/components/cj/mobile/children-list-drawer.vue";
 import { icon_url } from "@/filters";
@@ -507,8 +507,8 @@ export default {
             };
             setVirtualRoleAchievements(data).then((res) => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为已完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedComplete"),
                     type: "success",
                 });
                 const list = Array.from(new Set(this.achievementsVirtual.concat(ids)));
@@ -529,8 +529,8 @@ export default {
             };
             cancelVirtualRoleAchievements(data).then((res) => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为待完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedIncomplete"),
                     type: "success",
                 });
                 const list = this.achievementsVirtual.filter((item) => !ids.includes(item));

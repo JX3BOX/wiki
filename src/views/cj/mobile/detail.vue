@@ -14,12 +14,14 @@
                 </div>
                 <wiki-item :item="source" />
                 <button class="m-confirm" :class="{ complete: isComplete, disabled: !isVirtual }" @click="setConfirm">
-                    {{ isComplete ? "已完成" : "设为已完成" }}
+                    {{ isComplete ? $t("ui.achievement.completed") : $t("ui.achievement.mobile.setComplete") }}
                 </button>
             </div>
             <div class="m-wiki">
                 <div class="m-wiki-header">
-                    <div class="u-title">成就攻略</div>
+                    <div class="u-title">
+                        {{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.achievement") }) }}
+                    </div>
                     <div class="u-avatar-list">
                         <div v-for="item in authors" :key="item.user_id" class="u-avatar">
                             <img :src="showAvatar(item.user_avatar)" />
@@ -33,7 +35,7 @@
                     <Article id="wikiArticle" :content="clearContent(wiki_post?.post?.content)" />
                 </div>
 
-                <div class="u-show-log">查看历史修订</div>
+                <div class="u-show-log">{{ $t("ui.achievement.mobile.revisions") }}</div>
             </div>
         </div>
         <div class="m-comments">
@@ -55,7 +57,13 @@
                     </div>
                     <div
                         class="u-action"
-                        @click="() => $refs.suspendCommon.clickDrawer({ type: 'collect', text: '收藏' }, 1)"
+                        @click="
+                            () =>
+                                $refs.suspendCommon.clickDrawer(
+                                    { type: 'collect', text: $t('ui.common.actions.favorite') },
+                                    1
+                                )
+                        "
                     >
                         <img
                             v-if="$refs.suspendCommon?.isCollect"
@@ -66,7 +74,13 @@
                     </div>
                     <div
                         class="u-action"
-                        @click="() => $refs.suspendCommon.clickDrawer({ type: 'pin', text: '固定按钮' }, 1)"
+                        @click="
+                            () =>
+                                $refs.suspendCommon.clickDrawer(
+                                    { type: 'pin', text: $t('ui.common.actions.pin') },
+                                    1
+                                )
+                        "
                     >
                         <img v-if="$refs.suspendCommon?.fixIsActive" src="@/assets/img/cj/mobile/pin.svg" svg-inline />
                         <img v-else src="@/assets/img/cj/mobile/pin_un.svg" svg-inline />
@@ -502,8 +516,8 @@ export default {
             };
             setVirtualRoleAchievements(data).then((res) => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为已完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedComplete"),
                     type: "success",
                 });
                 const list = Array.from(new Set(this.achievementsVirtual.concat(ids)));
@@ -524,8 +538,8 @@ export default {
             };
             cancelVirtualRoleAchievements(data).then((res) => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为待完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedIncomplete"),
                     type: "success",
                 });
                 const list = this.achievementsVirtual.filter((item) => !ids.includes(item));

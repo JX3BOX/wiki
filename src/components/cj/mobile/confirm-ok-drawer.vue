@@ -17,11 +17,17 @@
                         <div class="u-icon">
                             <img src="@/assets/img/cj/mobile/warn.svg" svg-inline />
                         </div>
-                        确定要将其设为{{ current ? "未" : "已" }}完成吗
+                        {{
+                            $t(
+                                current
+                                    ? "ui.achievement.mobile.confirmIncomplete"
+                                    : "ui.achievement.mobile.confirmComplete"
+                            )
+                        }}
                     </div>
                     <div class="m-op">
                         <button class="u-confirm" @click="confirmResult">
-                            确认
+                            {{ $t("ui.achievement.mobile.confirmAction") }}
                         </button>
                     </div>
                 </div>

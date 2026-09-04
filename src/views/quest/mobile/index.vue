@@ -3,7 +3,7 @@
         <div class="m-page-container" v-infinite-scroll="loadSearchQuests">
             <template v-if="!isSearchMode">
                 <div class="m-section">
-                    <div class="m-section-title">热门任务</div>
+                    <div class="m-section-title">{{ $t("ui.quest.hot") }}</div>
                     <Carousel :items="hotQuests" :showCount="1" :item-gap="20" :container-padding="0">
                         <template #default="{ item: quests }">
                             <div class="m-quest-group">
@@ -14,6 +14,9 @@
                                     :key="index"
                                     @click="onView(quest.id)"
                                 >
+                                    <span v-if="questIsCompleted(quest.id)" class="u-completed-label">
+                                        {{ $t("ui.common.actions.complete") }}
+                                    </span>
                                     <div class="u-name">{{ quest.name }}</div>
                                     <div class="u-target">{{ quest.target }}</div>
                                 </div>
@@ -22,7 +25,7 @@
                     </Carousel>
                 </div>
                 <div class="m-section">
-                    <div class="m-section-title">最新任务</div>
+                    <div class="m-section-title">{{ $t("ui.quest.newest") }}</div>
                     <Carousel :items="newestQuests" :show-count="1" :item-gap="20" :container-padding="0">
                         <template #default="{ item: quests }">
                             <div class="m-quest-group">
@@ -33,6 +36,9 @@
                                     :key="index"
                                     @click="onView(quest.id)"
                                 >
+                                    <span v-if="questIsCompleted(quest.id)" class="u-completed-label">
+                                        {{ $t("ui.common.actions.complete") }}
+                                    </span>
                                     <div class="u-name">{{ quest.name }}</div>
                                     <div class="u-target">{{ quest.target }}</div>
                                 </div>
@@ -41,7 +47,7 @@
                     </Carousel>
                 </div>
                 <div class="m-section">
-                    <div class="m-section-title">最近更新</div>
+                    <div class="m-section-title">{{ $t("ui.quest.recent") }}</div>
                     <div class="m-quest-group">
                         <div
                             class="m-quest-item"
@@ -50,6 +56,9 @@
                             :key="index"
                             @click="onView(post.source_id)"
                         >
+                            <span v-if="questIsCompleted(post.source_id)" class="u-completed-label">
+                                {{ $t("ui.common.actions.complete") }}
+                            </span>
                             <div class="u-name">{{ post.title }}</div>
                             <div class="u-target">
                                 <LegacyIcon class="el-icon-news" />
@@ -61,7 +70,14 @@
             </template>
             <template v-else>
                 <div class="m-section">
-                    <div class="m-section-title">{{ currentRole?.name }} 在 {{ currentMap?.label }} 的任务</div>
+                    <div class="m-section-title">
+                        {{
+                            $t("ui.quest.mobile.roleMapTitle", {
+                                role: currentRole?.name,
+                                map: currentMap?.label,
+                            })
+                        }}
+                    </div>
                     <div class="m-quest-group">
                         <div
                             class="m-quest-item"
@@ -70,6 +86,9 @@
                             :class="{ 'is-completed': questIsCompleted(quest.id) }"
                             @click="onView(quest.id)"
                         >
+                            <span v-if="questIsCompleted(quest.id)" class="u-completed-label">
+                                {{ $t("ui.common.actions.complete") }}
+                            </span>
                             <div class="u-name">{{ quest.name }}</div>
                             <div class="u-target">{{ quest.target }}</div>
                         </div>
@@ -113,7 +132,7 @@
                     @click="toggleOnlyNotCompleted"
                 >
                     <img src="@/assets/img/common/no-visible.svg" svg-inline />
-                    隐藏已完成的成就
+                    {{ $t("ui.quest.mobile.hideCompletedAchievements") }}
                 </div>
             </template>
         </suspend-common>
@@ -146,7 +165,7 @@ import WikiViewDrawer from "@/components/quest/mobile/wiki-view-drawer.vue";
 
 import { getQuestMaps, listUserQuest, getQuests, getNewestQuests } from "@/service/quest";
 import { isInMiniprogramWebview } from "@/utils/minprogram";
-import { chunk } from "lodash";
+import chunk from "lodash/chunk";
 import questType from "@/assets/data/quest-type.json";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
@@ -218,7 +237,7 @@ export default {
                 });
             } else {
                 this.$message({
-                    message: "非小程序环境，不支持跳转搜索页",
+                    message: this.$t("ui.common.status.miniprogramOnly"),
                     type: "warning",
                 });
             }
@@ -482,8 +501,7 @@ export default {
                 z-index: 2;
             }
 
-            &:after {
-                content: "完成";
+            .u-completed-label {
                 .pa;
                 top: 16px;
                 right: 16px;

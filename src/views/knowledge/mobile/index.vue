@@ -11,15 +11,15 @@
             <div class="m-big-search" v-if="!searchKey && !type" @click="openDrawer">
                 <img class="u-search-icon" src="@/assets/img/cj/mobile/search.svg" svg-inline />
                 <div class="u-info">
-                    <span class="u-title">通识百科</span>
-                    <span class="u-tip">点击开始搜索内容</span>
+                    <span class="u-title">{{ $t("ui.apps.knowledge") }}</span>
+                    <span class="u-tip">{{ $t("ui.common.mobile.tapToSearch") }}</span>
                 </div>
             </div>
 
             <!-- Result Title (Search/Category Mode) -->
             <div class="m-section-header" v-if="searchKey || type">
-                <span class="u-title">{{ typeName || "搜索结果" }}</span>
-                <span class="u-back" @click="goHome" v-if="type || searchKey">返回首页</span>
+                <span class="u-title">{{ typeName || $t("ui.common.labels.searchResults") }}</span>
+                <span class="u-back" @click="goHome" v-if="type || searchKey">{{ $t("ui.common.actions.backHome") }}</span>
             </div>
 
             <!-- Home Dashboard (No Search/Type) -->
@@ -28,7 +28,7 @@
                     <div class="m-section" v-for="(section, i) in homeSections" :key="`${section.key}${i}`">
                         <div class="m-section-header">
                             <span class="u-title">{{ section.label }}</span>
-                            <span class="u-more" @click="enterCategory(section.key)"> 更多 </span>
+                            <span class="u-more" @click="enterCategory(section.key)">{{ $t("ui.knowledge.mobile.more") }}</span>
                         </div>
 
                         <!-- Multi-Block Section (Mixed Layout) -->
@@ -79,9 +79,11 @@
                 </div>
 
                 <div class="m-status">
-                    <div class="u-loading" v-if="loading"><LegacyIcon class="el-icon-loading" /> 加载中...</div>
-                    <div class="u-no-more" v-if="finished && list.length">End</div>
-                    <div class="u-empty" v-if="finished && !list.length">暂无相关数据</div>
+                    <div class="u-loading" v-if="loading">
+                        <LegacyIcon class="el-icon-loading" /> {{ $t("ui.knowledge.mobile.loading") }}
+                    </div>
+                    <div class="u-no-more" v-if="finished && list.length">{{ $t("ui.knowledge.mobile.end") }}</div>
+                    <div class="u-empty" v-if="finished && !list.length">{{ $t("ui.knowledge.mobile.noRelatedData") }}</div>
                 </div>
             </div>
         </div>
@@ -107,7 +109,7 @@
                 <div class="m-more-action">
                     <div class="u-action" @click="openDrawer">
                         <img src="@/assets/img/cj/mobile/search.svg" svg-inline />
-                        {{ displaySearchDesc || "搜索内容" }}
+                        {{ displaySearchDesc || $t("ui.common.mobile.searchContent") }}
                     </div>
                 </div>
             </template>
@@ -263,7 +265,7 @@ export default {
 
                     sections.push({
                         key: "game",
-                        label: "玩法",
+                        label: this.$t("ui.knowledge.sections.gameplay"),
                         layout: "grid",
                         list: mergedList,
                     });
@@ -308,7 +310,7 @@ export default {
                 if (playerList.length || orgList.length) {
                     sections.push({
                         key: "player", // More link goes to Player category
-                        label: "玩家&组织",
+                        label: this.$t("ui.knowledge.mobile.playersAndOrganizations"),
                         blocks: [
                             { layout: "grid", list: playerList }, // Player: Grid, 4 items
                             { layout: "list", list: orgList }, // Org: List, 2 items

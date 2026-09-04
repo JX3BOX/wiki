@@ -155,7 +155,8 @@ import {
     ZoomIn,
 } from "@element-plus/icons-vue";
 import { createHead } from "@vueuse/head";
-import { createJx3boxUiI18n, getJx3boxUiAvailableLocales, install as JX3BOX_UI } from "@jx3box/jx3box-ui";
+import { createJx3boxUiI18n, getJx3boxUiAvailableLocales } from "@jx3box/jx3box-ui/i18n";
+import i18nMixin from "@jx3box/jx3box-ui/i18n/mixin";
 import { mergeAppLocaleMessages } from "@/locale";
 import { initRouterI18nHead } from "@/router/i18n-head";
 import LegacyIcon from "@/components/common/legacy-icon.vue";
@@ -344,12 +345,12 @@ export const bootstrapApp = (RootComponent, { router, store } = {}) => {
     i18n.global.missingWarn = false;
     i18n.global.fallbackWarn = false;
     app.use(i18n);
+    app.mixin(i18nMixin);
 
     if (router) {
         initRouterI18nHead(router, i18n, head);
     }
 
-    app.use(JX3BOX_UI);
     const elementLocaleMap = {
         "zh-CN": zhCn,
         "en-US": en,

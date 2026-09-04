@@ -18,7 +18,8 @@
 
 <script>
 import { getMenus } from "@/service/item";
-import { get, isEqual } from "lodash";
+import get from "lodash/get";
+import isEqual from "lodash/isEqual";
 import bus from "@/store/bus";
 export default {
     name: "Sidebar",

@@ -52,9 +52,6 @@ export default {
     color: #fff;
 
     font-size: 12px;
-    @media screen and (max-width: @phone) {
-        gap: 10px;
-    }
     .u-qq {
         display: inline-flex;
         justify-content: center;
@@ -87,6 +84,57 @@ export default {
         .bold;
         box-sizing: border-box;
         cursor: pointer;
+    }
+
+    @media screen and (max-width: @phone) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 10px 12px;
+        line-height: 1.5;
+
+        .m-qq,
+        .m-reply {
+            width: 100%;
+            min-width: 0;
+            justify-content: flex-start;
+        }
+
+        .m-qq {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 8px;
+
+            .u-qq {
+                width: auto;
+                min-width: 93px;
+            }
+        }
+
+        .m-reply {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 8px;
+
+            > span:first-child,
+            > span:last-child {
+                min-width: 0;
+                white-space: normal;
+            }
+        }
+
+        .u-reply {
+            max-width: 100%;
+            min-width: 0;
+            height: auto;
+            min-height: 24px;
+            flex: 0 1 auto;
+            white-space: normal;
+            word-break: normal;
+            overflow-wrap: anywhere;
+        }
     }
 }
 </style>

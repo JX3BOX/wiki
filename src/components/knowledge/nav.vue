@@ -27,7 +27,7 @@
 
 <script>
 import { getKnowledgeMenus, getKnowledgeCount, getKnowledgeList } from "@/service/knowledge.js";
-import { each } from "lodash";
+import each from "lodash/each";
 import { getCalendarCount } from "@/service/calendar";
 
 export default {
@@ -44,8 +44,7 @@ export default {
             },
         };
     },
-    computed: {
-    },
+    computed: {},
     methods: {
         // 数据加载
         init: function () {

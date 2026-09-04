@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { chunk } from "lodash";
+import chunk from "lodash/chunk";
 import WikiItem from "@/components/common/wiki-item.vue";
 export default {
     name: "QuestCarousel",

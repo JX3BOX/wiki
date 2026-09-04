@@ -22,11 +22,11 @@
                             </div>
                             <div class="u-pos">
                                 <div class="u-pos-item">
-                                    <span class="u-label">任务起点：</span>
+                                    <span class="u-label">{{ $t("ui.quest.mobile.start") }}</span>
                                     <template v-if="source?.start?.type === 'npc'">
-                                        <span class="u-map"> {{ source?.start?.mapName || "未知地图" }} </span> -
+                                        <span class="u-map"> {{ source?.start?.mapName || $t("ui.quest.unknownMap") }} </span> -
                                         <span class="u-npc">
-                                            {{ source?.start?.name || "未知NPC" }}
+                                            {{ source?.start?.name || $t("ui.quest.mobile.unknownNpc") }}
                                         </span>
                                         <span class="u-id">(ID: {{ source?.start?.id }})</span>
                                     </template>
@@ -41,11 +41,11 @@
                                     </template>
                                 </div>
                                 <div class="u-pos-item">
-                                    <span class="u-label">任务终点：</span>
+                                    <span class="u-label">{{ $t("ui.quest.mobile.end") }}</span>
                                     <template v-if="source?.start?.type === 'npc'">
-                                        <span class="u-map"> {{ source?.start?.mapName || "未知地图" }} </span> -
+                                        <span class="u-map"> {{ source?.start?.mapName || $t("ui.quest.unknownMap") }} </span> -
                                         <span class="u-npc">
-                                            {{ source?.start?.name || "未知NPC" }}
+                                            {{ source?.start?.name || $t("ui.quest.mobile.unknownNpc") }}
                                         </span>
                                         <span class="u-id">(ID: {{ source?.start?.id }})</span>
                                     </template>
@@ -63,14 +63,14 @@
                         </div>
                         <!-- 任务目标 -->
                         <div class="m-quest-section">
-                            <p class="u-title">任务目标</p>
+                            <p class="u-title">{{ $t("ui.quest.target") }}</p>
                             <div class="u-target">
                                 <p v-html="targetDesc"></p>
                                 <template v-if="source?.killNpcs?.length > 0">
                                     <div class="u-target-sub" v-for="(killNpc, i) in source?.killNpcs" :key="i">
-                                        <span>击杀</span>
+                                        <span>{{ $t("ui.quest.kill") }}</span>
                                         <span>{{ killNpc.name }}</span>
-                                        <el-tooltip v-if="killNpc.share" content="该目标可共享击杀" placement="top">
+                                        <el-tooltip v-if="killNpc.share" :content="$t('ui.quest.sharedKill')" placement="top">
                                             <img src="@/assets/img/quest/target-15.png" alt="" />
                                         </el-tooltip>
                                         <span> × {{ killNpc.amount }}</span>
@@ -78,7 +78,7 @@
                                 </template>
                                 <template v-if="source?.needItems?.length > 0">
                                     <div class="u-target-sub" v-for="(needItem, i) in source.needItems" :key="i">
-                                        <span>收集</span>
+                                        <span>{{ $t("ui.quest.collect") }}</span>
                                         <item-icon :item_id="needItem.id" :has_title="true" :size="18"></item-icon>
                                         <span> × {{ needItem.amount }}</span>
                                     </div>
@@ -93,7 +93,7 @@
                             </div>
                         </div>
                         <div class="m-quest-section">
-                            <p class="u-title">任务描述</p>
+                            <p class="u-title">{{ $t("ui.quest.description") }}</p>
                             <p class="u-desc" v-html="questDesc"></p>
                         </div>
                     </div>
@@ -104,9 +104,9 @@
                             @click="toggleConfirm"
                             v-loading="confirmLoading"
                         >
-                            {{ isComplete ? "设为待完成" : "设为已完成" }}
+                            {{ isComplete ? $t("ui.quest.mobile.setPending") : $t("ui.quest.mobile.setComplete") }}
                         </button>
-                        <button class="u-confirm" @click="toDetail">查看页面</button>
+                        <button class="u-confirm" @click="toDetail">{{ $t("ui.common.actions.viewPage") }}</button>
                     </div>
                 </div>
             </template>
@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import { pick } from "lodash";
+import pick from "lodash/pick";
 import { mapState } from "vuex";
 import ConfirmOkDrawer from "@/components/cj/mobile/confirm-ok-drawer.vue";
 import { getQuest, completeUserQuest, cancelUserQuest } from "@/service/quest";
@@ -183,10 +183,16 @@ export default {
             return this.completedQuests.includes(Number(this.id));
         },
         targetDesc() {
-            return questTargetDescFormat(this.source?.desc?.Objective).replaceAll("&emsp;", "");
+            return questTargetDescFormat(
+                this.source?.desc?.Objective,
+                this.$t("ui.quest.defaultPlayerName")
+            ).replaceAll("&emsp;", "");
         },
         questDesc() {
-            return questDescFormat(this.source?.desc?.Description, true).replace(/^&emsp;&emsp;\n/, "");
+            return questDescFormat(this.source?.desc?.Description, true, {
+                playerName: this.$t("ui.quest.defaultPlayerName"),
+                playerBody: this.$t("ui.quest.defaultPlayerBody"),
+            }).replace(/^&emsp;&emsp;\n/, "");
         },
     },
     methods: {

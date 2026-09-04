@@ -73,7 +73,7 @@ import ItemCard from "@/components/item/mobile/item-card.vue";
 import InputDrawerVue from "@/components/item/mobile/input-drawer.vue";
 import AddItemSearchDrawerVue from "@/components/item/mobile/add-item-search-drawer.vue";
 import ItemCountInputDrawerVue from "@/components/item/mobile/item-count-input-drawer.vue";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 
 export default {
     name: "MobileItemPlanList",

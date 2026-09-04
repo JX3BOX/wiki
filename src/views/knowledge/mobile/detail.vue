@@ -5,7 +5,12 @@
             <div class="u-main-title" v-if="title">{{ title }}</div>
 
             <!-- Content Card -->
-            <fold-card title="通识攻略" class="m-content-card" fixed v-if="post">
+            <fold-card
+                :title="$t('ui.common.wiki.guideTitle', { type: $t('ui.types.knowledge') })"
+                class="m-content-card"
+                fixed
+                v-if="post"
+            >
                 <div class="m-wiki-header">
                     <div class="m-wiki">
                         <div class="m-wiki-header">
@@ -28,7 +33,7 @@
             <!-- Empty State -->
             <div class="m-empty" v-if="!loading && !post">
                 <LegacyIcon class="el-icon-warning-outline" />
-                <span>暂无相关内容</span>
+                <span>{{ $t("ui.knowledge.noContent") }}</span>
             </div>
 
             <!-- Comments -->
@@ -53,7 +58,7 @@
                 <div class="m-more-action">
                     <span v-loading="favLoading" class="u-action" @click="toggleFav">
                         <LegacyIcon :class="isFav ? 'el-icon-star-on' : 'el-icon-star-off'" />
-                        {{ isFav ? "取消收藏" : "收藏页面" }}
+                        {{ isFav ? $t("ui.common.actions.unfavorite") : $t("ui.knowledge.mobile.favoritePage") }}
                     </span>
                 </div>
             </template>
@@ -212,7 +217,7 @@ export default {
                     url: `/pages/search/search-detail/search-detail?app=wiki&filter_category=通识`,
                 });
             } else {
-                this.$message.warning("非小程序环境，不支持跳转搜索页");
+                this.$message.warning(this.$t("ui.common.status.miniprogramOnly"));
             }
         },
     },

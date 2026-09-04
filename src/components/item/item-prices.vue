@@ -42,7 +42,7 @@
 
 <script>
 import { get_item, get_item_prices } from "@/service/item";
-import { item_price, item_color } from "@/filters";
+import { item_price as formatItemPrice, item_color } from "@/filters";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 import dayjs from "dayjs";
 import AsyncState from "@/components/common/async-state.vue";
@@ -69,6 +69,10 @@ export default {
         },
         requestKey() {
             return `${this.item_id || ""}:${this.server || ""}:${this.client || ""}`;
+        },
+        currentLocale() {
+            const locale = this.$i18n?.locale;
+            return (locale && typeof locale === "object" ? locale.value : locale) || "zh-CN";
         },
     },
     methods: {
@@ -126,7 +130,18 @@ export default {
         icon_url: function (id) {
             return iconLink(id, this.client);
         },
-        item_price,
+        item_price(price) {
+            return formatItemPrice(
+                price,
+                {
+                    brick: this.$t("ui.item.currency.brick"),
+                    gold: this.$t("ui.item.currency.gold"),
+                    silver: this.$t("ui.item.currency.silver"),
+                    copper: this.$t("ui.item.currency.copper"),
+                },
+                this.currentLocale
+            );
+        },
         date_format(timestamp) {
             return dayjs(timestamp * 1000).format("YYYY-MM-DD HH:mm:ss");
         },

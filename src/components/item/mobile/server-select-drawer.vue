@@ -42,7 +42,7 @@
 <script>
 import std_servers from "@jx3box/jx3box-data/data/server/server_std.json";
 import origin_servers from "@jx3box/jx3box-data/data/server/server_origin.json";
-import { uniq } from "lodash";
+import uniq from "lodash/uniq";
 
 export default {
     name: "SearchDrawer",

@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import Search from "@/components/common/search.vue";
 import DefaultLayout from "@/layout/default-layout.vue";
 import CommonNav from "@/components/common/nav.vue";
+import Search from "@/components/common/search.vue";
 import KnowledgeNav from "@/components/knowledge/nav";
 export default {
     name: "App",
@@ -51,4 +51,10 @@ export default {
 <style lang="less">
 @import "~@/assets/css/app.less";
 @import "~@/assets/css/knowledge/index.less";
+
+@media screen and (max-width: @phone) {
+    .p-knowledge .u-knowledge-search .m-search {
+        border-width: 2px;
+    }
+}
 </style>

@@ -156,5 +156,8 @@ export default {
     },
     common: {
         appendTitle: " - JX3BOX",
+        fallbackTitle: "Bách khoa JX3",
+        fallbackKeywords: "JX3,JX3BOX,bách khoa thành tựu,bách khoa vật phẩm,bách khoa nhiệm vụ,bách khoa kiến thức",
+        fallbackDescription: "Bách khoa JX3BOX cung cấp nội dung tra cứu và hướng dẫn về thành tựu, vật phẩm, nhiệm vụ cùng kiến thức trong game.",
     }
 };

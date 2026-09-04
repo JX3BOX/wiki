@@ -67,6 +67,11 @@
 
 <script>
 import CommonHeader from "@jx3box/jx3box-ui/src/CommonHeader.vue";
+import Breadcrumb from "@jx3box/jx3box-ui/src/Breadcrumb.vue";
+import Footer from "@jx3box/jx3box-ui/src/Footer.vue";
+import LeftSidebar from "@jx3box/jx3box-ui/src/LeftSidebar.vue";
+import Main from "@jx3box/jx3box-ui/src/Main.vue";
+import RightSidebar from "@jx3box/jx3box-ui/src/RightSidebar.vue";
 import { __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
@@ -75,7 +80,12 @@ import { refreshQQBotImage } from "@/service/wiki";
 export default {
     name: "DefaultLayout",
     components: {
+        Breadcrumb,
         CommonHeader,
+        Footer,
+        LeftSidebar,
+        Main,
+        RightSidebar,
     },
     props: {
         name: {

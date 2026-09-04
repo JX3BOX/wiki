@@ -23,9 +23,14 @@
                     <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.knowledge") }) }}</span>
                 </template>
                 <template v-if="!isRobot" #head-actions>
-                    <a class="u-btn--link el-button el-button--primary" :href="publishLink(`knowledge/${id}`)">
-                        <LegacyIcon class="el-icon-edit" />
-                        <span>{{ $t("ui.knowledge.improve") }}</span>
+                    <a
+                        class="u-btn--link el-button el-button--primary u-wiki-action"
+                        :href="publishLink(`knowledge/${id}`)"
+                        :aria-label="$t('ui.knowledge.improve')"
+                        :title="$t('ui.knowledge.improve')"
+                    >
+                        <LegacyIcon class="el-icon-edit" aria-hidden="true" />
+                        <span class="u-wiki-action-label">{{ $t("ui.knowledge.improve") }}</span>
                     </a>
                 </template>
                 <template #body>
@@ -89,17 +94,18 @@
 <script>
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
+import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import WikiPanel from "@/components/common/wiki-panel.vue";
 import WikiRevisions from "@/components/common/wiki-revisions.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 
-import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import notice from "@/components/cj/notice.vue";
-import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
 import bus from "@/store/bus";
-import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 import SingleComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
+import Thx from "@jx3box/jx3box-ui/src/single/Thx.vue";
+import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
+import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 import { getKnowledgeMenus } from "@/service/knowledge.js";
 import AsyncState from "@/components/common/async-state.vue";
 import { createLatestRequestGuard } from "@/utils/latest-request";
@@ -136,6 +142,7 @@ export default {
         wikiRobotBottom,
         WikiRobotTip,
         SingleComment,
+        Thx,
         AsyncState,
     },
     computed: {

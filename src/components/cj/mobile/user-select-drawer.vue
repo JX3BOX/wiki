@@ -13,7 +13,7 @@
         >
             <template #default>
                 <div class="c-var m-user-select">
-                    <div class="m-user-select__title">选择角色</div>
+                    <div class="m-user-select__title">{{ $t("ui.achievement.mobile.selectRole") }}</div>
                     <div class="m-user-list">
                         <div
                             v-for="item in list"
@@ -27,7 +27,7 @@
                                     <img :src="getMountAvatar(item.mount || 0, item.body_type || 1)" />
                                 </div>
                                 <div class="u-name">
-                                    {{ item.name || "虚拟角色" }}
+                                    {{ item.name || $t("ui.common.role.virtual") }}
                                 </div>
                             </div>
                             <div class="u-area">
@@ -37,8 +37,12 @@
                     </div>
 
                     <div class="m-op">
-                        <button class="u-reset" :class="{ active: !isEmptyVal }" @click="resetVal">重置</button>
-                        <button class="u-confirm" :class="{ active: changeTmp }" @click="changeValue">确定</button>
+                        <button class="u-reset" :class="{ active: !isEmptyVal }" @click="resetVal">
+                            {{ $t("ui.common.actions.reset") }}
+                        </button>
+                        <button class="u-confirm" :class="{ active: changeTmp }" @click="changeValue">
+                            {{ $t("ui.common.actions.confirm") }}
+                        </button>
                     </div>
                 </div>
             </template>
@@ -47,7 +51,9 @@
 </template>
 
 <script>
-import { cloneDeep, isEmpty, pick } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
+import isEmpty from "lodash/isEmpty";
+import pick from "lodash/pick";
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
 import { getUserRoles } from "@/service/team";
@@ -71,6 +77,7 @@ export default {
         },
     },
     data() {
+        const virtualRoleLabel = this.$t("ui.common.role.virtual");
         return {
             tmpVal: null,
 
@@ -78,11 +85,11 @@ export default {
 
             isLogin: User.isLogin(),
             virtualRole: {
-                name: "虚拟角色",
+                name: virtualRoleLabel,
                 ...User.getInfo(),
                 jx3id: 0,
                 ID: ~~User.getInfo().uid,
-                server: "虚拟角色",
+                server: virtualRoleLabel,
             },
         };
     },

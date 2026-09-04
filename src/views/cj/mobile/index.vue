@@ -1,6 +1,8 @@
 <template>
     <div class="c-var p-achievement">
-        <div v-if="currentRole" class="m-title">{{ currentRole?.name }}的{{ categoryName }}成就</div>
+        <div v-if="currentRole" class="m-title">
+            {{ $t("ui.achievement.mobile.roleCategoryTitle", { role: currentRole?.name, category: categoryName }) }}
+        </div>
         <div class="m-cj-list" v-loading="loading">
             <wiki-item v-for="item in currAchievements" @detail="openCurrent" :key="item.id" :item="item" />
         </div>
@@ -58,7 +60,7 @@ import {
     getMenuAchievements, getMenus, getRoleGameAchievements, getVirtualRoleAchievements, searchAchievements,
     setVirtualRoleAchievements,
 } from "@/service/achievement";
-import { get } from "lodash";
+import get from "lodash/get";
 import UserSelectDrawer from "@/components/cj/mobile/user-select-drawer.vue";
 import MapFilterDrawer from "@/components/cj/mobile/map-filter-drawer.vue";
 import CategoryFilterDrawer from "@/components/cj/mobile/category-filter-drawer.vue";
@@ -121,7 +123,9 @@ export default {
                 return this.mapSearch?.map?.name;
             }
 
-            return this.categorySearch?.general?.value === 2 ? '五甲' : '常规';
+            return this.categorySearch?.general?.value === 2
+                ? this.$t("ui.achievement.categories.armor")
+                : this.$t("ui.achievement.categories.general");
         }
     },
     watch:{
@@ -347,8 +351,8 @@ export default {
             };
             setVirtualRoleAchievements(data).then((res) => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为已完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedComplete"),
                     type: "success",
                 });
                 const list = Array.from(new Set(this.achievementsVirtual.concat(ids)));
@@ -369,8 +373,8 @@ export default {
             };
             cancelVirtualRoleAchievements(data).then((res) => {
                 this.$notify({
-                    title: "操作成功",
-                    message: "已将选中成就标记为待完成",
+                    title: this.$t("ui.common.status.operationSuccess"),
+                    message: this.$t("ui.achievement.markedIncomplete"),
                     type: "success",
                 });
                 const list = this.achievementsVirtual.filter((item) => !ids.includes(item));

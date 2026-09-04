@@ -2,7 +2,7 @@
     <WikiPanel
         class="m-relations-panel"
         scene="detail"
-        v-if="relations === false || (relations && relations.length) || npc"
+        v-if="(relations && relations.length) || npc"
     >
         <template #head-title>
             <LegacyIcon class="el-icon-link" />
@@ -18,7 +18,6 @@
             <div class="m-section">
                 <div class="u-empty" v-if="!relations || !relations.length">
                     <span v-if="relations === null">{{ $t("ui.common.status.loading") }}</span>
-                    <span v-if="relations === false">{{ $t("ui.common.status.loadFailed") }}</span>
                     <span v-if="relations && !relations.length">{{ $t("ui.achievement.noRelations") }}</span>
                 </div>
                 <div class="m-relations" v-if="relations && relations.length">

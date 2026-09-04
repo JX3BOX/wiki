@@ -71,8 +71,15 @@ import RoleSelect from "@/components/common/role-select.vue";
 import bus from "@/store/bus";
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
-import { omit } from "lodash";
+import omit from "lodash/omit";
 import { collectMenuAchievementIds } from "@/utils/achievement-statistics";
+
+const MENU_TYPE_KEYS = Object.freeze({
+    1: "ui.achievement.menuTypes.1",
+    2: "ui.achievement.menuTypes.2",
+    3: "ui.achievement.menuTypes.3",
+});
+
 export default {
     name: "Sidebar",
     props: ["sidebar"],
@@ -83,7 +90,7 @@ export default {
         menu_types() {
             return [1, 2, 3].map((value) => ({
                 value,
-                label: this.$t(`ui.achievement.menuTypes.${value}`),
+                label: this.$t(MENU_TYPE_KEYS[value]),
             }));
         },
         staticMenus() {
