@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import enPages from "../src/locale/en-US/pages.js";
 import enUi from "../src/locale/en-US/ui.js";
@@ -66,7 +67,7 @@ test("四个语言包拥有相同键与插值参数", () => {
 });
 
 test("源码中的静态 i18n 引用在所有语言包中存在", async () => {
-    const srcRoot = new URL("../src", import.meta.url).pathname;
+    const srcRoot = fileURLToPath(new URL("../src", import.meta.url));
     const files = await sourceFiles(srcRoot);
     const references = new Map();
     const referencePattern = /\$t\s*\(\s*["']([^"']+)["']/g;

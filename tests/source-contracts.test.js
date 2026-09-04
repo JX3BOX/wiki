@@ -173,6 +173,19 @@ test("成就详情的历史版本与打赏操作适配移动端窄屏", async ()
     assert.match(styles, /\.u-count\s*\{[\s\S]*?white-space:\s*nowrap/);
 });
 
+test("移动端操作区与多语言导航文本允许在窄屏内完整展示", async () => {
+    const appStyles = await readSource("src/assets/css/app.less");
+    const achievementHomeStyles = await readSource("src/assets/css/cj/home.less");
+    const commonNav = await readSource("src/components/common/nav.vue");
+
+    assert.match(appStyles, /\.m-search-view \.m-normal-op\s*\{[\s\S]*?flex-wrap:\s*wrap/);
+    assert.match(appStyles, /\.el-button \+ \.el-button\s*\{[\s\S]*?margin-left:\s*0/);
+    assert.match(achievementHomeStyles, /\.u-qlink a\s*\{[\s\S]*?height:\s*auto/);
+    assert.match(achievementHomeStyles, /span\s*\{[\s\S]*?white-space:\s*normal[\s\S]*?overflow-wrap:\s*anywhere/);
+    assert.match(commonNav, /\.u-menu\s*\{[\s\S]*?writing-mode:\s*vertical-rl/);
+    assert.match(commonNav, /text-orientation:\s*mixed/);
+});
+
 test("任务名称颜色不在 JavaScript 中使用 Less 变量", async () => {
     const sources = await Promise.all([
         readSource("src/components/quest/result/quest-card.vue"),

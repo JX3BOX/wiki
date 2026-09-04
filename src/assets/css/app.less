@@ -125,6 +125,22 @@
         width: 100%;
     }
 
+    // 批量操作在英文、越南文下更长，允许控件自然换行并清除按钮的默认相邻间距。
+    .m-search-view .m-normal-op {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .el-checkbox {
+            margin-right: 0;
+        }
+
+        .el-button + .el-button {
+            margin-left: 0;
+        }
+    }
+
     .c-wiki-panel .m-panel-head {
         min-width: 0;
         gap: 8px;

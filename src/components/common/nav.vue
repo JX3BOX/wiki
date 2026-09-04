@@ -41,6 +41,9 @@ export default {
             gap: 10px;
         }
         .u-menu {
+            .flex;
+            align-items: center;
+            justify-content: center;
             box-sizing: border-box;
             padding: 5px;
             border-top-right-radius: 4px;
@@ -49,6 +52,10 @@ export default {
             text-align: center;
             // background-color: #eee;
             font-size: 12px;
+            line-height: 20px;
+            white-space: nowrap;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
             color: @color;
             cursor: pointer;
             &:hover {
