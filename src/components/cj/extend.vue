@@ -1,181 +1,20 @@
 <template>
-    <div class="m-right-side" :class="{ isHome: isHome }">
-        <SideMsg></SideMsg>
-        <!-- 贡献排行榜 -->
-        <Rank></Rank>
-
-        <div class="m-group">
-            <h2 class="m-title">
-                <div class="u-title">
-                    <img class="u-icon" svg-inline src="@/assets/img/cj/puzzle.svg" />
-                    <span class="u-text">{{ $t("ui.achievement.groups") }}</span>
-                </div>
-                <a class="u-show-message" target="_blank" href="https://www.jx3box.com/tool/13659/">{{
-                    $t("ui.achievement.applyDisplay")
-                }}</a>
-            </h2>
-            <div class="m-group-content">
-                <!-- <el-tree
-                    class="m-group-tree"
-                    :default-expand-all="false"
-                    :data="groups"
-                    node-key="uuid"
-                    @node-click="clickNode"
-                /> -->
-                <el-collapse v-model="activeName" accordion>
-                    <el-collapse-item
-                        :title="group.label"
-                        :name="group.label"
-                        v-for="group in groups"
-                        :key="group.uuid"
-                    >
-                        <div class="u-zones" v-for="zone in group.children" :key="zone.uuid">
-                            <el-tag class="u-zone" size="small">{{ zone.label }}</el-tag>
-                            <span class="u-qq" v-for="qq in zone.children" :key="qq.uuid" @click="copy(qq.label)">{{
-                                qq.label
-                            }}</span>
-                        </div>
-                    </el-collapse-item>
-                </el-collapse>
-            </div>
-        </div>
+    <div class="m-right-side" :class="{ isHome: $route.name === 'home' }">
+        <SideMsg />
+        <Rank />
     </div>
 </template>
 
 <script>
-import { getMenuGroup } from "@/service/group";
-import { __ossRoot, __ossMirror } from "@/utils/config";
 import SideMsg from "@/components/common/side-msg.vue";
 import Rank from "@/components/common/rank.vue";
-import { v4 as uuid } from "uuid";
 
 export default {
     name: "Extend",
-    components: {
-        SideMsg,
-        Rank,
-    },
-    props: {
-        type: {
-            type: String,
-            default: "achievement",
-        },
-    },
-    data() {
-        return {
-            ranks: [],
-            groups: [],
-            isHome: true,
-
-            activeName: "",
-            qq: "614370825",
-        };
-    },
-    computed: {
-        client() {
-            return this.$store.state.client;
-        },
-    },
-    methods: {
-        clickNode(data) {
-            if (!data.children) {
-                const val = data.label;
-                this.copy(val);
-            }
-        },
-        copy(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                this.$notify({
-                    title: this.$t("ui.common.status.copySuccess"),
-                    message: text,
-                    type: "success",
-                });
-            });
-        },
-        copy_success() {
-            this.$notify({ title: this.$t("ui.common.status.copySuccess"), type: "success" });
-        },
-        copy_error() {
-            this.$notify({ title: this.$t("ui.common.status.browserUnsupported"), type: "error" });
-        },
-        checkIsHome: function () {
-            this.isHome = this.$route.name == "home" || !this.$route.name;
-        },
-        onQQClick() {
-            navigator.clipboard.writeText(this.qq).then(() => {
-                this.$notify({
-                    title: this.$t("ui.common.status.copySuccess"),
-                    message: this.$t("ui.common.labels.content") + this.qq,
-                    type: "success",
-                });
-            });
-        },
-        loadGroups() {
-            getMenuGroup("wiki_cj_group").then((res) => {
-                const groups = res.data?.data?.menus || [];
-                const newGroups = groups.map((item) => {
-                    return {
-                        zone: item.label.split("/")[0],
-                        server: item.label.split("/")?.[1] || "",
-                        children: item.link.split("/"),
-                        priority: item.priority,
-                    };
-                });
-                this.groups = this.convertToTree(newGroups);
-            });
-        },
-        convertToTree(data) {
-            const tree = {};
-
-            data.forEach((item) => {
-                const zone = item.zone;
-
-                if (!tree[zone]) {
-                    tree[zone] = {
-                        label: zone,
-                        children: [],
-                        uuid: uuid(),
-                    };
-                }
-
-                const serverNode = {
-                    label: item.server,
-                    children: item.children.map((val) => {
-                        return {
-                            label: val,
-                            uuid: uuid(),
-                        };
-                    }),
-                    priority: item.priority,
-                    uuid: uuid(),
-                };
-
-                tree[zone].children.push(serverNode);
-            });
-
-            return Object.values(tree);
-        },
-    },
-    mounted() {
-        // 获取成就群
-        this.loadGroups();
-        this.checkIsHome();
-    },
-    watch: {
-        "$route.name": function () {
-            this.checkIsHome();
-        },
-    },
+    components: { SideMsg, Rank },
 };
 </script>
 
 <style lang="less">
 @import "~@/assets/css/cj/right-side.less";
-.m-group-tree {
-    .is-leaf + .el-tree-node__label:before {
-        content: "»";
-        color: #3d454d;
-        margin-right: 5px;
-    }
-}
 </style>

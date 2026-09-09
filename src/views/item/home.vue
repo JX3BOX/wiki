@@ -1,5 +1,5 @@
 <template>
-    <div class="m-home-view">
+    <div class="m-home-view m-wiki-home">
         <WikiPanel :border="false">
             <template #head-title>
                 <LegacyIcon class="el-icon-location-information" />

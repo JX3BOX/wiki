@@ -19,6 +19,12 @@ const routes = [
         redirect: { name: "home" },
         children: [
             {
+                name: "groups",
+                path: "/groups",
+                component: () => import("@/views/cj/groups.vue"),
+                meta: { i18n: { title: "ui.achievement.groups" } },
+            },
+            {
                 name: "home",
                 path: "/",
                 component: Home,

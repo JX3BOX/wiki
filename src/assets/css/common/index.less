@@ -166,3 +166,47 @@
         .db;
     }
 }
+
+// 四个百科首页统一模块留白，避免快捷按钮外边距与面板内边距叠加。
+.m-wiki-home {
+    --wiki-home-section-gap: 8px;
+    --wiki-home-body-space: 16px;
+
+    > .c-wiki-panel,
+    > .m-knowledge-panel {
+        margin: 0 0 var(--wiki-home-section-gap);
+    }
+    > .c-wiki-panel > .m-panel-body {
+        padding: var(--wiki-home-body-space) 15px 8px;
+    }
+    .m-qlinks {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        gap: 12px;
+        .u-qlink {
+            margin: 0;
+            a { min-height: 38px; box-sizing: border-box; }
+        }
+    }
+    > .m-knowledge-panel {
+        > .m-title {
+            padding: 10px 15px;
+            margin: 0;
+            font-weight: 500;
+        }
+        > .m-panel {
+            margin: var(--wiki-home-body-space) 15px 8px;
+        }
+    }
+}
+@media screen and (max-width: @phone) {
+    .m-wiki-home {
+        --wiki-home-section-gap: 8px;
+        --wiki-home-body-space: 12px;
+        .m-qlinks {
+            gap: 8px;
+            .u-qlink a { padding: 8px 12px; }
+        }
+    }
+}

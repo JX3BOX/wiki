@@ -286,23 +286,24 @@ test("移动端操作区与多语言导航文本允许在窄屏内完整展示",
 
     assert.match(appStyles, /\.m-search-view \.m-normal-op\s*\{[\s\S]*?flex-wrap:\s*wrap/);
     assert.match(appStyles, /\.el-button \+ \.el-button\s*\{[\s\S]*?margin-left:\s*0/);
-    assert.match(achievementHomeStyles, /\.u-qlink a\s*\{[\s\S]*?height:\s*auto/);
+    assert.match(achievementHomeStyles, /\.m-home-collections\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
     assert.match(achievementHomeStyles, /span\s*\{[\s\S]*?white-space:\s*normal[\s\S]*?overflow-wrap:\s*anywhere/);
     assert.match(commonNav, /\.u-menu\s*\{[\s\S]*?writing-mode:\s*vertical-rl/);
     assert.match(commonNav, /text-orientation:\s*mixed/);
 });
 
-test("Wiki 首页待攻略入口在桌面端单行展示并在手机端紧凑排列", async () => {
+test("公共待攻略入口保持单行，成就首页改为宝典和群组入口", async () => {
     const counter = await readSource("src/components/common/counter.vue");
     const commonStyles = await readSource("src/assets/css/common/index.less");
-    const homeStyles = await readSource("src/assets/css/cj/home.less");
+    const home = await readSource("src/views/cj/home.vue");
 
     assert.match(counter, /class="u-counter-main"[\s\S]*?<LegacyIcon[\s\S]*?waitingGuide/);
     assert.match(commonStyles, /\.u-counter-link\s*\{[\s\S]*?flex-flow:\s*row nowrap[\s\S]*?white-space:\s*nowrap/);
     assert.match(commonStyles, /\.u-counter-main\s*\{[\s\S]*?display:\s*inline-flex[\s\S]*?align-items:\s*center/);
     assert.match(commonStyles, /\.u-waiting\s*\{[\s\S]*?flex:\s*none[\s\S]*?white-space:\s*nowrap/);
-    assert.match(homeStyles, /\.u-qlink \.u-counter-link\s*\{[\s\S]*?flex-direction:\s*column[\s\S]*?flex-wrap:\s*nowrap/);
-    assert.match(homeStyles, /\.u-waiting\s*\{[\s\S]*?font-size:\s*12px/);
+    assert.doesNotMatch(home, /<Counter|hot_achievements|newest_achievements/);
+    assert.match(home, /name: 'groups'/);
+    assert.match(home, /href="\/pvx\/achievements"/);
 });
 
 test("任务名称颜色不在 JavaScript 中使用 Less 变量", async () => {
