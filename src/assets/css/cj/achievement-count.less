@@ -1,53 +1,12 @@
+@import "../common/wiki-stat-strip.less";
+
 .m-achievement-count {
-    .fl;
-
-    .u-stat {
-        .fl;
-        white-space: nowrap;
-        overflow: auto;
-        .fz(14px);
-
-        em {
-            .mr(10px);
-            font-style: normal;
-        }
-
-        b {
-            font-style: italic;
-            color: @v4primary;
-
-            &:after {
-                content: "|";
-                font-weight: 300;
-                color: #999;
-                .ml(10px);
-                font-family: Georgia, "Times New Roman", Times, serif;
-            }
-        }
-
-        span {
-            .mr(10px);
-
-            &:last-child b {
-                &:after {
-                    .none;
-                }
-            }
-        }
-    }
-
+    .wiki-stat-strip();
+    float: left;
     max-width: calc(100% - 350px);
-    overflow-x: auto;
-}
 
-@media screen and (max-width: @ipad) {
-    .m-achievement-count {
+    @media screen and (max-width: @ipad) {
         float: none;
         max-width: 100%;
-
-        .u-stat {
-            .fz(13px);
-            float: none;
-        }
     }
 }

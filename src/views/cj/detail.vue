@@ -3,10 +3,14 @@
         <AsyncState :loading="loading" :error="loadError" @retry="syncWikiData" />
         <AchievementSingle v-if="source && !loadError" :isRobot="isRobot" :achievement="source" show-favorite="true" />
 
-        <Notice v-if="!isRobot"></Notice>
+        <WikiDetailNotice
+            v-if="!isRobot"
+            :show-robot-tip="!!(wiki_post && wiki_post.post)"
+            :type-name="$t('ui.types.achievement')"
+            :reply="source?.Name"
+        />
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
-            <WikiRobotTip v-if="!isRobot" :type-name="$t('ui.types.achievement')" :reply="source?.Name"></WikiRobotTip>
-            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
+            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel" :variant="isRobot ? 'default' : 'surface'">
                 <template #head-title>
                     <img class="u-icon" svg-inline src="@/assets/img/cj/achievement.svg" />
                     <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.achievement") }) }}</span>
@@ -46,14 +50,14 @@
             </WikiPanel>
 
             <template v-if="!isRobot">
-                <Relations :source-id="id" />
+                <Relations :source-id="id" variant="surface" />
 
                 <!-- 历史版本 -->
-                <WikiRevisions type="achievement" :source-id="id" />
+                <WikiRevisions type="achievement" :source-id="id" variant="surface" />
 
                 <!-- 打赏 -->
                 <div class="m-wiki-thx-panel">
-                    <WikiPanel>
+                    <WikiPanel variant="surface">
                         <template #head-title>
                             <LegacyIcon class="u-icon el-icon-coin" />
                             <span class="u-txt">{{ $t("ui.common.wiki.reward") }}</span>
@@ -79,7 +83,7 @@
                 </div>
 
                 <!-- 百科评论 -->
-                <WikiComments type="achievement" :source-id="id" />
+                <WikiComments type="achievement" :source-id="id" variant="surface" />
             </template>
         </div>
         <div
@@ -108,7 +112,7 @@ import WikiComments from "@jx3box/jx3box-ui/src/wiki/WikiComments.vue";
 import Thx from "@jx3box/jx3box-ui/src/single/Thx.vue";
 import AchievementSingle from "@/components/cj/achievement-single.vue";
 import Relations from "@/components/cj/relations.vue";
-import Notice from "@/components/cj/notice.vue";
+import WikiDetailNotice from "@/components/common/wiki-detail-notice.vue";
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
@@ -120,7 +124,6 @@ import bus from "@/store/bus.js";
 
 import { get_achievement } from "@/service/achievement";
 import WikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
-import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
 import AsyncState from "@/components/common/async-state.vue";
 import { createLatestRequestGuard } from "@/utils/latest-request";
 import { createArticleReadyTracker } from "@/utils/article-ready";
@@ -134,9 +137,8 @@ export default {
         Thx,
         Relations,
         Article,
-        Notice,
+        WikiDetailNotice,
         WikiRobotBottom,
-        WikiRobotTip,
         AsyncState,
     },
     props: {
@@ -252,7 +254,8 @@ export default {
                 };
                 this.is_empty = isEmpty;
                 this.compatible = compatible;
-                document.title = this.wiki_post.source?.Name + this.$t("pages.common.appendTitle");
+                const title = this.source?.Name || this.wiki_post.source?.Name || this.wiki_post.post?.title || this.$t("ui.apps.achievement");
+                document.title = title + this.$t("pages.common.appendTitle");
 
                 User.isLogin() &&
                     postHistory({

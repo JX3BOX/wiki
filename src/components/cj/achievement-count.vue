@@ -1,7 +1,7 @@
 <template>
     <div class="m-achievement-count">
         <div class="u-stat">
-            <span v-for="(text, key) in countDict" :key="key">
+            <span v-for="(text, key) in countDict" :key="key" class="u-stat-item">
                 <em>{{ text }}</em>
                 <b>{{ count[key] }}</b>
             </span>

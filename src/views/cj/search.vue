@@ -1,7 +1,8 @@
 <template>
-    <div class="m-search-view m-search-view--cj" v-loading="loading">
+    <div class="m-search-view m-search-view--cj">
+        <WikiSearchLoading v-if="loading" />
         <AsyncState :loading="loading" :error="loadError" :empty="isEmpty" @retry="loadAchievements" />
-        <div v-if="isLogin && isVirtual && !isEmpty" class="m-normal-op">
+        <div v-if="!loading && isLogin && isVirtual && !isEmpty" class="m-normal-op">
             <el-checkbox v-model="isAll" border @change="switchAll" size="small">{{ $t("ui.achievement.all") }}</el-checkbox>
             <template v-if="selectedAchievements.length">
                 <el-button plain icon="Check" @click.stop="finishVirtual" size="small" :loading="saving">
@@ -12,7 +13,7 @@
                 </el-button>
             </template>
         </div>
-        <Achievements v-if="!loadError" :achievements="achievements" />
+        <Achievements v-if="!loading && !loadError" :achievements="achievements" />
         <el-pagination
             background
             :total="achievements_count"
@@ -20,7 +21,7 @@
             layout="prev, pager, next, jumper"
             :current-page="page"
             :page-size="length"
-            v-if="!loadError"
+            v-if="!loading && !loadError"
             @current-change="page_change_handle"
         >
             <template #prev-icon>&laquo;</template>
@@ -30,6 +31,7 @@
 </template>
 
 <script>
+import WikiSearchLoading from "@/components/common/wiki-search-loading.vue";
 import Achievements from "@/components/cj/achievements.vue";
 import { searchAchievements, setVirtualRoleAchievements, cancelVirtualRoleAchievements } from "@/service/achievement";
 
@@ -39,6 +41,7 @@ import { createLatestRequestGuard } from "@/utils/latest-request";
 export default {
     name: "SearchPage",
     components: {
+        WikiSearchLoading,
         Achievements,
         AsyncState,
     },

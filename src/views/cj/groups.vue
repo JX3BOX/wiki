@@ -1,12 +1,15 @@
 <template>
     <article class="p-cj-groups">
+        <router-link class="u-back" :to="{ name: 'home' }">← {{ $t("ui.achievement.groupsBack") }}</router-link>
         <header class="m-groups-header">
-            <router-link class="u-back" :to="{ name: 'home' }">← {{ $t("ui.achievement.groupsBack") }}</router-link>
-            <h1>{{ $t("ui.achievement.groups") }}</h1>
-            <p>{{ $t("ui.achievement.groupsIntro") }}</p>
-            <a class="u-apply" href="https://www.jx3box.com/tool/13659/" target="_blank" rel="noopener noreferrer">{{
-                $t("ui.achievement.applyDisplay")
-            }}</a>
+            <div class="m-groups-heading">
+                <span class="u-symbol"><LegacyIcon class="el-icon-chat-dot-round" /></span>
+                <div>
+                    <h1>{{ $t("ui.achievement.groups") }}</h1>
+                    <p>{{ $t("ui.achievement.groupsIntro") }}</p>
+                </div>
+            </div>
+            <a class="u-apply" href="/tool/13659/" target="_blank" rel="noopener noreferrer">{{ $t("ui.achievement.applyDisplay") }}</a>
         </header>
         <GroupDirectory />
     </article>
@@ -22,61 +25,28 @@ export default {
 
 <style lang="less" scoped>
 .p-cj-groups {
-    padding: 12px 15px;
-    color: #3d454d;
+    padding: 4px 15px 24px;
+    color: #535c6a;
     font-size: 14px;
     line-height: 1.6;
-    .u-back {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 4px;
-        background: mix(@v4primary, #fff, 8%);
-        color: @v4primary;
-        border: 1px solid mix(@v4primary, #fff, 40%);
-        font-size: 13px;
-        &:hover {
-            background: mix(@v4primary, #fff, 14%);
-            border-color: @v4primary;
-        }
-    }
-    a:focus-visible {
-        outline: 2px solid @v4primary;
-        outline-offset: 3px;
-    }
+    .u-back { display: inline-flex; padding: 6px 0; margin-bottom: 12px; color: #939aa7; font-size: 12px; text-decoration: none; &:hover { color: @v4primary; } }
+    a:focus-visible { outline: 2px solid #aa98e0; outline-offset: 3px; }
 }
 .m-groups-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px 16px;
-    margin: 0 0 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #eee;
-    .u-back,
-    h1,
-    .u-apply {
-        flex-shrink: 0;
-    }
-    h1 {
-        margin: 0;
-        color: #6c645c;
-        font-size: 18px;
-        font-weight: 500;
-    }
-    p {
-        flex: 1;
-        min-width: 240px;
-        margin: 0;
-        color: #888;
-        font-size: 13px;
-    }
-    .u-apply {
-        margin-left: auto;
-        color: @v4primary;
-        font-size: 12px;
-        &:hover {
-            text-decoration: underline;
-        }
-    }
+    gap: 16px;
+    margin-bottom: 24px;
+    .m-groups-heading { display: flex; align-items: center; gap: 14px; min-width: 0; flex: 1 1 280px; }
+    .u-symbol { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: #f0ebfc; color: @v4primary; font-size: 22px; flex-shrink: 0; }
+    h1 { margin: 0 0 5px; color: #454d5a; font-size: 20px; font-weight: 600; }
+    p { margin: 0; color: #939aa7; font-size: 12px; overflow-wrap: anywhere; }
+    .u-apply { padding: 7px 12px; border: 1px solid #e7e0f6; border-radius: 7px; background: #f8f6fd; color: #8068bc; font-size: 12px; text-decoration: none; &:hover { background: #eee8fb; } }
+}
+@media (max-width: @phone) {
+    .p-cj-groups { padding: 0 0 16px; }
+    .m-groups-header h1 { font-size: 18px; }
 }
 </style>

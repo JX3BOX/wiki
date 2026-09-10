@@ -503,3 +503,187 @@
     font-weight: normal;
     .mr(6px);
 }
+
+// 列表与详情头部共用卡片、状态标签和资历徽标样式。
+.m-achievement-list > .m-achievement-single,
+.m-detail-view > .m-achievement-single {
+    padding: 12px 14px;
+    border-color: #e8ebf0;
+    border-radius: 8px;
+    background: #fafbfc;
+    transition: border-color 0.18s, background-color 0.18s;
+
+    &:hover {
+        border-color: #d7d0f1;
+        background: #fff;
+
+        .u-header .u-title {
+            color: @v4primary;
+        }
+    }
+
+    .u-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        padding-bottom: 10px;
+        border-bottom-color: #edf0f4;
+
+        .u-title {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 8px;
+            min-width: 0;
+            color: #3d4553;
+            font-weight: 600;
+            line-height: 22px;
+        }
+
+        .u-title-text {
+            overflow-wrap: anywhere;
+        }
+
+        .m-achievement-status {
+            height: 24px !important;
+            padding: 0 8px !important;
+            margin-right: 0;
+            border-radius: 6px;
+            font-size: 11px !important;
+            line-height: 22px !important;
+        }
+
+        .u-other {
+            position: static;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 11px;
+            color: #858d9a;
+
+            .el-button {
+                min-height: 26px;
+                padding: 0 9px;
+                border-radius: 6px;
+            }
+        }
+    }
+
+    .u-body {
+        padding-top: 12px;
+        text-shadow: none;
+
+        .u-right {
+            top: 12px;
+        }
+
+        .u-point {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            min-width: 48px;
+            height: 28px;
+            padding: 0 8px;
+            box-sizing: border-box;
+            border: 1px solid #e8e2f6;
+            border-radius: 7px;
+            background: #f4f1fb;
+            color: #7964b5;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+
+            img {
+                width: 15px;
+                height: 15px;
+                object-fit: contain;
+                opacity: 0.75;
+            }
+        }
+
+        .u-icon img {
+            width: 32px;
+            border-radius: 6px;
+        }
+
+        .u-desc {
+            margin-left: 42px;
+            font-size: 13px;
+            line-height: 22px;
+            color: #697180;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .u-expand {
+        margin-top: 8px;
+        padding-top: 22px;
+        border-radius: 5px;
+
+        hr {
+            border: 0;
+            border-top: 1px solid #e5e0f1;
+        }
+
+        .u-icon {
+            width: 26px;
+            color: #9a90b5;
+            background-color: #fafbfc;
+        }
+
+        &:hover {
+            background-color: #f3f0fb;
+
+            .u-icon {
+                color: @v4primary;
+                background-color: #f3f0fb;
+            }
+        }
+    }
+}
+
+// 详情头部适当增加留白，突出成就名称。
+.m-detail-view > .m-achievement-single {
+    margin-bottom: 16px;
+    padding: 16px 18px;
+    border-radius: 10px;
+
+    .u-header {
+        padding-bottom: 12px;
+
+        .u-title {
+            font-size: 16px;
+            line-height: 26px;
+        }
+
+        .u-other .el-button {
+            height: 30px;
+            padding: 0 12px;
+        }
+    }
+
+    .u-body {
+        padding-top: 14px;
+
+        .u-right {
+            top: 14px;
+        }
+
+        .u-icon img {
+            width: 36px;
+        }
+
+        .u-desc {
+            margin-left: 48px;
+            padding-top: 6px;
+            min-height: 30px;
+        }
+    }
+
+    @media screen and (max-width: @phone) {
+        padding: 12px;
+    }
+}

@@ -1,52 +1,61 @@
 <template>
     <div class="m-left-side">
-        <role-select v-model="currentRole" @list-loaded="onRoleLoaded">
-            <template #tip>
-                <el-tooltip
-                    v-if="!isVirtual && !isSync"
-                    class="item"
-                    effect="dark"
-                    :content="$t('ui.achievement.syncTip')"
-                    placement="top"
-                >
-                    <a href="/tool/74559" target="_blank"><LegacyIcon class="el-icon-warning-outline" /></a>
-                </el-tooltip>
-                <el-tooltip
-                    v-else
-                    class="item"
-                    effect="dark"
-                    :content="$t('ui.common.role.virtualTip')"
-                    placement="top"
-                >
-                    <a href="/tool/74559" target="_blank"><LegacyIcon class="el-icon-warning-outline" /></a>
-                </el-tooltip>
-            </template>
-        </role-select>
+        <div class="m-nav-header">
+            <role-select v-model="currentRole" @list-loaded="onRoleLoaded">
+                <template #tip>
+                    <el-tooltip
+                        v-if="currentRole && !isVirtual"
+                        class="item"
+                        effect="dark"
+                        :content="$t('ui.achievement.syncTip')"
+                        placement="top"
+                    >
+                        <a href="/tool/74559" target="_blank" rel="noopener noreferrer" :aria-label="$t('ui.achievement.syncTip')" @click.stop><el-icon><Link /></el-icon></a>
+                    </el-tooltip>
+                    <el-tooltip
+                        v-else-if="currentRole"
+                        class="item"
+                        effect="dark"
+                        :content="$t('ui.common.role.virtualTip')"
+                        placement="top"
+                    >
+                        <a href="/tool/74559" target="_blank" rel="noopener noreferrer" @click.stop><LegacyIcon class="el-icon-warning-outline" /></a>
+                    </el-tooltip>
+                </template>
+            </role-select>
 
-        <el-select v-model="selectedGeneral">
-            <el-option v-for="type in menu_types" :key="type.value" :label="type.label" :value="type.value"></el-option>
-        </el-select>
-        <div v-if="currentRole" class="m-filters">
-            <el-checkbox v-model="uncompleted" :label="$t('ui.achievement.onlyUnfinished')" border size="small"></el-checkbox>
-            <div class="u-total" v-if="[1, 2].includes(sidebar.general)">
-                <!-- numTotal -->
-                <b class="u-completed-num">{{ uncompleted ? achievementTotal - completedNum : completedNum }}</b>
-                <span class="u-total-num"> / {{ achievementTotal }}</span>
+            <el-select v-model="selectedGeneral">
+                <el-option v-for="type in menu_types" :key="type.value" :label="type.label" :value="type.value"></el-option>
+            </el-select>
+            <div v-if="currentRole" class="m-filters">
+                <el-checkbox v-model="uncompleted" :label="$t('ui.achievement.onlyUnfinished')" border size="small"></el-checkbox>
+                <div class="u-total" v-if="[1, 2].includes(treeGeneral)">
+                    <!-- numTotal -->
+                    <b class="u-completed-num">{{ uncompleted ? achievementTotal - completedNum : completedNum }}</b>
+                    <span class="u-total-num"> / {{ achievementTotal }}</span>
+                </div>
             </div>
         </div>
         <div class="m-menus">
+            <router-link class="u-cj-home" :class="{ 'is-active': $route.name === 'home' }" :to="{ name: 'home' }" @click="goHome">
+                <el-icon><CaretRight /></el-icon>
+                <span>{{ $t("ui.achievement.navHome") }}</span>
+            </router-link>
             <el-tree
                 class="filter-tree"
-                :class="{ other: [3].includes(sidebar.general) }"
                 :data="menus"
                 node-key="id"
+                :indent="42"
                 :expand-on-click-node="false"
                 @node-click="clickNode"
                 :filter-node-method="filterNode"
                 ref="tree"
             >
                 <template #default="{ data }">
-                    <router-link class="el-tree-node__label" :to="menu_url(data)">
+                    <router-link
+                        class="el-tree-node__label"
+                        :to="menu_url(data)"
+                    >
                         <span class="u-name" v-text="data.name"></span>
                         <em v-if="getMenuAchievementCount(data)" class="u-count">
                             (<span v-if="currentRole">{{
@@ -67,6 +76,7 @@
 
 <script>
 import { getMenus, getRoleGameAchievements, getVirtualRoleAchievements } from "@/service/achievement";
+import { CaretRight, Link } from "@element-plus/icons-vue";
 import RoleSelect from "@/components/common/role-select.vue";
 import bus from "@/store/bus";
 import User from "@jx3box/jx3box-common/js/user";
@@ -85,13 +95,15 @@ export default {
     props: ["sidebar"],
     components: {
         RoleSelect,
+        CaretRight,
+        Link,
     },
     computed: {
         menu_types() {
-            return [1, 2, 3].map((value) => ({
+            return [1, 2].map((value) => ({
                 value,
                 label: this.$t(MENU_TYPE_KEYS[value]),
-            }));
+            })).concat(this.staticMenus.map((item) => ({ value: item.router, label: item.name })));
         },
         staticMenus() {
             return [
@@ -101,6 +113,9 @@ export default {
                 { name: this.$t("ui.achievement.rare"), id: "rare", router: "rare" },
             ];
         },
+        treeGeneral() {
+            return this.sidebar.general === 2 ? 2 : 1;
+        },
         generalTotal() {
             return this.$store.state.generalTotal;
         },
@@ -109,10 +124,10 @@ export default {
         },
         achievementTotal() {
             let total = this.total;
-            if (this.sidebar.general === 1) {
+            if (this.treeGeneral === 1) {
                 total = this.generalTotal;
             }
-            if (this.sidebar.general === 2) {
+            if (this.treeGeneral === 2) {
                 total = this.armorTotal;
             }
             return total;
@@ -128,13 +143,20 @@ export default {
         },
         selectedGeneral: {
             get() {
-                return this.sidebar.general;
+                return this.staticMenus.some((item) => item.router === this.$route.name)
+                    ? this.$route.name
+                    : this.treeGeneral;
             },
-            set(val) {
+            set(value) {
+                if (this.staticMenus.some((item) => item.router === value)) {
+                    this.$router.push({ name: value });
+                    return;
+                }
                 this.$store.commit("SET_STATE", {
                     key: "sidebar",
-                    value: { ...this.sidebar, general: val },
+                    value: { ...this.sidebar, general: value, sub: null, detail: null },
                 });
+                this.$router.push({ name: value === 2 ? "top_five" : "home" });
             },
         },
         isVirtual() {
@@ -177,6 +199,7 @@ export default {
     watch: {
         // 鐩戝惉$route 褰撲笉澶勪簬normal璺敱鐨勬椂鍊?鍙栨秷灞曞紑 tree
         $route(to) {
+            if (to.name === "home") this.$refs.tree?.setCurrentKey(null);
             if (to.name !== "normal") {
                 let all = this.$refs.tree.store._getAllNodes();
                 for (let i = 0; i < all.length; i++) all[i].expanded = false;
@@ -192,7 +215,7 @@ export default {
                 that.expand_menu();
 
                 // 寮傛鍔犺浇渚ц竟鏍忔暟鎹?
-                if (that.sidebar.general) that.get_menus(this.sidebar.general);
+                if (that.sidebar.general) that.get_menus(this.treeGeneral);
             },
         },
         virtualRole: {
@@ -239,10 +262,15 @@ export default {
         },
     },
     methods: {
+        goHome() {
+            this.$refs.tree?.setCurrentKey(null);
+            this.old_node = null;
+            if (window.innerWidth < 1024) bus.emit("toggleLeftSide", false);
+        },
         getMenuAchievementIds(data) {
             return collectMenuAchievementIds(data).filter((id) => {
                 const item = this.achievementMetadata[id];
-                return item?.visible && item.general === this.sidebar.general;
+                return item?.visible && item.general === this.treeGeneral;
             });
         },
         getMenuAchievementCount(data) {
@@ -268,7 +296,7 @@ export default {
                 if (first_node) {
                     setTimeout(function () {
                         that.$router.push({
-                            name: that.sidebar.general == 2 ? "top_five" : "normal",
+                            name: that.treeGeneral == 2 ? "top_five" : "normal",
                             params: {
                                 sub: first_node.data.sub,
                                 detail: first_node.data.detail,
@@ -306,31 +334,13 @@ export default {
                 return;
             }
 
-            if (general == 3) {
-                that.menus = this.staticMenus;
-                return;
-            }
-
-            // if (general === 4) {
-            //     that.menus = [{ name: "瀹犵墿鎴愬氨", id: "rare", router: "rare" }];
-            //     that.$router.push({ name: 'rare' })
-            //     that.$refs.tree.setCurrentKey('rare')
-            //     return;
-            // }
-            // if (general === 5) {
-            //     that.menus = [{ name: "濂囬亣鎴愬氨", id: "adventure", router: "adventure" }];
-            //     that.$router.push({ name: 'adventure' })
-            //     // that.$refs.tree.setCurrentKey('adventure')
-            //     return;
-            // }
-
             getMenus({ general, client: this.$store.state.client }).then(
                 (data) => {
                     data = data.data;
                     if (data.code === 200) {
                         let menus = [];
                         for (let i in data.data.menus) menus.push(data.data.menus[i]);
-                        that.menus = menus;
+                        if (general === that.treeGeneral) that.menus = menus;
 
                         // 缂撳瓨鑿滃崟鏁版嵁
                         that.menus_cache[general] = menus;
@@ -340,22 +350,24 @@ export default {
                     }
                 },
                 () => {
-                    that.menus = false;
+                    if (general === that.treeGeneral) that.menus = [];
                 }
             );
         },
         expand_menu() {
             let that = this;
             that.$nextTick(function () {
+                if (that.$route.name === "home") {
+                    that.$refs.tree?.setCurrentKey(null);
+                    return;
+                }
                 // 榛樿灞曞紑褰撳墠鑿滃崟
                 let key = "";
-                if (that.sidebar.general != 3) {
-                    let sub = that.sidebar.sub;
-                    let detail = that.sidebar.detail;
-                    key = sub + (detail ? `-${detail}` : "");
-                } else {
-                    key = that.sidebar.other;
+                if (["normal", "top_five"].includes(that.$route.name)) {
+                    const { sub, detail } = that.$route.params;
+                    key = sub ? sub + (detail ? `-${detail}` : "") : "";
                 }
+                if (!key) that.$refs.tree?.setCurrentKey(null);
 
                 if (key) {
                     let node = that.$refs.tree.store.getNode(key);
@@ -371,7 +383,7 @@ export default {
             });
         },
         menu_url(data) {
-            switch (this.sidebar.general) {
+            switch (this.treeGeneral) {
                 case 1:
                     return {
                         name: "normal",
@@ -384,10 +396,7 @@ export default {
                         params: { sub: data.sub, detail: data.detail },
                         query: omit(this.$route.query, ["page"]),
                     };
-                case 3:
-                    // case 4:
-                    // case 5:
-                    return { name: data.router, query: omit(this.$route.query, ["page"]) };
+
             }
             return null;
         },

@@ -1,57 +1,135 @@
+// 恢复首页热门与最新成就轮播卡片。
 .m-cj-home {
-    .m-home-featured .u-qlink a.u-feature {
-        justify-content: center;
-        min-width: 220px;
-        min-height: 52px;
-        padding: 12px 28px;
-        box-sizing: border-box;
-        background-color: darken(@v4primary, 10%);
-        font-size: 16px;
-        font-weight: 600;
-        gap: 8px;
-    }
-    .m-home-featured span,
-    .m-home-collections span {
-        min-width: 0;
-        white-space: normal;
-        overflow-wrap: anywhere;
-    }
-    .m-qlinks a:focus-visible {
-        outline: 2px solid @v4primary;
-        outline-offset: 3px;
-    }
-}
-@media screen and (max-width: @phone) {
-    .m-cj-home {
-        .m-home-featured,
-        .m-home-collections {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            .u-qlink {
-                min-width: 0;
-            }
-            .u-qlink a {
-                justify-content: center;
+    .m-carousel {
+        @m-hot-icon-radius: 6px;
+
+        .u-icon {
+            position: relative;
+            .fl;
+            width: 48px;
+            margin-left: 7px;
+            line-height: 0;
+            overflow: hidden;
+
+            &:before {
+                content: "";
+                position: absolute;
+                width: 100%;
                 height: 100%;
+                border: 4px solid #24292e;
+                border-radius: @m-hot-icon-radius;
+                z-index: 10;
                 box-sizing: border-box;
             }
-        }
-        .m-home-featured .u-qlink a.u-feature {
-            min-width: 0;
-            padding: 12px;
-            font-size: 15px;
-            gap: 6px;
 
-            > .legacy-icon,
-            > [data-legacy-icon] {
-                flex-shrink: 0;
+            img {
+                display: inline-block;
+                border-radius: @m-hot-icon-radius;
             }
         }
-    }
-}
 
-@media screen and (max-width: 360px) {
-    .m-cj-home .m-qlinks.m-home-featured {
-        grid-template-columns: minmax(0, 1fr);
+        .m-carousel-content {
+            margin-left: 65px;
+            margin-right: 10px;
+
+            & > span {
+                display: block;
+            }
+
+            .u-title {
+                .flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 14px;
+                line-height: 16px;
+            }
+
+            .u-desc,
+            .u-rank {
+                .flex;
+                align-items: center;
+                gap: 5px;
+                margin-top: 3px;
+                font-size: 12px;
+                line-height: 16px;
+            }
+
+            .u-desc {
+                opacity: 0.6;
+
+                i,
+                span {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+
+                span {
+                    width: calc(100% - 20px);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+
+            .u-rank {
+                color: slateblue;
+                white-space: nowrap;
+
+                i {
+                    margin-right: 3px;
+                }
+
+                span {
+                    display: inline-block;
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .u-item {
+            position: relative;
+            .db;
+            .w(100%);
+            padding: 5px;
+            box-sizing: border-box;
+            border: 1px solid #d7dae1;
+            border-left: none;
+            background-color: #f5f7fa;
+            border-radius: 5px;
+            color: #3d454d;
+            overflow: hidden;
+            .h(66px);
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                border-left: 5px solid @v4primary;
+            }
+        }
+
+        .u-item-new {
+            padding-top: 8px;
+
+            .u-title {
+                .lh(24px);
+            }
+        }
+
+        &.m-hot {
+            .u-item-0:before {
+                border-left-color: #fc3c3c;
+            }
+
+            .u-item-1:before {
+                border-left-color: #fba524;
+            }
+
+            .u-item-2:before {
+                border-left-color: #fe7979;
+            }
+        }
     }
 }
