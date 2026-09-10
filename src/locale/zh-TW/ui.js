@@ -471,6 +471,7 @@ const zhTWOverrides = {
         },
     },
     knowledge: {
+        quickCreate: "建立通識詞條",
         quickTeam: "團隊平台",
         quickExam: "劍三考試",
         quickStory: "江湖故事",

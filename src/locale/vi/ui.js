@@ -546,6 +546,7 @@ export default {
         },
     },
     knowledge: {
+        quickCreate: "Tạo mục kiến thức",
         quickTeam: "Nền tảng tổ đội",
         quickExam: "Kỳ thi JX3",
         quickStory: "Chuyện giang hồ",

@@ -546,6 +546,7 @@ export default {
         },
     },
     knowledge: {
+        quickCreate: "Create Knowledge Entry",
         quickTeam: "Team Platform",
         quickExam: "JX3 Exams",
         quickStory: "Jianghu Stories",

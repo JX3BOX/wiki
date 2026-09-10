@@ -13,6 +13,12 @@
                     </a>
                 </li>
                 <li class="u-qlink">
+                    <a :href="publishLink('knowledge')" target="_blank" rel="noopener noreferrer">
+                        <LegacyIcon class="el-icon-edit-outline" />
+                        <span>{{ $t("ui.knowledge.quickCreate") }}</span>
+                    </a>
+                </li>
+                <li class="u-qlink">
                     <a class="u-team" href="/team" target="_blank" rel="noopener noreferrer">
                         <LegacyIcon class="el-icon-user" />
                         <span>{{ $t("ui.knowledge.quickTeam") }}</span>
@@ -36,11 +42,13 @@
 </template>
 
 <script>
+import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import WikiPanel from "@/components/common/wiki-panel.vue";
 
 export default {
     name: "KnowledgeEntry",
     components: { WikiPanel },
+    methods: { publishLink },
 };
 </script>
 

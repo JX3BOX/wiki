@@ -546,6 +546,7 @@ export default {
         },
     },
     knowledge: {
+        quickCreate: "创建通识词条",
         quickTeam: "团队平台",
         quickExam: "剑三考试",
         quickStory: "江湖故事",
