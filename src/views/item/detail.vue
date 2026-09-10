@@ -206,7 +206,7 @@
                     <div class="w-left">
                         <jx3-item :item_id="source.id" />
                     </div>
-                    <div class="w-right">
+                    <div class="w-right m-item-summary">
                         <div class="m-name">
                             <div class="u-title">
                                 <item-icon :item="source" :dishoverable="true" />
@@ -387,12 +387,15 @@
                 </el-tabs>
             </div>
 
-            <Notice></Notice>
+            <WikiDetailNotice
+                :show-robot-tip="!!(wiki_post && wiki_post.post)"
+                :type-name="$t('ui.types.item')"
+                :reply="source?.Name"
+            />
         </template>
 
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
-            <WikiRobotTip v-if="!isRobot" :type-name="$t('ui.types.item')" :reply="source?.Name"></WikiRobotTip>
-            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
+            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel" :variant="isRobot ? 'default' : 'surface'">
                 <template #head-title>
                     <img class="u-icon" svg-inline src="@/assets/img/item/item.svg" />
                     <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.item") }) }}</span>
@@ -425,11 +428,11 @@
             </WikiPanel>
             <template v-if="!isRobot">
                 <!-- 历史版本 -->
-                <WikiRevisions type="item" :source-id="id" />
+                <WikiRevisions type="item" :source-id="id" variant="surface" />
 
                 <!-- 打赏 -->
                 <div class="m-wiki-thx-panel">
-                    <WikiPanel>
+                    <WikiPanel variant="surface">
                         <template #head-title>
                             <LegacyIcon class="u-icon el-icon-coin" />
                             <span class="u-txt">{{ $t("ui.common.wiki.reward") }}</span>
@@ -455,7 +458,7 @@
                 </div>
 
                 <!-- 百科评论 -->
-                <WikiComments type="item" :source-id="id" />
+                <WikiComments type="item" :source-id="id" variant="surface" />
             </template>
         </div>
         <div class="m-wiki-post-empty" :class="isRobot ? 'is-robot-empty' : ''" v-else-if="!loading && !loadError">
@@ -485,9 +488,8 @@ import ItemPrices from "@/components/item/item-prices.vue";
 import ItemPriceChart from "@/components/item/item-price-chart.vue";
 import GamePrice from "@jx3box/jx3box-ui/src/wiki/GamePrice.vue";
 import User from "@jx3box/jx3box-common/js/user";
-import Notice from "@/components/cj/notice.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
-import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
+import WikiDetailNotice from "@/components/common/wiki-detail-notice.vue";
 import AsyncState from "@/components/common/async-state.vue";
 import { createLatestRequestGuard } from "@/utils/latest-request";
 import { createArticleReadyTracker } from "@/utils/article-ready";
@@ -643,10 +645,9 @@ export default {
         "item-prices": ItemPrices,
         "item-price-chart": ItemPriceChart,
         GamePrice,
-        Notice,
         wikiRobotBottom,
         GameText,
-        WikiRobotTip,
+        WikiDetailNotice,
         AsyncState,
     },
     methods: {

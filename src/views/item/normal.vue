@@ -54,7 +54,7 @@ export default {
             });
         },
         showPagination() {
-            return !this.loadError && (this.page > 1 || this.items_total > this.length);
+            return !this.loading && !this.loadError && (this.page > 1 || this.items_total > this.length);
         },
     },
     components: {

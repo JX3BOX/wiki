@@ -12,12 +12,12 @@
         </template>
         <template #left>
             <CommonNav>
-                <Sidebar :sidebar="globalSidebar" />
+                <Sidebar :sidebar="globalSidebar" v-model="keyword" @search="search" />
             </CommonNav>
         </template>
-        <Search class="m-item-search" :placeholder="$t('ui.item.searchPlaceholder')" @search="search($event)">
+        <Search v-model="keyword" class="m-item-search" :placeholder="$t('ui.item.searchPlaceholder')" @search="search($event)">
             <template #filter>
-                <el-popover placement="bottom-end" trigger="click" popper-class="m-search-filter-popper">
+                <el-popover placement="bottom-end" trigger="click" popper-class="m-search-filter-popper m-item-filter-popper" :width="280">
                     <div class="m-search-filter">
                         <el-select
                             v-model="filter.BindType"

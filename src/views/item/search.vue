@@ -64,7 +64,7 @@ export default {
             });
         },
         showPagination() {
-            return !this.loadError && (this.page > 1 || this.total > this.length);
+            return !this.loading && !this.loadError && (this.page > 1 || this.total > this.length);
         },
     },
     methods: {

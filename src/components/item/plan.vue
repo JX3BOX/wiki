@@ -1,49 +1,41 @@
 <template>
-    <el-popover popper-class="w-plans" placement="bottom" trigger="click" v-model:visible="visible" width="300">
-        <el-input class="m-input" v-model.lazy="search" :placeholder="$t('ui.item.planKeyword')" size="large" prefix-icon="Search"></el-input>
-        <div class="m-list" v-if="list && list.length">
-            <div class="u-list" v-for="(item, index) in list" :key="index">
-                <div class="u-title" @click="showRelation(item, index)">
+    <el-popover popper-class="w-plans m-item-plan-picker" placement="bottom" trigger="click" v-model:visible="visible" width="300">
+        <el-input class="m-input" v-model="search" :placeholder="$t('ui.item.planKeyword')" size="default" prefix-icon="Search"></el-input>
+        <div class="m-list" ref="listViewport" @scroll.passive="loadMoreOnScroll">
+            <div class="u-list" v-for="(item, index) in list" :key="item.id">
+                <button type="button" class="u-title" :class="{ 'is-expanded': relation_index === index }" :aria-expanded="relation_index === index" @click="showRelation(item, index)">
                     <LegacyIcon :class="relation_index == index ? 'el-icon-caret-bottom' : 'el-icon-caret-right'" />
                     <span class="u-value" :class="hasInPlan(item) ? 'u-has' : ''">
                         {{ item.title }}
                         <span v-if="hasInPlan(item)" class="u-added">{{ $t("ui.item.alreadyAdded") }}</span>
                     </span>
-                </div>
+                </button>
                 <template v-if="relation_index == index && item.relation">
-                    <div class="u-child" v-for="(plan, k) in item.relation" :key="k" @click="addToPlan(item, k)">
+                    <button type="button" class="u-child" v-for="(plan, k) in item.relation" :key="k" @click="addToPlan(item, k)">
                         <span>{{ plan.title || `${$t("ui.item.subPlan")}${k + 1}` }}</span>
-                    </div>
+                    </button>
                 </template>
             </div>
+            <div v-if="loading" class="u-load-state" role="status">{{ $t("ui.common.status.loading") }}</div>
+            <div v-else-if="loadError" class="u-load-state" role="status">
+                <span>{{ $t("ui.common.status.loadFailed") }}</span>
+                <el-button text size="small" @click="loadPlans()">{{ $t("ui.common.actions.retry") }}</el-button>
+            </div>
+            <el-alert v-else-if="!list.length" :title="$t('ui.item.noPlans')" type="info" center show-icon :closable="false" />
         </div>
-        <div v-else class="m-list">
-            <el-alert :title="$t('ui.item.noPlans')" type="info" center show-icon :closable="false"> </el-alert>
-        </div>
-        <el-pagination
-            class="m-pagination"
-            background
-            layout="prev, pager, next"
-            :pager-count="5"
-            size="small"
-            :hide-on-single-page="true"
-            :page-size="per"
-            :total="total"
-            v-model:current-page="page"
-        ></el-pagination>
 
-        <el-popover popper-class="w-add-plans" placement="top" width="160" trigger="click" v-model:visible="add">
+        <el-popover popper-class="w-add-plans m-item-plan-create" placement="top" width="160" trigger="click" v-model:visible="add">
             <el-input class="u-input" v-model="new_plan" :placeholder="$t('ui.item.newPlanName')"></el-input>
-            <div style="text-align: right; margin: 0">
+            <div class="m-create-actions">
                 <el-button size="small" @click="add = false">{{ $t("ui.common.actions.cancel") }}</el-button>
                 <el-button type="primary" size="small" @click="createPlan">{{ $t("ui.common.actions.confirm") }}</el-button>
             </div>
             <template #reference>
                 <div class="m-create">
-                    <!-- <a href="/publish/#/item_plan" target="_blank" class="el-button"><LegacyIcon class="el-icon-document-add" /> 鍒涘缓鏂版竻鍗?/a> -->
-                    <span class="el-button"
-                        ><LegacyIcon class="el-icon-document-add" /> <span>{{ $t("ui.item.createPlan") }}</span></span
-                    >
+                    <el-button class="u-create-plan" plain>
+                        <LegacyIcon class="el-icon-document-add" />
+                        <span>{{ $t("ui.item.createPlan") }}</span>
+                    </el-button>
                 </div>
             </template>
         </el-popover>
@@ -73,46 +65,78 @@ export default {
             relation_index: -1,
             new_plan: "",
 
-            page: 1,
+            page: 0,
             total: 0,
-            per: 5,
+            per: 10,
+            loading: false,
+            loadError: false,
+            hasMore: true,
+            requestVersion: 0,
         };
     },
     computed: {
         item_id: function () {
             return this.$route.params.item_id;
         },
-        params: function () {
-            return {
-                page: this.page,
-                per: this.per,
-            };
-        },
     },
     watch: {
-        search(val) {
-            this.loadPlans({ search: val });
+        search() {
+            this.resetPlans();
         },
-        page() {
-            this.loadPlans(this.params);
-        },
+    },
+    beforeUnmount() {
+        this.requestVersion++;
     },
     methods: {
         // 数据
         // ========================
         // 打开我的清单列表，未登录则跳转登录页
         openPlans() {
-            if (!User.isLogin()) User.toLogin();
-            this.loadPlans(this.params);
+            if (!User.isLogin()) return User.toLogin();
+            this.resetPlans();
         },
-        // 加载清单列表
-        loadPlans(params) {
-            let _params = Object.assign({ type: 1 }, params);
-            getMyPlans(_params).then((res) => {
-                this.list = res.list;
-                this.total = res.total;
-                console.log(this.list);
-            });
+        resetPlans() {
+            this.requestVersion++;
+            this.loading = false;
+            this.loadError = false;
+            this.list = [];
+            this.page = 0;
+            this.total = 0;
+            this.hasMore = true;
+            this.relation_index = -1;
+            if (this.$refs.listViewport) this.$refs.listViewport.scrollTop = 0;
+            return this.loadPlans();
+        },
+        loadMoreOnScroll() {
+            const viewport = this.$refs.listViewport;
+            if (!this.visible || !viewport || !viewport.clientHeight || this.loadError) return;
+            if (viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight <= 40) {
+                this.loadPlans();
+            }
+        },
+        async loadPlans() {
+            if (this.loading || !this.hasMore) return;
+            const version = this.requestVersion;
+            const nextPage = this.page + 1;
+            this.loading = true;
+            this.loadError = false;
+            try {
+                const res = await getMyPlans({ type: 1, search: this.search, page: nextPage, per: this.per });
+                if (version !== this.requestVersion) return;
+                const items = res.list || [];
+                const existing = new Set(this.list.map((item) => item.id));
+                this.list.push(...items.filter((item) => !existing.has(item.id)));
+                this.total = Number(res.total) || 0;
+                this.page = nextPage;
+                this.hasMore = items.length === this.per && nextPage * this.per < this.total;
+            } catch (error) {
+                if (version === this.requestVersion) this.loadError = true;
+            } finally {
+                if (version === this.requestVersion) {
+                    this.loading = false;
+                    this.$nextTick(() => this.loadMoreOnScroll());
+                }
+            }
         },
 
         // 交互
@@ -195,99 +219,169 @@ export default {
     },
 };
 </script>
-<style lang="less" scoped>
-.w-plans {
-    max-height: 800px;
-    overflow-y: auto;
-    .m-create {
-        .x;
-        .mt(10px);
-        padding-top: 10px;
-        border-top: 1px solid #eee;
-        .el-button {
-            padding: 8px 20px;
-        }
+<style lang="less">
+.el-popover.el-popper.m-item-plan-picker,
+.el-popover.el-popper.m-item-plan-create {
+    max-width: calc(100vw - 32px);
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #e7e9f1;
+    border-radius: 8px;
+    box-shadow: 0 8px 28px rgba(52, 43, 89, 0.1);
+    color: #596170;
+    font-size: 12px;
+
+    .el-input__wrapper {
+        min-height: 34px;
+        padding: 1px 10px;
+        border-radius: 6px;
+        background: #fafbfc;
+        box-shadow: 0 0 0 1px #e5e7ee inset;
+
+        &.is-focus { box-shadow: 0 0 0 1px #b8a9e8 inset; }
     }
+
+    .el-input__inner {
+        font-size: 12px;
+        &::placeholder { color: #a0a6b1; font-weight: 400; }
+    }
+
+    .el-input__prefix { color: #a0a6b1; }
+}
+
+.m-item-plan-picker {
     .m-list {
-        .pt(10px);
+        max-height: min(360px, 50vh);
+        overflow-y: auto;
+        padding-top: 8px;
+        .scrollbar();
     }
 
     .u-list {
-        .fz(14px, 2);
-        .pointer;
+        margin: 2px 0;
+        font-size: 12px;
+
         .u-title,
-        .u-child {
-            &:hover {
-                color: @v4primary;
-                background-color: @bg-gray;
-            }
-        }
-        .u-title {
-            .flex;
-            align-items: center;
-            gap: 6px;
-            min-height: 36px;
-            padding: 4px 8px;
-            border-radius: 4px;
-
-            .u-value {
-                min-width: 0;
-                width: 100%;
-                .db;
-            }
-            .u-added {
-                .fr;
-                .fz(12px);
-                white-space: nowrap;
-            }
-        }
-
-        .u-child:hover:after {
-            content: "✓";
-            margin-left: auto;
-        }
-        .has-child {
-            &::after {
-                content: "  ";
-                .fr;
-            }
-        }
-        .u-status {
-            color: #999;
-            font-style: normal;
-            .mr(5px);
-        }
-
         .u-child {
             display: flex;
             align-items: center;
+            gap: 7px;
+            width: 100%;
             min-height: 34px;
-            padding: 7px 10px 7px 28px;
-            border-radius: 4px;
+            padding: 7px 8px;
+            box-sizing: border-box;
+            border: 0;
+            border-radius: 5px;
+            background: transparent;
+            color: #606876;
+            font: inherit;
             line-height: 20px;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.15s, color 0.15s;
+
+            &:hover,
+            &.is-expanded {
+                background: #f5f2fc;
+                color: #7863c5;
+            }
+
+            &:focus-visible {
+                outline: 2px solid #a99adf;
+                outline-offset: -2px;
+            }
         }
-        i {
-            .mr(5px);
+
+        .u-title > .legacy-icon {
+            flex-shrink: 0;
+            color: #a5aab5;
+            font-size: 11px;
+        }
+
+        .u-value {
+            flex: 1;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .u-added {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 0 5px;
+            border-radius: 4px;
+            background: #eee8fc;
+            color: #8a78b9;
+            font-size: 11px;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+
+        .u-child {
+            width: calc(100% - 14px);
+            margin: 2px 0 2px 14px;
+            padding-left: 15px;
+            border-left: 1px solid #e8e3f5;
+            border-radius: 0 5px 5px 0;
+            overflow-wrap: anywhere;
+
+            &::after {
+                content: "+";
+                margin-left: auto;
+                color: #a49abf;
+                flex-shrink: 0;
+            }
+        }
+    }
+
+    .u-load-state {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 12px 0;
+        color: #969da9;
+        font-size: 12px;
+    }
+
+    .m-create {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #eef0f4;
+    }
+
+    .u-create-plan {
+        width: 100%;
+        height: 32px;
+        gap: 5px;
+        border-color: #e5dff8;
+        border-radius: 6px;
+        background: #f5f2ff;
+        color: #7863c5;
+        font-size: 12px;
+        font-weight: 400;
+
+        > span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        &:hover,
+        &:focus-visible {
+            border-color: #cfc3f0;
+            background: #ede7fc;
+            color: #6854dc;
         }
     }
 }
-.w-add-plans {
-    .u-input {
-        .mb(10px);
+
+.m-item-plan-create {
+    .u-input { margin-bottom: 10px; }
+    .m-create-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+        .el-button { margin: 0; border-radius: 5px; font-weight: 400; }
     }
-}
-</style>
-<style lang="less">
-.w-plans,
-.w-add-plans {
-    z-index: 99 !important;
-    width: 180px;
-}
-.m-item-icon-popup {
-    padding: 0;
-}
-.m-pagination {
-    .mt(10px);
-    .w(100%);
 }
 </style>

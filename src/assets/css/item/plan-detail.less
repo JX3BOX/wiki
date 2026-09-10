@@ -281,3 +281,210 @@
         }
     }
 }
+
+// 清单详情采用与百科详情一致的卡片、留白和操作样式。
+.v-plan-view {
+    .m-plan-head {
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #e9ebf1;
+        border-radius: 10px;
+        background: #fff;
+    }
+
+    .m-plan-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        flex: 1;
+
+        .u-heading-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #f1edfd;
+            color: #7863c5;
+            font-size: 22px;
+        }
+
+        .u-heading-content { min-width: 0; }
+
+        .u-title {
+            display: block;
+            margin: 0;
+            color: #343946;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .u-time {
+            margin: 5px 0 0;
+            gap: 5px;
+            font-size: 12px;
+            line-height: 18px;
+            color: #969da9;
+        }
+    }
+
+    .m-plan-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        .el-button {
+            margin: 0;
+            height: 30px;
+            padding: 0 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 400;
+            > span { display: inline-flex; align-items: center; gap: 6px; }
+        }
+
+        .el-button--primary {
+            background: #f5f2ff;
+            border-color: #e5dff8;
+            color: #7863c5;
+            &:hover { background: #ede7fc; border-color: #cfc3f0; }
+        }
+
+        .el-button--info {
+            background: #fff;
+            border-color: #e5e7ee;
+            color: #9299a5;
+            &:hover { background: #fff5f5; border-color: #f1cccc; color: #cc7171; }
+        }
+    }
+
+    .m-plan-desc {
+        margin: 0 0 20px;
+        padding: 12px 16px;
+        border-left: 3px solid #d9cff3;
+        border-radius: 0 6px 6px 0;
+        background: #faf9fd;
+        .u-desc { color: #7c8491; font-size: 13px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
+    }
+
+    .m-plan-item .m-border {
+        margin-bottom: 20px;
+        padding: 0;
+        border-color: #e9ebf1;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .m-group-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 20px;
+        border-bottom: 1px solid #eef0f4;
+        background: #fafbfc;
+
+        .u-title {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            text-align: left;
+            letter-spacing: normal;
+            color: #596170;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 22px;
+            overflow-wrap: anywhere;
+        }
+
+        .u-group-count {
+            flex-shrink: 0;
+            padding: 0 7px;
+            border-radius: 5px;
+            color: #8a78b9;
+            background: #eee9fa;
+            font-size: 11px;
+            line-height: 20px;
+            font-variant-numeric: tabular-nums;
+        }
+    }
+
+    .m-plan-item .u-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 12px;
+        padding: 18px 20px;
+
+        .u-item {
+            flex-direction: row;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            margin: 0;
+            padding: 12px;
+            border: 1px solid #eef0f4;
+            border-radius: 8px;
+            background: #fafbfc;
+            text-decoration: none;
+            transition: background-color 0.15s, border-color 0.15s;
+
+            &:hover { background: #f7f4fd; border-color: #dcd3f1; }
+            &:focus-visible { outline: 2px solid #a99adf; outline-offset: 2px; }
+
+            .u-img { display: flex; flex-shrink: 0; }
+            .u-name {
+                flex: 1;
+                min-width: 0;
+                font-size: 13px !important;
+                line-height: 1.6 !important;
+                font-weight: 500;
+                text-shadow: none;
+                overflow-wrap: anywhere;
+                &.is-light-quality { color: #687180; }
+            }
+
+            > .u-count {
+                flex-shrink: 0;
+                padding: 2px 6px;
+                border-radius: 4px;
+                background: #eef0f5;
+                color: #88909e;
+                font-size: 11px;
+                line-height: 18px;
+                font-variant-numeric: tabular-nums;
+            }
+        }
+    }
+
+    .m-plan-equips {
+        border-color: #e9ebf1;
+        border-radius: 10px;
+        background: #fff;
+        .u-list .u-item { border-color: #eef0f4; background: #fafbfc; border-radius: 8px; }
+        .u-list .u-item > .u-title {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: normal;
+            text-align: left;
+            border-color: #e9ebf1;
+            color: #596170;
+        }
+    }
+
+    @media screen and (max-width: @phone) {
+        .m-plan-head { padding: 16px; margin-bottom: 16px; }
+        .m-plan-heading .u-title { font-size: 19px; }
+        .m-group-heading { padding: 12px 14px; }
+        .m-plan-item .u-content { grid-template-columns: minmax(0, 1fr); padding: 14px; gap: 10px; }
+        .m-plan-item .u-content .u-item { min-width: 0; margin: 0; }
+        .m-plan-item .m-border { margin-bottom: 16px; }
+    }
+}

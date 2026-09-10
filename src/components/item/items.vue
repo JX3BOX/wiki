@@ -9,8 +9,8 @@
         <el-col :xs="24" :md="24" class="m-list-empty" v-else-if="items && !items.length">
             <slot name="empty-message">{{ $t("ui.common.status.noRecords") }}</slot>
         </el-col>
-        <el-col :xs="24" :md="24" class="m-list-empty" v-else-if="items === null">
-            <slot name="loading-message">{{ $t("ui.item.searching") }}</slot>
+        <el-col :xs="24" :md="24" class="m-list-loading" v-else-if="items === null">
+            <slot name="loading-message"><WikiSearchLoading /></slot>
         </el-col>
         <template v-for="(item, key) in visibleItems" :key="itemKey(item, key)">
             <el-col :xs="24" :md="24" class="m-item-container">
@@ -19,13 +19,15 @@
                         <ItemIcon :item="item" />
                     </div>
                     <div class="m-right">
-                        <span class="u-uiid">ID : {{ item.id }}</span>
+                        <div class="m-item-heading">
                         <h6
                             class="u-name"
                             :class="{ white: item.Quality == 1 }"
                             v-text="item.Name"
                             :style="{ color: item_color(item.Quality === 1 ? -1 : item.Quality) }"
                         ></h6>
+                        <span class="u-uiid">ID {{ item.id }}</span>
+                        </div>
                         <game-text
                             class="u-description"
                             :client="client"
@@ -39,6 +41,7 @@
 </template>
 
 <script>
+import WikiSearchLoading from "@/components/common/wiki-search-loading.vue";
 import ItemIcon from "@/components/common/item-icon.vue";
 import GameText from "@jx3box/jx3box-editor/src/GameText.vue";
 import { item_color } from "@/filters";
@@ -87,6 +90,7 @@ export default {
         },
     },
     components: {
+        WikiSearchLoading,
         ItemIcon,
         GameText,
     },

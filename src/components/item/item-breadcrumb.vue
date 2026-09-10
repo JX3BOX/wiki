@@ -1,7 +1,7 @@
 <template>
-    <div class="m-breadcrumb">
+    <div class="m-breadcrumb m-item-breadcrumb">
         <div class="u-stat">
-            <span v-for="(value, key) in countDict" :key="key">
+            <span v-for="(value, key) in countDict" :key="key" class="u-stat-item">
                 <em>{{ value }}</em>
                 <b>{{ count[key] }}</b>
             </span>

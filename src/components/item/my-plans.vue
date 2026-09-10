@@ -6,15 +6,16 @@
                     <i class="u-icon u-icon-mycollection"><img svg-inline src="@/assets/img/item/plan.svg" /></i>
                     <span>{{ $t("ui.item.myPlans") }}</span>
                 </span>
-                <a class="fr el-button el-button--success el-button--small" @click="onAddPlan" v-if="isLogin">
+                <button type="button" class="u-create-plan" @click="onAddPlan" v-if="isLogin">
                     <LegacyIcon class="el-icon-document-add" />
                     <span>{{ $t("ui.common.actions.create") }}</span>
-                </a>
+                </button>
             </h3>
             <template v-if="isLogin">
                 <template v-if="data && data.length">
                     <router-link
                         class="m-my-item-plan"
+                        :title="plan.title"
                         v-for="(plan, key) in data"
                         :key="key"
                         :to="{

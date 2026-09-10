@@ -1,10 +1,19 @@
 <template>
-    <div class="m-cj-aside-left">
+    <div class="m-item-sidebar">
+        <Search
+            class="u-nav-keyword"
+            compact
+            :model-value="modelValue"
+            @update:modelValue="$emit('update:modelValue', $event)"
+            @search="$emit('search', $event)"
+            :placeholder="$t('ui.item.navKeyword')"
+        />
         <div class="m-menus">
-            <!-- <router-link class="u-all el-tree-node__label" :to="{ name: 'search', params: { keyword: '' } }"
-                ><LegacyIcon class="el-icon-caret-right" />全部</router-link
-            > -->
-            <el-tree class="filter-tree" :data="menus" node-key="id" ref="tree" @node-click="clickNode">
+            <router-link class="u-item-home" :class="{ 'is-active': $route.name === 'home' }" :to="{ name: 'home' }" @click="goHome">
+                <el-icon><CaretRight /></el-icon>
+                <span>{{ $t("ui.item.navHome") }}</span>
+            </router-link>
+            <el-tree class="filter-tree" :data="menus" node-key="id" ref="tree" :indent="42" @node-click="clickNode">
                 <template #default="{ node, data }">
                     <router-link class="el-tree-node__label" :to="menu_url(data, node)">
                         <span class="u-name" v-text="data.label"></span>
@@ -17,13 +26,17 @@
 </template>
 
 <script>
+import Search from "@/components/common/search.vue";
+import { CaretRight } from "@element-plus/icons-vue";
 import { getMenus } from "@/service/item";
 import get from "lodash/get";
 import isEqual from "lodash/isEqual";
 import bus from "@/store/bus";
 export default {
     name: "Sidebar",
-    props: ["sidebar"],
+    components: { CaretRight, Search },
+    props: ["sidebar", "modelValue"],
+    emits: ["update:modelValue", "search"],
     data: function () {
         return {
             menus: null,
@@ -66,8 +79,16 @@ export default {
         },
     },
     methods: {
+        goHome() {
+            this.$refs.tree?.setCurrentKey(null);
+            this.clickNode(null, { isLeaf: true });
+        },
         expand_menu() {
             this.$nextTick(() => {
+                if (this.$route.name === "home") {
+                    this.$refs.tree?.setCurrentKey(null);
+                    return;
+                }
                 let AucGenre = this.sidebar.AucGenre;
                 let AucSubTypeID = this.sidebar.AucSubTypeID;
                 let key = AucGenre + (AucSubTypeID ? `-${AucSubTypeID}` : "");

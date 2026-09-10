@@ -8,10 +8,16 @@
         <div class="m-plan-content" :wiki-post="plan" :showQR="false">
             <!-- 头部标题 -->
             <div class="m-plan-head">
-                <span class="u-title">
-                    {{ plan.title }}
-                    <span class="u-time"><LegacyIcon class="el-icon-time" />{{ date_format(plan.updated) }}</span>
-                </span>
+                <div class="m-plan-heading">
+                    <span class="u-heading-icon"><LegacyIcon class="el-icon-notebook-1" /></span>
+                    <div class="u-heading-content">
+                        <h1 class="u-title">{{ plan.title }}</h1>
+                        <span class="u-time" v-if="plan.updated">
+                            <LegacyIcon class="el-icon-time" />
+                            {{ $t("ui.common.labels.lastUpdated") }} {{ date_format(plan.updated) }}
+                        </span>
+                    </div>
+                </div>
                 <!-- 编辑 & 删除 & 收藏 -->
                 <div class="m-plan-actions">
                     <template v-if="isAuthor || isEditor">
@@ -30,8 +36,8 @@
             <!-- 详细内容 -->
             <div class="m-plan-body">
                 <!-- 内容备注 -->
-                <div class="m-plan-desc">
-                    <div class="u-desc">{{ plan.description || "-" }}</div>
+                <div class="m-plan-desc" v-if="plan.description">
+                    <div class="u-desc">{{ plan.description }}</div>
                     <!-- <span class="u-user">
                         <img
                             class="u-avatar"
@@ -50,7 +56,10 @@
                 <div class="m-plan-item" v-if="plan.type == '1'">
                     <div v-for="(item, index) in plan.relation" :key="index">
                         <div class="m-border" v-if="item.data && item.data.length">
-                            <div class="u-title" v-if="item.title">{{ item.title }}</div>
+                            <div class="m-group-heading">
+                                <h2 class="u-title">{{ item.title || $t("ui.item.subPlan") }}</h2>
+                                <span class="u-group-count">{{ item.data.length }}</span>
+                            </div>
                             <div class="u-content">
                                 <router-link
                                     class="u-item"
@@ -60,9 +69,9 @@
                                 >
                                     <span class="u-img">
                                         <ItemIcon :item="el" :size="48" />
-                                        <span class="u-count">{{ el.count }}</span>
                                     </span>
-                                    <span class="u-name" :class="`quality-${el.Quality}`"> {{ el.Name }}</span>
+                                    <span class="u-name" :class="[`quality-${el.Quality}`, { 'is-light-quality': Number(el.Quality) === 1 }]">{{ el.Name || el.id }}</span>
+                                    <span class="u-count">×{{ el.count ?? 1 }}</span>
                                 </router-link>
                             </div>
                         </div>

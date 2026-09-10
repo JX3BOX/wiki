@@ -1,5 +1,5 @@
 <template>
-    <div class="m-extend">
+    <div class="m-extend m-item-extend">
         <SideMsg></SideMsg>
         <!-- 贡献排行榜 -->
         <!-- <Rank type="item"></Rank> -->

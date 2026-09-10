@@ -13,7 +13,9 @@
                         <router-link :to="{ name: 'view', params: { item_id: item.id } }">
                             <ItemIcon :item="item" />
                         </router-link>
-                        <img class="u-remove" src="@/assets/img/item/close.svg" svg-inline @click.stop="remove(item.fId)" />
+                        <button class="u-remove" type="button" :aria-label="$t('ui.common.actions.remove')" :title="$t('ui.common.actions.remove')" @click.stop="remove(item.fId)">
+                            <el-icon><Close /></el-icon>
+                        </button>
                     </div>
                 </div>
                 <el-pagination
@@ -37,6 +39,7 @@
 </template>
 
 <script>
+import { Close } from "@element-plus/icons-vue";
 import User from "@jx3box/jx3box-common/js/user";
 import ItemIcon from "@/components/common/item-icon.vue";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
@@ -46,6 +49,7 @@ export default {
     name: "MyItems",
     components: {
         ItemIcon,
+        Close,
     },
     props: [],
     data: function () {
