@@ -120,13 +120,36 @@ export default {
 
     .el-tabs__nav-wrap {
         padding: 4px;
-        border-radius: 12px;
+        border-radius: 6px;
         background: #f2f3f7;
 
         &.is-scrollable {
             padding-right: 22px;
             padding-left: 22px;
+
+            .el-tabs__nav-scroll {
+                justify-content: flex-start;
+            }
+
+            .el-tabs__nav {
+                flex: 0 0 auto;
+            }
+
+            .el-tabs__item {
+                flex-shrink: 0;
+            }
         }
+    }
+
+    .el-tabs__nav-prev,
+    .el-tabs__nav-next {
+        top: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        line-height: 1;
     }
 
     .el-tabs__nav-scroll {
@@ -148,7 +171,7 @@ export default {
         justify-content: center;
         height: 28px;
         padding: 0 8px;
-        border-radius: 9px;
+        border-radius: 4px;
         font-size: 12px;
         font-weight: 500;
         color: #858c99;
