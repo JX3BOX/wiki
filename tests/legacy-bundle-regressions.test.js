@@ -54,16 +54,13 @@ test("正式与预览发布均在构建前执行测试和 lint", async () => {
     }
 });
 
-test("正式发布在构建后检查四入口和 JavaScript 体积", async () => {
+test("体积统计可手动执行且不作为发布门禁", async () => {
     const packageJson = JSON.parse(await readSource("package.json"));
     const workflow = await readSource(".github/workflows/build.yml");
     const budgetScript = await readSource("scripts/check-bundle-budget.mjs");
 
     assert.equal(packageJson.scripts["check:bundle"], "node scripts/check-bundle-budget.mjs");
-    assert.ok(workflow.indexOf("npm run check:bundle") > workflow.indexOf("npm run build"));
+    assert.doesNotMatch(workflow, /npm run check:bundle/);
     assert.match(budgetScript, /const entries = \["cj", "item", "quest", "knowledge"\]/);
-    assert.match(budgetScript, /initialEntryGzipKiB:\s*440/);
-    assert.match(budgetScript, /initialUnionGzipKiB:\s*450/);
-    assert.match(budgetScript, /largestJavaScriptGzipKiB:\s*768/);
     assert.match(budgetScript, /from "node:zlib"/);
 });

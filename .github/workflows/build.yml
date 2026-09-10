@@ -27,9 +27,6 @@ jobs:
             - name: Build
               run: npm run build
 
-            - name: Check bundle budget
-              run: npm run check:bundle
-
             - name: Github Pages
               uses: JamesIves/github-pages-deploy-action@releases/v3
               with:

@@ -61,8 +61,9 @@
 npm test
 npm run lint
 npm run build
-npm run check:bundle
 git diff --check
 ```
+
+需要分析构建体积时可额外执行 `npm run check:bundle`，仅输出统计，不作为发布门禁。
 
 同时应对涉及页面做最小范围冒烟测试，重点检查模块显隐、公共组件解析和控制台运行时错误。

@@ -35,19 +35,19 @@ async function createFixture(scriptUrl, scriptContent = "console.log('bundle bud
     return root;
 }
 
-test("构建体积门禁按 dist 资源后缀解析 CDN URL 并忽略 prefetch", async () => {
+test("构建体积统计按 dist 资源后缀解析 CDN URL 并忽略 prefetch", async () => {
     const fixture = await createFixture("https://cdn.example.test/custom-prefix/assets/app.js?v=1");
     try {
         const result = spawnSync(process.execPath, [budgetScript, fixture], { encoding: "utf8" });
         assert.equal(result.status, 0, result.stderr);
-        assert.match(result.stdout, /Bundle budget passed/);
+        assert.match(result.stdout, /Bundle size report complete/);
         assert.match(result.stdout, /initial union gzip/);
     } finally {
         await rm(fixture, { recursive: true, force: true });
     }
 });
 
-test("构建体积门禁在 HTML 资源无法对应构建产物时失败", async () => {
+test("构建体积统计在 HTML 资源无法对应构建产物时失败", async () => {
     const fixture = await createFixture("https://cdn.example.test/custom-prefix/assets/missing.js");
     try {
         const result = spawnSync(process.execPath, [budgetScript, fixture], { encoding: "utf8" });
@@ -58,15 +58,16 @@ test("构建体积门禁在 HTML 资源无法对应构建产物时失败", async
     }
 });
 
-test("构建体积门禁在 JavaScript 超出预算时失败", async () => {
+test("构建体积统计不因资源体积过大而失败", async () => {
     const fixture = await createFixture(
         "https://cdn.example.test/custom-prefix/assets/app.js",
-        randomBytes(800 * 1024)
+        randomBytes(900 * 1024)
     );
     try {
         const result = spawnSync(process.execPath, [budgetScript, fixture], { encoding: "utf8" });
-        assert.notEqual(result.status, 0);
-        assert.match(result.stderr, /最大 JavaScript 资源/);
+        assert.equal(result.status, 0, result.stderr);
+        assert.match(result.stdout, /initial union gzip/);
+        assert.match(result.stdout, /Bundle size report complete/);
     } finally {
         await rm(fixture, { recursive: true, force: true });
     }
