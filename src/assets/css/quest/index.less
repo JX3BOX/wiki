@@ -22,6 +22,8 @@
             align-items: stretch;
             gap: 0;
             padding: 0;
+            box-shadow: none;
+            background: transparent;
         }
 
         .el-input-group__prepend {
@@ -38,15 +40,29 @@
     .u-player {
         .flex;
         height: 40px;
-        padding: 0 12px;
+        padding: 0 14px;
         align-items: center;
-        .fz(14px, 1);
+        .fz(13px, 1);
+        font-family: inherit;
+        font-weight: 400;
+        box-sizing: border-box;
+        border: 1px solid #e5dff8;
+        border-radius: 0 6px 6px 0;
+        background: #f5f2ff;
+        color: #7863c5;
         white-space: nowrap;
-        border-left: 1px solid #dcdfe6;
         cursor: pointer;
 
+        &:hover,
+        &:focus,
+        &:active {
+            background: #ede7fc;
+            border-color: #cfc3f0;
+            color: #6854dc;
+        }
+
         .el-icon {
-            .ml(4px);
+            .ml(6px);
         }
     }
 
@@ -55,9 +71,61 @@
     }
 }
 
-.u-player-setting-popover {
+.el-popover.el-popper.u-player-setting-popover {
+    max-width: calc(100vw - 32px);
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #e7e9f1;
+    border-radius: 8px;
+    box-shadow: 0 8px 28px rgba(52, 43, 89, 0.1);
+    color: #596170;
+    font-size: 12px;
+
     .el-input {
-        margin-bottom: 6px;
+        margin-bottom: 10px;
+    }
+
+    .el-input-group__prepend {
+        padding: 0 12px;
+        border-radius: 6px 0 0 6px;
+        background: #f5f7fa;
+        box-shadow: 1px 0 0 0 #e5e7ee inset, 0 1px 0 0 #e5e7ee inset, 0 -1px 0 0 #e5e7ee inset;
+        color: #8a909c;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .el-input__wrapper {
+        min-height: 34px;
+        padding: 4px 10px;
+        box-sizing: border-box;
+        border-radius: 0 6px 6px 0;
+        background: #fafbfc;
+        box-shadow: 0 0 0 1px #e5e7ee inset;
+
+        &:hover { box-shadow: 0 0 0 1px #cfd2dc inset; }
+        &.is-focus { box-shadow: 0 0 0 1px #b8a9e8 inset; }
+    }
+
+    .el-input__inner {
+        color: #687180;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .u-setting-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 10px;
+        border-top: 1px solid #eef0f4;
+
+        .el-button {
+            min-height: 30px;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 400;
+        }
     }
 }
 

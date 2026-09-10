@@ -1,13 +1,16 @@
 @import "./grid-layout.less";
 .m-list-head {
     .grid-layout;
-    font-size: 14px;
-    font-weight: bold;
-    height: 2rem;
-    margin-bottom: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    min-height: 40px;
+    margin-bottom: 10px;
     border-bottom: 1px dashed #d7dae2;
-    column-gap: 8px;
     color: #666;
+
+    > div:nth-child(3) {
+        text-align: center;
+    }
 }
 
 @media screen and (max-width: 768px) {

@@ -2,6 +2,7 @@
     <div class="m-quest-view" :class="isRobot ? 'm-quest-view__robot' : ''" v-loading="pageLoading">
         <AsyncState :loading="pageLoading" :error="loadError" @retry="syncQuestData" />
         <div v-if="!isRobot && !loadError" class="w-quest">
+            <div class="m-quest-heading">
             <p class="u-title__warpper">
                 <span class="u-title">
                     <span class="u-title-name" :class="questNameClass">{{ quest.name }}</span>
@@ -39,6 +40,7 @@
                 </el-button>
             </div>
 
+            </div>
             <div class="u-tag-list">
                 <el-tag v-show="quest.canShare"><img src="@/assets/img/quest/player-63.png" alt="" />{{ $t("ui.quest.shareable") }}</el-tag>
                 <el-tag v-show="quest.canAssist"
@@ -240,8 +242,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="!isRobot && !loadError">
-            <Notice></Notice>
+        <div v-if="!isRobot && !loadError" class="m-quest-context">
             <el-tabs v-model="activeTab" @tab-click="handleTabClick">
                 <el-tab-pane :label="$t('ui.quest.textTab')" v-if="showDialog" name="dialog">
                     <div class="u-quest-dialog">
@@ -256,9 +257,16 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+        <WikiDetailNotice
+            v-if="!isRobot && !loadError"
+            :show-robot-tip="!!(wiki_post && wiki_post.post)"
+            :type-name="$t('ui.types.quest')"
+            :reply="quest.name"
+        >
+            <template #notice><Notice /></template>
+        </WikiDetailNotice>
         <div class="m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="wiki_post && wiki_post.post">
-            <wikiRobotTip v-if="!isRobot" :type-name="$t('ui.types.quest')" :reply="quest.name"></wikiRobotTip>
-            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel">
+            <WikiPanel :wiki-post="wiki_post" ref="wikiPanel" variant="surface">
                 <template #head-title>
                     <img class="u-icon" svg-inline src="@/assets/img/quest/quest.svg" />
                     <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.quest") }) }}</span>
@@ -291,11 +299,11 @@
             </WikiPanel>
             <template v-if="!isRobot">
                 <!-- 历史版本 -->
-                <WikiRevisions type="quest" :source-id="String(id)" />
+                <WikiRevisions type="quest" :source-id="String(id)" variant="surface" />
 
                 <!-- 打赏 -->
                 <div class="m-wiki-thx-panel">
-                    <WikiPanel>
+                    <WikiPanel variant="surface">
                         <template #head-title>
                             <i class="u-icon el-icon-coin"></i>
                             <span class="u-txt">{{ $t("ui.common.wiki.reward") }}</span>
@@ -305,7 +313,7 @@
                                 class="m-thx"
                                 :postId="id"
                                 postType="quest"
-                                :postTitle="wiki_post.source.QuestName"
+                                :postTitle="quest.name || wiki_post.source?.QuestName || wiki_post.post?.title || $t('ui.quest.unknownQuest')"
                                 :userId="author_id"
                                 :adminBoxcoinEnable="true"
                                 :userBoxcoinEnable="true"
@@ -321,7 +329,7 @@
                 </div>
 
                 <!-- 百科评论 -->
-                <WikiComments type="quest" :source-id="id_str" />
+                <WikiComments type="quest" :source-id="id_str" variant="surface" />
             </template>
         </div>
         <div
@@ -364,7 +372,7 @@ import WikiRevisions from "@/components/common/wiki-revisions.vue";
 import WikiComments from "@jx3box/jx3box-ui/src/wiki/WikiComments.vue";
 import Thx from "@jx3box/jx3box-ui/src/single/Thx.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
-import wikiRobotTip from "@/components/common/wiki-robot-tip.vue";
+import WikiDetailNotice from "@/components/common/wiki-detail-notice.vue";
 
 import { getQuest, completeUserQuest, cancelUserQuest } from "@/service/quest";
 import { buildPoints, schoolIcon, questDescFormat, questTargetDescFormat } from "@/utils/quest.js";
@@ -427,7 +435,7 @@ export default {
         Thx,
         Notice,
         wikiRobotBottom,
-        wikiRobotTip,
+        WikiDetailNotice,
         AsyncState,
     },
     data() {

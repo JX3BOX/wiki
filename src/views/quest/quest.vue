@@ -34,7 +34,7 @@
                     <el-popover
                         popper-class="u-player-setting-popover"
                         placement="top"
-                        width="160"
+                        :width="240"
                         v-model:visible="settingVisible"
                     >
                         <el-input v-model="playerName" :placeholder="$t('ui.quest.playerName')" @input="handlePlayerInfoChange" size="small"
@@ -43,16 +43,16 @@
                         <el-input v-model="playerBody" :placeholder="$t('ui.quest.bodyType')" @input="handlePlayerInfoChange" size="small"
                             ><template #prepend>{{ $t("ui.quest.bodyType") }}</template></el-input
                         >
-                        <div style="text-align: right; margin: 0">
+                        <div class="u-setting-actions">
                             <el-button type="primary" size="small" @click="settingVisible = false">{{ $t("ui.common.actions.confirm") }}</el-button>
                         </div>
                         <template #reference>
-                            <div class="u-player">
+                            <button type="button" class="u-player">
                                 <span class="u-player-name">{{ playerName }}</span
                                 >|
                                 <span class="u-player-body">{{ playerBody }}</span>
                                 <el-icon><Setting></Setting></el-icon>
-                            </div>
+                            </button>
                         </template>
                     </el-popover>
                 </template>

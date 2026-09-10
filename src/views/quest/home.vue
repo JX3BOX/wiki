@@ -20,7 +20,7 @@
                         <Counter type="quest" :showCounter="false"></Counter>
                     </li>
                     <li class="u-qlink">
-                        <a target="_blank" href="/exam" style="background-color: #f7b044;">
+                        <a target="_blank" href="/keju" style="background-color: #f7b044;">
                             <LegacyIcon class="el-icon-goblet-square-full" />
                             <span>{{ $t("ui.quest.quick.exam") }}</span>
                         </a>
@@ -35,6 +35,12 @@
                         <a target="_blank" href="/book">
                             <LegacyIcon class="el-icon-watermelon" />
                             <span>{{ $t("ui.quest.quick.books") }}</span>
+                        </a>
+                    </li>
+                    <li class="u-qlink">
+                        <a target="_blank" href="/pvx/questsection">
+                            <el-icon><Collection /></el-icon>
+                            <span>{{ $t("ui.quest.quick.questSection") }}</span>
                         </a>
                     </li>
                     <li class="u-qlink">
@@ -81,6 +87,7 @@
 
 <script>
 import WikiPanel from "@/components/common/wiki-panel.vue";
+import { Collection } from "@element-plus/icons-vue";
 import NewestPost from "@/components/quest/home/newest-post.vue";
 import QuestCarousel from "@/components/quest/home/quest-carousel.vue";
 
@@ -92,7 +99,7 @@ import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import Counter from "@/components/common/counter.vue";
 export default {
     name: "Home",
-    components: { NewestPost, QuestCarousel, WikiPanel, Counter },
+    components: { NewestPost, QuestCarousel, WikiPanel, Counter, Collection },
     data: () => ({
         by: "all",
         feedback,
@@ -111,7 +118,7 @@ export default {
         async getNewestData(page = 1) {
             let params = {
                 page,
-                pageSize: 12,
+                per: 12,
                 client: this.client,
             };
             getNewestQuests(params).then((res) => {

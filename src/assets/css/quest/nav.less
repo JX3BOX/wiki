@@ -1,29 +1,29 @@
+@import "../common/wiki-sidebar.less";
 @import "../common/wiki-tree-nav.less";
 
 .m-nav {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
 
     .h(100%);
 
     .m-nav-header {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+        .wiki-sidebar-header();
 
-        .m-related-roles {
-            .el-select {
-                .db;
-            }
-        }
+        .u-nav-search {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            border: 0;
+            background: transparent;
+            color: #8a909c;
+            cursor: pointer;
 
-        .u-keyword {
-            .mb(0);
-        }
-
-        .m-filters {
-            margin-bottom: 0;
+            &:hover { color: @v4primary; }
         }
     }
 
@@ -35,6 +35,16 @@
         overflow-y: auto;
         overflow-x: hidden;
         .scrollbar();
+
+        .el-tree {
+            background: transparent;
+        }
+
+        .u-quest-home {
+            .wiki-sidebar-home();
+        }
+
+        .wiki-sidebar-tree();
     }
 
     .m-menus {

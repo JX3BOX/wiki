@@ -1,7 +1,8 @@
 <template>
-    <div class="m-search-result" v-loading="loading">
-        <list-head></list-head>
-        <div class="m-list-empty" v-if="loadError">
+    <div class="m-search-result">
+        <list-head v-if="!loading"></list-head>
+        <WikiSearchLoading v-if="loading" />
+        <div class="m-list-empty" v-else-if="loadError">
             <span>{{ $t("ui.common.status.loadFailed") }}</span>
             <el-button link type="primary" @click="search()">{{ $t("ui.common.actions.retry") }}</el-button>
         </div>
@@ -35,7 +36,7 @@
             @current-change="search"
             :total="total"
             :page-size="pageSize"
-            v-if="!loadError"
+            v-if="!loading && !loadError"
             style="text-align: center; margin-top: 1.5rem"
         >
         </el-pagination>
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+import WikiSearchLoading from "@/components/common/wiki-search-loading.vue";
 import LzString from "lz-string";
 import { getQuests } from "@/service/quest";
 import QuestCard from "@/components/quest/result/quest-card.vue";
@@ -52,7 +54,7 @@ import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "SearchResult",
-    components: { QuestCard, ListHead },
+    components: { QuestCard, ListHead, WikiSearchLoading },
     data: () => ({
         total: 1,
         pageSize: 10,

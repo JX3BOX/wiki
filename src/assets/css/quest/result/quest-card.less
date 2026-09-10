@@ -2,17 +2,30 @@
 .m-quest-card {
     .pr;
     .pointer;
-    .fz(14px);
+    .fz(13px);
     border-radius: 6px;
     border: 1px solid #eee;
 
     background-color: @bg-light;
 
-    margin-bottom: 20px;
-    min-height: 120px;
-    text-align: center;
+    margin-bottom: 10px;
+    min-height: 88px;
+    text-align: left;
+    line-height: 1.7;
+    transition: border-color 0.15s, background-color 0.15s;
 
     .grid-layout;
+    padding-top: 14px;
+    padding-bottom: 14px;
+
+    > div {
+        min-width: 0;
+    }
+
+    > .u-level {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
 
     @media screen and (max-width: 768px) {
         & > .u-level {
@@ -25,7 +38,7 @@
 
         & {
             display: block;
-            padding: 12px 6px;
+            padding: 14px 16px;
         }
     }
 
@@ -40,28 +53,33 @@
 
     .u-actions {
         .pa;
-        .rt(4px);
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 4px;
 
         opacity: 0.5;
 
         .el-button--small {
-            padding-top: 4px;
-            padding-bottom: 4px;
+            min-height: 28px;
+            padding: 6px 8px;
         }
     }
 
     .u-map {
-        padding: 0 16px;
+        padding: 0;
     }
 
     .u-name {
         .u-name-title {
             .flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             width: 100%;
-            font-weight: bold;
-            font-size: 16px;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         .u-name-text {
@@ -101,12 +119,13 @@
         color: @color;
         .fz(12px, 1.8);
         text-align: left;
-        padding: 0 10px;
+        padding: 0;
+        overflow-wrap: anywhere;
     }
 
     .u-reward {
         width: 100%;
-        padding: 0 16px;
+        padding: 0;
         text-align: left;
     }
 
@@ -116,6 +135,12 @@
         .mb(4px);
         .flex;
         align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 4px;
+
+        &:empty {
+            display: none;
+        }
 
         & > span {
             .mr(4px);
@@ -131,5 +156,14 @@
 
     .u-reward-text {
         .mr(10px);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .m-quest-card .u-actions {
+        position: static;
+        transform: none;
+        justify-content: flex-end;
+        margin: 8px 0 0;
     }
 }

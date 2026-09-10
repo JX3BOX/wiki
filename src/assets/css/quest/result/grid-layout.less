@@ -1,7 +1,10 @@
 .grid-layout {
     display: grid;
-    grid-template-columns: 1fr 2fr 0.8fr 3fr 3fr;
-    justify-items: center;
+    grid-template-columns: minmax(70px, 0.9fr) minmax(120px, 1.7fr) minmax(60px, 0.6fr) minmax(0, 3fr) minmax(0, 2.4fr);
+    justify-items: stretch;
     align-items: center;
-    column-gap: 8px;
+    column-gap: 16px;
+    box-sizing: border-box;
+    padding-left: 16px;
+    padding-right: 144px;
 }
