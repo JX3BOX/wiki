@@ -20,15 +20,17 @@
                         </a>
                     </li>
                     <li class="u-qlink">
-                        <a class="u-qlink--yellow" href="/pvx/achievements" target="_blank" rel="noopener noreferrer">
-                            <LegacyIcon class="el-icon-notebook-1" />
+                        <a class="u-qlink--yellow u-qlink--sparkle" href="/pvx/achievements" target="_blank" rel="noopener noreferrer">
+                            <LegacyIcon class="el-icon-medal" />
                             <span>{{ $t("ui.achievement.quick.handbook") }}</span>
+                            <span class="u-sparkles" aria-hidden="true"><i></i><i></i><i></i></span>
                         </a>
                     </li>
                     <li class="u-qlink">
-                        <a class="u-qlink--yellow" href="/pvx/adventure" target="_blank" rel="noopener noreferrer">
-                            <LegacyIcon class="el-icon-notebook-2" />
+                        <a class="u-qlink--yellow u-qlink--sparkle" href="/pvx/adventure" target="_blank" rel="noopener noreferrer">
+                            <el-icon><Reading /></el-icon>
                             <span>{{ $t("ui.achievement.quick.adventureScroll") }}</span>
+                            <span class="u-sparkles" aria-hidden="true"><i></i><i></i><i></i></span>
                         </a>
                     </li>
                     <li class="u-qlink">
@@ -100,6 +102,7 @@
 </template>
 
 <script>
+import { Reading } from "@element-plus/icons-vue";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import chunk from "lodash/chunk";
@@ -109,7 +112,7 @@ import PostList from "@/components/common/post-list.vue";
 
 export default {
     name: "Home",
-    components: { WikiPanel, PostList, WikiItem },
+    components: { WikiPanel, PostList, WikiItem, Reading },
     data() {
         return {
             hot_achievements: [],

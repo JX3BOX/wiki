@@ -133,3 +133,108 @@
         }
     }
 }
+
+// 宝典入口的轻量装饰动效，不影响按钮点击与排版。
+.m-cj-home .m-qlinks .u-qlink--sparkle {
+    --sparkle-delay: 0s;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-image:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.09) 48%, transparent 52%, rgba(194, 112, 16, 0.09) 100%),
+        linear-gradient(125deg, rgba(255, 243, 205, 0.18), transparent 65%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48), inset 0 -1px 0 rgba(183, 105, 13, 0.12), 0 2px 5px rgba(196, 131, 36, 0.12) !important;
+
+    &:hover,
+    &:focus,
+    &.router-link-active,
+    &.router-link-exact-active {
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48), inset 0 -1px 0 rgba(183, 105, 13, 0.12), 0 2px 5px rgba(196, 131, 36, 0.12) !important;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        right: -10px;
+        bottom: -18px;
+        width: 70px;
+        height: 62px;
+        background: url("~@/assets/img/cj/guide-star-pattern.svg") center / contain no-repeat;
+        opacity: 0.24;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    &[href="/pvx/achievements"]::after {
+        width: 48px;
+        height: 43px;
+        right: -6px;
+        bottom: calc(50% - 21.5px);
+        opacity: 0.22;
+        transform: rotate(-60deg);
+    }
+
+    &[href="/pvx/adventure"]::after {
+        right: -8px;
+        bottom: -3px;
+        width: 112px;
+        height: 48px;
+        background-image: url("~@/assets/img/cj/guide-wave-pattern.svg");
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: -40%;
+        left: -55%;
+        width: 35%;
+        height: 180%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+        transform: skewX(-20deg);
+        animation: cj-guide-shine 6s ease-in-out infinite;
+        animation-delay: var(--sparkle-delay);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .u-sparkles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+
+        i {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            margin: 0;
+            background: #fff7da;
+            clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+            opacity: 0;
+            animation: cj-guide-twinkle 4.8s ease-in-out infinite;
+            animation-delay: var(--sparkle-delay);
+
+            &:nth-child(1) { top: 5px; right: 14px; }
+            &:nth-child(2) { bottom: 6px; left: 10px; width: 6px; height: 6px; animation-delay: calc(var(--sparkle-delay) + 1.6s); }
+            &:nth-child(3) { display: none; }
+        }
+    }
+
+    &[href="/pvx/adventure"] { --sparkle-delay: -2.4s; }
+}
+
+@keyframes cj-guide-shine {
+    0%, 65% { left: -55%; opacity: 0; }
+    70% { opacity: 1; }
+    92%, 100% { left: 130%; opacity: 0; }
+}
+@keyframes cj-guide-twinkle {
+    0%, 55%, 100% { opacity: 0; transform: scale(0.4) rotate(-15deg); }
+    72% { opacity: 0.9; transform: scale(1) rotate(0); }
+    85% { opacity: 0; transform: scale(0.5) rotate(15deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .m-cj-home .m-qlinks .u-qlink--sparkle {
+        &::before { animation: none; }
+        .u-sparkles i { animation: none; opacity: 0.5; }
+    }
+}
