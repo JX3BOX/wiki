@@ -93,7 +93,9 @@ test("公共机器人提示在四类 Wiki 详情的移动端按完整语句换�
         ].map(readSource)
     );
 
-    for (const source of detailPages) assert.match(source, /wiki-robot-tip|WikiRobotTip|wikiRobotTip/);
+    for (const source of detailPages) assert.match(source, /<WikiDetailNotice\b/);
+    const detailNotice = await readSource("src/components/common/wiki-detail-notice.vue");
+    assert.match(detailNotice, /<WikiRobotTip v-if="showRobotTip"/);
     assert.match(robotTip, /\.m-qq\s*\{[\s\S]*?display:\s*grid[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) auto/);
     assert.match(robotTip, /\.m-reply\s*\{[\s\S]*?display:\s*flex[\s\S]*?flex-wrap:\s*wrap/);
     assert.match(robotTip, /\.u-reply\s*\{[\s\S]*?max-width:\s*100%[\s\S]*?white-space:\s*normal[\s\S]*?overflow-wrap:\s*anywhere/);
@@ -193,28 +195,10 @@ test("Element Plus 图标按实际使用集合注册", async () => {
     }
 });
 
-test("源码使用的 Element Plus 组件与指令均按需注册", async () => {
+test("Element Plus 完整安装以兼容共享组件内部使用的组件与指令", async () => {
     const bootstrap = await readSource("src/utils/bootstrap.js");
-    const sources = await collectVueSources();
-    const usedTags = new Set();
-
-    for (const source of sources) {
-        for (const match of source.matchAll(/<el-([a-z0-9-]+)\b/g)) usedTags.add(match[1]);
-    }
-
-    for (const tag of usedTags) {
-        const componentName = `El${tag
-            .split("-")
-            .map((part) => part[0].toUpperCase() + part.slice(1))
-            .join("")}`;
-        assert.match(bootstrap, new RegExp(`\\b${componentName},`), `${tag} 未在 bootstrap 中注册`);
-    }
-
-    assert.match(bootstrap, /\bElLoading,/);
-    assert.match(bootstrap, /\bElInfiniteScroll,/);
-    // 可达的 JX3BOX DesignTask 内部使用 el-rate，必须保留全局兼容注册。
-    assert.match(bootstrap, /\bElRate,/);
-    assert.doesNotMatch(bootstrap, /import ElementPlus from "element-plus"/);
+    assert.match(bootstrap, /import ElementPlus from "element-plus"/);
+    assert.match(bootstrap, /app\.use\(ElementPlus,/);
 });
 
 test("小程序标识不再切换独立页面或加载专用样式", async () => {
@@ -266,7 +250,7 @@ test("公共历史版本在手机端切换为不横向溢出的摘要卡片", as
     const revisions = await readSource("src/components/common/wiki-revisions.vue");
 
     assert.match(revisions, /:data-label="\$t\('ui\.common\.labels\.revisionNote'\)"/);
-    assert.match(revisions, /@media screen and \(max-width: 480px\)/);
+    assert.match(revisions, /@media screen and \(max-width: 720px\)/);
     assert.match(revisions, /grid-template-columns:\s*48px minmax\(86px, 1fr\) minmax\(72px, 1fr\)/);
     assert.match(revisions, /&:nth-child\(4\)\s*\{[\s\S]*?grid-column:\s*1 \/ -1/);
 });
@@ -276,23 +260,23 @@ test("物品清单弹层不使用无语义的子清单箭头并保持两级列�
 
     assert.doesNotMatch(plan, /class="el-icon-arrow-right"/);
     assert.match(plan, /\.u-child\s*\{[\s\S]*?display:\s*flex/);
-    assert.match(plan, /\.u-child\s*\{[\s\S]*?padding:\s*7px 10px 7px 28px/);
+    assert.match(plan, /<button type="button" class="u-child"/);
+    assert.match(plan, /\.u-child\s*\{[\s\S]*?margin:\s*2px 0 2px 14px[\s\S]*?padding-left:\s*15px/);
 });
 
 test("移动端操作区与多语言导航文本允许在窄屏内完整展示", async () => {
     const appStyles = await readSource("src/assets/css/app.less");
-    const achievementHomeStyles = await readSource("src/assets/css/cj/home.less");
+    const homeStyles = await readSource("src/assets/css/common/index.less");
     const commonNav = await readSource("src/components/common/nav.vue");
 
     assert.match(appStyles, /\.m-search-view \.m-normal-op\s*\{[\s\S]*?flex-wrap:\s*wrap/);
     assert.match(appStyles, /\.el-button \+ \.el-button\s*\{[\s\S]*?margin-left:\s*0/);
-    assert.match(achievementHomeStyles, /\.m-home-collections\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
-    assert.match(achievementHomeStyles, /span\s*\{[\s\S]*?white-space:\s*normal[\s\S]*?overflow-wrap:\s*anywhere/);
     assert.match(commonNav, /\.u-menu\s*\{[\s\S]*?writing-mode:\s*vertical-rl/);
+    assert.match(homeStyles, /flex-wrap:\s*wrap/);
     assert.match(commonNav, /text-orientation:\s*mixed/);
 });
 
-test("公共待攻略入口保持单行，成就首页改为宝典和群组入口", async () => {
+test("公共待攻略入口保持单行，成就首页展示六个便捷入口", async () => {
     const counter = await readSource("src/components/common/counter.vue");
     const commonStyles = await readSource("src/assets/css/common/index.less");
     const home = await readSource("src/views/cj/home.vue");
@@ -301,8 +285,12 @@ test("公共待攻略入口保持单行，成就首页改为宝典和群组入�
     assert.match(commonStyles, /\.u-counter-link\s*\{[\s\S]*?flex-flow:\s*row nowrap[\s\S]*?white-space:\s*nowrap/);
     assert.match(commonStyles, /\.u-counter-main\s*\{[\s\S]*?display:\s*inline-flex[\s\S]*?align-items:\s*center/);
     assert.match(commonStyles, /\.u-waiting\s*\{[\s\S]*?flex:\s*none[\s\S]*?white-space:\s*nowrap/);
-    assert.doesNotMatch(home, /<Counter|hot_achievements|newest_achievements/);
-    assert.match(home, /name: 'groups'/);
+    assert.doesNotMatch(home, /<Counter/);
+    assert.match(home, /ui\.achievement\.hot/);
+    assert.match(home, /ui\.achievement\.newest/);
+    assert.match(home, /href="\/tool\/9126"/);
+    assert.match(home, /href="\/pvx\/adventure"/);
+    assert.match(home, /href="\/pvx\/partner"/);
     assert.match(home, /href="\/pvx\/achievements"/);
 });
 
