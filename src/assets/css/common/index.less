@@ -22,6 +22,14 @@
             transition: opacity 0.2s linear;
             text-decoration: none !important;
 
+            &.u-qlink--red {
+                background-color: #fe7979;
+            }
+
+            &.u-qlink--yellow {
+                background-color: #f7b044;
+            }
+
             &:hover {
                 opacity: 0.8;
                 text-decoration: none !important;
@@ -208,5 +216,60 @@
             gap: 8px;
             .u-qlink a { padding: 8px 12px; }
         }
+    }
+}
+
+// 四个百科首页复用同一份攻略列表样式；列表内容与面板标题对齐。
+.m-wiki-home.m-home-view .m-posts .m-post {
+    padding: 14px 0;
+    border-color: #e9ebef;
+    font-weight: 400;
+
+    .u-post {
+        margin-top: 0;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+        line-height: 22px;
+    }
+
+    .u-info {
+        gap: 7px;
+        min-width: 0;
+        .u-name {
+            font-size: 13px;
+            font-weight: 500;
+            overflow-wrap: anywhere;
+        }
+        .u-icon { flex-shrink: 0; }
+    }
+
+    .u-remark {
+        margin: 0;
+        font-size: 12px;
+        color: #9298a3;
+        overflow-wrap: anywhere;
+    }
+
+    .m-user {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px 12px;
+        margin-top: 6px;
+        font-size: 12px;
+        line-height: 18px;
+        .u-author { gap: 6px; }
+        .u-icon { width: 16px; height: 16px; border-radius: 3px; }
+        .u-name,
+        .u-updated { font-weight: 400; color: #8a919c; line-height: 18px; }
+    }
+
+    .u-excerpt {
+        margin-top: 8px;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #8a919c;
+        overflow-wrap: anywhere;
     }
 }

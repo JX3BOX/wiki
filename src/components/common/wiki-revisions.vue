@@ -217,7 +217,7 @@ export default {
         margin-right: 0 !important;
     }
 
-    @media screen and (max-width: 480px) {
+    @media screen and (max-width: 720px) {
         .m-revisions-panel {
             overflow-x: visible;
         }
@@ -277,6 +277,48 @@ export default {
                     padding-top: 7px;
                     border-top: 1px solid #ebeef5;
                 }
+            }
+        }
+    }
+}
+// 覆盖新皮肤的表格最小宽度，移动端使用完整宽度的修订卡片。
+@media screen and (max-width: 720px) {
+    .c-wiki-revisions.is-surface > .m-panel-body .m-revisions-panel {
+        min-width: 0;
+        max-width: 100%;
+        box-shadow: none;
+
+        .m-histories {
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
+
+            tbody,
+            tr {
+                min-width: 0;
+                max-width: 100%;
+            }
+
+            tr {
+                grid-template-columns: minmax(64px, 0.7fr) minmax(0, 1.3fr);
+            }
+
+            td,
+            td:first-child {
+                width: auto;
+                min-width: 0;
+                white-space: normal;
+                overflow: visible;
+                overflow-wrap: anywhere;
+
+                &::before { white-space: normal; }
+                > a { white-space: normal; overflow: visible; overflow-wrap: anywhere; }
+            }
+
+            td:nth-child(3),
+            td:nth-child(4) {
+                grid-column: 1 / -1;
+                border-top: 1px solid #ebeef5;
             }
         }
     }

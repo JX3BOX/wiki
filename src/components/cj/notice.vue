@@ -11,27 +11,22 @@
 import { getBreadcrumb } from "@/service/achievement";
 export default {
     name: "WikiNotice",
+    props: {
+        noticeKey: { type: String, default: "wiki_cj_ac" },
+    },
     data() {
         return {
-            data: [],
+            data: "",
         };
     },
     mounted() {
         this.loadData();
     },
     methods: {
-        loadData() {
+        async loadData() {
             try {
-                const data = sessionStorage.getItem("wiki_cj_ac");
-
-                if (data) {
-                    this.data = JSON.parse(data);
-                } else {
-                    getBreadcrumb("wiki_cj_ac").then((res) => {
-                        this.data = res;
-                        sessionStorage.setItem("wiki_cj_ac", JSON.stringify(this.data));
-                    });
-                }
+                // 公告由后台随时更新，每次进入页面重新读取，避免会话缓存长期显示旧内容。
+                this.data = await getBreadcrumb(this.noticeKey);
             } catch (e) {
                 this.data = "";
             }

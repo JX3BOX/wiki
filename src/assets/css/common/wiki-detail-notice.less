@@ -1,0 +1,114 @@
+// 四个百科详情共用的公告及机器人提示样式。
+.m-wiki-detail-notice {
+    margin-bottom: 18px;
+
+    &:not(.has-robot-tip) .m-wiki-top {
+        border-radius: 8px;
+    }
+    .m-wiki-top {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 14px 18px;
+        border: 1px solid #eceef4;
+        border-radius: 8px 8px 0 0;
+        background-color: #fafbfc;
+    }
+
+    .m-wiki-top__header {
+        margin-bottom: 8px;
+    }
+
+    .m-wiki-top__header .u-title {
+        gap: 8px;
+        color: #596170;
+        font-size: 13px;
+    }
+
+    .m-wiki-top__content {
+        color: #7c8491;
+        font-size: 12px;
+        line-height: 1.9;
+        overflow-wrap: anywhere;
+        // 富文本中的源码换行和缩进不应产生可见空行。
+        white-space: normal;
+
+        p {
+            margin: 0 0 8px;
+        }
+
+        ul,
+        ol {
+            margin: 8px 0;
+            padding-left: 18px;
+            list-style-position: outside;
+        }
+
+        ul { list-style-type: disc; }
+        ol { list-style-type: decimal; }
+
+        li {
+            display: list-item;
+            margin: 2px 0;
+            padding: 0;
+        }
+
+        li::marker {
+            color: #a49abf;
+        }
+
+        > :first-child { margin-top: 0; }
+        > :last-child { margin-bottom: 0; }
+    }
+
+    .m-robot__wiki-tip {
+        margin: 0;
+        padding: 12px 18px;
+        gap: 8px 24px;
+        border: 1px solid #e8e3f5;
+        border-top: 0;
+        border-radius: 0 0 8px 8px;
+        background: #f7f5fd;
+        color: #7a728f;
+        line-height: 1.8;
+
+        .m-reply {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            min-width: 0;
+        }
+
+        .u-qq,
+        .u-reply {
+            height: auto;
+            min-height: 26px;
+            padding: 2px 8px;
+            border: 1px solid #e8e3f5;
+            border-radius: 5px;
+            background: #fff;
+            color: #7863c5;
+        }
+
+        .u-qq {
+            width: auto;
+            flex-shrink: 0;
+        }
+
+        .u-reply {
+            max-width: 100%;
+            overflow-wrap: anywhere;
+        }
+
+        .u-qq:hover,
+        .u-reply:hover {
+            border-color: #b8a9e8;
+            background: #f0ebfc;
+        }
+    }
+
+    @media screen and (max-width: @phone) {
+        .m-wiki-top,
+        .m-robot__wiki-tip {
+            padding: 12px;
+        }
+    }
+}

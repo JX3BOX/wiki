@@ -1,5 +1,14 @@
 <template>
-    <div class="m-search-bar m-cj-search" :class="$route.name == 'view' ? 'can-return' : ''">
+    <el-input
+        v-if="compact"
+        :model-value="keyword"
+        @update:modelValue="updateKeyword"
+        @keydown.enter="searchHandle"
+        :placeholder="placeholder || displayPlaceholder"
+        :aria-label="placeholder || displayPlaceholder"
+        clearable
+    />
+    <div v-else class="m-search-bar m-cj-search" :class="$route.name == 'view' ? 'can-return' : ''">
         <div class="m-return">
             <el-button class="u-return-btn" @click="returnHandle">
                 <LegacyIcon class="el-icon-arrow-left" />{{ $t("ui.common.actions.back") }}
@@ -37,7 +46,10 @@
 import debounce from "lodash/debounce";
 
 export default {
+    emits: ["search", "update:modelValue"],
     props: {
+        modelValue: { type: String, default: undefined },
+        compact: { type: Boolean, default: false },
         name: {
             type: String,
             default: "CommonSearch",
@@ -78,11 +90,18 @@ export default {
         }
     },
     watch: {
+        modelValue(value) {
+            if (value !== undefined && value !== this.keyword) {
+                this.debouncedSearch?.cancel();
+                this.keyword = value;
+            }
+        },
         "$route.fullPath": {
             immediate: true,
             handler() {
+                this.debouncedSearch?.cancel();
                 this.syncingFromRoute = true;
-                this.keyword = this.$route.params?.keyword || "";
+                this.keyword = this.modelValue ?? this.$route.params?.keyword ?? "";
                 this.$nextTick(() => {
                     this.syncingFromRoute = false;
                 });
@@ -107,6 +126,7 @@ export default {
         updateKeyword(val) {
             const oldVal = this.keyword;
             this.keyword = val || "";
+            this.$emit("update:modelValue", this.keyword);
             if (this.syncingFromRoute) return;
             
             if (this.isMobile) {

@@ -91,6 +91,7 @@ export default {
             select: "Select",
         },
         status: {
+            searching: "Searching, please wait…",
             noRecords: "👻 No records",
             noData: "💧 No data",
             loading: "🎉 Loading...",
@@ -172,6 +173,13 @@ export default {
         rank: "Leaderboard",
     },
     achievement: {
+        groupSearch: "Search region, server or group number",
+        groupRegions: "Filter by region",
+        groupAll: "All regions",
+        groupCopy: "Copy group number",
+        groupNoMatch: "No matching servers or groups",
+        groupBrowse: "Browse all server groups",
+        navHome: "Home",
         searchPlaceholder: "Search achievement names, descriptions, titles, or reward items",
         mapPlaceholder: "Map",
         syncTip: "Sync achievements from the game first",
@@ -188,6 +196,9 @@ export default {
         batchComplete: "Mark completed ({count})",
         batchIncomplete: "Mark incomplete ({count})",
         quick: {
+            sync: "Sync Achievements",
+            adventureScroll: "Adventure Scroll",
+            partners: "Companion Encyclopedia",
             handbook: "Achievement handbook",
             hidden: "Hidden achievements",
             adventures: "Adventure index",
@@ -266,6 +277,8 @@ export default {
         viewAchievement: "View achievement",
     },
     item: {
+        navKeyword: "Enter a keyword",
+        navHome: "Home",
         searchPlaceholder: "Search item names, bracketed names, or descriptions",
         filters: {
             bindType: "Binding",
@@ -281,6 +294,8 @@ export default {
             bindOnPickup: "Bind on pickup",
         },
         quick: {
+            mounts: "Mount index",
+            furniture: "Furniture index",
             stone: "Five-element stone crafting",
             craft: "Crafting assistant",
             prices: "Price trends",
@@ -416,6 +431,10 @@ export default {
         },
     },
     quest: {
+        navSearchPlaceholder: "Search quests, press Enter",
+        roleHelp: "Role help",
+        noDescription: "No quest description available",
+        navHome: "Home",
         searchPlaceholder: "Search quest keywords or bracketed names and press Enter",
         chainTip: "Enter a full quest name or ID to view its chain",
         viewChain: "View quest chain",
@@ -434,6 +453,7 @@ export default {
             exam: "Exam questions",
             reputation: "Reputation index",
             books: "Book index",
+            questSection: "Story index",
             daily: "Daily activities",
         },
         hot: "Popular quests",
@@ -526,6 +546,21 @@ export default {
         },
     },
     knowledge: {
+        quickTeam: "Team Platform",
+        quickExam: "JX3 Exams",
+        quickStory: "Jianghu Stories",
+
+        onlyUnread: "Unread only",
+        markRead: "Mark as read",
+        markUnread: "Read · Mark as unread",
+        readLoadFailed: "Could not load reading progress. Please refresh.",
+        readSaveFailed: "Could not save reading status. Please retry.",
+
+        bigbang: "JX3 Major Events",
+        popularKnowledge: "Popular knowledge",
+        newestKnowledge: "Newest knowledge",
+        noDescription: "No description yet",
+
         searchPlaceholder: "Search knowledge names or content and press Enter",
         selectCategory: "Select a category",
         byAuthor: "By {author}",

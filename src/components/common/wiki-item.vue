@@ -16,7 +16,7 @@
             </div>
             <div class="u-desc">
                 <LegacyIcon class="el-icon-mic" />
-                <span v-html="`${type === 'quest' ? item.target : parseDesc(item.Desc)}`"></span>
+                <span v-html="type === 'quest' ? (item.target || $t('ui.quest.noDescription')) : parseDesc(item.Desc)"></span>
             </div>
         </div>
     </router-link>

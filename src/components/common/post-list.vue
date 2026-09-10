@@ -2,7 +2,7 @@
     <WikiPanel :border="false">
         <template #head-title>
             <LegacyIcon class="el-icon-collection" />
-            <span>{{ $t("ui.common.wiki.recentGuides") }}</span>
+            <span>{{ $t("ui.common.wiki.latestGuide") }}</span>
         </template>
         <template #body>
             <el-row class="m-posts">

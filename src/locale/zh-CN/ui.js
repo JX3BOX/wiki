@@ -91,6 +91,7 @@ export default {
             select: "请选择",
         },
         status: {
+            searching: "正在搜索，请稍候…",
             noRecords: "👻 暂无记录",
             noData: "💧 暂无数据",
             loading: "🎉 数据加载中...",
@@ -172,6 +173,13 @@ export default {
         rank: "排行榜",
     },
     achievement: {
+        groupSearch: "搜索大区、区服或群号",
+        groupRegions: "大区筛选",
+        groupAll: "全部大区",
+        groupCopy: "点击复制群号",
+        groupNoMatch: "没有匹配的区服或群号",
+        groupBrowse: "查看全部区服群",
+        navHome: "首页",
         searchPlaceholder: "输入成就名称/成就描述/称号/奖励物品「回车」进行搜索",
         mapPlaceholder: "地图",
         syncTip: "请先在游戏中同步成就",
@@ -188,6 +196,9 @@ export default {
         batchComplete: "批量设为完成（{count}）",
         batchIncomplete: "批量取消完成（{count}）",
         quick: {
+            sync: "同步成就",
+            adventureScroll: "奇遇珍卷",
+            partners: "侠客大全",
             handbook: "资历宝典",
             hidden: "隐藏成就",
             adventures: "奇遇大全",
@@ -266,6 +277,8 @@ export default {
         viewAchievement: "查看成就",
     },
     item: {
+        navKeyword: "输入关键字",
+        navHome: "首页",
         searchPlaceholder: "输入物品名称（可适配中括号形式）/物品描述「回车」进行搜索",
         filters: {
             bindType: "绑定类型",
@@ -281,6 +294,8 @@ export default {
             bindOnPickup: "拾取后绑定",
         },
         quick: {
+            mounts: "坐骑大全",
+            furniture: "家具大全",
             stone: "五行石合成",
             craft: "技艺助手",
             prices: "价格走势",
@@ -416,6 +431,10 @@ export default {
         },
     },
     quest: {
+        navSearchPlaceholder: "输入任务关键词，回车搜索",
+        roleHelp: "角色使用帮助",
+        noDescription: "暂无任务描述",
+        navHome: "首页",
         searchPlaceholder: "输入任务关键字（可包括中括号），「回车」进行搜索",
         chainTip: "查看任务链需要键入完整任务名或任务ID哦",
         viewChain: "查看任务链",
@@ -434,6 +453,7 @@ export default {
             exam: "科举题库",
             reputation: "声望大全",
             books: "书籍大全",
+            questSection: "剧情大全",
             daily: "日常活动",
         },
         hot: "热门任务",
@@ -526,6 +546,21 @@ export default {
         },
     },
     knowledge: {
+        quickTeam: "团队平台",
+        quickExam: "剑三考试",
+        quickStory: "江湖故事",
+
+        onlyUnread: "只看未阅读",
+        markRead: "标记已阅读",
+        markUnread: "已阅读 · 取消标记",
+        readLoadFailed: "阅读进度加载失败，请刷新重试",
+        readSaveFailed: "阅读状态保存失败，请重试",
+
+        bigbang: "剑三大事件",
+        popularKnowledge: "热门通识",
+        newestKnowledge: "最新通识",
+        noDescription: "暂无通识简介",
+
         searchPlaceholder: "输入通识名称或内容「回车」进行搜索",
         selectCategory: "选择分类",
         byAuthor: "By {author}",

@@ -1,0 +1,48 @@
+// 百科顶部统计共用样式。
+.wiki-stat-strip() {
+    min-width: 0;
+    overflow-x: auto;
+
+    .u-stat {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        width: max-content;
+        padding: 4px 0;
+        white-space: nowrap;
+        font-size: 12px;
+        line-height: 22px;
+    }
+
+    .u-stat-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin: 0;
+        padding: 0 12px;
+
+        + .u-stat-item { border-left: 1px solid #eceef3; }
+
+        em {
+            margin: 0;
+            color: #9299a5;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        b {
+            color: #687180;
+            font-size: 13px;
+            font-weight: 500;
+            font-style: normal;
+            font-variant-numeric: tabular-nums;
+            &::after { content: none; }
+        }
+
+    }
+
+    @media screen and (max-width: @ipad) {
+        .u-stat-item { padding-right: 10px; padding-left: 10px; }
+    }
+}

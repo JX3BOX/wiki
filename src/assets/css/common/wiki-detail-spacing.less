@@ -1,0 +1,23 @@
+// 详情新皮肤模块间距：桌面 24px，移动端 16px。
+.wiki-detail-spacing() {
+    > .c-wiki-panel,
+    > .m-wiki-thx-panel,
+    > .m-wiki-thx-panel > .c-wiki-panel {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    > .c-wiki-panel + .c-wiki-panel,
+    > .c-wiki-panel + .m-wiki-thx-panel,
+    > .m-wiki-thx-panel + .c-wiki-panel {
+        margin-top: 24px;
+    }
+
+    @media screen and (max-width: @phone) {
+        > .c-wiki-panel + .c-wiki-panel,
+        > .c-wiki-panel + .m-wiki-thx-panel,
+        > .m-wiki-thx-panel + .c-wiki-panel {
+            margin-top: 16px;
+        }
+    }
+}

@@ -1,6 +1,6 @@
 <template>
     <div class="c-wiki-nav">
-        <Menu class="c-wiki-menu"></Menu>
+        <Menu class="c-wiki-menu" :class="{ 'is-vertical': !/^zh(?:-|$)/i.test($i18n.locale) }"></Menu>
         <div class="c-nav-content">
             <slot></slot>
         </div>
@@ -25,7 +25,7 @@ export default {
     width: 100%;
     gap: 10px;
     @w: 30px;
-    padding: 0 10px 10px 0;
+    // padding: 10px 0;
     .c-wiki-menu {
         position: fixed;
         top: 0;
@@ -33,6 +33,17 @@ export default {
         height: 100%;
         .w(@w);
         flex-shrink: 0;
+        &.is-vertical .u-menu {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 5px;
+            line-height: 20px;
+        }
+
         .m-menus {
             // position: fixed;
             // top: 10px;
@@ -41,21 +52,15 @@ export default {
             gap: 10px;
         }
         .u-menu {
-            .flex;
-            align-items: center;
-            justify-content: center;
             box-sizing: border-box;
-            padding: 5px;
+            padding: 8px 5px;
             border-top-right-radius: 4px;
             border-bottom-right-radius: 4px;
-            width: @w;
+            width: 100%;
             text-align: center;
             // background-color: #eee;
             font-size: 12px;
-            line-height: 20px;
-            white-space: nowrap;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
+            // letter-spacing: 1px;
             color: @color;
             cursor: pointer;
             &:hover {

@@ -239,6 +239,7 @@ const zhTWOverrides = {
             select: "請選擇",
         },
         status: {
+            searching: "正在搜尋，請稍候…",
             noData: "💧 暫無資料",
             loading: "🎉 資料載入中…",
             loadFailed: "⚠️ 資料載入失敗",
@@ -289,6 +290,14 @@ const zhTWOverrides = {
         },
     },
     achievement: {
+        quick: { sync: "同步成就", adventureScroll: "奇遇珍卷", partners: "俠客大全" },
+        groupSearch: "搜尋大區、區服或群號",
+        groupRegions: "大區篩選",
+        groupAll: "全部大區",
+        groupCopy: "點擊複製群號",
+        groupNoMatch: "沒有符合的區服或群號",
+        groupBrowse: "查看全部區服群",
+        navHome: "首頁",
         searchPlaceholder: "輸入成就名稱、描述、稱號或獎勵物品後按 Enter 搜尋",
         syncTip: "請先在遊戲中同步成就",
         menuTypes: {
@@ -347,6 +356,9 @@ const zhTWOverrides = {
         viewAchievement: "查看成就",
     },
     item: {
+        quick: { mounts: "坐騎大全", furniture: "家具大全" },
+        navKeyword: "輸入關鍵字",
+        navHome: "首頁",
         searchPlaceholder: "輸入物品名稱（支援中括號格式）或描述後按 Enter 搜尋",
         filters: {
             source: "取得方式",
@@ -410,6 +422,13 @@ const zhTWOverrides = {
         },
     },
     quest: {
+        navSearchPlaceholder: "輸入任務關鍵字，按 Enter 搜尋",
+        roleHelp: "角色使用說明",
+        noDescription: "暫無任務描述",
+        quick: {
+            questSection: "劇情大全",
+        },
+        navHome: "首頁",
         searchPlaceholder: "輸入任務關鍵字（可包含中括號）後按 Enter 搜尋",
         chainTip: "請輸入完整的任務名稱或任務 ID，以查看任務鏈",
         searchTips: {
@@ -452,6 +471,21 @@ const zhTWOverrides = {
         },
     },
     knowledge: {
+        quickTeam: "團隊平台",
+        quickExam: "劍三考試",
+        quickStory: "江湖故事",
+
+        onlyUnread: "只看未閱讀",
+        markRead: "標記已閱讀",
+        markUnread: "已閱讀 · 取消標記",
+        readLoadFailed: "閱讀進度載入失敗，請重新整理",
+        readSaveFailed: "閱讀狀態儲存失敗，請重試",
+
+        bigbang: "劍三大事件",
+        popularKnowledge: "熱門通識",
+        newestKnowledge: "最新通識",
+        noDescription: "暫無通識簡介",
+
         searchPlaceholder: "輸入通識名稱或內容後按 Enter 搜尋",
         tagline: "劍網3魔盒通識百科｜完整掌握劍三世界觀！",
         improve: "補充通識",

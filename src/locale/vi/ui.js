@@ -91,6 +91,7 @@ export default {
             select: "Vui lòng chọn",
         },
         status: {
+            searching: "Đang tìm kiếm, vui lòng đợi…",
             noRecords: "👻 Không có bản ghi",
             noData: "💧 Không có dữ liệu",
             loading: "🎉 Đang tải...",
@@ -172,6 +173,13 @@ export default {
         rank: "Bảng xếp hạng",
     },
     achievement: {
+        groupSearch: "Tìm khu vực, máy chủ hoặc số nhóm",
+        groupRegions: "Lọc khu vực",
+        groupAll: "Tất cả khu vực",
+        groupCopy: "Sao chép số nhóm",
+        groupNoMatch: "Không tìm thấy máy chủ hoặc nhóm",
+        groupBrowse: "Xem tất cả nhóm máy chủ",
+        navHome: "Trang chủ",
         searchPlaceholder: "Tìm theo tên, mô tả, danh hiệu hoặc vật phẩm thưởng của thành tựu",
         mapPlaceholder: "Bản đồ",
         syncTip: "Hãy đồng bộ thành tựu từ game trước",
@@ -188,6 +196,9 @@ export default {
         batchComplete: "Đánh dấu hoàn thành ({count})",
         batchIncomplete: "Đánh dấu chưa hoàn thành ({count})",
         quick: {
+            sync: "Đồng bộ thành tựu",
+            adventureScroll: "Trân quyển kỳ ngộ",
+            partners: "Danh sách hiệp khách",
             handbook: "Cẩm nang thành tựu",
             hidden: "Thành tựu ẩn",
             adventures: "Danh sách kỳ ngộ",
@@ -266,6 +277,8 @@ export default {
         viewAchievement: "Xem thành tựu",
     },
     item: {
+        navKeyword: "Nhập từ khóa",
+        navHome: "Trang chủ",
         searchPlaceholder: "Tìm theo tên vật phẩm, tên trong ngoặc hoặc mô tả",
         filters: {
             bindType: "Kiểu khóa",
@@ -281,6 +294,8 @@ export default {
             bindOnPickup: "Khóa khi nhặt",
         },
         quick: {
+            mounts: "Danh sách thú cưỡi",
+            furniture: "Danh sách nội thất",
             stone: "Ghép đá ngũ hành",
             craft: "Trợ lý chế tạo",
             prices: "Xu hướng giá",
@@ -416,6 +431,10 @@ export default {
         },
     },
     quest: {
+        navSearchPlaceholder: "Nhập từ khóa nhiệm vụ, nhấn Enter",
+        roleHelp: "Hướng dẫn nhân vật",
+        noDescription: "Chưa có mô tả nhiệm vụ",
+        navHome: "Trang chủ",
         searchPlaceholder: "Tìm từ khóa nhiệm vụ hoặc tên trong ngoặc rồi nhấn Enter",
         chainTip: "Nhập đầy đủ tên hoặc ID nhiệm vụ để xem chuỗi nhiệm vụ",
         viewChain: "Xem chuỗi nhiệm vụ",
@@ -434,6 +453,7 @@ export default {
             exam: "Ngân hàng câu hỏi",
             reputation: "Danh sách danh vọng",
             books: "Danh sách sách",
+            questSection: "Tổng hợp cốt truyện",
             daily: "Hoạt động hằng ngày",
         },
         hot: "Nhiệm vụ phổ biến",
@@ -526,6 +546,21 @@ export default {
         },
     },
     knowledge: {
+        quickTeam: "Nền tảng tổ đội",
+        quickExam: "Kỳ thi JX3",
+        quickStory: "Chuyện giang hồ",
+
+        onlyUnread: "Chỉ chưa đọc",
+        markRead: "Đánh dấu đã đọc",
+        markUnread: "Đã đọc · Bỏ đánh dấu",
+        readLoadFailed: "Không tải được tiến độ đọc. Vui lòng tải lại.",
+        readSaveFailed: "Không lưu được trạng thái đọc. Vui lòng thử lại.",
+
+        bigbang: "Sự kiện lớn JX3",
+        popularKnowledge: "Kiến thức phổ biến",
+        newestKnowledge: "Kiến thức mới nhất",
+        noDescription: "Chưa có mô tả",
+
         searchPlaceholder: "Tìm tên hoặc nội dung kiến thức rồi nhấn Enter",
         selectCategory: "Chọn danh mục",
         byAuthor: "Bởi {author}",

@@ -97,19 +97,83 @@ export default {
 .m-wiki-rank {
     padding: 15px;
     .m-title {
-        .fz(18px, 24px);
+        .fz(16px, 24px);
+        font-weight: 600;
+        color: #454d5a;
         margin: 0;
-        padding: 0 0 5px 0;
+        padding: 0 0 10px;
         border-bottom: 1px solid #ebeef5;
         .flex;
         align-items: center;
     }
 
     .u-icon {
-        .h(24px);
+        .h(20px);
         .y(top);
         fill: @bg-black;
         .mr(5px);
+    }
+
+    .el-tabs__header {
+        margin: 8px 0 12px;
+    }
+
+    .el-tabs__nav-wrap {
+        padding: 4px;
+        border-radius: 12px;
+        background: #f2f3f7;
+
+        &.is-scrollable {
+            padding-right: 22px;
+            padding-left: 22px;
+        }
+    }
+
+    .el-tabs__nav-scroll {
+        display: flex;
+        justify-content: center;
+    }
+
+    .el-tabs__nav {
+        display: flex;
+        flex: 1;
+        gap: 3px;
+        border: 0;
+    }
+
+    .el-tabs__item,
+    .el-tabs__item.is-top:nth-child(2),
+    .el-tabs__item.is-top:last-child {
+        flex: 1;
+        justify-content: center;
+        height: 28px;
+        padding: 0 8px;
+        border-radius: 9px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #858c99;
+        transition: color 0.18s, background-color 0.18s, box-shadow 0.18s;
+
+        &:hover {
+            color: @v4primary;
+            background: rgba(255, 255, 255, 0.55);
+        }
+
+        &.is-active {
+            color: @v4primary;
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(42, 34, 79, 0.1);
+        }
+
+        &:focus-visible {
+            outline: 2px solid #b6a9ef;
+            outline-offset: -2px;
+        }
+    }
+
+    .el-tabs__active-bar,
+    .el-tabs__nav-wrap::after {
+        display: none;
     }
 
     .u-list {
@@ -117,13 +181,10 @@ export default {
         padding: 0;
         margin: 0;
 
-        max-height: 360px;
-        overflow: hidden auto;
-        padding-right: 5px;
-        .scrollbar();
 
         li {
-            border-bottom: 1px dotted #eee;
+            border-bottom: 1px solid #f0f1f5;
+            &:last-child { border-bottom: 0; }
         }
         a:hover .u-name {
             color: @v4primary;
@@ -134,7 +195,11 @@ export default {
         .flex;
         justify-content: space-between;
         align-items: center;
-        padding: 5px 0;
+        padding: 7px 4px;
+        gap: 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.15s;
 
         &:hover {
             background-color: @bg-light;
@@ -145,16 +210,18 @@ export default {
     .u-left {
         .flex;
         align-items: center;
-        gap: 5px;
+        gap: 7px;
+        min-width: 0;
     }
     .u-order {
-        background-color: #f6f8fa;
+        flex-shrink: 0;
+        background-color: #f3f4f7;
         display: inline-block;
         border-radius: 3px;
         font-size: 12px;
-        line-height: 16px;
-        width: 16px;
-        height: 16px;
+        line-height: 18px;
+        width: 18px;
+        height: 18px;
         color: #888;
         vertical-align: middle;
         -webkit-box-sizing: border-box;
@@ -174,18 +241,26 @@ export default {
         }
     }
     .u-avatar {
-        .size(14px);
+        .size(18px);
+        flex-shrink: 0;
         .r(50%);
     }
 
     .u-name {
         .fz(12px);
         .lh(@h);
-        color: #555;
+        color: #555d6b;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .u-count {
-        .fz(10px, @h);
+        .fz(11px, @h);
+        flex-shrink: 0;
+        font-style: normal;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
         color: @v4primary;
         .fr;
         .mr(2px);
