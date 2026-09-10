@@ -13,11 +13,15 @@
     .mb(5px);
     .u-title {
         .flex(y);
+        column-gap: 6px;
         .fz(14px);
         .bold;
         margin: 0;
-        i {
-            .mr(3px);
+        > i,
+        > .legacy-icon,
+        > [data-legacy-icon] {
+            flex-shrink: 0;
+            margin-right: 0;
         }
     }
     .u-more {

@@ -2,6 +2,14 @@
     <div class="m-quest-view" :class="isRobot ? 'm-quest-view__robot' : ''" v-loading="pageLoading">
         <AsyncState :loading="pageLoading" :error="loadError" @retry="syncQuestData" />
         <div v-if="!isRobot && !loadError" class="w-quest">
+            <p class="u-title__warpper">
+                <span class="u-title">
+                    <span class="u-title-name" :class="questNameClass">{{ quest.name }}</span>
+                    <img class="u-title-school" v-if="quest.schoolName" :src="schoolIcon(quest.schoolName)" alt="" />
+                    <span class="u-title-difficulty" v-if="quest.difficulty">【{{ quest.difficulty }}】</span>
+                </span>
+                <span class="u-title-id"> (ID:{{ quest.id }})</span>
+            </p>
             <div class="u-actions" @click.stop>
                 <el-tooltip :content="$t('ui.quest.roleTip')" placement="top" v-if="!role">
                     <LegacyIcon class="el-icon-info" />
@@ -31,14 +39,6 @@
                 </el-button>
             </div>
 
-            <p class="u-title__warpper">
-                <span class="u-title">
-                    <span class="u-title-name" :class="questNameClass">{{ quest.name }}</span>
-                    <img class="u-title-school" v-if="quest.schoolName" :src="schoolIcon(quest.schoolName)" alt="" />
-                    <span class="u-title-difficulty" v-if="quest.difficulty">【{{ quest.difficulty }}】</span>
-                </span>
-                <span class="u-title-id"> (ID:{{ quest.id }})</span>
-            </p>
             <div class="u-tag-list">
                 <el-tag v-show="quest.canShare"><img src="@/assets/img/quest/player-63.png" alt="" />{{ $t("ui.quest.shareable") }}</el-tag>
                 <el-tag v-show="quest.canAssist"

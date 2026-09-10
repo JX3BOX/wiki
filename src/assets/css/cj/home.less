@@ -40,6 +40,18 @@
             min-width: 0;
             padding: 12px;
             font-size: 15px;
+            gap: 6px;
+
+            > .legacy-icon,
+            > [data-legacy-icon] {
+                flex-shrink: 0;
+            }
         }
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .m-cj-home .m-qlinks.m-home-featured {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

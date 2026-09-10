@@ -176,6 +176,33 @@
 }
 
 @media screen and (max-width: @phone) {
+    .v-knowledge-single .c-comment {
+        .c-comment-cmt__box > .u-flex-1 {
+            min-width: 0;
+        }
+
+        .c-comment-cmt .u-toolbar.u-toolbar--primary .u-toolbar-left {
+            gap: 4px 12px;
+        }
+
+        .c-comment-cmt .u-toolbar .el-button {
+            min-height: 28px;
+            margin-left: 0;
+            white-space: nowrap;
+        }
+
+        .c-comment-cmt .u-date {
+            flex-basis: 100%;
+            margin-left: 0;
+            line-height: 1.5;
+        }
+
+        .c-comment-cmt .u-toolbar.u-toolbar--primary .u-toolbar-right {
+            margin-top: 4px;
+            padding-right: 0;
+        }
+    }
+
     .m-navigation {
         align-items: flex-start;
         flex-direction: column;

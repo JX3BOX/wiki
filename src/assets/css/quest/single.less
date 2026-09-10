@@ -578,6 +578,40 @@
         padding: 0;
 
         .w-quest {
+            .u-title__warpper {
+                gap: 4px 6px;
+
+                .u-title {
+                    min-width: 0;
+                    max-width: 100%;
+                    flex-wrap: wrap;
+                }
+
+                .u-title-name {
+                    overflow-wrap: anywhere;
+                }
+
+                .u-title-id {
+                    line-height: 1.4;
+                }
+            }
+
+            .u-actions {
+                position: static;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 6px;
+                margin: 8px 0;
+
+                .el-button {
+                    min-height: 32px;
+                    height: auto;
+                    max-width: 100%;
+                    white-space: normal;
+                }
+            }
+
             .u-offer .u-offer-list,
             .u-reward .u-reward-list {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
