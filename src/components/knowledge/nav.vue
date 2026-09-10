@@ -1,123 +1,107 @@
 <template>
-    <nav class="m-nav">
-        <div class="m-menus-panel">
-            <el-tree
-                :data="maps"
-                :props="defaultProps"
-                node-key="id"
-                ref="tree"
-                :indent="42"
-                lazy
-                :load="loadNode"
-            >
-                <template #default="{ node, data }">
-                    <span v-if="!node.isLeaf" class="el-tree-node__label">
-                        <span class="u-name" v-text="data.name"></span>
-                        <em v-if="data.count" class="u-count" v-text="`(${data.count})`"></em>
-                    </span>
-                    <router-link v-else class="el-tree-node__label" :to="menuLink(data, node)">
-                        <span class="u-leaf-name" v-text="data.name" :title="data.name"></span>
-                        <em v-if="data.count" class="u-count" v-text="`(${data.count})`"></em>
-                    </router-link>
-                </template>
-            </el-tree>
+    <div class="m-knowledge-nav">
+        <div class="m-knowledge-nav-header">
+            <el-input
+                :model-value="keyword"
+                class="u-keyword"
+                :placeholder="$t('ui.quest.navKeyword')"
+                clearable
+                @update:modelValue="updateKeyword"
+                @keydown.enter="search"
+            />
+            <div class="m-filters">
+                <el-checkbox  :model-value="reading.onlyUnread" @change="toggleUnread" :label="$t('ui.knowledge.onlyUnread')" border size="small" />
+                <div class="u-total"><b class="u-completed-num">{{ reading.error ? '—' : reading.read }}</b><span> / {{ totalCount }}</span></div>
+            </div>
         </div>
-    </nav>
+        <ul class="m-knowledge-stats">
+            <li class="m-knowledge-stat">
+                <a
+                    class="m-knowledge-category"
+                    href="/knowledge"
+                    :class="{ 'is-active': $route.name === 'index' }"
+                    :aria-current="$route.name === 'index' ? 'page' : undefined"
+                >
+                    <el-icon class="u-arrow"><CaretRight /></el-icon>
+                    <span class="u-name">首页</span>
+                </a>
+            </li>
+            <li v-for="item in maps" :key="item.id" class="m-knowledge-stat">
+                <router-link
+                    class="m-knowledge-category"
+                    active-class="is-active"
+                    :to="{ name: 'normal', params: { type_slug: item.id } }"
+                >
+                    <el-icon class="u-arrow"><CaretRight /></el-icon>
+                    <span class="u-name">{{ item.name }}</span>
+                    <span class="u-count">{{ reading.byType[item.id]?.read || 0 }} / {{ item.count }}</span>
+                </router-link>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
-import { getKnowledgeMenus, getKnowledgeCount, getKnowledgeList } from "@/service/knowledge.js";
-import each from "lodash/each";
-import { getCalendarCount } from "@/service/calendar";
+import { getKnowledgeMenus, getKnowledgeCount } from "@/service/knowledge.js";
+import { reading, loadReading } from "@/store/knowledge-reading";
+import User from "@jx3box/jx3box-common/js/user";
+import { CaretRight } from "@element-plus/icons-vue";
 
 export default {
-    name: "Nav",
-    components: {},
-    data: function () {
+    name: "KnowledgeNav",
+    components: { CaretRight },
+    emits: ["search"],
+    data() {
         return {
-            active: "knowledge",
             maps: [],
-            defaultProps: {
-                children: "children",
-                label: "name",
-                isLeaf: "leaf",
-            },
+            keyword: "",
+            reading,
         };
     },
-    computed: {},
+    computed: {
+        totalCount() {
+            return this.maps.reduce((total, item) => total + (Number(item.count) || 0), 0);
+        },
+    },
+    watch: {
+        "$route.fullPath": {
+            immediate: true,
+            handler() {
+                this.keyword = this.$route.params.keyword || "";
+            },
+        },
+    },
     methods: {
-        // 数据加载
-        init: function () {
-            // 通识
-            this.loadKnowledge();
+        toggleUnread(value) {
+            if (!User.isLogin()) { User.toLogin(); return; }
+            reading.onlyUnread = value;
+            if (value && !['normal', 'search'].includes(this.$route.name)) this.search();
         },
-        async loadNode(node, resolve) {
-            const { level, data } = node;
-
-            if (level === 0) {
-                return resolve(this.maps);
-            }
-
-            const res = await getKnowledgeList({ type: data.id, _no_page: 1 });
-
-            let children = res?.data?.data;
-
-            children = children.map((item) => {
-                return {
-                    ...item,
-                    leaf: true,
-                };
-            });
-
-            if (children?.length) {
-                resolve(children);
-            } else {
-                resolve([]);
-            }
+        search(event) {
+            if (event?.isComposing) return;
+            this.$emit("search", this.keyword);
         },
-        loadKnowledge: async function () {
-            // 加载通识子类统计
-            const data = await getKnowledgeCount();
-            const res = await getKnowledgeMenus();
-            // const list = await getKnowledgeList({ _no_page: 1 });
-
-            let knowledgeMenus = res?.data?.data;
-            const maps = [];
-
-            each(knowledgeMenus, (item, key) => {
-                const _item = data.data.data?.find((i) => i.type == item.name);
-                maps.push({
-                    id: item.name,
-                    name: item.label,
-                    count: _item.count,
-                    children: [],
-                    leaf: false,
-                });
-            });
-
-            this.maps = maps;
+        updateKeyword(value) {
+            const previous = this.keyword;
+            this.keyword = value || "";
+            if (previous && !this.keyword) this.search();
         },
-        loadCalendarCount: function (year) {
-            getCalendarCount({ year }).then((res) => {
-                const currentYear = this.data.calendar.children.find((child) => child.key == year);
+        async loadKnowledge() {
+            const [countsResponse, menusResponse] = await Promise.all([getKnowledgeCount(), getKnowledgeMenus()]);
+            const counts = countsResponse?.data?.data || [];
+            const menus = menusResponse?.data?.data || [];
 
-                res.data.forEach((item) => {
-                    const month = currentYear.children.find((currentMonth) => currentMonth.month == item.month);
-
-                    if (month) {
-                        month.count = item.count;
-                    }
-                });
-            });
-        },
-        menuLink(data, node) {
-            return { path: `/view/${data.id}` };
+            this.maps = Object.values(menus).map((item) => ({
+                id: item.name,
+                name: item.label,
+                count: counts.find((count) => count.type === item.name)?.count ?? 0,
+            }));
         },
     },
-    created: function () {
-        this.init();
+    created() {
+        this.loadKnowledge();
+        loadReading().catch(() => this.$message.error(this.$t('ui.knowledge.readLoadFailed')));
     },
-    mounted: function () {},
 };
 </script>
 

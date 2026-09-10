@@ -10,14 +10,16 @@
 				<span v-for="item in formatTags(data.post.tags)" :key="item">{{ item }}</span>
 			</span>
 		</div>
-		<span class="u-remark" v-if="data.post">
-			<LegacyIcon class="el-icon-edit" />
-			<span class="u-remark-content">{{ $t("ui.knowledge.lastRevision") }}{{ data.post.remark }}@{{ data.post.user_nickname }}</span>
-		</span>
-		<div class="u-updated" v-if="data.updated">
-			<LegacyIcon class="el-icon-refresh" />
-			<span> {{ $t("ui.knowledge.lastUpdated") }}{{ date_format(data.updated) }}</span>
-		</div>
+        <div class="u-meta" v-if="data.updated || data.post">
+            <div class="u-updated" v-if="data.updated">
+                <LegacyIcon class="el-icon-refresh" />
+                <span>{{ $t("ui.knowledge.lastUpdated") }}{{ date_format(data.updated) }}</span>
+            </div>
+            <span class="u-remark" v-if="data.post">
+                <LegacyIcon class="el-icon-edit" />
+                <span class="u-remark-content">{{ $t("ui.knowledge.lastRevision") }}{{ data.post.remark }}@{{ data.post.user_nickname }}</span>
+            </span>
+        </div>
 	</router-link>
 </template>
 <script>

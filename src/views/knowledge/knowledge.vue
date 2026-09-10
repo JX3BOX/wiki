@@ -9,7 +9,7 @@
     >
         <template #left>
             <CommonNav>
-                <KnowledgeNav> </KnowledgeNav>
+                <KnowledgeNav @search="onSearchKey" />
             </CommonNav>
         </template>
 

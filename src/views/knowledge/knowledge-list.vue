@@ -21,6 +21,7 @@
 <script>
 // import Search from "@/components/common/search.vue";
 import KnowledgeResultList from "@/components/knowledge/list.vue";
+import { reading } from "@/store/knowledge-reading";
 import { getKnowledgeList } from "@/service/knowledge.js";
 import { createLatestRequestGuard } from "@/utils/latest-request";
 
@@ -42,14 +43,16 @@ export default {
         };
     },
     computed: {
+        onlyUnread() { return reading.onlyUnread; },
         type() {
-            return this.$route.params.knowledge_type;
+            return this.$route.params.type_slug;
         },
         params() {
             let params = {
                 per: this.per,
                 page: this.page,
                 type: this.type,
+                unread: reading.onlyUnread ? 1 : 0,
             };
             if (this.search) {
                 params._search = this.search;
@@ -98,6 +101,13 @@ export default {
         },
     },
     watch: {
+        onlyUnread: {
+            flush: "sync",
+            handler() {
+                this.page = 1;
+                this.list = null;
+            },
+        },
         params: {
             immediate: true,
             deep: true,
@@ -107,6 +117,7 @@ export default {
         },
         type() {
             this.page = 1;
+            this.list = null;
         },
     },
     beforeUnmount() {

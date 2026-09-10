@@ -1,12 +1,26 @@
 <template>
     <div class="v-knowledge-single" v-loading="loading">
         <AsyncState :loading="loading" :error="loadError" @retry="syncWikiData" />
-        <div v-if="!isRobot" class="u-detail-title">
-            <span>{{ title }}</span>
-            <el-tag v-if="categoryLabel" class="u-detail-category" size="small" effect="light">{{
-                categoryLabel
-            }}</el-tag>
-        </div>
+        <header v-if="!isRobot" class="m-knowledge-detail-header">
+            <div class="u-detail-title">
+                <h1>{{ title }}</h1>
+                <el-tag v-if="categoryLabel" class="u-detail-category" size="small" effect="light">{{
+                    categoryLabel
+                }}</el-tag>
+                <el-button
+                    v-if="data && data.post"
+                    class="u-reading-btn"
+                    :type="isRead ? 'success' : 'default'"
+                    plain
+                    :loading="savingRead || reading.loading"
+                    @click="toggleRead"
+                >
+                    <template #icon><Check /></template>
+                    {{ $t(isRead ? 'ui.knowledge.markUnread' : 'ui.knowledge.markRead') }}
+                </el-button>
+            </div>
+            <WikiDetailNotice notice-key="wiki_knowledge_ac" :show-robot-tip="!!(data && data.post)" :type-name="$t('ui.types.knowledge')" :reply="title" />
+        </header>
         <div v-else class="m-robot-header">
             <div class="m-robot-header__left">
                 <div class="u-title">{{ title }}</div>
@@ -14,10 +28,8 @@
             </div>
             <img class="u-robot-header__right" src="@/assets/img/knowledge/knowledge_robot.svg" />
         </div>
-        <notice v-if="!isRobot"></notice>
         <div class="m-wiki m-wiki-post-panel" :class="{ 'is-robot': isRobot }" v-if="data && data.post">
-            <WikiRobotTip v-if="!isRobot" :type-name="$t('ui.types.knowledge')" :reply="title"></WikiRobotTip>
-            <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel">
+            <WikiPanel class="m-knowledge-panel" :wiki-post="data" ref="wikiPanel" variant="surface">
                 <template #head-title>
                     <img class="u-icon" svg-inline src="../../assets/img/knowledge/knowledge.svg" />
                     <span class="u-txt">{{ $t("ui.common.wiki.guideTitle", { type: $t("ui.types.knowledge") }) }}</span>
@@ -39,11 +51,11 @@
             </WikiPanel>
 
             <template v-if="!isRobot">
-                <WikiRevisions v-if="id" type="knowledge" :source-id="id" style="margin-bottom: 35px" />
+                <WikiRevisions v-if="id" type="knowledge" :source-id="id" variant="surface" />
 
                 <!-- 打赏 -->
                 <div class="m-wiki-thx-panel">
-                    <WikiPanel>
+                    <WikiPanel variant="surface">
                         <template #head-title>
                             <LegacyIcon class="u-icon el-icon-coin" />
                             <span class="u-txt">{{ $t("ui.common.wiki.reward") }}</span>
@@ -67,7 +79,7 @@
                     </WikiPanel>
                 </div>
 
-                <WikiPanel v-if="id" class="m-knowledge-panel">
+                <WikiPanel v-if="id" class="m-knowledge-panel" variant="surface">
                     <template #head-title>
                         <LegacyIcon class="u-icon el-icon-chat-line-round" />
                         <span class="u-txt">{{ $t("ui.common.wiki.discussion") }}</span>
@@ -92,6 +104,8 @@
 </template>
 
 <script>
+import { Check } from "@element-plus/icons-vue";
+import { reading, loadReading, markReading } from "@/store/knowledge-reading";
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
@@ -100,12 +114,11 @@ import WikiRevisions from "@/components/common/wiki-revisions.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 
-import notice from "@/components/cj/notice.vue";
 import bus from "@/store/bus";
 import SingleComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
 import Thx from "@jx3box/jx3box-ui/src/single/Thx.vue";
 import wikiRobotBottom from "@/components/common/wiki-robot-bottom.vue";
-import WikiRobotTip from "@/components/common/wiki-robot-tip.vue";
+import WikiDetailNotice from "@/components/common/wiki-detail-notice.vue";
 import { getKnowledgeMenus } from "@/service/knowledge.js";
 import AsyncState from "@/components/common/async-state.vue";
 import { createLatestRequestGuard } from "@/utils/latest-request";
@@ -125,6 +138,8 @@ export default {
     },
     data: function () {
         return {
+            reading,
+            savingRead: false,
             loading: false,
             data: "",
             knowledgeTypeMap: {},
@@ -135,17 +150,18 @@ export default {
         };
     },
     components: {
+        Check,
         Article,
         WikiPanel,
         WikiRevisions,
-        notice,
         wikiRobotBottom,
-        WikiRobotTip,
+        WikiDetailNotice,
         SingleComment,
         Thx,
         AsyncState,
     },
     computed: {
+        isRead() { return reading.readIds.includes(Number(this.id)); },
         id: function () {
             return this.$route.params.source_id || this.sourceId;
         },
@@ -196,6 +212,17 @@ export default {
         },
     },
     methods: {
+        async toggleRead() {
+            if (!User.isLogin()) { User.toLogin(); return; }
+            if (this.savingRead) return;
+            this.savingRead = true;
+            try {
+                if (!reading.loaded || reading.error) await loadReading();
+                await markReading(this.id, !this.isRead);
+            } catch {
+                this.$message.error(this.$t('ui.knowledge.readSaveFailed'));
+            } finally { this.savingRead = false; }
+        },
         onSearchKey(val) {
             this.$router.push({ path: "/", query: { search: val } });
         },
@@ -253,7 +280,7 @@ export default {
         },
         goBack() {
             if (this.data?.source?.type) {
-                this.$router.push({ name: "normal", params: { knowledge_type: this.data.source.type } });
+                this.$router.push({ name: "normal", params: { type_slug: this.data.source.type } });
             } else {
                 this.$router.push({ name: "index" });
             }

@@ -1,75 +1,54 @@
 <template>
-    <div class="m-knowledge-panel">
-        <div class="m-title">
-            <span class="u-title-left"
-                ><LegacyIcon class="el-icon-location-information" /><span>
-                    {{ $t("ui.common.home.quickEntry") }}</span
-                ></span
-            >
-            <!-- <a class="u-title-right" target="_blank" :href="feedback">反馈建议 &raquo;</a> -->
-        </div>
-        <div class="m-entry m-panel">
-            <a class="u-entry" v-for="(item, index) in list" :key="index" :href="item.link" target="_blank">
-                <LegacyIcon :name="item.icon" />
-                <span>{{ item.name }}</span>
-            </a>
-        </div>
-    </div>
+    <WikiPanel :border="false">
+        <template #head-title>
+            <LegacyIcon class="el-icon-location-information" />
+            <span>{{ $t("ui.common.home.quickEntry") }}</span>
+        </template>
+        <template #body>
+            <ul class="m-qlinks">
+                <li class="u-qlink">
+                    <a class="u-bigbang" href="/event/bigbang" target="_blank" rel="noopener noreferrer">
+                        <LegacyIcon class="el-icon-trophy" />
+                        <span>{{ $t("ui.knowledge.bigbang") }}</span>
+                    </a>
+                </li>
+                <li class="u-qlink">
+                    <a class="u-team" href="/team" target="_blank" rel="noopener noreferrer">
+                        <LegacyIcon class="el-icon-user" />
+                        <span>{{ $t("ui.knowledge.quickTeam") }}</span>
+                    </a>
+                </li>
+                <li class="u-qlink">
+                    <a href="/exam" target="_blank" rel="noopener noreferrer">
+                        <LegacyIcon class="el-icon-edit-outline" />
+                        <span>{{ $t("ui.knowledge.quickExam") }}</span>
+                    </a>
+                </li>
+                <li class="u-qlink">
+                    <a href="/community?category=story" target="_blank" rel="noopener noreferrer">
+                        <LegacyIcon class="el-icon-collection" />
+                        <span>{{ $t("ui.knowledge.quickStory") }}</span>
+                    </a>
+                </li>
+            </ul>
+        </template>
+    </WikiPanel>
 </template>
+
 <script>
-import { feedback } from "@/utils/config";
+import WikiPanel from "@/components/common/wiki-panel.vue";
+
 export default {
-    name: "Entry",
-    data: function () {
-        return {
-            feedback,
-        };
-    },
-    computed: {
-        list() {
-            return [
-                {
-                    link: "/cj",
-                    name: this.$t("ui.apps.achievement"),
-                    icon: "el-icon-medal",
-                },
-                {
-                    link: "/item",
-                    name: this.$t("ui.apps.item"),
-                    icon: "el-icon-apple",
-                },
-                {
-                    link: "#/pet",
-                    name: this.$t("ui.achievement.quick.pets"),
-                    icon: "el-icon-pear",
-                },
-                {
-                    link: "/quest",
-                    name: this.$t("ui.apps.quest"),
-                    icon: "el-icon-discover",
-                },
-            ];
-        },
-    },
+    name: "KnowledgeEntry",
+    components: { WikiPanel },
 };
 </script>
 
 <style scoped lang="less">
-.m-entry {
-	.flex;
-	.u-entry {
-		.mr(20px);
-		.db;
-		.r(4px);
-		.color(#fff);
-		padding: 8px 20px;
-		background-color: @v4primary;
-		i {
-			.mr(5px);
-		}
-		&:hover {
-			filter: brightness(110%);
-		}
-	}
+.m-qlinks .u-qlink .u-bigbang {
+    background-color: #fe7979;
+}
+.m-qlinks .u-qlink .u-team {
+    background-color: #f7b044;
 }
 </style>

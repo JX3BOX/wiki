@@ -1,3 +1,61 @@
+.v-knowledge-single .m-wiki-post-panel:not(.is-robot) {
+    > .c-wiki-panel,
+    > .m-wiki-thx-panel {
+        margin-bottom: 0;
+    }
+
+    > .c-wiki-panel + .c-wiki-panel,
+    > .m-wiki-thx-panel,
+    > .m-wiki-thx-panel + .c-wiki-panel {
+        margin-top: 24px;
+    }
+}
+
+.v-knowledge-single .m-knowledge-detail-header {
+    margin: 8px 0 18px;
+
+    .u-detail-title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        line-height: 1.5;
+
+        .u-reading-btn {
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            min-width: 0;
+            margin: 0;
+            color: #343946;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .u-detail-category {
+            margin: 0;
+            padding: 4px 10px;
+            height: auto;
+            border-color: #e8e3fa;
+            border-radius: 6px;
+            background-color: #f5f3ff;
+            color: #7863c5;
+            line-height: 18px;
+        }
+    }
+
+    @media screen and (max-width: @phone) {
+        .u-detail-title h1 {
+            font-size: 20px;
+        }
+    }
+}
+
 .m-wiki,
 .m-wiki-null {
     .mt(10px);

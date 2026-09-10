@@ -1,3 +1,30 @@
+.v-knowledge-index.m-wiki-home > .m-knowledge-home-section {
+    margin: 0 0 16px;
+
+    > .m-title {
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        padding: 10px 2px;
+        border-bottom: 0;
+
+        .u-text,
+        .u-title-left {
+            gap: 8px;
+        }
+    }
+
+    > .m-panel {
+        margin: 0;
+    }
+}
+
+.v-knowledge-index.m-wiki-home > .m-knowledge-panel > .m-recent {
+    margin-top: calc(var(--wiki-home-body-space) - 10px);
+}
+
+
+
 .m-knowledge-panel {
     .fz(14px, 1.6);
 
@@ -23,6 +50,8 @@
     }
     .m-recent {
         .m-post {
+            padding-left: 0;
+
             .u-remark {
                 color: grey;
             }
@@ -37,3 +66,9 @@
         }
     }
 }
+
+// .p-knowledge{
+//     .c-wiki-nav{
+//         padding-top:0;
+//     }
+// }

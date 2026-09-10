@@ -26,7 +26,7 @@ const routes = [
             },
             {
                 name: "normal",
-                path: "/type/:knowledge_type([a-z_]+)",
+                path: "/:type_slug([a-z_]+)",
                 component: KnowledgeList,
                 meta: {
                     i18n: {
@@ -35,6 +35,10 @@ const routes = [
                         description: "pages.knowledge.normal.description",
                     },
                 },
+            },
+            {
+                path: "/type/:knowledge_type([a-z_]+)",
+                redirect: (to) => ({ name: "normal", params: { type_slug: to.params.knowledge_type }, query: to.query }),
             },
             {
                 name: "view",

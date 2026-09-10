@@ -1,10 +1,10 @@
 <template>
-    <div class="m-knowledge-panel">
+    <div class="m-knowledge-panel m-knowledge-home-section">
         <div class="m-title">
             <span class="u-text"
                 ><LegacyIcon class="el-icon-orange" /><span> {{ $t("ui.knowledge.guide") }}</span></span
             >
-            <router-link class="u-wiki-more" to="/type/game">{{ $t("ui.common.actions.more") }}</router-link>
+            <router-link class="u-wiki-more" :to="{ name: 'normal', params: { type_slug: 'game' } }">{{ $t("ui.common.actions.more") }}</router-link>
         </div>
         <div class="m-guide m-panel">
             <div v-for="(item, index) in data" :key="index" class="u-guide">
@@ -52,70 +52,79 @@ export default {
 
 <style scoped lang="less">
 .m-guide {
-    .flex;
-    background-color: #fff;
-    border: 1px solid #e1e4e8;
-    .r(5px);
-    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+
     .u-guide {
-        width: 34%;
-        border-right: 1px solid #eee;
-        &:last-child {
-            border-right: 0;
+        min-width: 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .u-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: #f7f8fa;
+        border-bottom: 1px solid #e9ebef;
+        color: #454b57;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+
+        &::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #a6acb5;
         }
-        .u-title {
-            .x;
-            .lh(40px);
-            .bold;
-            background-color: #fafbfc;
-            border-bottom: 1px solid #eee;
+    }
+
+    .u-list {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 2px 4px;
+        padding: 8px;
+    }
+
+    .u-label {
+        min-width: 0;
+        padding: 4px 8px;
+        border-radius: 5px;
+        color: #596170;
+        font-size: 13px;
+        line-height: 20px;
+        overflow-wrap: anywhere;
+        transition: color 0.16s, background-color 0.16s;
+
+        &:hover {
+            color: @v4primary;
+            background: #f5f3ff;
+            text-decoration: none;
         }
-        .u-list {
-            .flex;
-            .fz(13px);
-            flex-wrap: wrap;
-            padding: 20px;
-            .u-label {
-                flex-shrink: 0;
-                min-width: 30%;
-                .mb(5px);
-                .mr(10px);
-                .color(@v4primary,@pink);
-                span {
-                    color: #888;
-                    margin-left: 5px;
-                    font-size: 12px;
-                }
-            }
+
+        &:focus-visible {
+            outline: 2px solid #a6acb5;
+            outline-offset: -2px;
         }
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .m-guide .u-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media screen and (max-width: @phone) {
     .m-guide {
-        flex-direction: column;
-
-        .u-guide {
-            width: 100%;
-            border-right: 0;
-            border-bottom: 1px solid #eee;
-
-            &:last-child {
-                border-bottom: 0;
-            }
-
-            .u-list {
-                gap: 6px 10px;
-                padding: 12px;
-
-                .u-label {
-                    min-width: 0;
-                    margin: 0;
-                    flex: 1 1 calc(50% - 5px);
-                    overflow-wrap: anywhere;
-                }
-            }
-        }
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
     }
 }
 </style>

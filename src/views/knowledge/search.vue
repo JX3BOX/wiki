@@ -1,13 +1,14 @@
 <template>
-    <div class="m-search-view" v-loading="loading">
-        <div class="m-list-empty" v-if="loadError">
+    <div class="m-search-view">
+        <WikiSearchLoading v-if="loading" />
+        <div class="m-list-empty" v-else-if="loadError">
             <span>{{ $t("ui.common.status.loadFailed") }}</span>
             <el-button link type="primary" @click="getListData">{{ $t("ui.common.actions.retry") }}</el-button>
         </div>
         <span class="m-list-empty" v-else-if="!loading && isEmpty">{{ $t("ui.common.status.noRecords") }}</span>
         <!-- 搜索结果 & list列表 -->
         <knowledgeList
-            v-if="list && !loadError && list.length"
+            v-if="!loading && list && !loadError && list.length"
             :list="list"
             :total="total"
             :pagination="pagination"
@@ -17,13 +18,16 @@
 </template>
 
 <script>
+import WikiSearchLoading from "@/components/common/wiki-search-loading.vue";
 import knowledgeList from "@/components/knowledge/list.vue";
+import { reading } from "@/store/knowledge-reading";
 import { getKnowledgeList } from "@/service/knowledge.js";
 import { createLatestRequestGuard } from "@/utils/latest-request";
 
 export default {
     name: "SearchPage",
     components: {
+        WikiSearchLoading,
         knowledgeList,
     },
     props: [],
@@ -41,6 +45,7 @@ export default {
         };
     },
     computed: {
+        onlyUnread() { return reading.onlyUnread; },
         search() {
             return this.$route.params.keyword;
         },
@@ -55,6 +60,7 @@ export default {
                 per: this.per,
                 page: this.page,
                 type: this.type,
+                unread: reading.onlyUnread ? 1 : 0,
             };
             if (this.search) {
                 params._search = this.search;
@@ -103,6 +109,13 @@ export default {
         },
     },
     watch: {
+        onlyUnread: {
+            flush: "sync",
+            handler() {
+                this.page = 1;
+                this.list = null;
+            },
+        },
         params: {
             immediate: true,
             deep: true,
