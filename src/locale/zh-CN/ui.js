@@ -196,7 +196,7 @@ export default {
         batchComplete: "批量设为完成（{count}）",
         batchIncomplete: "批量取消完成（{count}）",
         quick: {
-            sync: "同步成就",
+            groups: "加入成就群",
             adventureScroll: "奇遇珍卷",
             partners: "侠客大全",
             handbook: "资历宝典",

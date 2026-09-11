@@ -196,7 +196,7 @@ export default {
         batchComplete: "Đánh dấu hoàn thành ({count})",
         batchIncomplete: "Đánh dấu chưa hoàn thành ({count})",
         quick: {
-            sync: "Đồng bộ thành tựu",
+            groups: "Tham gia nhóm thành tựu",
             adventureScroll: "Trân quyển kỳ ngộ",
             partners: "Danh sách hiệp khách",
             handbook: "Cẩm nang thành tựu",

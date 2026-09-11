@@ -290,7 +290,7 @@ const zhTWOverrides = {
         },
     },
     achievement: {
-        quick: { sync: "同步成就", adventureScroll: "奇遇珍卷", partners: "俠客大全" },
+        quick: { groups: "加入成就群", adventureScroll: "奇遇珍卷", partners: "俠客大全" },
         groupSearch: "搜尋大區、區服或群號",
         groupRegions: "大區篩選",
         groupAll: "全部大區",

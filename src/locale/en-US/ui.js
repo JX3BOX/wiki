@@ -196,7 +196,7 @@ export default {
         batchComplete: "Mark completed ({count})",
         batchIncomplete: "Mark incomplete ({count})",
         quick: {
-            sync: "Sync Achievements",
+            groups: "Join Achievement Groups",
             adventureScroll: "Adventure Scroll",
             partners: "Companion Encyclopedia",
             handbook: "Achievement handbook",
