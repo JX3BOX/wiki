@@ -313,6 +313,7 @@ const zhTWOverrides = {
         groupsError: "群組載入失敗，請重試",
         groupsRetry: "重新載入",
         groups: "各伺服器成就群組",
+        officialGroup: "魔盒成就群",
         sameBoss: "同一 BOSS 的其他成就",
         bossReference: "BOSS 屬性參考",
         boss: "首領：",

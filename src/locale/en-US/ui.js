@@ -215,6 +215,7 @@ export default {
         groupsError: "Unable to load groups. Please retry.",
         groupsRetry: "Retry",
         groups: "Achievement groups by server",
+        officialGroup: "JX3BOX Achievement Group",
         applyDisplay: "Request listing »",
         relations: "Related achievements",
         sameBoss: "Other achievements for this boss",

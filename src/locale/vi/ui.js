@@ -215,6 +215,7 @@ export default {
         groupsError: "Không thể tải nhóm. Vui lòng thử lại.",
         groupsRetry: "Thử lại",
         groups: "Nhóm thành tựu theo máy chủ",
+        officialGroup: "Nhóm thành tựu JX3BOX",
         applyDisplay: "Yêu cầu hiển thị »",
         relations: "Thành tựu liên quan",
         sameBoss: "Thành tựu khác của cùng boss",
