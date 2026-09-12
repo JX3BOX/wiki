@@ -65,11 +65,41 @@ module.exports = {
         proxy: buildEnvProxy(),
         allowedHosts: "all",
         port: process.env.DEV_PORT || 12028,
-        // Vue CLI 默认开启静态目录索引；异常编码路径会被 serve-index 打成错误堆栈。
+        // 多页面项目没有编译后的 /index.html，不能回退到 public 中的源模板。
+        historyApiFallback: {
+            index: "/cj/index.html",
+            htmlAcceptHeaders: ["text/html", "application/xhtml+xml"],
+            rewrites: Object.keys(pages).map((name) => ({
+                from: new RegExp(`^/${name}(?:/|$)`),
+                to: `/${pages[name].filename}`,
+            })),
+        },
+        // 保留 public/index.html 作为构建模板，但不作为静态目录首页。
         static: {
             serveIndex: false,
+            staticOptions: { index: false },
         },
         setupMiddlewares: (middlewares, devServer) => {
+            // webpack 已提前注册部分路由；捕获它们在匹配异常编码路径时抛出的错误。
+            devServer.app.use((error, req, res, next) => {
+                if (error instanceof URIError && error.status === 400) {
+                    return res.status(400).end("Bad Request");
+                }
+                next(error);
+            });
+            // 同时保护后续注册的路由和静态资源中间件。
+            devServer.app.use((req, res, next) => {
+                let pathname;
+                try {
+                    pathname = decodeURIComponent(req.path);
+                } catch (_) {
+                    return res.status(400).end("Bad Request");
+                }
+                if (pathname === "/index.html") {
+                    return res.redirect(302, "/cj");
+                }
+                next();
+            });
             devServer.app.get("/", (_, res) => {
                 res.redirect(302, "/cj");
             });
