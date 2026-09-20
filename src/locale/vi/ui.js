@@ -183,6 +183,7 @@ export default {
         searchPlaceholder: "Tìm theo tên, mô tả, danh hiệu hoặc vật phẩm thưởng của thành tựu",
         mapPlaceholder: "Bản đồ",
         syncTip: "Hãy đồng bộ thành tựu từ game trước",
+        categoryCountHint: "Số lượng theo loại được tính như trong trò chơi: các giai đoạn của cùng một chuỗi thành tựu được gộp thành một mục thống kê.",
         onlyUnfinished: "Chỉ hiện chưa hoàn thành",
         menuTypes: {
             1: "Thành tựu thường",

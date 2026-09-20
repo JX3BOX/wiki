@@ -24,9 +24,16 @@
                 </template>
             </role-select>
 
+            <div class="m-cj-category-select">
             <el-select v-model="selectedGeneral">
                 <el-option v-for="type in menu_types" :key="type.value" :label="type.label" :value="type.value"></el-option>
             </el-select>
+                <el-tooltip :content="$t('ui.achievement.categoryCountHint')" placement="top">
+                    <button type="button" class="u-cj-category-hint" :aria-label="$t('ui.achievement.categoryCountHint')">
+                        <el-icon><InfoFilled /></el-icon>
+                    </button>
+                </el-tooltip>
+            </div>
             <div v-if="currentRole" class="m-filters">
                 <el-checkbox v-model="uncompleted" :label="$t('ui.achievement.onlyUnfinished')" border size="small"></el-checkbox>
                 <div class="u-total" v-if="[1, 2].includes(treeGeneral)">
@@ -76,13 +83,13 @@
 
 <script>
 import { getMenus, getRoleGameAchievements, getVirtualRoleAchievements } from "@/service/achievement";
-import { CaretRight, Link } from "@element-plus/icons-vue";
+import { CaretRight, Link, InfoFilled } from "@element-plus/icons-vue";
 import RoleSelect from "@/components/common/role-select.vue";
 import bus from "@/store/bus";
 import User from "@jx3box/jx3box-common/js/user";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
 import omit from "lodash/omit";
-import { collectMenuAchievementIds } from "@/utils/achievement-statistics";
+import { collectMenuAchievementSeries } from "@/utils/achievement-statistics";
 
 const MENU_TYPE_KEYS = Object.freeze({
     1: "ui.achievement.menuTypes.1",
@@ -97,6 +104,7 @@ export default {
         RoleSelect,
         CaretRight,
         Link,
+        InfoFilled,
     },
     computed: {
         menu_types() {
@@ -123,14 +131,7 @@ export default {
             return this.$store.state.armorTotal;
         },
         achievementTotal() {
-            let total = this.total;
-            if (this.treeGeneral === 1) {
-                total = this.generalTotal;
-            }
-            if (this.treeGeneral === 2) {
-                total = this.armorTotal;
-            }
-            return total;
+            return this.getMenuAchievementCount(this.menus);
         },
         achievements() {
             return this.$store.state.achievements;
@@ -163,12 +164,7 @@ export default {
             return !this.currentRole?.jx3id;
         },
         completedNum({ menus, achievementsVirtual, achievements }) {
-            const completedNumList = menus.map((data) => {
-                return this.getMenuCompleted(data, achievementsVirtual, achievements);
-            });
-            return completedNumList.reduce((acc, cur) => {
-                return acc + cur;
-            }, 0);
+            return this.getMenuCompleted(menus, achievementsVirtual, achievements);
         },
         total({ menus }) {
             const numList = menus.map((data) => {
@@ -267,21 +263,18 @@ export default {
             this.old_node = null;
             if (window.innerWidth < 1024) bus.emit("toggleLeftSide", false);
         },
-        getMenuAchievementIds(data) {
-            return collectMenuAchievementIds(data).filter((id) => {
-                const item = this.achievementMetadata[id];
-                return item?.visible && item.general === this.treeGeneral;
-            });
+        getMenuAchievementSeries(data) {
+            return collectMenuAchievementSeries(data, this.achievementMetadata, this.treeGeneral);
         },
         getMenuAchievementCount(data) {
-            return this.getMenuAchievementIds(data).length;
+            return this.getMenuAchievementSeries(data).length;
         },
         getMenuCompleted(data, achievementsVirtual, achievements) {
             const list = this.isVirtual
                 ? achievementsVirtual || this.achievementsVirtual
                 : achievements || this.achievements;
             const completedIds = new Set((list || []).map(String));
-            return this.getMenuAchievementIds(data).filter((id) => completedIds.has(id)).length;
+            return this.getMenuAchievementSeries(data).filter((ids) => ids.every((id) => completedIds.has(id))).length;
         },
         filterNode(value, data) {
             if (!value) return true;
@@ -436,4 +429,19 @@ export default {
 
 <style lang="less">
 @import "~@/assets/css/cj/left-side.less";
+.m-cj-category-select {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    .el-select { flex: 1; min-width: 0; }
+}
+.u-cj-category-hint {
+    display: inline-flex;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #8b91a1;
+    cursor: help;
+    font-size: 16px;
+}
 </style>

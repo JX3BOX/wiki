@@ -183,6 +183,7 @@ export default {
         searchPlaceholder: "输入成就名称/成就描述/称号/奖励物品「回车」进行搜索",
         mapPlaceholder: "地图",
         syncTip: "请先在游戏中同步成就",
+        categoryCountHint: "分类数量采用游戏内统计口径，同一系列的多个阶段合并为一个统计项。",
         onlyUnfinished: "只看未完成",
         menuTypes: {
             1: "常规成就",

@@ -63,3 +63,19 @@ export function summarizeVisibleAchievements(metadata) {
 
     return count;
 }
+
+// 一个菜单数组项代表一个系列；过滤当前档位后再按完整 ID 集合去重。
+export function collectMenuAchievementSeries(menu, metadata, general) {
+    const groups = new Map();
+    const visit = (node) => {
+        (node?.achievements || []).forEach((entry) => {
+            const ids = new Set();
+            appendAchievementIds(entry, ids);
+            const validIds = [...ids].filter((id) => metadata?.[id]?.visible === true && metadata[id].general === general);
+            if (validIds.length) groups.set([...validIds].sort().join(","), validIds);
+        });
+        (node?.children || []).forEach(visit);
+    };
+    (Array.isArray(menu) ? menu : [menu]).forEach(visit);
+    return [...groups.values()];
+}

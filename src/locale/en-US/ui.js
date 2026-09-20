@@ -183,6 +183,7 @@ export default {
         searchPlaceholder: "Search achievement names, descriptions, titles, or reward items",
         mapPlaceholder: "Map",
         syncTip: "Sync achievements from the game first",
+        categoryCountHint: "Category counts follow the in-game method: all stages of an achievement series are combined into one counted item.",
         onlyUnfinished: "Incomplete only",
         menuTypes: {
             1: "Standard achievements",
