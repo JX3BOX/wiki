@@ -28,6 +28,13 @@
                         </a>
                     </li>
                     <li class="u-qlink">
+                        <a class="u-qlink--yellow u-qlink--sparkle" href="/pvx/achievements/hidden" target="_blank" rel="noopener noreferrer">
+                            <el-icon><Hide /></el-icon>
+                            <span>{{ $t("ui.achievement.quick.hidden") }}</span>
+                            <span class="u-sparkles" aria-hidden="true"><i></i><i></i><i></i></span>
+                        </a>
+                    </li>
+                    <li class="u-qlink">
                         <a class="u-qlink--yellow u-qlink--sparkle" href="/pvx/adventure" target="_blank" rel="noopener noreferrer">
                             <el-icon><Reading /></el-icon>
                             <span>{{ $t("ui.achievement.quick.adventureScroll") }}</span>
@@ -103,7 +110,7 @@
 </template>
 
 <script>
-import { ChatLineRound, Reading } from "@element-plus/icons-vue";
+import { ChatLineRound, Hide, Reading } from "@element-plus/icons-vue";
 import { getStatRank } from "@jx3box/jx3box-common/js/stat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import chunk from "lodash/chunk";
@@ -113,7 +120,7 @@ import PostList from "@/components/common/post-list.vue";
 
 export default {
     name: "Home",
-    components: { WikiPanel, PostList, WikiItem, ChatLineRound, Reading },
+    components: { WikiPanel, PostList, WikiItem, ChatLineRound, Hide, Reading },
     data() {
         return {
             hot_achievements: [],
