@@ -74,7 +74,8 @@ export default {
     },
     methods: {
         remove(fId) {
-            delMyFav(fId).then((res) => {
+            if (!fId) return;
+            return delMyFav(fId).then(() => {
                 this.data = this.data.filter((item) => item.fId !== fId);
                 this.$store.commit("SET_STATE", {
                     key: "myFavorites",
@@ -113,22 +114,19 @@ export default {
         },
         loadMyItems: function () {
             // 我收藏的物品
-            getMyFav({ post_type: "item", pageSize: this.pageSize, pageIndex: this.pageIndex }).then((res) => {
-                let list = res.data.data.list;
+            return getMyFav({ post_type: "item", pageSize: this.pageSize, pageIndex: this.pageIndex }).then((res) => {
+                const list = res.data.data.list || [];
                 this.total = res.data.data.page.total;
-                let ids = [];
-                if (list) {
-                    list.forEach((item) => {
-                        ids.push(item.post_id);
-                    });
+                if (!list.length) {
+                    this.data = [];
+                    return;
                 }
+                const ids = list.map((item) => item.post_id);
 
-                this.loadItems(ids, this.pageSize).then((res) => {
-                    this.data = res.data.data.data.map((item) => {
-                        return {
-                            ...item,
-                            fId: list ? list.find((k) => k.post_id === item.id)?.id : null,
-                        };
+                return this.loadItems(ids, this.pageSize).then((res) => {
+                    this.data = res.data.data.data.flatMap((item) => {
+                        const favorite = list.find((entry) => String(entry.post_id) === String(item.id));
+                        return favorite ? [{ ...item, fId: favorite.id }] : [];
                     });
                 });
             });
