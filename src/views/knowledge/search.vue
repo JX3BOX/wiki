@@ -1,5 +1,5 @@
 <template>
-    <div class="m-search-view">
+    <div class="m-search-view m-search-view--knowledge">
         <WikiSearchLoading v-if="loading" />
         <div class="m-list-empty" v-else-if="loadError">
             <span>{{ $t("ui.common.status.loadFailed") }}</span>
@@ -133,6 +133,10 @@ export default {
 };
 </script>
 <style lang="less">
+.m-search-view--knowledge .m-archive-pages {
+    padding-top: 20px;
+}
+
 .u-list-empty {
     .db;
     .u-msg-yellow;
