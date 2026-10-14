@@ -4,7 +4,7 @@
         <WikiSearchLoading v-if="loading" />
         <div class="m-list-empty" v-else-if="loadError">
             <span>{{ $t("ui.common.status.loadFailed") }}</span>
-            <el-button link type="primary" @click="search()">{{ $t("ui.common.actions.retry") }}</el-button>
+            <el-button link type="primary" @click="search(currentPage)">{{ $t("ui.common.actions.retry") }}</el-button>
         </div>
         <div class="m-list-empty" v-else-if="!loading && !hasResults">{{ $t("ui.common.status.noRecords") }}</div>
         <template v-else-if="resultIsObject">
@@ -34,6 +34,7 @@
             background
             layout="prev, pager, next, jumper"
             @current-change="search"
+            :current-page="currentPage"
             :total="total"
             :page-size="pageSize"
             v-if="!loading && !loadError"
@@ -58,6 +59,7 @@ export default {
     data: () => ({
         total: 1,
         pageSize: 10,
+        currentPage: 1,
         result: {},
         loading: false,
         loadError: false,
@@ -70,6 +72,7 @@ export default {
     },
     methods: {
         search(page = 1) {
+            this.currentPage = page;
             const token = this.requestGuard.begin();
             this.loading = true;
             this.loadError = false;
