@@ -8,6 +8,12 @@
             <template #body>
                 <ul class="m-qlinks">
                     <li class="u-qlink">
+                        <router-link :to="{ name: 'waiting' }">
+                            <LegacyIcon class="el-icon-edit-outline" />
+                            <span>{{ $t("ui.achievement.waiting") }}</span>
+                        </router-link>
+                    </li>
+                    <li class="u-qlink">
                         <a class="u-qlink--red" href="/tool/9126" target="_blank" rel="noopener noreferrer">
                             <LegacyIcon class="el-icon-trophy" />
                             <span>{{ $t("ui.common.home.inGameWiki") }}</span>
