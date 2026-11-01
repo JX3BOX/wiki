@@ -2,12 +2,10 @@
     <div class="m-knowledge-nav">
         <div class="m-knowledge-nav-header">
             <el-input
-                :model-value="keyword"
+                v-model="keyword"
                 class="u-keyword"
                 :placeholder="$t('ui.quest.navKeyword')"
                 clearable
-                @update:modelValue="updateKeyword"
-                @keydown.enter="search"
             />
             <div class="m-filters">
                 <el-checkbox  :model-value="reading.onlyUnread" @change="toggleUnread" :label="$t('ui.knowledge.onlyUnread')" border size="small" />
@@ -31,18 +29,39 @@
                     class="m-knowledge-category"
                     active-class="is-active"
                     :to="{ name: 'normal', params: { type_slug: item.id } }"
+                    :aria-expanded="item.expanded"
+                    @click="toggleCategory(item)"
                 >
-                    <el-icon class="u-arrow"><CaretRight /></el-icon>
+                    <el-icon class="u-arrow" :class="{ 'is-expanded': item.expanded }"><CaretRight /></el-icon>
                     <span class="u-name">{{ item.name }}</span>
                     <span class="u-count">{{ reading.byType[item.id]?.read || 0 }} / {{ item.count }}</span>
                 </router-link>
+                <ul v-if="item.expanded" class="m-knowledge-children" v-loading="item.loading">
+                    <li v-if="item.error" class="u-child-status">
+                        <el-button link type="primary" @click="loadCategory(item)">{{ $t("ui.common.actions.retry") }}</el-button>
+                    </li>
+                    <li v-else-if="item.loaded && !filteredEntries(item).length" class="u-child-status">{{ $t("ui.common.status.noRecords") }}</li>
+                    <li v-for="entry in filteredEntries(item)" :key="entry.id">
+                        <router-link
+                            class="u-entry"
+                            active-class="is-active"
+                            :to="{ name: 'view', params: { source_id: entry.id } }"
+                            :title="entry.name"
+                        >
+                            <template v-for="(part, index) in highlightParts(entry.name)" :key="index">
+                                <mark v-if="part.match" class="u-search-match">{{ part.text }}</mark>
+                                <template v-else>{{ part.text }}</template>
+                            </template>
+                        </router-link>
+                    </li>
+                </ul>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import { getKnowledgeMenus, getKnowledgeCount } from "@/service/knowledge.js";
+import { getKnowledgeMenus, getKnowledgeCount, getKnowledgeList } from "@/service/knowledge.js";
 import { reading, loadReading } from "@/store/knowledge-reading";
 import User from "@jx3box/jx3box-common/js/user";
 import { CaretRight } from "@element-plus/icons-vue";
@@ -50,7 +69,6 @@ import { CaretRight } from "@element-plus/icons-vue";
 export default {
     name: "KnowledgeNav",
     components: { CaretRight },
-    emits: ["search"],
     data() {
         return {
             maps: [],
@@ -63,28 +81,55 @@ export default {
             return this.maps.reduce((total, item) => total + (Number(item.count) || 0), 0);
         },
     },
-    watch: {
-        "$route.fullPath": {
-            immediate: true,
-            handler() {
-                this.keyword = this.$route.params.keyword || "";
-            },
-        },
-    },
     methods: {
+        filteredEntries(item) {
+            const keyword = this.keyword.trim().toLowerCase();
+            return keyword
+                ? item.children.filter((entry) => String(entry.name || "").toLowerCase().includes(keyword))
+                : item.children;
+        },
+        highlightParts(name) {
+            const text = String(name || "");
+            const keyword = this.keyword.trim();
+            if (!keyword) return [{ text, match: false }];
+            const parts = [];
+            const normalized = text.toLowerCase();
+            const query = keyword.toLowerCase();
+            let start = 0;
+            let index = normalized.indexOf(query);
+            while (index !== -1) {
+                if (index > start) parts.push({ text: text.slice(start, index), match: false });
+                parts.push({ text: text.slice(index, index + keyword.length), match: true });
+                start = index + keyword.length;
+                index = normalized.indexOf(query, start);
+            }
+            if (start < text.length) parts.push({ text: text.slice(start), match: false });
+            return parts;
+        },
+        toggleCategory(item) {
+            item.expanded = !item.expanded;
+            if (item.expanded && !item.loaded && !item.loading) this.loadCategory(item);
+        },
+        async loadCategory(item) {
+            item.loading = true;
+            item.error = false;
+            try {
+                const response = await getKnowledgeList({ type: item.id, _no_page: 1 });
+                const data = response?.data?.data;
+                item.children = Array.isArray(data) ? data : data?.list || [];
+                item.loaded = true;
+            } catch {
+                item.error = true;
+            } finally {
+                item.loading = false;
+            }
+        },
         toggleUnread(value) {
             if (!User.isLogin()) { User.toLogin(); return; }
             reading.onlyUnread = value;
-            if (value && !['normal', 'search'].includes(this.$route.name)) this.search();
-        },
-        search(event) {
-            if (event?.isComposing) return;
-            this.$emit("search", this.keyword);
-        },
-        updateKeyword(value) {
-            const previous = this.keyword;
-            this.keyword = value || "";
-            if (previous && !this.keyword) this.search();
+            if (value && !['normal', 'search'].includes(this.$route.name)) {
+                this.$router.push({ name: 'search', query: { page: 1 } });
+            }
         },
         async loadKnowledge() {
             const [countsResponse, menusResponse] = await Promise.all([getKnowledgeCount(), getKnowledgeMenus()]);
@@ -92,6 +137,11 @@ export default {
             const menus = menusResponse?.data?.data || [];
 
             this.maps = Object.values(menus).map((item) => ({
+                expanded: false,
+                loading: false,
+                loaded: false,
+                error: false,
+                children: [],
                 id: item.name,
                 name: item.label,
                 count: counts.find((count) => count.type === item.name)?.count ?? 0,

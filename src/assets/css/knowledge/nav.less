@@ -73,7 +73,40 @@
             color: #6854dc;
             font-weight: 500;
 
-            .u-arrow {
+            .m-knowledge-children {
+        min-height: 32px;
+        margin: 0 0 6px;
+        padding: 0 8px 0 24px;
+        list-style: none;
+
+        .u-entry {
+            display: block;
+            padding: 6px 8px;
+            border-radius: 4px;
+            color: #555d6b;
+            font-size: 12px;
+            line-height: 20px;
+            overflow-wrap: anywhere;
+            text-decoration: none;
+
+            &:hover, &.is-active {
+                background: #f0ecfc;
+                color: #6854dc;
+            }
+        }
+
+        .u-search-match {
+            padding: 0;
+            border-radius: 2px;
+            background: #fff0b3;
+            color: #8a5600;
+            font-weight: 600;
+        }
+
+        .u-child-status { padding: 6px 8px; color: #9097a4; font-size: 12px; }
+    }
+
+    .u-arrow {
                 color: #8a7cc2;
             }
 
@@ -89,12 +122,48 @@
         }
     }
 
+    .m-knowledge-children {
+        min-height: 32px;
+        margin: 0 0 6px;
+        padding: 0 8px 0 24px;
+        list-style: none;
+
+        .u-entry {
+            display: block;
+            padding: 6px 8px;
+            border-radius: 4px;
+            color: #555d6b;
+            font-size: 12px;
+            line-height: 20px;
+            overflow-wrap: anywhere;
+            text-decoration: none;
+
+            &:hover, &.is-active {
+                background: #f0ecfc;
+                color: #6854dc;
+            }
+        }
+
+        .u-search-match {
+            padding: 0;
+            border-radius: 2px;
+            background: #fff0b3;
+            color: #8a5600;
+            font-weight: 600;
+        }
+
+        .u-child-status { padding: 6px 8px; color: #9097a4; font-size: 12px; }
+    }
+
     .u-arrow {
         flex-shrink: 0;
         box-sizing: content-box;
         padding: 6px;
         color: #a5aab5;
         font-size: 12px;
+
+        svg { transition: transform 0.15s; }
+        &.is-expanded svg { transform: rotate(90deg); }
     }
 
     .u-name {
