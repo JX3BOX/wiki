@@ -10,13 +10,15 @@
                 <el-button
                     v-if="data && data.post"
                     class="u-reading-btn"
+                    :class="{ 'is-unread': !isRead }"
                     :type="isRead ? 'success' : 'default'"
-                    plain
+                    :plain="isRead"
                     :loading="savingRead || reading.loading"
                     @click="toggleRead"
                 >
-                    <template #icon><Check /></template>
+                    <template #icon><component :is="isRead ? 'Check' : 'Reading'" /></template>
                     {{ $t(isRead ? 'ui.knowledge.markUnread' : 'ui.knowledge.markRead') }}
+                    <span v-if="!isRead" class="u-reading-sparkles" aria-hidden="true"></span>
                 </el-button>
             </div>
             <WikiDetailNotice notice-key="wiki_knowledge_ac" :show-robot-tip="!!(data && data.post)" :type-name="$t('ui.types.knowledge')" :reply="title" />
@@ -104,7 +106,7 @@
 </template>
 
 <script>
-import { Check } from "@element-plus/icons-vue";
+import { Check, Reading } from "@element-plus/icons-vue";
 import { reading, loadReading, markReading } from "@/store/knowledge-reading";
 import { postStat, postHistory } from "@jx3box/jx3box-common/js/stat";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
@@ -151,6 +153,7 @@ export default {
     },
     components: {
         Check,
+        Reading,
         Article,
         WikiPanel,
         WikiRevisions,

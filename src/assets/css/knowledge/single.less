@@ -1,3 +1,5 @@
+@import "../common/guide-motion.less";
+
 .v-knowledge-single .m-wiki-post-panel:not(.is-robot) {
     > .c-wiki-panel,
     > .m-wiki-thx-panel {
@@ -25,6 +27,87 @@
         .u-reading-btn {
             margin-left: auto;
             flex-shrink: 0;
+
+            &.is-unread {
+                position: relative;
+                isolation: isolate;
+                overflow: hidden;
+                --el-button-text-color: #fff;
+                --el-button-hover-text-color: #fff;
+                --el-button-active-text-color: #fff;
+                --el-button-disabled-text-color: #fff;
+                --el-button-bg-color: #f7b044;
+                --el-button-hover-bg-color: #efa73c;
+                --el-button-active-bg-color: #e99a2d;
+                --el-button-disabled-bg-color: #f7b044;
+                --el-button-border-color: transparent;
+                --el-button-hover-border-color: transparent;
+                --el-button-active-border-color: transparent;
+                --el-button-disabled-border-color: transparent;
+                --el-button-outline-color: #f7b044;
+                .guide-button-gradient();
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48), inset 0 -1px 0 rgba(183, 105, 13, 0.12), 0 2px 5px rgba(196, 131, 36, 0.12);
+
+                &::after {
+                    .guide-button-wave();
+                }
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: -40%;
+                    left: -55%;
+                    width: 35%;
+                    height: 180%;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+                    transform: skewX(-20deg);
+                    animation: cj-guide-shine 6s ease-in-out -2.4s infinite;
+                    pointer-events: none;
+                    z-index: -1;
+                }
+
+                .u-reading-sparkles {
+                    position: absolute;
+                    inset: 0;
+                    pointer-events: none;
+
+                    &::before,
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        width: 8px;
+                        height: 8px;
+                        background: #fff7da;
+                        clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+                        animation: cj-guide-twinkle 4.8s ease-in-out -2.4s infinite;
+                    }
+
+                    &::before {
+                        top: 4px;
+                        right: 8px;
+                    }
+
+                    &::after {
+                        bottom: 4px;
+                        left: 5px;
+                        width: 6px;
+                        height: 6px;
+                        animation-delay: -0.8s;
+                    }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    &::before {
+                        animation: none;
+                    }
+
+                    .u-reading-sparkles::before,
+                    .u-reading-sparkles::after {
+                        animation: none;
+                        opacity: 0.5;
+                    }
+                }
+            }
         }
 
         h1 {
